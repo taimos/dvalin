@@ -7,9 +7,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,11 +28,11 @@
 	<import resource="classpath:spring/jetty.xml" />
 	<import resource="classpath:spring/jaxrs-server.xml" />
 
-	<bean id="objectMapper" class="de.taimos.springcxfdaemon.MapperFactory" factory-method="createDefault" />
-	
-	<bean class="de.taimos.springcxfdaemon.remote.RemoteServiceBeanPostProcessor" />
-	
-	<beans profile="test">	
-		<bean class="de.taimos.springcxfdaemon.test.TestProxyBeanPostProcessor" />
+	<bean id="objectMapper" class="de.taimos.dvalin.jaxrs.MapperFactory" factory-method="createDefault" />
+
+	<bean class="de.taimos.dvalin.jaxrs.remote.RemoteServiceBeanPostProcessor" />
+
+	<beans profile="test">
+		<bean class="de.taimos.dvalin.jaxrs.test.TestProxyBeanPostProcessor" />
 	</beans>
 </beans>
