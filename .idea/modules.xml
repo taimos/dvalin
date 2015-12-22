@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" filepath="$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jpa/dvalin-jpa.iml" filepath="$PROJECT_DIR$/jpa/dvalin-jpa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" filepath="$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dvalin-parent.iml" filepath="$PROJECT_DIR$/dvalin-parent.iml" />
+    </modules>
+  </component>
+</project>

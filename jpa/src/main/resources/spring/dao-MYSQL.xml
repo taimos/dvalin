@@ -1,0 +1,11 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://${ds.mysql.host}:${ds.mysql.port}/${ds.mysql.db}" />
+		<property name="username" value="${ds.mysql.user}" />
+		<property name="password" value="${ds.mysql.password}" />
+	</bean>
+
+</beans>

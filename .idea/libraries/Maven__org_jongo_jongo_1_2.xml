@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.jongo:jongo:1.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jongo/jongo/1.2/jongo-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jongo/jongo/1.2/jongo-1.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jongo/jongo/1.2/jongo-1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

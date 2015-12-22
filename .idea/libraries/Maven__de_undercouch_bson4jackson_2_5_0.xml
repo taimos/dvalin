@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: de.undercouch:bson4jackson:2.5.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/undercouch/bson4jackson/2.5.0/bson4jackson-2.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/de/undercouch/bson4jackson/2.5.0/bson4jackson-2.5.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/undercouch/bson4jackson/2.5.0/bson4jackson-2.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
