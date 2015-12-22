@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.taimos.dao.mongo;
 
@@ -14,36 +14,35 @@ import de.taimos.dao.mongo.links.DocumentLink;
  * <br>
  *
  * @author thoeger
- * 		
  */
 public class LinkObject extends AEntity {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private String name;
-	
-	private List<DocumentLink<LinkedObject>> links = new ArrayList<>();
-	
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public List<DocumentLink<LinkedObject>> getLinks() {
-		return this.links;
-	}
-	
-	public void setLinks(List<DocumentLink<LinkedObject>> links) {
-		this.links = links;
-	}
-	
-	@Override
-	public String toString() {
-		return "LinkObject [name=" + this.name + ", links=" + this.links + "]";
-	}
-	
+
+    private static final long serialVersionUID = 1L;
+
+    private String name;
+
+    private List<DocumentLink<LinkedObject>> links = new ArrayList<>();
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<DocumentLink<LinkedObject>> getLinks() {
+        return this.links;
+    }
+
+    public void setLinks(List<DocumentLink<LinkedObject>> links) {
+        this.links = links;
+    }
+
+    @Override
+    public String toString() {
+        return "LinkObject [name=" + this.name + ", links=" + this.links + "]";
+    }
+
 }

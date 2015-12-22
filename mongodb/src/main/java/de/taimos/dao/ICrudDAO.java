@@ -9,9 +9,9 @@ package de.taimos.dao;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,46 +26,45 @@ import java.util.List;
  * Copyright 2015 Hoegernet<br>
  * <br>
  * DAO with default CRUD operations
- * 
- * @author Thorsten Hoeger
  *
  * @param <T> type of the managed {@link AEntity}
+ * @author Thorsten Hoeger
  */
 public interface ICrudDAO<T extends AEntity> {
-	
-	/**
-	 * find the element with the given id
-	 * 
-	 * @param id the id to find
-	 * @return the obejct with the given id or <code>null</code> if no element exists with this id
-	 */
-	T findById(String id);
-	
-	/**
-	 * saves the goven element
-	 * 
-	 * @param object the element to save
-	 * @return the saved element
-	 */
-	T save(T object);
-	
-	/**
-	 * deletes the given object using its id.
-	 * 
-	 * @param object the object to delete
-	 */
-	void delete(T object);
-	
-	/**
-	 * deletes the given object using its id.
-	 * 
-	 * @param id the id of the object to delete
-	 */
-	void delete(String id);
-	
-	/**
-	 * @return a list of all elements in this collection
-	 */
-	List<T> findList();
-	
+
+    /**
+     * find the element with the given id
+     *
+     * @param id the id to find
+     * @return the obejct with the given id or <code>null</code> if no element exists with this id
+     */
+    T findById(String id);
+
+    /**
+     * saves the goven element
+     *
+     * @param object the element to save
+     * @return the saved element
+     */
+    T save(T object);
+
+    /**
+     * deletes the given object using its id.
+     *
+     * @param object the object to delete
+     */
+    void delete(T object);
+
+    /**
+     * deletes the given object using its id.
+     *
+     * @param id the id of the object to delete
+     */
+    void delete(String id);
+
+    /**
+     * @return a list of all elements in this collection
+     */
+    List<T> findList();
+
 }

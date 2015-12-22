@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.taimos.springcxfdaemon.swagger;
 
@@ -23,51 +23,50 @@ import io.swagger.config.ScannerFactory;
  * <br>
  *
  * @author thoeger
- * 		
  */
 @Component
 public class SwaggerScanner implements Scanner {
-	
-	@Autowired
-	private ServiceAnnotationClassesProvider annotationProvider;
-	
-	
-	@PostConstruct
-	public void init() {
-		ScannerFactory.setScanner(this);
-	}
-	
-	@Override
-	public Set<Class<?>> classes() {
-		Set<Class<?>> classes = new HashSet<>();
-		for (Class<?> clz : this.annotationProvider.getClasses()) {
-			if (!this.hasAnnotation(clz, Provider.class) && clz.isAnnotationPresent(Path.class)) {
-				classes.add(clz);
-			}
-		}
-		return classes;
-	}
-	
-	private boolean hasAnnotation(Class<?> clz, Class<? extends Annotation> ann) {
-		if (clz.isAnnotationPresent(ann)) {
-			return true;
-		}
-		for (Class<?> iface : clz.getInterfaces()) {
-			if (this.hasAnnotation(iface, ann)) {
-				return true;
-			}
-		}
-		return (clz.getSuperclass() != null) && this.hasAnnotation(clz.getSuperclass(), ann);
-	}
-	
-	@Override
-	public boolean getPrettyPrint() {
-		return false;
-	}
-	
-	@Override
-	public void setPrettyPrint(boolean shouldPrettyPrint) {
-		//
-	}
-	
+
+    @Autowired
+    private ServiceAnnotationClassesProvider annotationProvider;
+
+
+    @PostConstruct
+    public void init() {
+        ScannerFactory.setScanner(this);
+    }
+
+    @Override
+    public Set<Class<?>> classes() {
+        Set<Class<?>> classes = new HashSet<>();
+        for (Class<?> clz : this.annotationProvider.getClasses()) {
+            if (!this.hasAnnotation(clz, Provider.class) && clz.isAnnotationPresent(Path.class)) {
+                classes.add(clz);
+            }
+        }
+        return classes;
+    }
+
+    private boolean hasAnnotation(Class<?> clz, Class<? extends Annotation> ann) {
+        if (clz.isAnnotationPresent(ann)) {
+            return true;
+        }
+        for (Class<?> iface : clz.getInterfaces()) {
+            if (this.hasAnnotation(iface, ann)) {
+                return true;
+            }
+        }
+        return (clz.getSuperclass() != null) && this.hasAnnotation(clz.getSuperclass(), ann);
+    }
+
+    @Override
+    public boolean getPrettyPrint() {
+        return false;
+    }
+
+    @Override
+    public void setPrettyPrint(boolean shouldPrettyPrint) {
+        //
+    }
+
 }

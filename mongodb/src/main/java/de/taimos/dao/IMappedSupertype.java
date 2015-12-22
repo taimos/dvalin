@@ -9,9 +9,9 @@ package de.taimos.dao;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,11 +27,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * <br>
  * denotes that the class is used as a superclass meant to be sub-classes. It advises Jongo to include type information into the JSON string
  * into the field <code>@class</code> to allow deserialization into the correct Java class
- * 
- * @author Thorsten Hoeger
  *
+ * @author Thorsten Hoeger
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public interface IMappedSupertype {
-	//
+    //
 }

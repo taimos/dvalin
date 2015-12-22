@@ -9,9 +9,9 @@ package de.taimos.springcxfdaemon;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,28 +30,28 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ServiceAnnotationClassesProvider {
-	
-	private Class<? extends Annotation> serviceAnnotation;
-	
-	@Autowired
-	private ListableBeanFactory beanFactory;
-	
-	
-	public Class<? extends Annotation> getServiceAnnotation() {
-		return this.serviceAnnotation;
-	}
-	
-	public void setServiceAnnotation(Class<? extends Annotation> serviceAnnotation) {
-		this.serviceAnnotation = serviceAnnotation;
-	}
-	
-	public Class<?>[] getClasses() {
-		Map<String, Object> beansWithAnnotation = this.beanFactory.getBeansWithAnnotation(this.serviceAnnotation);
-		List<Class<?>> classes = new ArrayList<>();
-		for (Object bean : beansWithAnnotation.values()) {
-			classes.add(bean.getClass());
-			classes.addAll(Arrays.asList(bean.getClass().getInterfaces()));
-		}
-		return classes.toArray(new Class[0]);
-	}
+
+    private Class<? extends Annotation> serviceAnnotation;
+
+    @Autowired
+    private ListableBeanFactory beanFactory;
+
+
+    public Class<? extends Annotation> getServiceAnnotation() {
+        return this.serviceAnnotation;
+    }
+
+    public void setServiceAnnotation(Class<? extends Annotation> serviceAnnotation) {
+        this.serviceAnnotation = serviceAnnotation;
+    }
+
+    public Class<?>[] getClasses() {
+        Map<String, Object> beansWithAnnotation = this.beanFactory.getBeansWithAnnotation(this.serviceAnnotation);
+        List<Class<?>> classes = new ArrayList<>();
+        for (Object bean : beansWithAnnotation.values()) {
+            classes.add(bean.getClass());
+            classes.addAll(Arrays.asList(bean.getClass().getInterfaces()));
+        }
+        return classes.toArray(new Class[0]);
+    }
 }

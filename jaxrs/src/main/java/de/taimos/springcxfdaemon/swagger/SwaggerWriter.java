@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.taimos.springcxfdaemon.swagger;
 
@@ -11,9 +11,8 @@ import io.swagger.jaxrs.listing.SwaggerSerializers;
  * <br>
  *
  * @author thoeger
- * 		
  */
 @JaxRsComponent
 public class SwaggerWriter extends SwaggerSerializers {
-	//
+    //
 }
