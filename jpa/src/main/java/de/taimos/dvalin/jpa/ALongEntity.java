@@ -1,4 +1,4 @@
-package de.taimos.dao.hibernate;
+package de.taimos.dvalin.jpa;
 
 /*
  * #%L
@@ -24,8 +24,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
-import de.taimos.dao.IEntity;
 
 /**
  * Copyright 2015 Taimos GmbH<br>

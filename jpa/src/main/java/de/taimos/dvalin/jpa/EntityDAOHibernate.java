@@ -1,4 +1,4 @@
-package de.taimos.dao.hibernate;
+package de.taimos.dvalin.jpa;
 
 /*
  * #%L
@@ -28,9 +28,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.transaction.annotation.Transactional;
-
-import de.taimos.dao.IEntity;
-import de.taimos.dao.IEntityDAO;
 
 /**
  * @param <E> the entity type

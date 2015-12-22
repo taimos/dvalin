@@ -1,4 +1,4 @@
-package de.taimos.dao;
+package de.taimos.dvalin.jpa;
 
 /*
  * #%L
@@ -19,8 +19,6 @@ package de.taimos.dao;
  * limitations under the License.
  * #L%
  */
-
-import de.taimos.dao.hibernate.ALongEntity;
 
 /**
  * @param <E> the entity type

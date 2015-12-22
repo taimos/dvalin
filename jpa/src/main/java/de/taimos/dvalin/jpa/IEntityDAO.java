@@ -1,4 +1,4 @@
-package de.taimos.dao;
+package de.taimos.dvalin.jpa;
 
 /*
  * #%L

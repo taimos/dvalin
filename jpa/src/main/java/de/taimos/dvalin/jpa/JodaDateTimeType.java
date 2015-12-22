@@ -1,4 +1,4 @@
-package de.taimos.dao.hibernate;
+package de.taimos.dvalin.jpa;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
