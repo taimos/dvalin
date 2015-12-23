@@ -38,8 +38,17 @@
         <processorPath useClasspath="true" />
         <module name="dvalin-jaxrs" />
       </profile>
+      <profile default="false" name="Annotation profile for daemon" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="daemon" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="daemon" target="1.7" />
+      <module name="dvalin-daemon" target="1.7" />
       <module name="dvalin-jaxrs" target="1.7" />
       <module name="dvalin-jpa" target="1.7" />
       <module name="dvalin-mongodb" target="1.7" />

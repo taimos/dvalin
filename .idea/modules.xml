@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/daemon/dvalin-daemon.iml" filepath="$PROJECT_DIR$/daemon/dvalin-daemon.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" filepath="$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa/dvalin-jpa.iml" filepath="$PROJECT_DIR$/jpa/dvalin-jpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" filepath="$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" />

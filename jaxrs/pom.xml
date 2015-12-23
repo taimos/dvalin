@@ -13,6 +13,12 @@
 		<jetty.version>9.2.11.v20150529</jetty.version>
 	</properties>
 	<dependencies>
+        <dependency>
+            <groupId>de.taimos</groupId>
+            <artifactId>dvalin-daemon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 		<dependency>
 			<groupId>de.taimos</groupId>
 			<artifactId>restutils</artifactId>
@@ -101,7 +107,7 @@
 		</dependency>
 
 		<!-- Spring Framework -->
-		<!-- Core utilities used by other modules. Define this if you use Spring 
+		<!-- Core utilities used by other modules. Define this if you use Spring
 			Utility APIs (org.springframework.core.*/org.springframework.util.*) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -109,7 +115,7 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Expression Language (depends on spring-core) Define this if you use 
+		<!-- Expression Language (depends on spring-core) Define this if you use
 			Spring Expression APIs (org.springframework.expression.*) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -117,14 +123,14 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Bean Factory and JavaBeans utilities (depends on spring-core) Define 
+		<!-- Bean Factory and JavaBeans utilities (depends on spring-core) Define
 			this if you use Spring Bean APIs (org.springframework.beans.*) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
-		<!-- Aspect Oriented Programming (AOP) Framework (depends on spring-core, 
+		<!-- Aspect Oriented Programming (AOP) Framework (depends on spring-core,
 			spring-beans) Define this if you use Spring AOP APIs (org.springframework.aop.*) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -132,8 +138,8 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Application Context (depends on spring-core, spring-expression, spring-aop, 
-			spring-beans) This is the central artifact for Spring's Dependency Injection 
+		<!-- Application Context (depends on spring-core, spring-expression, spring-aop,
+			spring-beans) This is the central artifact for Spring's Dependency Injection
 			Container and is generally always defined -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -141,7 +147,7 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Various Application Context utilities, including EhCache, JavaMail, 
+		<!-- Various Application Context utilities, including EhCache, JavaMail,
 			Quartz, and Freemarker integration Define this if you need any of these integrations -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -149,8 +155,8 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Transaction Management Abstraction (depends on spring-core, spring-beans, 
-			spring-aop, spring-context) Define this if you use Spring Transactions or 
+		<!-- Transaction Management Abstraction (depends on spring-core, spring-beans,
+			spring-aop, spring-context) Define this if you use Spring Transactions or
 			DAO Exception Hierarchy (org.springframework.transaction.*/org.springframework.dao.*) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -158,8 +164,8 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Support for testing Spring applications with tools such as JUnit and 
-			TestNG This artifact is generally always defined with a 'test' scope for 
+		<!-- Support for testing Spring applications with tools such as JUnit and
+			TestNG This artifact is generally always defined with a 'test' scope for
 			the integration testing framework and unit testing stubs -->
 		<dependency>
 			<groupId>org.springframework</groupId>

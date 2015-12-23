@@ -16,6 +16,7 @@
         <jackson.version>2.6.3</jackson.version>
         <joda.time.version>2.9.1</joda.time.version>
         <slf4j.version>1.7.13</slf4j.version>
+        <daemon.version>2.5</daemon.version>
     </properties>
     <scm>
         <connection>scm:git:git@github.com:taimos/dvalin.git</connection>
@@ -24,17 +25,6 @@
         <tag>HEAD</tag>
     </scm>
     <dependencies>
-        <dependency>
-            <groupId>de.taimos</groupId>
-            <artifactId>daemon-framework-spring</artifactId>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>de.taimos</groupId>
-            <artifactId>daemon-framework-log4j</artifactId>
-            <version>2.5</version>
-        </dependency>
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -66,6 +56,7 @@
         </dependency>
     </dependencies>
     <modules>
+        <module>daemon</module>
         <module>jaxrs</module>
         <module>mongodb</module>
         <module>jpa</module>
