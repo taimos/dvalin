@@ -28,14 +28,14 @@
 		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
 	<jaxrs:server id="restService" address="http://${jaxrs.bindhost:0.0.0.0}:${jaxrs.bindport:${svc.port:8080}}${jaxrs.path:}"
-		depends-on="cxf-engine" serviceAnnotation="${jaxrs.annotation:de.taimos.springcxfdaemon.JaxRsComponent}">
+		depends-on="cxf-engine" serviceAnnotation="${jaxrs.annotation:de.taimos.dvalin.jaxrs.JaxRsComponent}">
 		<jaxrs:features>
 			<bean class="de.taimos.dvalin.jaxrs.monitoring.MonitoringFeature" />
 		</jaxrs:features>
 	</jaxrs:server>
 
 	<bean id="classesProvider" class="de.taimos.dvalin.jaxrs.ServiceAnnotationClassesProvider">
-		<property name="serviceAnnotation" value="${jaxrs.annotation:de.taimos.springcxfdaemon.JaxRsComponent}" />
+		<property name="serviceAnnotation" value="${jaxrs.annotation:de.taimos.dvalin.jaxrs.JaxRsComponent}" />
 	</bean>
 
 	<!-- Swagger beans -->
