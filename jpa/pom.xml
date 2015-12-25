@@ -18,7 +18,7 @@
 			<version>${hibernate.version}</version>
 		</dependency>
 
-		<!-- Transaction Management Abstraction (depends on spring-core, spring-beans, spring-aop, spring-context) Define this if you use Spring Transactions 
+		<!-- Transaction Management Abstraction (depends on spring-core, spring-beans, spring-aop, spring-context) Define this if you use Spring Transactions
 			or DAO Exception Hierarchy (org.springframework.transaction.*/org.springframework.dao.*) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -30,16 +30,16 @@
 			<artifactId>spring-orm</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
-			<version>3.4.1</version>
+			<version>3.4.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mattbertolini</groupId>
 			<artifactId>liquibase-slf4j</artifactId>
-			<version>1.2.1</version>
-		</dependency>		
+			<version>2.0.0</version>
+		</dependency>
 	</dependencies>
 </project>

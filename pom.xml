@@ -12,7 +12,7 @@
     <name>Taimos Microservices Framework</name>
     <inceptionYear>2015</inceptionYear>
     <properties>
-        <org.springframework.version>4.2.3.RELEASE</org.springframework.version>
+        <org.springframework.version>4.2.4.RELEASE</org.springframework.version>
         <jackson.version>2.6.3</jackson.version>
         <joda.time.version>2.9.1</joda.time.version>
         <slf4j.version>1.7.13</slf4j.version>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>19.0</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>

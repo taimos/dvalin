@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-jaxrs</artifactId>
-			<version>1.5.4</version>
+			<version>1.5.5</version>
 			<exclusions>
 				<!-- This conflicts with JAX-RS 2.0 -->
 				<exclusion>
