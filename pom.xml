@@ -149,6 +149,7 @@
         <module>cloud</module>
         <module>notification</module>
         <module>jaxrs</module>
+        <module>jaxrs-jwtauth</module>
         <module>mongodb</module>
         <module>jpa</module>
         <module>interconnect</module>
