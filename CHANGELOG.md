@@ -1,5 +1,5 @@
 # Version 1.1
-* 
+* Fix broken Swagger endpoint
 
 # Version 1.0
 * Initial version
