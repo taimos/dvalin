@@ -39,5 +39,5 @@
 	</bean>
 
 	<!-- Swagger beans -->
-	<context:component-scan base-package="de.taimos.springcxfdaemon.swagger" />
+	<context:component-scan base-package="de.taimos.dvalin.jaxrs.swagger" />
 </beans>
