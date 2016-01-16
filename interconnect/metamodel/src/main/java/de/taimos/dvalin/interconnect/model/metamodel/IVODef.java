@@ -28,12 +28,9 @@ public class IVODef {
     private Boolean identity;
     private String filterPkgName;
     private String parentFilterPkgName;
-    private String indexName;
     private Boolean auditing = false;
     private Boolean interfaceOnly = false;
     private Boolean pageable = false;
-    private Boolean userSpecific = false;
-    private Boolean mandateSpecific = false;
     private Boolean generateFindById = false;
     private Boolean generateDelete = false;
     private Boolean generateUpdate = false;
@@ -267,21 +264,6 @@ public class IVODef {
     }
 
     /**
-     * @return the indexName
-     */
-    @XmlAttribute(required = false)
-    public String getIndexName() {
-        return this.indexName;
-    }
-
-    /**
-     * @param indexName the indexName to set
-     */
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
-    }
-
-    /**
      * @return the removalDate, format as yyyy/mm/dd
      */
     @XmlAttribute(required = false)
@@ -309,36 +291,6 @@ public class IVODef {
      */
     public void setPageable(Boolean pageable) {
         this.pageable = pageable;
-    }
-
-    /**
-     * @return true if user specific ivo (i.e. uses a userId/coreId)
-     */
-    @XmlAttribute(required = false)
-    public Boolean getUserSpecific() {
-        return this.userSpecific;
-    }
-
-    /**
-     * @param userSpecific set to true if this is a user specific ivo (i.e. uses a userId/coreId)
-     */
-    public void setUserSpecific(Boolean userSpecific) {
-        this.userSpecific = userSpecific;
-    }
-
-    /**
-     * @return true if mandate specific ivo (i.e. uses a mandateId)
-     */
-    @XmlAttribute(required = false)
-    public Boolean getMandateSpecific() {
-        return this.mandateSpecific;
-    }
-
-    /**
-     * @param mandateSpecific set to true if this is a mandate specific ivo (i.e. uses a mandateId)
-     */
-    public void setMandateSpecific(Boolean mandateSpecific) {
-        this.mandateSpecific = mandateSpecific;
     }
 
     /**

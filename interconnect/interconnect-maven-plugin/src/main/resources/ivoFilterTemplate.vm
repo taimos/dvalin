@@ -1,0 +1,127 @@
+package ${ivod.pkgName}.requests;
+
+#foreach ( $imp in $mmh.getImports() )
+import $imp;
+#end
+import ${ivod.pkgName}.${mmh.getIVOClazzName()};
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+
+/**
+ * $ivod.comment
+ *
+ * @author $ivod.author
+ */
+@SuppressWarnings("all")
+#if ($mmh.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$ivod.removalDate")
+#end
+@JsonDeserialize(builder = ${mmh.getModIVOClazzName()}.${mmh.getModIVOClazzName()}Builder.class)
+public class ${mmh.getModIVOClazzName()} extends $mmh.getParent() implements I${mmh.getModIVOClazzName()} {
+
+private static final long serialVersionUID = ${ivod.version}L;
+
+	/**
+	* Builder for the read-only ivo
+	*
+	*/
+#if ($mmh.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$ivod.removalDate")
+#end
+	@JsonPOJOBuilder()
+	public static class ${mmh.getModIVOClazzName()}Builder extends Abstract${mmh.getModIVOClazzName()}Builder<${mmh.getModIVOClazzName()}Builder> implements IVOBuilder {
+
+		// nothing to do here, really
+
+	}
+
+	/**
+	* Abstract Builder for the read-only ivo
+	*
+	* @param <E> type of builder
+	*/
+	public abstract static class Abstract${mmh.getModIVOClazzName()}Builder<E extends Abstract${mmh.getModIVOClazzName()}Builder<?>> $mmh.getParentBuilder() $mmh.getBuilderImplements() {
+#foreach ( $att in $mmh.getFilterableMemberDefs() )
+		private $mmh.getType( $att, true ) $att.name;
+#end
+
+#foreach ( $att in $mmh.getFilterableMemberDefs() )
+		/**
+#if ( $att.filterRequired )
+		 * This field is required.
+#else
+		 * This field is optional.
+#end
+		 * @param  $att.name the value to set
+		 * @return the builder
+		 *
+		 **/
+#if ( $att.filterRequired )
+		@Nonnull
+#else
+	 	@Nullable
+#end
+		public E with$mmh.upperCaseFirst( $att.name )($mmh.getType( $att, false ) p$att.name) {
+			this.$att.name = p$att.name;
+			return (E) this;
+		}
+#end
+
+		protected void internalFillFromIVO($mmh.getModIVOClazzName() ivo) {
+#foreach ( $att in $mmh.getFilterableMemberDefs() )
+		this.with$mmh.upperCaseFirst( $att.name )(ivo.$att.name);
+#end
+		}
+
+		/**
+		 * @return the entry
+		 **/
+		public ${mmh.getModIVOClazzName()} build() {
+			${mmh.getModIVOClazzName()} result = new ${mmh.getModIVOClazzName()}(this);
+			return result;
+		}
+	}
+
+#foreach ( $att in $mmh.getFilterableMemberDefs() )
+	private final #if ( $att.javaTransientFlag ) transient #end $mmh.getType( $att, false ) $att.name;
+#end
+
+
+	protected ${mmh.getModIVOClazzName()}(Abstract${mmh.getModIVOClazzName()}Builder<?> builder) {
+#foreach ( $att in $mmh.getFilterableMemberDefs() )
+		this.$att.name = builder.$att.name;
+#end
+	}
+
+#foreach ( $att in $mmh.getFilterableMemberDefs() )
+#if ( $att.jsonTransientFlag )
+	@JsonIgnore
+#end
+	@Override
+	public $mmh.getType( $att, false ) get$mmh.upperCaseFirst( $att.name )() {
+		return this.$att.name;
+	}
+
+#end
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IPageableBuilder createPageableBuilder() {
+		return (IPageableBuilder) createBuilder();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${mmh.getModIVOClazzName()}Builder builder = new ${mmh.getModIVOClazzName()}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+	@Override
+	public ${mmh.getModIVOClazzName()} clone() {
+		return (${mmh.getModIVOClazzName()}) super.clone();
+	}
+
+}
