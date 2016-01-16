@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.taimos</groupId>
@@ -11,4 +12,31 @@
     </properties>
     <dependencies>
     </dependencies>
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>schemagen</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>schemagen</goal>
+                        </goals>
+                        <configuration>
+                            <transformSchemas>
+                                <transformSchema>
+                                    <uri>http://www.taimos.de/xsd/IVODef/1.0.0</uri>
+                                    <toPrefix>ivo</toPrefix>
+                                    <toFile>IVODef-v1_0_0.xsd</toFile>
+                                </transformSchema>
+                            </transformSchemas>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
