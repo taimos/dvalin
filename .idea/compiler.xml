@@ -64,7 +64,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="dvalin-interconnect-api" />
       </profile>
       <profile default="false" name="Annotation profile for dvalin-interconnect-model" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -87,6 +86,13 @@
         <processorPath useClasspath="true" />
         <module name="interconnect-maven-plugin" />
       </profile>
+      <profile default="false" name="Annotation profile for dvalin-interconnect-test" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="dvalin-interconnect-test" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="daemon" target="1.7" />
@@ -96,6 +102,7 @@
       <module name="dvalin-interconnect-metamodel" target="1.7" />
       <module name="dvalin-interconnect-model" target="1.7" />
       <module name="dvalin-interconnect-parent" target="1.7" />
+      <module name="dvalin-interconnect-test" target="1.7" />
       <module name="dvalin-jaxrs" target="1.7" />
       <module name="dvalin-jpa" target="1.7" />
       <module name="dvalin-mongodb" target="1.7" />

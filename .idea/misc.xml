@@ -12,6 +12,7 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/interconnect/pom.xml" />
+        <option value="$PROJECT_DIR$/interconnect/test/pom.xml" />
       </list>
     </option>
   </component>

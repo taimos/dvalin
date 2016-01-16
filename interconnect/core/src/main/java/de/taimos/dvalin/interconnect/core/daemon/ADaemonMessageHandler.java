@@ -1,0 +1,264 @@
+package de.taimos.dvalin.interconnect.core.daemon;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.jms.Message;
+import javax.jms.TextMessage;
+
+import org.slf4j.Logger;
+
+import de.taimos.dvalin.interconnect.core.InterconnectConnector;
+import de.taimos.dvalin.interconnect.core.MessageConnector;
+import de.taimos.dvalin.interconnect.model.InterconnectMapper;
+import de.taimos.dvalin.interconnect.model.InterconnectObject;
+import de.taimos.dvalin.interconnect.model.ivo.IPageable;
+import de.taimos.dvalin.interconnect.model.ivo.IVO;
+import de.taimos.dvalin.interconnect.model.ivo.daemon.DaemonErrorIVO;
+import de.taimos.dvalin.interconnect.model.ivo.daemon.PingIVO;
+import de.taimos.dvalin.interconnect.model.ivo.daemon.PongIVO;
+import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
+import de.taimos.dvalin.interconnect.model.service.DaemonError;
+import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
+import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
+import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
+
+public abstract class ADaemonMessageHandler {
+
+    final Map<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod> registry;
+
+    private final boolean throwExceptionOnTimeout;
+
+
+    /**
+     * @param aHandlerClazz            Handler class
+     * @param aThrowExceptionOnTimeout if true throw Exception if timeout is reached
+     */
+    public ADaemonMessageHandler(final Class<? extends IDaemonHandler> aHandlerClazz, final boolean aThrowExceptionOnTimeout) {
+        final Map<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod> reg = new HashMap<>();
+        for (final DaemonScanner.DaemonMethod re : DaemonScanner.scan(aHandlerClazz)) {
+            reg.put(re.getRequest(), re);
+        }
+        this.registry = Collections.unmodifiableMap(reg);
+        this.throwExceptionOnTimeout = aThrowExceptionOnTimeout;
+    }
+
+    /**
+     * @param aHandlerClazz                    Handler class
+     * @param aCatchExceptionsInRequestHandler if true Exceptions during execution are catched and returned as a DaemonError
+     * @param aThrowExceptionOnTimeout         if true throw Exception if timeout is reached
+     * @deprecated use ADaemonMessageHandler(aHandlerClazz, aThrowExceptionOnTimeout) instead
+     */
+    @Deprecated
+    public ADaemonMessageHandler(final Class<? extends IDaemonHandler> aHandlerClazz, @SuppressWarnings("unused") final boolean aCatchExceptionsInRequestHandler, final boolean aThrowExceptionOnTimeout) {
+        this(aHandlerClazz, aThrowExceptionOnTimeout);
+    }
+
+    /**
+     * @param aRegistry                        Registry
+     * @param aCatchExceptionsInRequestHandler if true Exceptions during execution are catched and returned as a DaemonError
+     * @param aThrowExceptionOnTimeout         if true throw Exception if timeout is reached
+     * @deprecated use ADaemonMessageHandler(aHandlerClazz, aThrowExceptionOnTimeout) instead
+     */
+    @Deprecated
+    public ADaemonMessageHandler(final Map<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod> aRegistry, @SuppressWarnings("unused") final boolean aCatchExceptionsInRequestHandler, final boolean aThrowExceptionOnTimeout) {
+        this.registry = Collections.unmodifiableMap(new HashMap<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod>(aRegistry));
+        this.throwExceptionOnTimeout = aThrowExceptionOnTimeout;
+    }
+
+    /**
+     * Reply with a Daemon response.
+     *
+     * @param response Response
+     * @param secure   (encrypted communication)
+     * @throws Exception If something went wrong
+     */
+    protected abstract void reply(DaemonResponse response, boolean secure) throws Exception;
+
+    /**
+     * Create a new request handler.
+     *
+     * @param context Context
+     * @return ADaemonHandler
+     */
+    protected abstract IDaemonHandler createRequestHandler(final IDaemonHandler.IContext context);
+
+    protected abstract Logger getLogger();
+
+    /**
+     * @param message Message
+     * @throws Exception If no registered method was found for the incomming InterconnectObject or Insecure call or no (valid) Request UUID
+     *                   or no
+     */
+    public final void onMessage(final Message message) throws Exception {
+        final long begin = System.currentTimeMillis();
+        if (message instanceof TextMessage) {
+            final TextMessage textMessage = (TextMessage) message;
+            this.getLogger().debug("TextMessage received: {}", textMessage.getText());
+            final boolean secure = MessageConnector.isMessageSecure(textMessage);
+            if (secure) {
+                MessageConnector.decryptMessage(textMessage);
+            }
+            final InterconnectObject ivoIn = InterconnectMapper.fromJson(textMessage.getText(), InterconnectObject.class);
+            final Class<? extends InterconnectObject> icoClass = ivoIn.getClass();
+            final DaemonRequest request = new DaemonRequest(textMessage.getJMSCorrelationID(), textMessage.getJMSReplyTo(), ivoIn);
+            if (icoClass.equals(PingIVO.class)) {
+                this.reply(new DaemonResponse(request, new PongIVO.PongIVOBuilder().build()), secure);
+                return;
+            }
+            final DaemonScanner.DaemonMethod method = this.registry.get(icoClass);
+            if (method == null) {
+                throw new Exception("No registered method found for " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
+            }
+            if (method.isSecure() != secure) {
+                throw new Exception("Insecure call (is " + secure + " should be " + method.isSecure() + ") for " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
+            }
+            final String requestUUID = message.getStringProperty(InterconnectConnector.HEADER_REQUEST_UUID);
+            if (requestUUID == null) {
+                throw new Exception("No request UUID found in message with " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
+
+            }
+            final UUID uuid;
+            try {
+                uuid = UUID.fromString(requestUUID);
+            } catch (final IllegalArgumentException e) {
+                throw new Exception("No valid request UUID " + requestUUID + " message with " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
+            }
+            int deliveryCount;
+            try {
+                deliveryCount = message.getIntProperty("JMSXDeliveryCount");
+            } catch (final Exception e) {
+                if (message.getJMSRedelivered()) {
+                    deliveryCount = 2;
+                } else {
+                    deliveryCount = 1;
+                }
+                this.getLogger().warn("Can not get JMSXDeliveryCount");
+            }
+            Class<? extends IVO> ivoClass = null;
+            if (ivoIn instanceof IVO) {
+                ivoClass = (Class<? extends IVO>) ivoIn.getClass();
+            }
+            final ADaemonHandler.Context context = new ADaemonHandler.Context(ivoClass, uuid, deliveryCount, message.getJMSRedelivered());
+            final IDaemonHandler handler = this.createRequestHandler(context);
+            final StringBuilder sbInvokeLog = new StringBuilder();
+            sbInvokeLog.append("Invoke " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")");
+            if (ivoIn instanceof IPageable) {
+                sbInvokeLog.append(" at Page " + ((IPageable) ivoIn).getOffset() + ";" + ((IPageable) ivoIn).getLimit());
+            }
+            sbInvokeLog.append(" with " + context);
+            this.getLogger().info(sbInvokeLog.toString());
+            if (method.getType() == DaemonScanner.Type.voit) {
+                this.handleReceiver(handler, method, ivoIn);
+            } else {
+
+                final DaemonResponse response;
+                try {
+                    final InterconnectObject out = this.handleRequest(handler, method, context, ivoIn);
+                    response = new DaemonResponse(request, out);
+                    final long end = System.currentTimeMillis();
+                    final long runtime = end - begin;
+                    if (runtime > method.getTimeoutInMs()) {
+                        if (this.throwExceptionOnTimeout) {
+                            throw new Exception("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context);
+                        }
+                        this.getLogger().warn("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context);
+                        return;
+                    } else if (runtime > (method.getTimeoutInMs() / 2L)) {
+                        this.getLogger().info("Slow response because runtime " + runtime + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context);
+                    }
+                } catch (final DaemonError e) {
+                    this.getLogger().debug("DaemonError for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context, e);
+                    final DaemonErrorIVO.DaemonErrorIVOBuilder error = new DaemonErrorIVO.DaemonErrorIVOBuilder();
+                    error.number(e.getNumber().get());
+                    error.daemon(e.getNumber().daemon());
+                    error.message(e.getMessage());
+                    this.reply(new DaemonResponse(request, error.build()), secure);
+                    return;
+                }
+                this.reply(response, secure);
+            }
+        } else {
+            throw new Exception("Invalid message type received: " + message.getClass().getSimpleName());
+        }
+    }
+
+    private static Throwable extractTargetException(final InvocationTargetException e) {
+        if (e.getTargetException() != null) {
+            return e.getTargetException();
+        }
+        return e;
+    }
+
+    /**
+     * @param handler Handler
+     * @param method  Method
+     * @param context Context
+     * @param ico     Request
+     * @return Response
+     * @throws DaemonError Forward...
+     */
+    InterconnectObject handleRequest(final IDaemonHandler handler, final DaemonScanner.DaemonMethod method, final ADaemonHandler.Context context, final InterconnectObject ico) throws DaemonError {
+        handler.beforeRequestHook();
+        try {
+            return method.invoke(handler, ico);
+        } catch (final InvocationTargetException e) {
+            if (e.getTargetException() instanceof DaemonError) {
+                throw (DaemonError) e.getTargetException();
+            }
+            if (e.getTargetException() instanceof RuntimeException) {
+                handler.exceptionHook((RuntimeException) e.getTargetException());
+            }
+            final Throwable targetException = ADaemonMessageHandler.extractTargetException(e);
+            if (method.isIdempotent()) {
+                throw new IdemponentRetryException(targetException);
+            }
+            this.getLogger().error("Exception in non-idempotent " + method.getMethod().getName() + "(" + ico.getClass().getSimpleName() + ")" + " with " + context, e);
+            throw new DaemonError(new DaemonErrorNumber() {
+
+                private static final long serialVersionUID = 1L;
+
+
+                @Override
+                public int get() {
+                    return -1;
+                }
+
+                @Override
+                public String daemon() {
+                    return "framework";
+                }
+            }, targetException);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            handler.afterRequestHook();
+        }
+    }
+
+    /**
+     * @param handler Handler
+     * @param method  Method
+     * @param ico     Receiver
+     */
+    private void handleReceiver(final IDaemonHandler handler, final DaemonScanner.DaemonMethod method, final InterconnectObject ico) {
+        handler.beforeRequestHook();
+        try {
+            method.invoke(handler, ico);
+        } catch (final InvocationTargetException e) {
+            final Throwable targetException = ADaemonMessageHandler.extractTargetException(e);
+            if (method.isIdempotent()) {
+                throw new IdemponentRetryException(targetException);
+            }
+            throw new RuntimeException(targetException);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            handler.afterRequestHook();
+        }
+    }
+
+}

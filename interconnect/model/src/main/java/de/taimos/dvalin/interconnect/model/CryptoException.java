@@ -7,10 +7,17 @@ public class CryptoException extends Exception {
 
 	/**
 	 * @param message the exception message
-	 * @param cause the root cause
 	 */
-	public CryptoException(String message, Throwable cause) {
-		super(message, cause);
+	public CryptoException(String message) {
+		super(message);
 	}
+
+    /**
+     * @param message the exception message
+     * @param cause the root cause
+     */
+    public CryptoException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

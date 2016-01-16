@@ -17,7 +17,7 @@
         <module>model</module>
         <module>metamodel</module>
         <module>interconnect-maven-plugin</module>
-        <module>api</module>
         <module>core</module>
+        <module>test</module>
     </modules>
 </project>
