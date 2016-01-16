@@ -64,5 +64,6 @@
         <module>jaxrs</module>
         <module>mongodb</module>
         <module>jpa</module>
+        <module>interconnect</module>
     </modules>
 </project>
