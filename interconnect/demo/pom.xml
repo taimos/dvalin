@@ -37,7 +37,9 @@
                             <goal>generateModel</goal>
                         </goals>
                         <configuration>
-                            <defdirs>src/main/resources/ivos</defdirs>
+                            <defdirs>
+                                <string>src/main/resources/ivos</string>
+                            </defdirs>
                         </configuration>
                     </execution>
                 </executions>
