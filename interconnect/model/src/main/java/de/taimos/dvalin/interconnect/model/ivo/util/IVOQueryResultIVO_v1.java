@@ -118,4 +118,9 @@ public class IVOQueryResultIVO_v1<E extends IVO> extends AbstractIVO implements 
         return (IVOQueryResultIVO_v1<E>) super.clone();
     }
 
+
+    public static <I extends IVO> IVOQueryResultIVO_v1<I> create(List<I> elements, long count) {
+        return new IVOQueryResultIVO_v1Builder<I>().withElements(elements).withPossibleResults(count).build();
+    }
+
 }

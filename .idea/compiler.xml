@@ -93,12 +93,20 @@
         <processorPath useClasspath="true" />
         <module name="dvalin-interconnect-test" />
       </profile>
+      <profile default="false" name="Annotation profile for dvalin-interconnect-demo" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="dvalin-interconnect-demo" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="daemon" target="1.7" />
       <module name="dvalin-daemon" target="1.7" />
       <module name="dvalin-interconnect-api" target="1.7" />
       <module name="dvalin-interconnect-core" target="1.7" />
+      <module name="dvalin-interconnect-demo" target="1.7" />
       <module name="dvalin-interconnect-metamodel" target="1.7" />
       <module name="dvalin-interconnect-model" target="1.7" />
       <module name="dvalin-interconnect-parent" target="1.7" />

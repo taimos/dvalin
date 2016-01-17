@@ -19,5 +19,6 @@
         <module>interconnect-maven-plugin</module>
         <module>core</module>
         <module>test</module>
+        <module>demo</module>
     </modules>
 </project>

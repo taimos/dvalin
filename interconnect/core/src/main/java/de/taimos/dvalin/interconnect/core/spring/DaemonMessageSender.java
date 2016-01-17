@@ -2,6 +2,8 @@ package de.taimos.dvalin.interconnect.core.spring;
 
 import java.util.HashMap;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -49,11 +51,13 @@ public final class DaemonMessageSender implements IDaemonMessageSender {
     /**
      * @throws Exception If MessageConnector can not be started
      */
+    @PostConstruct
     public void start() throws Exception {
         InterconnectConnector.start();
     }
 
     /** */
+    @PreDestroy
     public void stop() {
         try {
             InterconnectConnector.stop();
