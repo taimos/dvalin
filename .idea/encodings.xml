@@ -4,7 +4,6 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/daemon" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/interconnect/api" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/demo" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin" charset="UTF-8" />

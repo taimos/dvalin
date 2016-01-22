@@ -6,9 +6,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.taimos.dvalin.interconnect.core.daemon.Interconnect;
 import de.taimos.dvalin.interconnect.core.spring.RequestHandler;
+import de.taimos.dvalin.interconnect.demo.api.IRegistrationService;
 import de.taimos.dvalin.interconnect.demo.api.IUserService;
 import de.taimos.dvalin.interconnect.demo.api.UserError;
+import de.taimos.dvalin.interconnect.demo.model.RegUserIVO_v1;
 import de.taimos.dvalin.interconnect.demo.model.UserIVO_v1;
 import de.taimos.dvalin.interconnect.demo.model.requests.CreateUserIVO_v1;
 import de.taimos.dvalin.interconnect.demo.model.requests.DeleteUserIVO_v1;
@@ -25,6 +28,9 @@ public class Handler extends ADaemonHandler implements IUserService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private static ConcurrentHashMap<Long, UserIVO_v1> users = new ConcurrentHashMap<>();
+
+    @Interconnect
+    private IRegistrationService regService;
 
     /**
      * @param context Context
@@ -45,6 +51,11 @@ public class Handler extends ADaemonHandler implements IUserService {
         UserIVO_v1.UserIVO_v1Builder builder = newUser.createBuilder();
         builder.withId(Long.toString(max + 1));
         UserIVO_v1 createdUser = builder.build();
+
+        RegUserIVO_v1.RegUserIVO_v1Builder regB = new RegUserIVO_v1.RegUserIVO_v1Builder();
+        regB.withName(createdUser.getName());
+        regB.withUserId(createdUser.getIdAsLong());
+        regService.registerUser(regB.build());
 
         users.put(createdUser.getIdAsLong(), createdUser);
         return createdUser;
