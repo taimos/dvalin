@@ -317,6 +317,11 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 		}
 		return false;
 	}
+
+	@Override
+	public int hashCode() {
+        return this.id.hashCode();
+	}
 #end
 
 }
