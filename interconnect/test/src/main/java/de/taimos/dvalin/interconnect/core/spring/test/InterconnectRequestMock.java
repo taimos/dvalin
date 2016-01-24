@@ -20,16 +20,15 @@ import com.google.common.collect.Maps;
 
 import de.taimos.daemon.spring.annotations.TestComponent;
 import de.taimos.dvalin.interconnect.core.spring.requestresponse.IRequestMock;
+import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.InterconnectList;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.ivo.IVO;
-import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
 import de.taimos.dvalin.interconnect.model.service.Daemon;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner.DaemonMethod;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
-import de.taimos.dvalin.interconnect.model.service.IDaemonHandler.IContext;
 
 @TestComponent("requestMock")
 public class InterconnectRequestMock implements IRequestMock {
@@ -225,23 +224,22 @@ public class InterconnectRequestMock implements IRequestMock {
 
         @SuppressWarnings("unchecked")
         private IDaemonHandler createMockInstance(Class<? extends InterconnectObject> ivoClass, UUID uuid) {
-            final IContext ctx;
+            InterconnectContext.reset();
+            InterconnectContext.setUuid(uuid);
             if (IVO.class.isAssignableFrom(ivoClass)) {
-                ctx = new ADaemonHandler.Context((Class<? extends IVO>) ivoClass, uuid, 1, false);
+                InterconnectContext.setRequestClass((Class<? extends IVO>) ivoClass);
             } else {
-                ctx = new ADaemonHandler.Context(IVO.class, uuid, 1, false);
+                InterconnectContext.setRequestClass(IVO.class);
             }
             final IDaemonHandler mockInstance;
             if (this.singleton == true) {
-                final ASingletonHandlerMock singletonHandlerMockInstance = (ASingletonHandlerMock) this.beanFactory.getBean(this.beanName);
-                singletonHandlerMockInstance.setContext(ctx);
-                mockInstance = singletonHandlerMockInstance;
+                mockInstance =  (ASingletonHandlerMock) this.beanFactory.getBean(this.beanName);
             } else {
                 // TODO check Spring startup state to prevent errors from prototype mocks
                 //				if (SpringMain.isStarting()) {
                 //					throw new RuntimeException("Protoype mocks can not be used during starting phase!");
                 //				}
-                mockInstance = (APrototypeHandlerMock) this.beanFactory.getBean(this.beanName, ctx);
+                mockInstance = (APrototypeHandlerMock) this.beanFactory.getBean(this.beanName);
             }
             return mockInstance;
         }

@@ -3,7 +3,6 @@ package de.taimos.dvalin.interconnect.model.common.daemon;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -374,11 +373,7 @@ public class DaemonScannerTest {
 	}
 
 	private abstract class TestRequestHandler extends ADaemonHandler {
-
-		public TestRequestHandler() {
-			super(new Context(IVO.class, UUID.randomUUID(), 0, false));
-		}
-
+        //
 	}
 
 	private interface InterfaceIVO extends IVO {

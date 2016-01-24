@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.VoidIVO;
 import de.taimos.dvalin.interconnect.model.service.Daemon;
@@ -40,7 +41,7 @@ public abstract class ADaemonProxyFactory implements IDaemonProxyFactory {
     protected abstract <R> R syncRequest(UUID uuid, String queue, InterconnectObject request, Class<R> responseClazz, long timeout, TimeUnit unit, boolean secure) throws ExecutionException;
 
     @Override
-    public final <D extends IDaemon> D create(final UUID uuid, final Class<D> daemon) {
+    public final <D extends IDaemon> D create(final Class<D> daemon) {
         final String queueName;
         if (daemon.isAnnotationPresent(Daemon.class)) {
             queueName = daemon.getAnnotation(Daemon.class).name() + ".request";
@@ -55,7 +56,7 @@ public abstract class ADaemonProxyFactory implements IDaemonProxyFactory {
                 try {
                     final DaemonScanner.DaemonMethod dm = DaemonScanner.scan(method);
                     if (dm.getType() == DaemonScanner.Type.voit) {
-                        ADaemonProxyFactory.this.sendToQueue(uuid, queueName, (InterconnectObject) args[0], dm.isSecure());
+                        ADaemonProxyFactory.this.sendToQueue(InterconnectContext.getUuid(), queueName, (InterconnectObject) args[0], dm.isSecure());
                         return null;
                     }
                     final Class<?> responseClass;
@@ -64,10 +65,10 @@ public abstract class ADaemonProxyFactory implements IDaemonProxyFactory {
                     } else {
                         responseClass = method.getReturnType();
                     }
-                    return ADaemonProxyFactory.this.syncRequest(uuid, queueName, (InterconnectObject) args[0], responseClass, dm.getTimeoutInMs(), TimeUnit.MILLISECONDS, dm.isSecure());
+                    return ADaemonProxyFactory.this.syncRequest(InterconnectContext.getUuid(), queueName, (InterconnectObject) args[0], responseClass, dm.getTimeoutInMs(), TimeUnit.MILLISECONDS, dm.isSecure());
                 } catch (final ExecutionException e) {
                     if (e.getCause() instanceof DaemonError) {
-                        throw (DaemonError) e.getCause();
+                        throw e.getCause();
                     }
                     if (e.getCause() != null) {
                         throw e.getCause();

@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.ivo.IVO;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PingIVO;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PongIVO;
@@ -20,20 +21,9 @@ public abstract class ADaemonHandler implements IDaemonHandler {
 	/** Logger. */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private final Context context;
-
-
-	/**
-	 * @param context Context
-	 */
-	public ADaemonHandler(final Context context) {
-		this.context = context;
-		this.logger.trace("new bean instance created");
-	}
-
 	@Override
 	public IContext getContext() {
-		return this.context;
+		return InterconnectContext.getContext();
 	}
 
 	@Override

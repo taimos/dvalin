@@ -24,7 +24,6 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
-import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -153,7 +152,7 @@ public class InterconnectBeanPostProcessor implements InstantiationAwareBeanPost
             if (!IDaemon.class.isAssignableFrom(dependencyType)) {
                 throw new RuntimeException("Field has to be of type IDaemon but was of type " + dependencyType.getCanonicalName());
             }
-            return proxyFactory.create(UUID.randomUUID(), (Class<? extends IDaemon>) dependencyType);
+            return proxyFactory.create((Class<? extends IDaemon>) dependencyType);
         }
     }
 

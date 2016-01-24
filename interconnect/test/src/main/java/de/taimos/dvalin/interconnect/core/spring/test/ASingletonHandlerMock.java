@@ -1,15 +1,13 @@
 package de.taimos.dvalin.interconnect.core.spring.test;
 
 
+import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PingIVO;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PongIVO;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
 
 public class ASingletonHandlerMock implements IDaemonHandler {
-
-    private final ThreadLocal<IContext> contextLocal = new ThreadLocal<>();
-
 
     @Override
     public void afterRequestHook() {
@@ -27,19 +25,9 @@ public class ASingletonHandlerMock implements IDaemonHandler {
     }
 
     @Override
+    @Deprecated
     public IContext getContext() {
-        final IContext c = this.contextLocal.get();
-        if (c == null) {
-            throw new RuntimeException("No context was set");
-        }
-        return c;
-    }
-
-    /**
-     * @param c Context
-     */
-    public void setContext(final IContext c) {
-        this.contextLocal.set(c);
+        return InterconnectContext.getContext();
     }
 
     @Override

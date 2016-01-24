@@ -64,8 +64,8 @@ public class DaemonProxyFactory implements IDaemonProxyFactory {
     }
 
     @Override
-    public <D extends IDaemon> D create(UUID uuid, Class<D> daemon) {
-        return this.impl.create(uuid, daemon);
+    public <D extends IDaemon> D create(Class<D> daemon) {
+        return this.impl.create(daemon);
     }
 
 }

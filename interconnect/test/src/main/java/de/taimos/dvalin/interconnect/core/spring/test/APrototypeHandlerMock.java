@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonProxyFactory;
 import de.taimos.dvalin.interconnect.core.spring.message.IMessageMock;
+import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PingIVO;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PongIVO;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
@@ -12,8 +13,6 @@ import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
 
 public class APrototypeHandlerMock implements IDaemonHandler {
 
-    private final IContext ctx;
-
     @Autowired
     private IDaemonProxyFactory factory;
 
@@ -21,21 +20,14 @@ public class APrototypeHandlerMock implements IDaemonHandler {
     protected IMessageMock messageMock;
 
 
-    /**
-     * @param ctx the request context
-     */
-    public APrototypeHandlerMock(IContext ctx) {
-        super();
-        this.ctx = ctx;
-    }
-
     @Override
+    @Deprecated
     public IContext getContext() {
-        return this.ctx;
+        return InterconnectContext.getContext();
     }
 
     protected <I extends IDaemon> I createProxy(Class<I> clazz) {
-        return this.factory.create(this.getContext().uuid(), clazz);
+        return this.factory.create(clazz);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package de.taimos.dvalin.interconnect.core.spring;
 
-import java.util.UUID;
-
 import javax.annotation.PostConstruct;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -16,9 +14,7 @@ import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.interconnect.core.daemon.ADaemonMessageHandler;
 import de.taimos.dvalin.interconnect.core.daemon.DaemonResponse;
 import de.taimos.dvalin.interconnect.core.daemon.IdemponentRetryException;
-import de.taimos.dvalin.interconnect.model.ivo.IVO;
 import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
-import de.taimos.dvalin.interconnect.model.service.ADaemonHandler.Context;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
 
 
@@ -61,8 +57,8 @@ public final class DaemonMessageListener implements MessageListener, ErrorHandle
         }
 
         @Override
-        protected IDaemonHandler createRequestHandler(final IDaemonHandler.IContext context) {
-            return (ADaemonHandler) this.beanFactory.getBean("requestHandler", context);
+        protected IDaemonHandler createRequestHandler() {
+            return (ADaemonHandler) this.beanFactory.getBean("requestHandler");
         }
 
         @Override
@@ -81,7 +77,7 @@ public final class DaemonMessageListener implements MessageListener, ErrorHandle
     /** */
     @PostConstruct
     public void start() {
-        final ADaemonHandler rh = (ADaemonHandler) this.beanFactory.getBean("requestHandler", new Context(IVO.class, UUID.randomUUID(), 1, false));
+        final ADaemonHandler rh = (ADaemonHandler) this.beanFactory.getBean("requestHandler");
         this.handler = new DaemonMessageHandler(this.logger, rh.getClass(), this.messageSender, this.beanFactory);
     }
 

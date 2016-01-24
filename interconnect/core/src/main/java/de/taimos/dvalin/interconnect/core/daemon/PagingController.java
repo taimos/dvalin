@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
@@ -124,7 +123,7 @@ public final class PagingController<E extends IVO> implements Iterator<E> {
             // execute query
             final IVOQueryResultIVO_v1<E> list;
             try {
-                final IDaemon proxy = this.proxyFactory.create(UUID.randomUUID(), this.daemonClass);
+                final IDaemon proxy = this.proxyFactory.create(this.daemonClass);
                 final Method proxyMethod = this.extractProxyMethod(proxy);
                 list = (IVOQueryResultIVO_v1<E>) proxyMethod.invoke(proxy, request);
             } catch (final Exception e) {

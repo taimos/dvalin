@@ -32,13 +32,6 @@ public class Handler extends ADaemonHandler implements IUserService {
     @Interconnect
     private IRegistrationService regService;
 
-    /**
-     * @param context Context
-     */
-    public Handler(Context context) {
-        super(context);
-    }
-
     @Override
     public UserIVO_v1 createUser(CreateUserIVO_v1 ivo) throws DaemonError {
         long max = 0;

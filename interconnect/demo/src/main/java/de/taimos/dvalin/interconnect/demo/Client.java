@@ -23,7 +23,7 @@ public class Client {
 
     @Scheduled(initialDelay = 1000, fixedRate = 60000)
     public void init() {
-        IUserService svc = proxy.create(UUID.randomUUID(), IUserService.class);
+        IUserService svc = proxy.create(IUserService.class);
 
         try {
             System.out.println("Users:");

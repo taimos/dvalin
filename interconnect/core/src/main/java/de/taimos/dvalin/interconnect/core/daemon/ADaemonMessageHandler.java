@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 
 import de.taimos.dvalin.interconnect.core.InterconnectConnector;
 import de.taimos.dvalin.interconnect.core.MessageConnector;
+import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
@@ -20,7 +21,6 @@ import de.taimos.dvalin.interconnect.model.ivo.IVO;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.DaemonErrorIVO;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PingIVO;
 import de.taimos.dvalin.interconnect.model.ivo.daemon.PongIVO;
-import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
@@ -81,10 +81,9 @@ public abstract class ADaemonMessageHandler {
     /**
      * Create a new request handler.
      *
-     * @param context Context
      * @return ADaemonHandler
      */
-    protected abstract IDaemonHandler createRequestHandler(final IDaemonHandler.IContext context);
+    protected abstract IDaemonHandler createRequestHandler();
 
     protected abstract Logger getLogger();
 
@@ -94,6 +93,8 @@ public abstract class ADaemonMessageHandler {
      *                   or no
      */
     public final void onMessage(final Message message) throws Exception {
+        InterconnectContext.reset();
+
         final long begin = System.currentTimeMillis();
         if (message instanceof TextMessage) {
             final TextMessage textMessage = (TextMessage) message;
@@ -121,9 +122,8 @@ public abstract class ADaemonMessageHandler {
                 throw new Exception("No request UUID found in message with " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
 
             }
-            final UUID uuid;
             try {
-                uuid = UUID.fromString(requestUUID);
+                InterconnectContext.setUuid(UUID.fromString(requestUUID));
             } catch (final IllegalArgumentException e) {
                 throw new Exception("No valid request UUID " + requestUUID + " message with " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
             }
@@ -138,18 +138,21 @@ public abstract class ADaemonMessageHandler {
                 }
                 this.getLogger().warn("Can not get JMSXDeliveryCount");
             }
+            InterconnectContext.setDeliveryCount(deliveryCount);
+            InterconnectContext.setRedelivered(message.getJMSRedelivered());
+
             Class<? extends IVO> ivoClass = null;
             if (ivoIn instanceof IVO) {
                 ivoClass = (Class<? extends IVO>) ivoIn.getClass();
+                InterconnectContext.setRequestClass(ivoClass);
             }
-            final ADaemonHandler.Context context = new ADaemonHandler.Context(ivoClass, uuid, deliveryCount, message.getJMSRedelivered());
-            final IDaemonHandler handler = this.createRequestHandler(context);
+            final IDaemonHandler handler = this.createRequestHandler();
             final StringBuilder sbInvokeLog = new StringBuilder();
             sbInvokeLog.append("Invoke " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")");
             if (ivoIn instanceof IPageable) {
                 sbInvokeLog.append(" at Page " + ((IPageable) ivoIn).getOffset() + ";" + ((IPageable) ivoIn).getLimit());
             }
-            sbInvokeLog.append(" with " + context);
+            sbInvokeLog.append(" with " + InterconnectContext.getContext());
             this.getLogger().info(sbInvokeLog.toString());
             if (method.getType() == DaemonScanner.Type.voit) {
                 this.handleReceiver(handler, method, ivoIn);
@@ -157,21 +160,21 @@ public abstract class ADaemonMessageHandler {
 
                 final DaemonResponse response;
                 try {
-                    final InterconnectObject out = this.handleRequest(handler, method, context, ivoIn);
+                    final InterconnectObject out = this.handleRequest(handler, method, ivoIn);
                     response = new DaemonResponse(request, out);
                     final long end = System.currentTimeMillis();
                     final long runtime = end - begin;
                     if (runtime > method.getTimeoutInMs()) {
                         if (this.throwExceptionOnTimeout) {
-                            throw new Exception("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context);
+                            throw new Exception("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext());
                         }
-                        this.getLogger().warn("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context);
+                        this.getLogger().warn("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext());
                         return;
                     } else if (runtime > (method.getTimeoutInMs() / 2L)) {
-                        this.getLogger().info("Slow response because runtime " + runtime + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context);
+                        this.getLogger().info("Slow response because runtime " + runtime + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext());
                     }
                 } catch (final DaemonError e) {
-                    this.getLogger().debug("DaemonError for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + context, e);
+                    this.getLogger().debug("DaemonError for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext(), e);
                     final DaemonErrorIVO.DaemonErrorIVOBuilder error = new DaemonErrorIVO.DaemonErrorIVOBuilder();
                     error.number(e.getNumber().get());
                     error.daemon(e.getNumber().daemon());
@@ -196,12 +199,11 @@ public abstract class ADaemonMessageHandler {
     /**
      * @param handler Handler
      * @param method  Method
-     * @param context Context
      * @param ico     Request
      * @return Response
      * @throws DaemonError Forward...
      */
-    InterconnectObject handleRequest(final IDaemonHandler handler, final DaemonScanner.DaemonMethod method, final ADaemonHandler.Context context, final InterconnectObject ico) throws DaemonError {
+    InterconnectObject handleRequest(final IDaemonHandler handler, final DaemonScanner.DaemonMethod method, final InterconnectObject ico) throws DaemonError {
         handler.beforeRequestHook();
         try {
             return method.invoke(handler, ico);
@@ -216,7 +218,7 @@ public abstract class ADaemonMessageHandler {
             if (method.isIdempotent()) {
                 throw new IdemponentRetryException(targetException);
             }
-            this.getLogger().error("Exception in non-idempotent " + method.getMethod().getName() + "(" + ico.getClass().getSimpleName() + ")" + " with " + context, e);
+            this.getLogger().error("Exception in non-idempotent " + method.getMethod().getName() + "(" + ico.getClass().getSimpleName() + ")" + " with " + InterconnectContext.getContext(), e);
             throw new DaemonError(new DaemonErrorNumber() {
 
                 private static final long serialVersionUID = 1L;
