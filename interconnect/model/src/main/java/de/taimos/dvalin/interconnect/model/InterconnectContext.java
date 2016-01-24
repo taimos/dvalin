@@ -1,7 +1,6 @@
 package de.taimos.dvalin.interconnect.model;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import de.taimos.dvalin.interconnect.model.ivo.IVO;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
@@ -52,18 +51,12 @@ public class InterconnectContext {
         }
     }
 
-    private static final ThreadLocal<InnerContext> threadLocalContext = createLocalContext();
-
-    private static ThreadLocal<InnerContext> createLocalContext() {
-        return new ThreadLocal<>().withInitial(new Supplier<InnerContext>() {
-            @Override
-            public InnerContext get() {
-                return new InnerContext();
-            }
-        });
-    }
+    private static final ThreadLocal<InnerContext> threadLocalContext = new ThreadLocal<>();
 
     private static InnerContext getThreadLocalContext() {
+        if (threadLocalContext.get() == null) {
+            threadLocalContext.set(new InnerContext());
+        }
         return threadLocalContext.get();
     }
 
