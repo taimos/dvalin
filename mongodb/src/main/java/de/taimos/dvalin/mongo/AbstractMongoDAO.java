@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,6 +44,7 @@ import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
 import com.mongodb.MongoClient;
+import com.mongodb.gridfs.GridFS;
 
 /**
  * Copyright 2015 Hoegernet<br>
@@ -60,7 +61,9 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     private MongoClient mongo;
 
     private Jongo jongo;
+    private DB db;
     protected MongoCollection collection;
+
 
 
     @PostConstruct
@@ -69,9 +72,14 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
         if (dbName == null) {
             throw new RuntimeException("Missing database name; Set system property 'mongodb.name'");
         }
-        DB db = this.mongo.getDB(dbName);
-        this.jongo = this.createJongo(db);
+        this.db = this.mongo.getDB(dbName);
+        this.jongo = this.createJongo(this.db);
         this.collection = this.jongo.getCollection(this.getCollectionName());
+        this.customInit();
+    }
+
+    protected void customInit() {
+        // implement if needed
     }
 
     /**
@@ -310,6 +318,13 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     @SuppressWarnings("unused")
     protected void afterDelete(String id) {
         //
+    }
+
+    protected GridFS getGridFSBucket(String bucket) {
+        if (bucket == null || bucket.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return new GridFS(db, bucket);
     }
 
     /**
