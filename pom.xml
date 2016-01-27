@@ -14,7 +14,7 @@
         <org.springframework.version>4.2.4.RELEASE</org.springframework.version>
         <jackson.version>2.6.3</jackson.version>
         <joda.time.version>2.9.1</joda.time.version>
-        <slf4j.version>1.7.13</slf4j.version>
+        <slf4j.version>1.7.14</slf4j.version>
         <daemon.version>2.5</daemon.version>
     </properties>
     <scm>
@@ -33,6 +33,11 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${joda.time.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.1</version>
         </dependency>
 
         <dependency>
@@ -59,5 +64,6 @@
         <module>jaxrs</module>
         <module>mongodb</module>
         <module>jpa</module>
+        <module>interconnect</module>
     </modules>
 </project>

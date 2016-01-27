@@ -1,3 +1,6 @@
+# Version 1.2
+* Add Interconnect library (contribution by Cinovo AG http://www.cinovo.de)
+
 # Version 1.1
 * Fix broken Swagger endpoint
 

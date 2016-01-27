@@ -1,0 +1,116 @@
+package ${ivod.pkgName}.requests;
+
+#foreach ( $imp in $mmh.getImports() )
+import $imp;
+#end
+import ${ivod.pkgName}.${mmh.getIVOClazzName()};
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+
+/**
+ * $ivod.comment
+ *
+ * @author $ivod.author
+ */
+@SuppressWarnings("all")
+#if ($mmh.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$ivod.removalDate")
+#end
+@JsonDeserialize(builder = ${mmh.getModIVOClazzName()}.${mmh.getModIVOClazzName()}Builder.class)
+public class ${mmh.getModIVOClazzName()} extends $mmh.getParent() implements I${mmh.getModIVOClazzName()} {
+
+private static final long serialVersionUID = ${ivod.version}L;
+
+	/**
+	* Builder for the read-only ivo
+	*
+	*/
+#if ($mmh.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$ivod.removalDate")
+#end
+	@JsonPOJOBuilder()
+	public static class ${mmh.getModIVOClazzName()}Builder extends Abstract${mmh.getModIVOClazzName()}Builder<${mmh.getModIVOClazzName()}Builder> implements IVOBuilder {
+
+		// nothing to do here, really
+
+	}
+
+	/**
+	* Abstract Builder for the read-only ivo
+	*
+	* @param <E> type of builder
+	*/
+	public abstract static class Abstract${mmh.getModIVOClazzName()}Builder<E extends Abstract${mmh.getModIVOClazzName()}Builder<?>> $mmh.getParentBuilder() $mmh.getBuilderImplements() {
+		private String id;
+		/**
+		 * This field is required.
+		 * the id
+		 *
+		 * @param id the value to set
+		 * @return the builder
+		 *
+		 **/
+		@Nonnull
+		@SuppressWarnings("unchecked")
+		public E withId(String id) {
+			this.id = id;
+			return (E) this;
+		}
+
+
+		protected void internalFillFromIVO(${mmh.getModIVOClazzName()} ivo) {
+			this.withId(ivo.id);
+		}
+
+		/**
+		 * @return the entry
+		 **/
+		public ${mmh.getModIVOClazzName()} build() {
+			if (this.id == null) {
+				throw new IllegalStateException("The attribute id must not be null!");
+			}
+			${mmh.getModIVOClazzName()} result = new ${mmh.getModIVOClazzName()}(this);
+			return result;
+		}
+	}
+
+	private final  String id;
+
+	protected ${mmh.getModIVOClazzName()}(Abstract${mmh.getModIVOClazzName()}Builder<?> builder) {
+		this.id = builder.id;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${mmh.getModIVOClazzName()}Builder builder = new ${mmh.getModIVOClazzName()}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+	@Override
+	public ${mmh.getModIVOClazzName()} clone() {
+		return (${mmh.getModIVOClazzName()}) super.clone();
+	}
+
+
+#if ( $ivod.identity && !$ivod.parentName )
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " " + this.id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof $mmh.getModIVOClazzName()) {
+			return this.id.equals((($mmh.getModIVOClazzName())obj).id);
+		}
+		return false;
+	}
+#end
+}

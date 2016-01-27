@@ -1,0 +1,49 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- Enable annotation processing -->
+    <context:annotation-config/>
+
+    <!-- Auto scan the lib components -->
+    <context:component-scan base-package="de.taimos.dvalin.interconnect.core.spring" />
+
+    <beans profile="prod">
+        <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+            <property name="brokerURL">
+                <value>${interconnect.jms.broker}</value>
+            </property>
+        </bean>
+        <bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+            <property name="connectionFactory">
+                <ref local="jmsConnectionFactory"/>
+            </property>
+            <property name="createConnectionOnStartup" value="true"/>
+            <property name="idleTimeout" value="0"/>
+            <property name="maxConnections" value="3"/>
+            <property name="maximumActiveSessionPerConnection" value="100"/>
+            <property name="blockIfSessionPoolIsFull" value="false"/>
+        </bean>
+        <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+            <constructor-arg ref="jmsFactory"/>
+        </bean>
+        <bean id="topicJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+            <constructor-arg ref="jmsFactory"/>
+            <property name="pubSubDomain" value="true"/>
+        </bean>
+        <bean id="requestResponse" class="de.taimos.dvalin.interconnect.core.daemon.DaemonRequestResponse"
+              scope="singleton"/>
+
+        <jms:listener-container destination-type="queue" container-type="default" connection-factory="jmsFactory"
+                                acknowledge="transacted" concurrency="${interconnect.jms.consumers:2-8}"
+                                error-handler="messageListener">
+            <jms:listener destination="${serviceName}.request" ref="messageListener" method="onMessage"/>
+        </jms:listener-container>
+    </beans>
+
+</beans>

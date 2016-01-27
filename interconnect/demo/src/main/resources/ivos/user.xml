@@ -1,0 +1,8 @@
+<ivo xmlns="http://www.taimos.de/xsd/IVODef/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.taimos.de/xsd/IVODef/1.0.0 IVODef-v1_0_0.xsd" author="thoeger" comment="test ivo"
+     name="User" pkgName="de.taimos.dvalin.interconnect.demo.model" version="1" identity="true" generateFilter="true"
+     generateCreate="true" generateDelete="true" generateFindById="true" generateUpdate="true">
+
+    <string comment="the name of the user" name="name" filterable="true" required="true" useAsLabel="true"/>
+
+</ivo>

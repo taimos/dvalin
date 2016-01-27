@@ -1,0 +1,44 @@
+package ${ivod.pkgName}.requests;
+
+#foreach ( $imp in $mmh.getIImports() )
+import $imp;
+#end
+import ${ivod.pkgName}.${mmh.getIVOClazzName()};
+
+/**
+ * $ivod.comment
+ *
+ * @author $ivod.author
+ */
+@SuppressWarnings("all")
+#if ($mmh.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$ivod.removalDate")
+#end
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+public interface $mmh.getModIVOInterfaceName() $mmh.getIImplements() {
+
+	/**
+	 * property constant for id
+	 * property comment: the brand id
+	 */
+	public static final String PROP_ID = "id";
+
+
+	/**
+	 * the brand id
+	 * This field is required.
+	 *
+	 * @return the value for id
+	 *
+	 */
+	@Nonnull
+	public String getId();
+
+
+	/**
+	 * @return a clone
+	 */
+	public $mmh.getModIVOInterfaceName() clone();
+
+}

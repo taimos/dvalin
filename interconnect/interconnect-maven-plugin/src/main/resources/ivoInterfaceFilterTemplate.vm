@@ -1,0 +1,48 @@
+package ${ivod.pkgName}.requests;
+
+#foreach ( $imp in $mmh.getIImports() )
+import $imp;
+#end
+import ${ivod.pkgName}.${mmh.getIVOClazzName()};
+
+/**
+ * $ivod.comment
+ *
+ * @author $ivod.author
+ */
+@SuppressWarnings("all")
+#if ($mmh.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$ivod.removalDate")
+#end
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+public interface $mmh.getModIVOInterfaceName() $mmh.getIImplements() {
+
+#foreach ( $att in $mmh.getFilterableMemberDefs )
+	/**
+	 * property constant for $att.name
+	 * property comment: $att.comment
+	 */
+	public static final String PROP_$att.name.toUpperCase() = "$att.name";
+#end
+
+#foreach ( $att in $mmh.getFilterableMemberDefs() )
+	/**
+	 * $att.comment
+	 * This field is optional, thus may be null.
+	 *
+	 * @return the value for $att.name
+	 *
+	 **/
+	@Nullable
+	public $mmh.getType( $att, true ) get$mmh.upperCaseFirst( $att.name )();
+
+#end
+
+
+	/**
+	 * @return a clone
+	 */
+	public $mmh.getModIVOInterfaceName() clone();
+
+}
