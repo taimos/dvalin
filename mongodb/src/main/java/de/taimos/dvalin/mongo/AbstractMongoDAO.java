@@ -64,8 +64,6 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     private DB db;
     protected MongoCollection collection;
 
-
-
     @PostConstruct
     public final void init() {
         String dbName = System.getProperty("mongodb.name");
@@ -194,7 +192,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final List<T> findSortedByQuery(String query, String sort, Object... params) {
-        return this.findSortedByQuery(query, sort, null, this.getEntityClass(), params);
+        return this.findSortedByQuery(query, sort, (Integer) null, (Integer) null, params);
     }
 
     /**
@@ -211,8 +209,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final <P> List<P> findSortedByQuery(String query, String sort, String projection, Class<P> as, Object... params) {
-        Find find = this.createFind(query, sort, projection, params);
-        return this.convertIterable(find.as(as));
+        return this.findSortedByQuery(query, sort, null, null, projection, as, params);
     }
 
     /**
@@ -229,17 +226,76 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final <P> List<P> findSortedByQuery(String query, String sort, String projection, ResultHandler<P> handler, Object... params) {
-        Find find = this.createFind(query, sort, projection, params);
+        return this.findSortedByQuery(query, sort, null, null, projection, handler, params);
+    }
+
+    /**
+     * finds all elements matching the given query and sorts them accordingly
+     *
+     * @param query  the query to search for
+     * @param sort   the sort query to apply
+     * @param skip   the number of elements to skip
+     * @param limit  the number of elements to fetch
+     * @param params the parameters to replace # symbols
+     * @return the list of elements found
+     */
+    protected final List<T> findSortedByQuery(String query, String sort, Integer skip, Integer limit, Object... params) {
+        return this.findSortedByQuery(query, sort, skip, limit, null, this.getEntityClass(), params);
+    }
+
+    /**
+     * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
+     * rename or filter fields in the result elements. Instead of returning {@link #getEntityClass()} objects it returns objects of type
+     * <code>as</code>
+     *
+     * @param query      the query to search for
+     * @param sort       the sort query to apply
+     * @param skip       the number of elements to skip
+     * @param limit      the number of elements to fetch
+     * @param projection the projection of fields to use
+     * @param as         the target to convert result elements to
+     * @param params     the parameters to replace # symbols
+     * @param <P>        the element type
+     * @return the list of elements found
+     */
+    protected final <P> List<P> findSortedByQuery(String query, String sort, Integer skip, Integer limit, String projection, Class<P> as, Object... params) {
+        Find find = this.createFind(query, sort, skip, limit, projection, params);
+        return this.convertIterable(find.as(as));
+    }
+
+    /**
+     * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
+     * rename or filter fields in the result elements. Instead of returning {@link #getEntityClass()} objects it returns objects converted
+     * by the given {@link ResultHandler}
+     *
+     * @param query      the query to search for
+     * @param sort       the sort query to apply
+     * @param skip       the number of elements to skip
+     * @param limit      the number of elements to fetch
+     * @param projection the projection of fields to use
+     * @param handler    the handler to convert result elements with
+     * @param params     the parameters to replace # symbols
+     * @param <P>        the element type
+     * @return the list of elements found
+     */
+    protected final <P> List<P> findSortedByQuery(String query, String sort, Integer skip, Integer limit, String projection, ResultHandler<P> handler, Object... params) {
+        Find find = this.createFind(query, sort, skip, limit, projection, params);
         return this.convertIterable(find.map(handler));
     }
 
-    private Find createFind(String query, String sort, String projection, Object... params) {
+    private Find createFind(String query, String sort, Integer skip, Integer limit, String projection, Object... params) {
         Find find = this.collection.find(query, params);
         if ((sort != null) && !sort.isEmpty()) {
             find.sort(sort);
         }
         if ((projection != null) && !projection.isEmpty()) {
             find.projection(projection);
+        }
+        if (skip != null) {
+            find.skip(skip);
+        }
+        if (limit != null) {
+            find.limit(limit);
         }
         return find;
     }

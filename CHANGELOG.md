@@ -1,6 +1,7 @@
 # Version 1.2
 * Add Interconnect library (contribution by Cinovo AG http://www.cinovo.de)
 * fix #6 add GridFS access method in MongoDB library
+* fix #5 support skip and limit for MongoDB queries
 
 # Version 1.1
 * Fix broken Swagger endpoint
