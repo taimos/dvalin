@@ -12,9 +12,9 @@ package de.taimos.dvalin.jaxrs.security;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,21 +44,21 @@ public class SecurityContextUtil {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public static final SecurityContext getSC() {
+    public static SecurityContext getSC() {
         return SecurityContextUtil.getContext().getSecurityContext();
     }
 
-    public static final void assertSC() {
+    public static void assertSC() {
         if ((SecurityContextUtil.getSC() == null) || (SecurityContextUtil.getSC().getUserPrincipal() == null)) {
             throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED).entity("Invalid credentials or session").build());
         }
     }
 
-    public static final void assertLoggedIn() {
+    public static void assertLoggedIn() {
         SecurityContextUtil.assertSC();
     }
 
-    public static final String getUser() {
+    public static String getUser() {
         SecurityContext sc = SecurityContextUtil.getSC();
         if ((sc != null) && (sc.getUserPrincipal() != null)) {
             return sc.getUserPrincipal().getName();
@@ -66,21 +66,18 @@ public class SecurityContextUtil {
         return null;
     }
 
-    public static final boolean hasRole(String role) {
+    public static boolean hasRole(String role) {
         SecurityContext sc = SecurityContextUtil.getSC();
-        if (sc != null) {
-            return sc.isUserInRole(role);
-        }
-        return false;
+        return sc != null && sc.isUserInRole(role);
     }
 
-    public static final UUID requestId() {
+    public static UUID requestId() {
         final InvocationInstance ii = SecurityContextUtil.getContext().getContent(InvocationInstance.class);
         RESTAssert.assertNotNull(ii, Status.INTERNAL_SERVER_ERROR);
         return ii.getMessageId();
     }
 
-    public static final boolean isLoggedIn() {
+    public static boolean isLoggedIn() {
         return SecurityContextUtil.getUser() != null;
     }
 

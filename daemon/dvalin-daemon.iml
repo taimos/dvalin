@@ -6,7 +6,11 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/license" isTestSource="false" generated="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target/javadoc-bundle-options" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-status" />
+      <excludeFolder url="file://$MODULE_DIR$/target/site" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -27,11 +31,11 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.13" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.14" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.18" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-simple:1.7.14" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-simple:1.7.18" level="project" />
   </component>
 </module>

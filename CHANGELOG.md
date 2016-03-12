@@ -1,3 +1,14 @@
+# Version 1.3
+* Update 3rd-party libraries
+    * Jodatime 2.9.2
+    * Slf4J 1.7.18
+    * Jackson 2.7.2
+    * Swagger 1.5.7
+    * CXF 3.1.5
+    * Spring 4.2.5
+    * Fongo 2.0.6
+    * MongoDB 3.2.2
+
 # Version 1.2
 * Add Interconnect library (contribution by Cinovo AG http://www.cinovo.de)
 * fix #6 add GridFS access method in MongoDB library
