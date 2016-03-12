@@ -9,9 +9,9 @@ package de.taimos.dvalin.jpa;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,23 +30,23 @@ import java.util.List;
 public interface IEntityDAO<E extends IEntity<I>, I> {
 
     /**
-     * @param element
+     * @param element the element to save
      * @return the saved element
      */
     E save(E element);
 
     /**
-     * @param element
+     * @param element the element to delete
      */
     void delete(E element);
 
     /**
-     * @param id
+     * @param id the id of the element to delete
      */
     void deleteById(I id);
 
     /**
-     * @param id
+     * @param id the id of the element to find
      * @return the element with the given id or null if not found
      */
     E findById(I id);

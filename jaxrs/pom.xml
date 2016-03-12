@@ -9,7 +9,7 @@
 	<name>JAX-RS support for dvalin using Apache CXF</name>
 	<inceptionYear>2015</inceptionYear>
 	<properties>
-		<cxf.version>3.1.4</cxf.version>
+		<cxf.version>3.1.5</cxf.version>
 		<jetty.version>9.2.11.v20150529</jetty.version>
 	</properties>
 	<dependencies>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-jaxrs</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.7</version>
 			<exclusions>
 				<!-- This conflicts with JAX-RS 2.0 -->
 				<exclusion>

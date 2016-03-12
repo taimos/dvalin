@@ -11,9 +11,9 @@
 	<properties>
 		<bson.version>2.5.0</bson.version>
 		<jongo.version>1.2</jongo.version>
-		<mongo.version>3.0.4</mongo.version> <!-- Fongo does not support >= 3.1.0 -->
+		<mongo.version>3.2.2</mongo.version>
 		<mongobee.version>0.10</mongobee.version>
-		<fongo.version>2.0.3</fongo.version>
+		<fongo.version>2.0.6</fongo.version>
 	</properties>
 
 	<dependencies>
@@ -33,7 +33,7 @@
 			<version>${bson.version}</version>
 		</dependency>
 
-		<!-- Bean Factory and JavaBeans utilities (depends on spring-core) Define 
+		<!-- Bean Factory and JavaBeans utilities (depends on spring-core) Define
 			this if you use Spring Bean APIs (org.springframework.beans.*) -->
 		<dependency>
 			<groupId>org.springframework</groupId>

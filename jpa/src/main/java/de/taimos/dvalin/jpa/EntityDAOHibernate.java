@@ -9,9 +9,9 @@ package de.taimos.dvalin.jpa;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,8 +85,8 @@ public abstract class EntityDAOHibernate<E extends IEntity<I>, I> implements IEn
     }
 
     /**
-     * @param query
-     * @param params
+     * @param query the JPA query
+     * @param params the positional parameters
      * @return the entity or null if not found or more than one found
      */
     protected final E findByQuery(final String query, final Object... params) {
@@ -98,8 +98,8 @@ public abstract class EntityDAOHibernate<E extends IEntity<I>, I> implements IEn
     }
 
     /**
-     * @param query
-     * @param params
+     * @param query the JPA query
+     * @param params the positional parameters
      * @return the entity or null if not found or more than one found
      */
     protected final Object[] findGenericByQuery(final String query, final Object... params) {
