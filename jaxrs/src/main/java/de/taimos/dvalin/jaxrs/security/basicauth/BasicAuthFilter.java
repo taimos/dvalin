@@ -10,12 +10,13 @@ import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 
+import de.taimos.dvalin.daemon.conditional.BeanAvailable;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
 import de.taimos.dvalin.jaxrs.security.IUser;
 
 @JaxRsComponent
-@Conditional(BasicAuthAvailableCondition.class)
+@BeanAvailable(IBasicAuthUserDAO.class)
 public class BasicAuthFilter extends AuthorizationProvider {
 
     @Autowired
