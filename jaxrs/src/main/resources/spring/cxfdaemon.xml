@@ -32,6 +32,8 @@
 
 	<bean class="de.taimos.dvalin.jaxrs.remote.RemoteServiceBeanPostProcessor" />
 
+    <context:component-scan base-package="de.taimos.dvalin.jaxrs.security" />
+
 	<beans profile="test">
 		<bean class="de.taimos.dvalin.jaxrs.test.TestProxyBeanPostProcessor" />
 	</beans>
