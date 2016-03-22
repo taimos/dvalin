@@ -1,6 +1,7 @@
 # Version 1.4
 * add #9 automatic authentication filters for BasicAuth and TokenAuth
 * add conditionals for bean availability and system properties
+* add @LoggedIn annotation for SecurityContext assertions
 
 # Version 1.3
 * Update 3rd-party libraries

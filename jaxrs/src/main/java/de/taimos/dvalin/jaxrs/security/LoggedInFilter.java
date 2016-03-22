@@ -22,11 +22,9 @@ package de.taimos.dvalin.jaxrs.security;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Priority;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -40,50 +38,33 @@ import org.apache.cxf.security.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-
 import de.taimos.dvalin.jaxrs.JaxRsAnnotationScanner;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
+import de.taimos.dvalin.jaxrs.security.annotation.LoggedIn;
 
 @Provider
 @JaxRsComponent
 @Priority(Priorities.AUTHORIZATION)
-public class RolesFilter implements ContainerRequestFilter {
+public class LoggedInFilter implements ContainerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RolesFilter.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggedInFilter.class);
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         Message m = JAXRSUtils.getCurrentMessage();
 
         final Method method = (Method) m.get("org.apache.cxf.resource.method");
-        List<RolesAllowed> list = JaxRsAnnotationScanner.searchForAnnotation(method, RolesAllowed.class);
-        final List<String> needed = new ArrayList<>();
-        for (RolesAllowed annotation : list) {
-            needed.addAll(Lists.newArrayList(annotation.value()));
-        }
-        if (needed.isEmpty()) {
-            // No roles needed
-            RolesFilter.LOGGER.debug("No roles needed");
+        List<LoggedIn> list = JaxRsAnnotationScanner.searchForAnnotation(method, LoggedIn.class);
+        if (list.isEmpty()) {
+            LoggedInFilter.LOGGER.debug("No login mandatory");
             return;
         }
 
-        RolesFilter.LOGGER.debug("Needs: {}", Joiner.on(",").join(needed));
-
-        final SecurityContext securityContext = m.get(SecurityContext.class);
-        if (securityContext != null) {
-            for (final String need : needed) {
-                if (securityContext.isUserInRole(need)) {
-                    // Let it pass
-                    RolesFilter.LOGGER.debug("Passed with role {}", need);
-                    return;
-                }
-            }
+        LoggedInFilter.LOGGER.debug("Login mandatory");
+        if (m.get(SecurityContext.class) != null) {
+            return;
         }
-        String text = "Missing at least one of the following roles: " + Joiner.on(",").join(needed);
-        requestContext.abortWith(Response.status(Status.FORBIDDEN).entity(text).build());
+        requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
     }
 
 }
