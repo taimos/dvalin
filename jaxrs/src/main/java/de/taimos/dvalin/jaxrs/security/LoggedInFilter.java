@@ -61,10 +61,10 @@ public class LoggedInFilter implements ContainerRequestFilter {
         }
 
         LoggedInFilter.LOGGER.debug("Login mandatory");
-        if (m.get(SecurityContext.class) != null) {
-            return;
+        SecurityContext securityContext = m.get(SecurityContext.class);
+        if (securityContext == null || securityContext.getUserPrincipal() == null) {
+            requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
         }
-        requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
     }
 
 }
