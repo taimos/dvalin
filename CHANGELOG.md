@@ -2,6 +2,7 @@
 * add #9 automatic authentication filters for BasicAuth and TokenAuth
 * add conditionals for bean availability and system properties
 * add @LoggedIn annotation for SecurityContext assertions
+* add abstract server-side WebSocketAdapter with JSON support
 
 # Version 1.3
 * Update 3rd-party libraries
