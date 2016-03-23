@@ -22,7 +22,6 @@ package de.taimos.dvalin.jaxrs.security;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -54,8 +53,8 @@ public class LoggedInFilter implements ContainerRequestFilter {
         Message m = JAXRSUtils.getCurrentMessage();
 
         final Method method = (Method) m.get("org.apache.cxf.resource.method");
-        List<LoggedIn> list = JaxRsAnnotationScanner.searchForAnnotation(method, LoggedIn.class);
-        if (list.isEmpty()) {
+
+        if (!JaxRsAnnotationScanner.hasAnnotation(method, LoggedIn.class)) {
             LoggedInFilter.LOGGER.debug("No login mandatory");
             return;
         }

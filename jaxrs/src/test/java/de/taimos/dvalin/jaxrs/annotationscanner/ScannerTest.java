@@ -2,6 +2,8 @@ package de.taimos.dvalin.jaxrs.annotationscanner;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,6 +51,18 @@ public class ScannerTest {
     public void testNullMethod() throws Exception {
         List<Anno1> list = JaxRsAnnotationScanner.searchForAnnotation(null, Anno1.class);
         Assert.assertEquals(0, list.size());
+    }
+
+    @Test
+    public void testPresentAnno1() throws Exception {
+        boolean present = JaxRsAnnotationScanner.hasAnnotation(ApiImpl.class.getMethod("foobar"), Anno1.class);
+        Assert.assertTrue(present);
+    }
+
+    @Test
+    public void testNotPresentRolesAllowed() throws Exception {
+        boolean present = JaxRsAnnotationScanner.hasAnnotation(ApiImpl.class.getMethod("foobar"), RolesAllowed.class);
+        Assert.assertFalse(present);
     }
 
 }

@@ -18,6 +18,25 @@ public final class JaxRsAnnotationScanner {
         //
     }
 
+    /**
+     * Checks if there is an annotation of the given type on this method or on type level for all interfaces and superclasses
+     *
+     * @param method     the method to scan
+     * @param annotation the annotation to search for
+     * @return <i>true</i> if the given annotation is present on method or type level annotations in the type hierarchy
+     */
+    public static boolean hasAnnotation(Method method, Class<? extends Annotation> annotation) {
+        return !searchForAnnotation(method, annotation).isEmpty();
+    }
+
+    /**
+     * Searches for all annotations of the given type on this method or on type level for all interfaces and superclasses
+     *
+     * @param method     the method to scan
+     * @param annotation the annotation to search for
+     * @param <T>        the type of the annotation
+     * @return the list of all method or type level annotations in the type hierarchy
+     */
     public static <T extends Annotation> List<T> searchForAnnotation(Method method, Class<T> annotation) {
         if (method == null) {
             return Lists.newArrayList();
