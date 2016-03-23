@@ -17,27 +17,6 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
-      <profile default="false" name="Annotation profile for dvalin-mongodb" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dvalin-mongodb" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-jpa" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dvalin-jpa" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-jaxrs" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dvalin-jaxrs" />
-      </profile>
       <profile default="false" name="Annotation profile for daemon" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -45,60 +24,21 @@
         <processorPath useClasspath="true" />
         <module name="daemon" />
       </profile>
-      <profile default="false" name="Annotation profile for dvalin-daemon" enabled="true">
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="dvalin-daemon" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-interconnect-metamodel" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dvalin-interconnect-metamodel" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-interconnect-api" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-interconnect-model" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dvalin-interconnect-model" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-interconnect-core" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="dvalin-interconnect-core" />
-      </profile>
-      <profile default="false" name="Annotation profile for interconnect-maven-plugin" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="interconnect-maven-plugin" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-interconnect-test" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dvalin-interconnect-test" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-interconnect-demo" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="dvalin-interconnect-demo" />
+        <module name="dvalin-interconnect-metamodel" />
+        <module name="dvalin-interconnect-model" />
+        <module name="dvalin-interconnect-test" />
+        <module name="dvalin-jaxrs" />
+        <module name="dvalin-jpa" />
+        <module name="dvalin-mongodb" />
+        <module name="interconnect-maven-plugin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

@@ -49,7 +49,8 @@ public class SecurityContextUtil {
     }
 
     public static void assertSC() {
-        if ((SecurityContextUtil.getSC() == null) || (SecurityContextUtil.getSC().getUserPrincipal() == null)) {
+        SecurityContext sc = SecurityContextUtil.getSC();
+        if ((sc == null) || (sc.getUserPrincipal() == null)) {
             throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED).entity("Invalid credentials or session").build());
         }
     }
