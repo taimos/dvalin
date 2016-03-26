@@ -29,6 +29,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="dvalin-cloud-aws" />
         <module name="dvalin-daemon" />
         <module name="dvalin-interconnect-core" />
         <module name="dvalin-interconnect-demo" />
@@ -43,6 +44,8 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="daemon" target="1.7" />
+      <module name="dvalin-cloud-aws" target="1.7" />
+      <module name="dvalin-cloud-parent" target="1.7" />
       <module name="dvalin-daemon" target="1.7" />
       <module name="dvalin-interconnect-api" target="1.7" />
       <module name="dvalin-interconnect-core" target="1.7" />

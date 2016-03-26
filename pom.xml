@@ -147,6 +147,7 @@
     </build>
     <modules>
         <module>daemon</module>
+        <module>cloud</module>
         <module>jaxrs</module>
         <module>mongodb</module>
         <module>jpa</module>

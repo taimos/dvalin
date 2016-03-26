@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" filepath="$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" filepath="$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/daemon/dvalin-daemon.iml" filepath="$PROJECT_DIR$/daemon/dvalin-daemon.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/core/dvalin-interconnect-core.iml" filepath="$PROJECT_DIR$/interconnect/core/dvalin-interconnect-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/demo/dvalin-interconnect-demo.iml" filepath="$PROJECT_DIR$/interconnect/demo/dvalin-interconnect-demo.iml" />
