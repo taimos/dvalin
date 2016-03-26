@@ -27,7 +27,7 @@ import de.taimos.dvalin.cloud.aws.AWSClient;
 @Service
 public class AmazonSESMailSender implements MailSender {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MailSender.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(AmazonSESMailSender.class);
 
     @AWSClient(region = "${aws.mailregion:}")
     private AmazonSimpleEmailServiceClient sesClient;
