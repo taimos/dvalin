@@ -18,15 +18,10 @@
   #L%
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:cxf="http://cxf.apache.org/core" xmlns:httpj="http://cxf.apache.org/transports/http-jetty/configuration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:httpj="http://cxf.apache.org/transports/http-jetty/configuration"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
-       http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
-       http://cxf.apache.org/transports/http-jetty/configuration http://cxf.apache.org/schemas/configuration/http-jetty.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://cxf.apache.org/transports/http-jetty/configuration http://cxf.apache.org/schemas/configuration/http-jetty.xsd">
 
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
@@ -38,6 +33,7 @@
 				maxThreads="${jetty.maxThreads:150}" />
 			<httpj:handlers>
 				<ref bean="web-server-context-static" />
+                <ref bean="web-server-context-web-fs" />
 				<ref bean="web-server-context-web" />
 				<ref bean="web-server-context-swagger" />
 				<bean class="de.taimos.dvalin.jaxrs.websocket.WebSocketContextHandler" />
@@ -56,6 +52,14 @@
 			</bean>
 		</property>
 	</bean>
+    <bean name="web-server-context-web-fs" class="org.eclipse.jetty.server.handler.ContextHandler">
+        <property name="contextPath" value="/" />
+        <property name="handler">
+            <bean class="org.eclipse.jetty.server.handler.ResourceHandler">
+                <property name="resourceBase" value="./web" />
+            </bean>
+        </property>
+    </bean>
 	<bean name="web-server-context-web" class="org.eclipse.jetty.server.handler.ContextHandler">
 		<property name="contextPath" value="/" />
 		<property name="handler">
