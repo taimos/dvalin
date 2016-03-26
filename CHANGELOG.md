@@ -4,6 +4,7 @@
 * add @LoggedIn annotation for SecurityContext assertions
 * add abstract server-side WebSocketAdapter with JSON support
 * add AWS Cloud tooling with @AWSClient autowiring
+* add notification service to send emails with templating support
 
 # Version 1.3
 * Update 3rd-party libraries

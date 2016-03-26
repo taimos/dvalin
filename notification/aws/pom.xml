@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.taimos</groupId>
+        <artifactId>dvalin-notification-parent</artifactId>
+        <version>1.4-SNAPSHOT</version>
+    </parent>
+    <artifactId>dvalin-notification-aws</artifactId>
+    <name>Dvalin AWS notification service</name>
+    <properties>
+        <aws.version>1.10.50</aws.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>de.taimos</groupId>
+            <artifactId>dvalin-cloud-aws</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.taimos</groupId>
+            <artifactId>dvalin-notification-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-ses</artifactId>
+            <version>${aws.version}</version>
+        </dependency>
+    </dependencies>
+</project>

@@ -14,6 +14,9 @@
       <module fileurl="file://$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" filepath="$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa/dvalin-jpa.iml" filepath="$PROJECT_DIR$/jpa/dvalin-jpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" filepath="$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notification/aws/dvalin-notification-aws.iml" filepath="$PROJECT_DIR$/notification/aws/dvalin-notification-aws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" filepath="$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notification/dvalin-notification-parent.iml" filepath="$PROJECT_DIR$/notification/dvalin-notification-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/dvalin-parent.iml" filepath="$PROJECT_DIR$/dvalin-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/interconnect-maven-plugin.iml" filepath="$PROJECT_DIR$/interconnect/interconnect-maven-plugin/interconnect-maven-plugin.iml" />
     </modules>
