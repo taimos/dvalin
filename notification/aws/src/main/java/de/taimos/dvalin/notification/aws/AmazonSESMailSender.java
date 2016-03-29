@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
 import com.amazonaws.services.simpleemail.model.Body;
@@ -22,9 +21,10 @@ import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.cloud.aws.AWSClient;
 
-@Service
+@ProdComponent
 public class AmazonSESMailSender implements MailSender {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(AmazonSESMailSender.class);
