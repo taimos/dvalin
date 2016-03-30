@@ -5,6 +5,17 @@
 
 Dvalin is a Java micro service framework based on several open-source frameworks to combine the best tools into one quick start suite for fast, reliable and scaling micro services.
 The core technology is the Spring framework and dvalin uses our Daemon Framework as the lifecycle management for the service process.
+
+To use dvalin in your project add the maven dependencies as shown below. 
+It is recommended to set the dvalin version as property to make sure all modules you use have the same version.
+
+```
+<dependency>
+    <groupId>de.taimos</groupId>
+    <artifactId>dvalin-MODULE</artifactId>
+    <version>${dvalin.version}</version>
+</dependency>
+```
  
 # Parts of dvalin
  
