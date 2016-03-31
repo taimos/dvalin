@@ -235,4 +235,24 @@ to the AWS API. Otherwise the following chain will be used:
 
 ## notification
 
+The notification component provides a templating engine and support for sending e-mails. The `notification-aws` 
+library provides an implementation of the `MailSender` that uses Amazon SimpleEmailService. To activate the
+component add the file `spring/notification.xml` to your Spring context.
+
+### E-Mail
+
+Dvalin uses the standard Spring MailSender interface for its email support. The core library provides the 
+`TestMailSender` that stores the sent mails into a collection instead of sending them out. This can be 
+used in integration tests. The `notification-aws` version uses SES to send emails. The region to use can 
+be specified by the property `aws.mailregion`. If it is not set, the region is derived using the strategy 
+defined above for the `AWSClient` annotation.
+
+### Template engine
+
+For templating the Velocity template engine is used. Inject the `TemplateResolver` in your bean to process 
+templates. You can provide a location relative to the folder `/velocity` in your classpath or you provide 
+the template as String.
+
 ## interconnect
+
+*coming soon*
