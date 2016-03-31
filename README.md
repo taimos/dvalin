@@ -210,6 +210,29 @@ by injecting the `IDlinkDAO` wherever you want.
 
 ## cloud
 
+The `cloud` libraries provide SDKs for cloud service providers. Currently only Amazon Web Services 
+is available under `cloud-aws` and can be added using maven and by including the `spring/cloud-aws.xml` 
+file into your Spring context. It provides the core dependency to the Java AWS SDK and the annotation 
+`@AWSClient` to inject clients to access the AWS API. Just annotate a member extending `AmazonWebServiceClient`
+and dvalin will automatically inject a configured instance into your bean.
+
+Region selection occurs as follow:
+
+* If present the `region` value of the annotation is evaluated as Spring expression
+* If present the property `aws.region` is used
+* If present the environment variable `AWS_DEFAULT_REGION` is used
+* If present the environment variable `AWS_REGION` is used
+* If running on an EC2 instance the current region is used
+* The SDK's default region is used
+
+If `aws.accessKeyId` and `aws.secretKey` are present as properties they will be used to sign the requests
+to the AWS API. Otherwise the following chain will be used:
+
+* Use environment variables
+* Use system properties
+* Use profile information
+* Use EC2 instance profile
+
 ## notification
 
 ## interconnect
