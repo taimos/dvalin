@@ -17,27 +17,22 @@
   limitations under the License.
   #L%
   -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:cxf="http://cxf.apache.org/core" xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-       http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
-       http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-	<bean id="mongoClient" class="com.mongodb.MongoClient">
-		<constructor-arg>
-			<bean class="com.mongodb.MongoClientURI">
-				<constructor-arg value="${mongodb.uri:mongodb://${mongodb.host:localhost}:${mongodb.port:27017}}" />
-				<constructor-arg>
-					<!-- Options -->
-					<bean class="de.taimos.dvalin.mongo.MongoClientOptionsFactory">
-						<property name="socketTimeout" value="${mongodb.socketTimeout:10000}" />
-						<property name="connectTimeout" value="${mongodb.connectTimeout:10000}" />
-					</bean>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
-	</bean>
+    <bean id="mongoClient" class="com.mongodb.MongoClient">
+        <constructor-arg>
+            <bean class="com.mongodb.MongoClientURI">
+                <constructor-arg value="${mongodb.uri:mongodb://${mongodb.host:localhost}:${mongodb.port:27017}}"/>
+                <constructor-arg>
+                    <!-- Options -->
+                    <bean class="de.taimos.dvalin.mongo.MongoClientOptionsFactory">
+                        <property name="socketTimeout" value="${mongodb.socketTimeout:10000}"/>
+                        <property name="connectTimeout" value="${mongodb.connectTimeout:10000}"/>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
 </beans>
