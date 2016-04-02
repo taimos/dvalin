@@ -37,6 +37,7 @@
         <module name="dvalin-interconnect-model" />
         <module name="dvalin-interconnect-test" />
         <module name="dvalin-jaxrs" />
+        <module name="dvalin-jaxrs-jwtauth" />
         <module name="dvalin-jpa" />
         <module name="dvalin-mongodb" />
         <module name="dvalin-notification-aws" />
@@ -57,6 +58,7 @@
       <module name="dvalin-interconnect-parent" target="1.7" />
       <module name="dvalin-interconnect-test" target="1.7" />
       <module name="dvalin-jaxrs" target="1.7" />
+      <module name="dvalin-jaxrs-jwtauth" target="1.7" />
       <module name="dvalin-jpa" target="1.7" />
       <module name="dvalin-mongodb" target="1.7" />
       <module name="dvalin-notification-aws" target="1.7" />

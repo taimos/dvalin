@@ -67,6 +67,10 @@ public class SecurityContextUtil {
         return null;
     }
 
+    public static IUser getUserObject() {
+        return (IUser) SecurityContextUtil.getContext().get(IUser.class.getName());
+    }
+
     public static boolean hasRole(String role) {
         SecurityContext sc = SecurityContextUtil.getSC();
         return sc != null && sc.isUserInRole(role);
