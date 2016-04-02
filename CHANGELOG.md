@@ -1,3 +1,6 @@
+# Version 1.5
+* add #4 JSON Web Token authentication support
+
 # Version 1.4
 * add #9 automatic authentication filters for BasicAuth and TokenAuth
 * add conditionals for bean availability and system properties

@@ -37,18 +37,12 @@
         <module name="dvalin-interconnect-model" />
         <module name="dvalin-interconnect-test" />
         <module name="dvalin-jaxrs" />
+        <module name="dvalin-jaxrs-jwtauth" />
         <module name="dvalin-jpa" />
         <module name="dvalin-mongodb" />
         <module name="dvalin-notification-aws" />
         <module name="dvalin-notification-core" />
         <module name="interconnect-maven-plugin" />
-      </profile>
-      <profile default="false" name="Annotation profile for dvalin-jaxrs-jwtauth" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="dvalin-jaxrs-jwtauth" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

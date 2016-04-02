@@ -1,16 +1,16 @@
-package de.taimos.dvalin.jaxrs.jwtauth;
+package de.taimos.dvalin.jaxrs.security.jwt;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.nimbusds.jwt.JWTClaimsSet;
+
+import de.taimos.dvalin.jaxrs.security.IUser;
 
 /**
  * Created by thoeger on 06.01.16.
  */
-public class AuthenticatedUser {
+public final class AuthenticatedUser implements IUser {
 
     private static final String CLAIM_USERNAME = "preferred_username";
     private static final String CLAIM_DISPLAY_NAME = "name";
@@ -19,20 +19,18 @@ public class AuthenticatedUser {
     private String id;
     private String username;
     private String displayName;
-    private Set<String> roles;
-    private String session;
+    private String[] roles;
 
     public AuthenticatedUser() {
-
+        //
     }
 
     public AuthenticatedUser(JWTClaimsSet claims) {
         try {
             this.setId(claims.getSubject());
             this.setUsername(claims.getStringClaim(CLAIM_USERNAME));
-            this.setRoles(new HashSet<String>(claims.getStringListClaim(CLAIM_ROLES)));
+            this.setRoles(claims.getStringArrayClaim(CLAIM_ROLES));
             this.setDisplayName(claims.getStringClaim(CLAIM_DISPLAY_NAME));
-            this.setSession(claims.getJWTID());
         } catch (ParseException e) {
             throw new IllegalArgumentException(e);
         }
@@ -62,27 +60,18 @@ public class AuthenticatedUser {
         this.displayName = displayName;
     }
 
-    public Set<String> getRoles() {
+    public String[] getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(String[] roles) {
         this.roles = roles;
-    }
-
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
     }
 
     public JWTClaimsSet toClaimSet(String issuer, Date expiry) {
         JWTClaimsSet.Builder b = new JWTClaimsSet.Builder();
         b.issuer(issuer);
         b.expirationTime(expiry);
-        b.jwtID(session);
         b.subject(id);
         b.claim(CLAIM_USERNAME, username);
         b.claim(CLAIM_DISPLAY_NAME, displayName);

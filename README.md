@@ -112,6 +112,16 @@ and assert responses from web service endpoints. To assert conditions across mul
 the AsyncAssert class. To inject client proxies to your API under test just annotate a field in your test 
 class with `@TestProxy` and dvalin will create the desired proxy and link it to the server instance during test execution.  
 
+### JSON Web Tokens
+
+For Web Token support include the additional dependency `dvalin-jaxrs-jwtauth` and set the following properties:
+
+* `jwtauth.issuer` - the issuer of the tokens
+* `jwtauth.secret` - the shared secret to sign web tokens with
+* `jwtauth.timeout` - optional timeout of the tokens (defaults to one hour)
+
+You can then create WebTokens using the `JWTAuth` bean and they are automatically validated when set as Bearer type Authorization.
+
 ## jpa
 
 The `jpa` library adds JPA and Hibernate support including changeset management using liquibase. By setting some 

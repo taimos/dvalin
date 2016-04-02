@@ -1,7 +1,6 @@
-package de.taimos.dvalin.jaxrs.jwtauth;
+package de.taimos.dvalin.jaxrs.security.jwt;
 
 import java.text.ParseException;
-import java.util.Date;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -10,18 +9,19 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-
+import de.taimos.dvalin.daemon.conditional.BeanAvailable;
+import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
 
 /**
  * Created by thoeger on 06.01.16.
  */
+@JaxRsComponent
+@BeanAvailable(JWTAuth.class)
 public abstract class JWTAuthenticationHandler extends AuthorizationProvider {
 
     @Autowired
-    private JWTAuthConfig authConfig;
+    private JWTAuth auth;
 
     @Override
     protected SecurityContext handleAuthHeader(ContainerRequestContext requestContext, Message msg, String type, String auth) {
@@ -29,15 +29,7 @@ public abstract class JWTAuthenticationHandler extends AuthorizationProvider {
             return null;
         }
         try {
-            final SignedJWT jwt = authConfig.verifyToken(auth);
-            JWTClaimsSet claims = jwt.getJWTClaimsSet();
-            if (claims.getExpirationTime().before(new Date())) {
-                return null;
-            }
-
-            AuthenticatedUser user = new AuthenticatedUser(claims);
-            msg.put(AuthenticatedUser.class, user);
-            return createSC(user.getUsername(), user.getRoles().toArray(new String[0]));
+            return loginUser(msg, this.auth.validateToken(auth));
         } catch (ParseException e) {
             return null;
         }

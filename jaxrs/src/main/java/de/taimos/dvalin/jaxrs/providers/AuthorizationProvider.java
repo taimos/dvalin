@@ -12,9 +12,9 @@ package de.taimos.dvalin.jaxrs.providers;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,6 +43,7 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 
 import de.taimos.daemon.DaemonProperties;
+import de.taimos.dvalin.jaxrs.security.IUser;
 import de.taimos.httputils.WSConstants;
 
 @Provider
@@ -81,6 +82,14 @@ public abstract class AuthorizationProvider implements ContainerRequestFilter {
         if (this.isAuthorizationMandatory()) {
             this.abortUnauthorized(requestContext);
         }
+    }
+
+    protected final SecurityContext loginUser(Message msg, IUser user) {
+        if (user == null) {
+            return null;
+        }
+        msg.put(IUser.class, user);
+        return createSC(user.getUsername(), user.getRoles());
     }
 
     protected final void abortUnauthorized(ContainerRequestContext requestContext) {
