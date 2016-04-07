@@ -30,6 +30,7 @@ These libraries are:
 * `cloud` - basic tools to communicate with Cloud providers
 * `notification` - notification service to send e-mails and use template engines
 * `interconnect` - communication framework to connect micro services with each other
+* `test` - utilities for writing tests
 
 ## daemon
 
@@ -259,10 +260,26 @@ defined above for the `AWSClient` annotation.
 
 ### Template engine
 
-For templating the Velocity template engine is used. Inject the `TemplateResolver` in your bean to process 
+For templating the Velocity template engine is used. Inject the `ITemplateResolver` in your bean to process 
 templates. You can provide a location relative to the folder `/velocity` in your classpath or you provide 
 the template as String.
 
 ## interconnect
 
 *coming soon*
+
+## test
+
+The `test` library provides utilities to help in writing test for dvalin based projects. It adds dependencies
+to Mockito, JUnit and Concordion.
+
+### Base class for Mockito unit tests
+
+The class `AbstractMockitoTest` configures JUnit to use the Mockito runner and configures the log4j framework
+before test execution.
+
+### InjectionUtils
+
+The `InjectionUtils` helper class provides methods to inject dependencies into beans. This allows to fill 
+`@Autowired` annotated fields in unit tests with mocked objects. See the javadoc of the class for further 
+information about the features.
