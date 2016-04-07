@@ -27,6 +27,7 @@ These libraries are:
 * `jaxrs`- implement JAX-RS based REST services using the Apache CXF framework
 * `jpa` - connect to SQL databases using the popular Hibernate framework
 * `mongodb` - connect to MongoDB document store
+* `dynamodb`- connect to AWS DynamoDB data storage
 * `cloud` - basic tools to communicate with Cloud providers
 * `notification` - notification service to send e-mails and use template engines
 * `interconnect` - communication framework to connect micro services with each other
@@ -169,7 +170,6 @@ The mongodb library adds support for the MongoDB document store. By including th
 file into your Spring context you get the full support to interact with MongoDB databases including an 
 in-memory database for tests. 
 
-
 ### Connection properties
 
 The following settings are possible:
@@ -195,7 +195,7 @@ The library provides a general purpose DAO interface (`ICrudDAO`) and an abstrac
 (`AbstractMongoDAO`) with many helper methods to ease the development of the data layer. For this to 
 work your entities have to extend the `AEntity` superclass. The DAOs created have integrated support 
 for JodaTime classes. If you want to use polymorphic types in your entities make sure to implement 
-`@IMappedSupertype` on the super class. This advises the JAckson mapper to include type information 
+`@IMappedSupertype` on the super class. This advises the Jackson mapper to include type information 
 into the created JSON for deserialization. 
 
 ### Changesets
@@ -218,6 +218,17 @@ documents. To include a reference in one of your entities just add a field of th
 `DocumentLink` and let your referenced entity extend `AReferenceableEntity` instead of `AEntity`. 
 Dvalin will then include a reference to the given document in your JSON which you can resolve 
 by injecting the `IDlinkDAO` wherever you want.
+
+## dynamodb
+
+The dynamodb library adds support for the AWS DynamoDB data store. By including the AWS cloud module you 
+get the full support to interact with DynamoDB using the SDK or the DynamoDBMapper.
+
+### Abstract DAO implementation
+
+The library provides a general purpose DAO implementation (`AbstractDynamoDAO`) with automatic initialization
+and table creation. If you set the `dynamodb.url` property the endpoint of the SDK is reconfigured. This 
+enables the use of the local DynamoDB version for development.
 
 ## cloud
 
