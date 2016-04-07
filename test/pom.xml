@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>dvalin-parent</artifactId>
+        <groupId>de.taimos</groupId>
+        <version>1.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>dvalin-test</artifactId>
+    <name>Test support for dvalin</name>
+    <inceptionYear>2016</inceptionYear>
+    <dependencies>
+        <dependency>
+            <groupId>de.taimos</groupId>
+            <artifactId>dvalin-daemon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.concordion</groupId>
+            <artifactId>concordion</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.concordion</groupId>
+            <artifactId>concordion-extensions</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+    </dependencies>
+</project>

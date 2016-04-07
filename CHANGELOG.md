@@ -1,5 +1,6 @@
 # Version 1.5
 * add #4 JSON Web Token authentication support
+* add dvalin-test library with injection tooling for unit tests of beans 
 
 # Version 1.4
 * add #9 automatic authentication filters for BasicAuth and TokenAuth
