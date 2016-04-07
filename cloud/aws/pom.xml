@@ -8,7 +8,6 @@
     <artifactId>dvalin-cloud-aws</artifactId>
     <name>Dvalin AWS support</name>
     <properties>
-        <aws.version>1.10.50</aws.version>
     </properties>
     <dependencies>
         <dependency>

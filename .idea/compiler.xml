@@ -31,6 +31,7 @@
         <processorPath useClasspath="true" />
         <module name="dvalin-cloud-aws" />
         <module name="dvalin-daemon" />
+        <module name="dvalin-dynamodb" />
         <module name="dvalin-interconnect-core" />
         <module name="dvalin-interconnect-demo" />
         <module name="dvalin-interconnect-metamodel" />
@@ -51,6 +52,7 @@
       <module name="dvalin-cloud-aws" target="1.7" />
       <module name="dvalin-cloud-parent" target="1.7" />
       <module name="dvalin-daemon" target="1.7" />
+      <module name="dvalin-dynamodb" target="1.7" />
       <module name="dvalin-interconnect-api" target="1.7" />
       <module name="dvalin-interconnect-core" target="1.7" />
       <module name="dvalin-interconnect-demo" target="1.7" />
