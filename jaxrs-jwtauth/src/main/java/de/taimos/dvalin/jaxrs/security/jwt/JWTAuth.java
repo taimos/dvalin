@@ -13,7 +13,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
-import de.taimos.dvalin.daemon.conditional.OnSystemProperty;
+import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.security.SecurityContextUtil;
 

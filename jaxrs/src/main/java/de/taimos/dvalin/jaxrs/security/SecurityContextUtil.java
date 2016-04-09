@@ -36,8 +36,8 @@ import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.taimos.restutils.RESTAssert;
 import de.taimos.dvalin.jaxrs.monitoring.InvocationInstance;
+import de.taimos.restutils.RESTAssert;
 
 public class SecurityContextUtil {
 

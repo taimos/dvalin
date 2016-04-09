@@ -20,19 +20,16 @@ package de.taimos.dvalin.jaxrs.security.token;
  * #L%
  */
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 
 import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Conditional;
 
-import de.taimos.dvalin.daemon.conditional.BeanAvailable;
+import de.taimos.daemon.spring.conditional.BeanAvailable;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
-import de.taimos.dvalin.jaxrs.security.IUser;
 
 @JaxRsComponent
 @BeanAvailable(ITokenAuthUserDAO.class)
@@ -49,7 +46,7 @@ public class TokenAuthFilter extends AuthorizationProvider {
     @Override
     protected SecurityContext handleAuthHeader(ContainerRequestContext requestContext, Message msg, String type, String auth) {
         if (auth != null && type.toLowerCase().equals("token")) {
-            return loginUser(msg, this.tokenAuthUserDAO.getUserByToken(auth));
+            return this.loginUser(msg, this.tokenAuthUserDAO.getUserByToken(auth));
         }
         return null;
     }
