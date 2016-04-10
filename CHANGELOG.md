@@ -2,6 +2,15 @@
 * add #4 JSON Web Token authentication support
 * add dvalin-test library with injection tooling for unit tests of beans 
 * add DynamoDB support for document storage
+* Update dependencies
+    * daemon framework 2.6
+    * Slf4J 1.7.21
+    * Jodatime 2.9.3
+    * Jackson 2.7.3
+    * Swagger 1.5.8
+    * CXF 3.1.6
+    * Jongo 1.3.0
+    * bson4jackson 2.7.0
 
 # Version 1.4
 * add #9 automatic authentication filters for BasicAuth and TokenAuth
