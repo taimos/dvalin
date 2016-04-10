@@ -20,7 +20,6 @@ package de.taimos.dvalin.jaxrs.security.basicauth;
  * #L%
  */
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 
@@ -28,12 +27,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Conditional;
 
-import de.taimos.dvalin.daemon.conditional.BeanAvailable;
+import de.taimos.daemon.spring.conditional.BeanAvailable;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
-import de.taimos.dvalin.jaxrs.security.IUser;
 
 @JaxRsComponent
 @BeanAvailable(IBasicAuthUserDAO.class)
@@ -57,7 +54,7 @@ public class BasicAuthFilter extends AuthorizationProvider {
             String username = decoded.substring(0, decoded.indexOf(":"));
             String pwd = decoded.substring(decoded.indexOf(":") + 1);
 
-            return loginUser(msg, basicAuthUserDAO.getUserByNameAndPassword(username, pwd));
+            return this.loginUser(msg, this.basicAuthUserDAO.getUserByNameAndPassword(username, pwd));
         }
         return null;
     }

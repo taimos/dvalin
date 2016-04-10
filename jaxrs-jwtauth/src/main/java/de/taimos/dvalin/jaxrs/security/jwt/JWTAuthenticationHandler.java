@@ -9,7 +9,7 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.taimos.dvalin.daemon.conditional.BeanAvailable;
+import de.taimos.daemon.spring.conditional.BeanAvailable;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
 

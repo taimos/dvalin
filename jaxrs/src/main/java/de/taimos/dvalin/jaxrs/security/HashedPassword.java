@@ -137,21 +137,21 @@ public class HashedPassword {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || this.getClass() != o.getClass()) return false;
 
         HashedPassword that = (HashedPassword) o;
 
-        if (roundOffset != that.roundOffset) return false;
-        if (hash != null ? !hash.equals(that.hash) : that.hash != null) return false;
-        return salt != null ? salt.equals(that.salt) : that.salt == null;
+        if (this.roundOffset != that.roundOffset) return false;
+        if (this.hash != null ? !this.hash.equals(that.hash) : that.hash != null) return false;
+        return this.salt != null ? this.salt.equals(that.salt) : that.salt == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = roundOffset;
-        result = 31 * result + (hash != null ? hash.hashCode() : 0);
-        result = 31 * result + (salt != null ? salt.hashCode() : 0);
+        int result = this.roundOffset;
+        result = 31 * result + (this.hash != null ? this.hash.hashCode() : 0);
+        result = 31 * result + (this.salt != null ? this.salt.hashCode() : 0);
         return result;
     }
 }
