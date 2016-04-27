@@ -205,10 +205,14 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
         }
 
         private AWSCredentials getStaticCredentials() {
-            String accessKey = resolver.resolveStringValue(String.format("${aws.accessKeyId}"));
-            String secretKey = resolver.resolveStringValue(String.format("${aws.secretKey}"));
-            if (!accessKey.isEmpty() && !secretKey.isEmpty()) {
-                return new BasicAWSCredentials(accessKey, secretKey);
+            try {
+                String accessKey = resolver.resolveStringValue("${aws.accessKeyId}");
+                String secretKey = resolver.resolveStringValue("${aws.secretKey}");
+                if (!accessKey.isEmpty() && !secretKey.isEmpty()) {
+					return new BasicAWSCredentials(accessKey, secretKey);
+				}
+            } catch (IllegalArgumentException e) {
+                //
             }
             return null;
         }
@@ -225,7 +229,7 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
                 }
             }
             try {
-                String regionString = resolver.resolveStringValue(String.format("${aws.region}"));
+                String regionString = resolver.resolveStringValue("${aws.region}");
                 if (!regionString.isEmpty()) {
                     return Region.getRegion(Regions.fromName(regionString));
                 }

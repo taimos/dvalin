@@ -1,3 +1,6 @@
+# Version 1.6
+* fix @AWSClient credentials resolver 
+
 # Version 1.5
 * add #4 JSON Web Token authentication support
 * add dvalin-test library with injection tooling for unit tests of beans 
