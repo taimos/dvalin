@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.demo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,12 +19,6 @@ package de.taimos.dvalin.interconnect.demo;
  * limitations under the License.
  * #L%
  */
-
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.taimos.dvalin.interconnect.core.daemon.Interconnect;
 import de.taimos.dvalin.interconnect.core.spring.RequestHandler;
@@ -41,6 +35,11 @@ import de.taimos.dvalin.interconnect.demo.model.requests.UpdateUserIVO_v1;
 import de.taimos.dvalin.interconnect.model.ivo.util.IVOQueryResultIVO_v1;
 import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequestHandler
 public class Handler extends ADaemonHandler implements IUserService {
