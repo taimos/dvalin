@@ -2,6 +2,11 @@
 * fix @AWSClient credentials resolver 
 * Auto configuration of dvalin Spring context
 * add Maven archetype for basic dvalin project
+* Update dependencies
+    * daemon framework 2.7
+    * Spring 4.2.6
+    * Jackson 2.7.4
+    * AWS 1.10.76
 
 # Version 1.5
 * add #4 JSON Web Token authentication support

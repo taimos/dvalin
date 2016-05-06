@@ -11,14 +11,14 @@
     <name>Taimos Microservices Framework</name>
     <inceptionYear>2015</inceptionYear>
     <properties>
-        <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
-        <jackson.version>2.7.3</jackson.version>
+        <org.springframework.version>4.2.6.RELEASE</org.springframework.version>
+        <jackson.version>2.7.4</jackson.version>
         <joda.time.version>2.9.3</joda.time.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <daemon.version>2.6</daemon.version>
+        <daemon.version>2.7</daemon.version>
         <mockito.version>1.10.19</mockito.version>
         <junit.version>4.12</junit.version>
-        <aws.version>1.10.68</aws.version>
+        <aws.version>1.10.76</aws.version>
     </properties>
     <scm>
         <connection>scm:git:git@github.com:taimos/dvalin.git</connection>
@@ -64,13 +64,13 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>1.6.4</version>
+            <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.4</version>
+            <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
