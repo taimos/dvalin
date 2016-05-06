@@ -1,0 +1,11 @@
+[Unit]
+Description=$serviceName
+Requires=network.service
+
+[Service]
+ExecStart=/opt/$serviceName/${serviceName}.jar
+WorkingDirectory=/opt/$serviceName
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
