@@ -1,0 +1,11 @@
+[Unit]
+Description=testservice
+Requires=network.service
+
+[Service]
+ExecStart=/opt/testservice/testservice.jar
+WorkingDirectory=/opt/testservice
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

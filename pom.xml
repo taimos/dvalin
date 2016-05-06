@@ -158,5 +158,6 @@
         <module>jpa</module>
         <module>dynamodb</module>
         <module>interconnect</module>
+        <module>archetypes</module>
     </modules>
 </project>

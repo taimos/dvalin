@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/archetypes/basic/src/main/resources/archetype-resources" includeSubdirectories="true" />
+    </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
@@ -29,6 +32,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="dvalin-archetype-basic" />
         <module name="dvalin-cloud-aws" />
         <module name="dvalin-daemon" />
         <module name="dvalin-dynamodb" />
@@ -48,7 +52,10 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="basic" target="1.7" />
       <module name="daemon" target="1.7" />
+      <module name="dvalin-archetype-basic" target="1.7" />
+      <module name="dvalin-archetype-parent" target="1.7" />
       <module name="dvalin-cloud-aws" target="1.7" />
       <module name="dvalin-cloud-parent" target="1.7" />
       <module name="dvalin-daemon" target="1.7" />
