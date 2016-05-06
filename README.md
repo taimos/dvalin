@@ -19,7 +19,9 @@ It is recommended to set the dvalin version as property to make sure all modules
  
 # Parts of dvalin
  
-Dvalin provides several independent but combineable libraries serving different purposes around the runtime and interaction of micro services.
+Dvalin provides several independent but combineable libraries serving different purposes around the runtime and 
+interaction of micro services. By adding a library as a Maven dependency, it gets activated automatically and 
+all the needed Spring components are started.
 
 These libraries are:
 
@@ -35,18 +37,21 @@ These libraries are:
 
 ## daemon
 
-The `daemon` part includes the Taimos daemon framework into dvalin and adds two Spring conditional annotations to be used.
+The `daemon` part includes the Taimos daemon framework into dvalin. You can use the following conditional annotations from the daemon framework:
 
 * `@BeanAvailable` - Only create the annotated bean if the denoted bean is also available
 * `@OnSystemProperty` - Only create the annotated bean if the denoted system property is set and if it optionally also has the given value
 
+The entry point for your application is the `DvalinLifecycleAdapter`. Just extend it and implement a main method that calls the static `start` method. 
+This configures your application to read properties from a file called `dvalin.properties`.
+
 ## jaxrs
 
 The `jaxrs` library adds tooling to implement JAX-RS web services. It combines the powers of the Spring framework, 
-the Apache CXF framework, the Jackson JSON mapper and the Eclipse Jetty web server. To include it add the maven dependency 
-and include the `spring/cxfdaemon.xml` file into your Spring context. It will then automatically configure a Jetty web server 
-running on a given port and start a CXF JAX-RS handler into the running Jetty server. By default all beans annotated 
-with `@JaxRsComponent` will be registered as provider or endpoint respectively. Additionally several extra features are implemented.
+the Apache CXF framework, the Jackson JSON mapper and the Eclipse Jetty web server. To include it add the maven dependency to your POM file.
+It will then automatically configure a Jetty web server running on a given port and start a CXF JAX-RS handler into the running Jetty server. 
+By default all beans annotated with `@JaxRsComponent` will be registered as provider or endpoint respectively. 
+Additionally several extra features are implemented.
 
 You can subclass the `AbstractAPI` class to get easier access to some of the features.  
 
@@ -127,9 +132,8 @@ You can then create WebTokens using the `JWTAuth` bean and they are automaticall
 ## jpa
 
 The `jpa` library adds JPA and Hibernate support including changeset management using liquibase. By setting some 
-system properties and including the `spring/dao.xml` file into your Spring context you get the full support to 
-store and retrieve data from relational database systems. Supported databases are currently HSQL, PostgreSQL and MySQL.
-You have to add the desired jdbc driver to your classpath manually.
+system properties you get the full support to store and retrieve data from relational database systems. 
+Supported databases are currently HSQL, PostgreSQL and MySQL. You have to add the desired jdbc driver to your classpath manually.
 
 The following settings are possible:
 
@@ -166,9 +170,8 @@ on startup by the liquibase database migration library.
 
 ## mongodb
 
-The mongodb library adds support for the MongoDB document store. By including the `spring/dao-mongo.xml` 
-file into your Spring context you get the full support to interact with MongoDB databases including an 
-in-memory database for tests. 
+The mongodb library adds support for the MongoDB document store. By adding the dependency you get the 
+full support to interact with MongoDB databases including an in-memory database for tests. 
 
 ### Connection properties
 
@@ -233,10 +236,9 @@ enables the use of the local DynamoDB version for development.
 ## cloud
 
 The `cloud` libraries provide SDKs for cloud service providers. Currently only Amazon Web Services 
-is available under `cloud-aws` and can be added using maven and by including the `spring/cloud-aws.xml` 
-file into your Spring context. It provides the core dependency to the Java AWS SDK and the annotation 
-`@AWSClient` to inject clients to access the AWS API. Just annotate a member extending `AmazonWebServiceClient`
-and dvalin will automatically inject a configured instance into your bean.
+is available under `cloud-aws` and can be added using maven. It provides the core dependency to the 
+Java AWS SDK and the annotation `@AWSClient` to inject clients to access the AWS API. Just annotate 
+a member extending `AmazonWebServiceClient` and dvalin will automatically inject a configured instance into your bean.
 
 Region selection occurs as follow:
 
@@ -258,8 +260,7 @@ to the AWS API. Otherwise the following chain will be used:
 ## notification
 
 The notification component provides a templating engine and support for sending e-mails. The `notification-aws` 
-library provides an implementation of the `MailSender` that uses Amazon SimpleEmailService. To activate the
-component add the file `spring/notification.xml` to your Spring context.
+library provides an implementation of the `MailSender` that uses Amazon SimpleEmailService.
 
 ### E-Mail
 

@@ -1,5 +1,6 @@
 # Version 1.6
 * fix @AWSClient credentials resolver 
+* Auto configuration of dvalin Spring context
 
 # Version 1.5
 * add #4 JSON Web Token authentication support

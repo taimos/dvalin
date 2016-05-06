@@ -25,9 +25,9 @@ package de.taimos.dvalin.jaxrs.remote;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,15 +35,6 @@ package de.taimos.dvalin.jaxrs.remote;
  * limitations under the License.
  * #L%
  */
-
-import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
 
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.BeanUtils;
@@ -60,11 +51,22 @@ import org.springframework.beans.factory.config.InstantiationAwareBeanPostProces
 import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringValueResolver;
 
+import java.beans.PropertyDescriptor;
+import java.io.Serializable;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+
 @SuppressWarnings("serial")
+@Component
 public class RemoteServiceBeanPostProcessor implements InstantiationAwareBeanPostProcessor, EmbeddedValueResolverAware, BeanFactoryAware, Serializable {
 
     private transient ConfigurableListableBeanFactory beanFactory;

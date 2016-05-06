@@ -20,17 +20,16 @@ package de.taimos.dvalin.jaxrs.security.basicauth;
  * #L%
  */
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.HttpHeaders;
-
+import de.taimos.daemon.spring.conditional.BeanAvailable;
+import de.taimos.dvalin.jaxrs.JaxRsComponent;
+import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.taimos.daemon.spring.conditional.BeanAvailable;
-import de.taimos.dvalin.jaxrs.JaxRsComponent;
-import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.HttpHeaders;
 
 @JaxRsComponent
 @BeanAvailable(IBasicAuthUserDAO.class)
