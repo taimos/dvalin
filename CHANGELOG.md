@@ -2,6 +2,7 @@
 * fix @AWSClient credentials resolver 
 * Auto configuration of dvalin Spring context
 * add Maven archetype for basic dvalin project
+* add Maven archetype for docker packaged dvalin project
 * Update dependencies
     * daemon framework 2.7
     * Spring 4.2.6

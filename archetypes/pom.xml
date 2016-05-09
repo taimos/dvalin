@@ -16,5 +16,6 @@
     </dependencies>
     <modules>
         <module>basic</module>
+        <module>docker</module>
     </modules>
 </project>

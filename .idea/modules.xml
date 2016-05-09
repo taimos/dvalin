@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/archetypes/basic/dvalin-archetype-basic.iml" filepath="$PROJECT_DIR$/archetypes/basic/dvalin-archetype-basic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/archetypes/docker/dvalin-archetype-docker.iml" filepath="$PROJECT_DIR$/archetypes/docker/dvalin-archetype-docker.iml" />
       <module fileurl="file://$PROJECT_DIR$/archetypes/dvalin-archetype-parent.iml" filepath="$PROJECT_DIR$/archetypes/dvalin-archetype-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" filepath="$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" filepath="$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" />
