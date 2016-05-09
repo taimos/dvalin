@@ -8,8 +8,9 @@
 	<artifactId>dvalin-jaxrs-jwtauth</artifactId>
 	<name>JWT Authetication support for dvalin JAX-RS</name>
 	<inceptionYear>2016</inceptionYear>
-	<properties>
-	</properties>
+    <properties>
+        <versioneye>573031664a0faa000e61c8ad</versioneye>
+    </properties>
 	<dependencies>
         <dependency>
             <groupId>de.taimos</groupId>

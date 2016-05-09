@@ -10,6 +10,7 @@
     <name>Interconnect tools for microservice communication</name>
     <inceptionYear>2016</inceptionYear>
     <properties>
+        <versioneye>5730316d4a0faa000b7b7584</versioneye>
     </properties>
     <dependencies>
     </dependencies>

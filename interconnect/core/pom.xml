@@ -9,6 +9,7 @@
     <name>Dvalin interconnect core library</name>
     <properties>
         <activemq.version>5.9.0</activemq.version>
+        <versioneye>573030edebad9c00123944d0</versioneye>
     </properties>
     <dependencies>
         <dependency>

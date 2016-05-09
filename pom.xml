@@ -19,6 +19,7 @@
         <mockito.version>1.10.19</mockito.version>
         <junit.version>4.12</junit.version>
         <aws.version>1.10.76</aws.version>
+        <versioneye>5730315a4a0faa000e61c822</versioneye>
     </properties>
     <scm>
         <connection>scm:git:git@github.com:taimos/dvalin.git</connection>
@@ -125,25 +126,42 @@
                         </goals>
                     </execution>
                     <!--<execution>-->
-                        <!--<id>default-instrument</id>-->
-                        <!--<goals>-->
-                            <!--<goal>instrument</goal>-->
-                        <!--</goals>-->
+                    <!--<id>default-instrument</id>-->
+                    <!--<goals>-->
+                    <!--<goal>instrument</goal>-->
+                    <!--</goals>-->
                     <!--</execution>-->
                     <!--<execution>-->
-                        <!--<id>default-restore-instrumented-classes</id>-->
-                        <!--<goals>-->
-                            <!--<goal>restore-instrumented-classes</goal>-->
-                        <!--</goals>-->
+                    <!--<id>default-restore-instrumented-classes</id>-->
+                    <!--<goals>-->
+                    <!--<goal>restore-instrumented-classes</goal>-->
+                    <!--</goals>-->
                     <!--</execution>-->
                     <!--<execution>-->
-                        <!--<id>default-report</id>-->
-                        <!--<phase>prepare-package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>report</goal>-->
-                        <!--</goals>-->
+                    <!--<id>default-report</id>-->
+                    <!--<phase>prepare-package</phase>-->
+                    <!--<goals>-->
+                    <!--<goal>report</goal>-->
+                    <!--</goals>-->
                     <!--</execution>-->
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.versioneye</groupId>
+                <artifactId>versioneye-maven-plugin</artifactId>
+                <version>3.9.2</version>
+                <executions>
+                    <execution>
+                        <id>update</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <projectId>${versioneye}</projectId>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -8,6 +8,7 @@
     <artifactId>dvalin-interconnect-test</artifactId>
     <name>Dvalin interconnect test library</name>
     <properties>
+        <versioneye>573031754a0faa000b7b75ab</versioneye>
     </properties>
     <dependencies>
         <dependency>

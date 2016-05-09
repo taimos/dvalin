@@ -8,6 +8,7 @@
     <artifactId>dvalin-interconnect-demo</artifactId>
     <name>Dvalin interconnect demo project</name>
     <properties>
+        <versioneye>573030f0ebad9c000a488cd0</versioneye>
     </properties>
     <dependencies>
         <dependency>
