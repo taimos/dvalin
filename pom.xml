@@ -10,6 +10,45 @@
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
     <inceptionYear>2015</inceptionYear>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>hoegertn</id>
+            <name>Thorsten Hoeger</name>
+            <email>thorsten.hoeger@taimos.de</email>
+            <organization>Taimos GmbH</organization>
+            <organizationUrl>https://www.taimos.de</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>Europe/Berlin</timezone>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <email>info@cinovo.de</email>
+            <organization>Cinovo AG</organization>
+            <organizationUrl>http://www.cinovo.de</organizationUrl>
+        </contributor>
+        <contributor>
+            <email>info@tullius-walden.com</email>
+            <organization>Tullius Walden Bank AG</organization>
+            <organizationUrl>http://www.tullius-walden.com</organizationUrl>
+        </contributor>
+        <contributor>
+            <name>Philipp Sigloch</name>
+            <organization>Cinovo AG</organization>
+            <organizationUrl>http://www.cinovo.de</organizationUrl>
+        </contributor>
+    </contributors>
     <properties>
         <org.springframework.version>4.2.6.RELEASE</org.springframework.version>
         <jackson.version>2.7.4</jackson.version>
@@ -27,6 +66,14 @@
         <url>scm:git:git@github.com:taimos/dvalin.git</url>
         <tag>HEAD</tag>
     </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/taimos/dvalin/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>travis-ci</system>
+        <url>https://travis-ci.org/taimos/dvalin</url>
+    </ciManagement>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
