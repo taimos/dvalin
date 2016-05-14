@@ -1,3 +1,6 @@
+# Version 1.7
+* AWS tooling for ec2 and CloudFormation
+
 # Version 1.6
 * fix @AWSClient credentials resolver 
 * Auto configuration of dvalin Spring context

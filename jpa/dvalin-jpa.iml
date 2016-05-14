@@ -3,11 +3,11 @@
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/resources/spring/dao-HSQL.xml</file>
-          <file>file://$MODULE_DIR$/src/main/resources/spring/dao-MYSQL.xml</file>
-          <file>file://$MODULE_DIR$/src/main/resources/spring/dao-POSTGRESQL.xml</file>
-          <file>file://$MODULE_DIR$/src/main/resources/spring/dao.xml</file>
+        <fileset id="fileset2" name="Spring Application Context (2)" removed="false">
+          <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/jpa/config/DatabaseConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/jpa/config/DatabaseHSQL.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/jpa/config/DatabaseMYSQL.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/jpa/config/DatabasePOSTGRESQL.java</file>
         </fileset>
       </configuration>
     </facet>
