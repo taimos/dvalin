@@ -1,12 +1,12 @@
 package de.taimos.dvalin.cloud.aws;
 
-import com.amazonaws.services.autoscaling.AmazonAutoScaling;
+import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsRequest;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsResult;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingInstancesRequest;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingInstancesResult;
-import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
@@ -26,10 +26,10 @@ import java.util.Map;
 public class EC2Context {
 
     @AWSClient
-    private AmazonEC2 ec2;
+    private AmazonEC2Client ec2;
 
     @AWSClient
-    private AmazonAutoScaling autoScaling;
+    private AmazonAutoScalingClient autoScaling;
 
 
     public String getInstanceId() {

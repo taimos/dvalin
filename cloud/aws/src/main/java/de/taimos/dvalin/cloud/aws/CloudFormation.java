@@ -1,6 +1,6 @@
 package de.taimos.dvalin.cloud.aws;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
+import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
 import com.amazonaws.services.cloudformation.model.ResourceSignalStatus;
 import com.amazonaws.services.cloudformation.model.SignalResourceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class CloudFormation {
 
     @AWSClient
-    private AmazonCloudFormation cloudFormation;
+    private AmazonCloudFormationClient cloudFormation;
 
     @Autowired
     private EC2Context ec2Context;
