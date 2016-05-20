@@ -11,4 +11,6 @@ public @interface AWSClient {
 
     String region() default "";
 
+    String endpoint() default "";
+
 }

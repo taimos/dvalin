@@ -36,14 +36,15 @@ package de.taimos.dvalin.cloud.aws;
  * #L%
  */
 
-import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-
+import com.amazonaws.AmazonWebServiceClient;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSCredentialsProviderChain;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.internal.StaticCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -64,15 +65,13 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringValueResolver;
 
-import com.amazonaws.AmazonWebServiceClient;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.internal.StaticCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
+import java.beans.PropertyDescriptor;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
 
 @Component
 @SuppressWarnings("serial")
@@ -190,10 +189,10 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             if (!AmazonWebServiceClient.class.isAssignableFrom(dependencyType)) {
                 throw new RuntimeException("Field has to be of type AmazonWebServiceClient but was of type " + dependencyType.getCanonicalName());
             }
-            Region region = getRegion(this.client);
-            LOGGER.info("Using AWS region {}", region.toString());
+            Region region = this.getRegion(this.client);
+            this.LOGGER.info("Using AWS region {}", region.toString());
 
-            AWSCredentials cred = getStaticCredentials();
+            AWSCredentials cred = this.getStaticCredentials();
 
             final AWSCredentialsProvider provider;
             if (cred != null) {
@@ -201,13 +200,32 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             } else {
                 provider = new DefaultAWSCredentialsProviderChain();
             }
-            return region.createClient((Class<? extends AmazonWebServiceClient>)dependencyType, provider, null);
+            AmazonWebServiceClient client = region.createClient((Class<? extends AmazonWebServiceClient>) dependencyType, provider, null);
+            String endpoint = this.getCustomEndpoint(this.client);
+            if (endpoint == null) {
+                client.setEndpoint(endpoint);
+            }
+            return client;
+        }
+
+        private String getCustomEndpoint(AWSClient client) {
+            if (!client.endpoint().isEmpty()) {
+                try {
+                    String endpointString = AWSClientBeanPostProcessor.this.resolver.resolveStringValue(this.client.endpoint());
+                    if (!endpointString.isEmpty()) {
+                        return endpointString;
+                    }
+                } catch (IllegalArgumentException e) {
+                    this.LOGGER.warn("Failed to read endpoint property", e);
+                }
+            }
+            return null;
         }
 
         private AWSCredentials getStaticCredentials() {
             try {
-                String accessKey = resolver.resolveStringValue("${aws.accessKeyId}");
-                String secretKey = resolver.resolveStringValue("${aws.secretKey}");
+                String accessKey = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.accessKeyId}");
+                String secretKey = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.secretKey}");
                 if (!accessKey.isEmpty() && !secretKey.isEmpty()) {
 					return new BasicAWSCredentials(accessKey, secretKey);
 				}
@@ -220,21 +238,21 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
         private Region getRegion(AWSClient client) {
             if (!client.region().isEmpty()) {
                 try {
-                    String regionString = resolver.resolveStringValue(this.client.region());
+                    String regionString = AWSClientBeanPostProcessor.this.resolver.resolveStringValue(this.client.region());
                     if (!regionString.isEmpty()) {
                         return Region.getRegion(Regions.fromName(regionString));
                     }
                 } catch (IllegalArgumentException e) {
-                    LOGGER.warn("Failed to read regionProperty", e);
+                    this.LOGGER.warn("Failed to read regionProperty", e);
                 }
             }
             try {
-                String regionString = resolver.resolveStringValue("${aws.region}");
+                String regionString = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.region}");
                 if (!regionString.isEmpty()) {
                     return Region.getRegion(Regions.fromName(regionString));
                 }
             } catch (IllegalArgumentException e) {
-                LOGGER.info("Did not find aws.region system property");
+                this.LOGGER.info("Did not find aws.region system property");
             }
             if (System.getenv("AWS_DEFAULT_REGION") != null) {
                 return Region.getRegion(Regions.fromName(System.getenv("AWS_DEFAULT_REGION")));
