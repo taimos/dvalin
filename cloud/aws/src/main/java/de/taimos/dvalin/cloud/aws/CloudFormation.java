@@ -17,6 +17,18 @@ public class CloudFormation {
     private EC2Context ec2Context;
 
 
+    /**
+     * signal success to the current CloudFormation stack.<br>
+     * <br>
+     * Needed AWS actions:
+     * <ul>
+     * <li>ec2:DescribeInstances</li>
+     * <li>cloudformation:SignalResource</li>
+     * </ul>
+     *
+     * @param resourceName
+     *         the resource to signal
+     */
     public void signalReady(String resourceName) {
         SignalResourceRequest req = new SignalResourceRequest();
         req.setLogicalResourceId(resourceName);
@@ -27,6 +39,16 @@ public class CloudFormation {
     }
 
 
+    /**
+     * signal success to the current CloudFormation stack.<br>
+     * The resource is derived from the instance tags
+     * <br>
+     * Needed AWS actions:
+     * <ul>
+     * <li>ec2:DescribeInstances</li>
+     * <li>cloudformation:SignalResource</li>
+     * </ul>
+     */
     public void signalReady() {
         this.signalReady(this.ec2Context.getInstanceTags().get("aws:cloudformation:logical-id"));
     }

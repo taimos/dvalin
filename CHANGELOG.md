@@ -1,5 +1,6 @@
 # Version 1.7
 * AWS tooling for ec2 and CloudFormation
+* Document IAM actions needed in AWS
 
 # Version 1.6
 * fix @AWSClient credentials resolver 
