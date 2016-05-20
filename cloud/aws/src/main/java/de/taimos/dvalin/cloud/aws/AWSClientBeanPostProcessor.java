@@ -202,7 +202,7 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             }
             AmazonWebServiceClient client = region.createClient((Class<? extends AmazonWebServiceClient>) dependencyType, provider, null);
             String endpoint = this.getCustomEndpoint(this.client);
-            if (endpoint == null) {
+            if (endpoint != null) {
                 client.setEndpoint(endpoint);
             }
             return client;
