@@ -24,13 +24,22 @@ import com.google.common.collect.Lists;
 import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.cloud.aws.AWSClient;
 
+
 @ProdComponent
+/**
+ * <br>
+ * Needed AWS actions:
+ * <ul>
+ * <li>ses:SendEmail</li>
+ * </ul>
+ */
 public class AmazonSESMailSender implements MailSender {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(AmazonSESMailSender.class);
 
     @AWSClient(region = "${aws.mailregion:}")
     private AmazonSimpleEmailServiceClient sesClient;
+
 
     @Override
     public void send(SimpleMailMessage message) throws MailException {
@@ -60,6 +69,7 @@ public class AmazonSESMailSender implements MailSender {
         SendEmailResult emailResult = sesClient.sendEmail(req);
         LOGGER.info("Sent mail over SES with message id {}", emailResult.getMessageId());
     }
+
 
     @Override
     public void send(SimpleMailMessage... simpleMailMessages) throws MailException {
