@@ -3,6 +3,9 @@
 * Document IAM actions needed in AWS
 * Add support for custom AWS endpoints
 * Add ISpringLifecycleListener (#19)
+* Update dependencies
+    * Jodatime 2.9.4
+    * AWS 1.11.5
 
 # Version 1.6
 * fix @AWSClient credentials resolver 
