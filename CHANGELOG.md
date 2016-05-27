@@ -2,6 +2,7 @@
 * AWS tooling for ec2 and CloudFormation
 * Document IAM actions needed in AWS
 * Add support for custom AWS endpoints
+* Add ISpringLifecycleListener (#19)
 
 # Version 1.6
 * fix @AWSClient credentials resolver 

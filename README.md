@@ -257,6 +257,14 @@ to the AWS API. Otherwise the following chain will be used:
 * Use profile information
 * Use EC2 instance profile
 
+### Utility beans
+
+There are two utility beans that implement common use cases in EC2 and CloudFormation. 
+See `EC2Context` and `CloudFormation` beans for details.
+
+In addition you can let Dvalin signal the current CloudFormation stack by setting 
+the property `aws.cfnsignal` to `true`.
+
 ## notification
 
 The notification component provides a templating engine and support for sending e-mails. The `notification-aws` 
