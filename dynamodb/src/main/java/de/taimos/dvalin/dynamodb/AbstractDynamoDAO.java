@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -25,19 +24,13 @@ public abstract class AbstractDynamoDAO<T> {
 
     public final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @AWSClient
+    @AWSClient(endpoint = "${dynamodb.url:}")
     protected AmazonDynamoDBClient client;
 
     protected DynamoDBMapper mapper;
 
-    @Value("${dynamodb.url:}")
-    private String dynamodbUrl;
-
     @PostConstruct
     public final void init() {
-        if (!this.dynamodbUrl.isEmpty()) {
-            this.client.setEndpoint(this.dynamodbUrl);
-        }
         this.mapper = new DynamoDBMapper(this.client);
         try {
             DescribeTableResult tableResult = this.client.describeTable(this.getTableName());
