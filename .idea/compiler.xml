@@ -47,6 +47,9 @@
         <module name="dvalin-jaxrs-jwtauth" />
         <module name="dvalin-jpa" />
         <module name="dvalin-mongodb" />
+        <module name="dvalin-monitoring-aws" />
+        <module name="dvalin-monitoring-core" />
+        <module name="dvalin-monitoring-logging" />
         <module name="dvalin-notification-aws" />
         <module name="dvalin-notification-core" />
         <module name="dvalin-test" />
@@ -74,6 +77,10 @@
       <module name="dvalin-jaxrs-jwtauth" target="1.7" />
       <module name="dvalin-jpa" target="1.7" />
       <module name="dvalin-mongodb" target="1.7" />
+      <module name="dvalin-monitoring-aws" target="1.7" />
+      <module name="dvalin-monitoring-core" target="1.7" />
+      <module name="dvalin-monitoring-logging" target="1.7" />
+      <module name="dvalin-monitoring-parent" target="1.7" />
       <module name="dvalin-notification-aws" target="1.7" />
       <module name="dvalin-notification-core" target="1.7" />
       <module name="dvalin-notification-parent" target="1.7" />

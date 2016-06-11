@@ -220,6 +220,7 @@
         <module>jaxrs</module>
         <module>jaxrs-jwtauth</module>
         <module>mongodb</module>
+        <module>monitoring</module>
         <module>jpa</module>
         <module>dynamodb</module>
         <module>interconnect</module>
