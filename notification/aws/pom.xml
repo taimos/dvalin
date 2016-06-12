@@ -8,7 +8,6 @@
     <artifactId>dvalin-notification-aws</artifactId>
     <name>Dvalin AWS notification service</name>
     <properties>
-        <versioneye>573031624a0faa0013dba42b</versioneye>
     </properties>
     <dependencies>
         <dependency>

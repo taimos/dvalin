@@ -9,7 +9,6 @@
     <packaging>maven-plugin</packaging>
     <name>Dvalin interconnect maven plugin for source generation</name>
     <properties>
-        <versioneye>573030ecebad9c00123944af</versioneye>
     </properties>
     <dependencies>
         <dependency>

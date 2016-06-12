@@ -10,7 +10,6 @@
     <inceptionYear>2015</inceptionYear>
     <properties>
         <hibernate.version>4.3.11.Final</hibernate.version>
-        <versioneye>573031694a0faa000b7b7550</versioneye>
     </properties>
     <dependencies>
         <dependency>

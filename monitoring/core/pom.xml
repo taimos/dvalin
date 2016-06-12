@@ -9,7 +9,6 @@
     <artifactId>dvalin-monitoring-core</artifactId>
     <name>Dvalin monitoring service</name>
     <properties>
-        <!--<versioneye></versioneye>-->
     </properties>
     <dependencies>
         <dependency>

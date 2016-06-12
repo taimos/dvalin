@@ -9,7 +9,6 @@
     <artifactId>dvalin-monitoring-aws</artifactId>
     <name>Dvalin monitoring service implementation for AWS CloudWatch</name>
     <properties>
-        <!--<versioneye></versioneye>-->
     </properties>
     <dependencies>
         <dependency>

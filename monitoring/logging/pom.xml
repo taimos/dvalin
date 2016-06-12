@@ -9,7 +9,6 @@
     <artifactId>dvalin-monitoring-logging</artifactId>
     <name>Dvalin monitoring service implementation for logging framework</name>
     <properties>
-        <!--<versioneye></versioneye>-->
     </properties>
     <dependencies>
         <dependency>

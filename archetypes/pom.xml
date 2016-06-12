@@ -10,7 +10,6 @@
     <name>Maven archetypes</name>
     <inceptionYear>2016</inceptionYear>
     <properties>
-        <versioneye>573031764a0faa000b7b75c0</versioneye>
     </properties>
     <dependencies>
     </dependencies>

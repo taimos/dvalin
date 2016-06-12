@@ -9,7 +9,6 @@
     <name>Daemon support for dvalin</name>
     <inceptionYear>2015</inceptionYear>
     <properties>
-        <versioneye>5730315b4a0faa000e61c83b</versioneye>
     </properties>
     <dependencies>
         <dependency>

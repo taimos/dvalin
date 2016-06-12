@@ -8,7 +8,6 @@
     <artifactId>dvalin-interconnect-metamodel</artifactId>
     <name>Dvalin interconnect metamodel for transfer data model</name>
     <properties>
-        <versioneye>573030ebebad9c001239449a</versioneye>
     </properties>
     <dependencies>
     </dependencies>
