@@ -1,11 +1,20 @@
 package de.taimos.dvalin.cloud.aws;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Component;
+
 import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsRequest;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsResult;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingInstancesRequest;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingInstancesResult;
+import com.amazonaws.services.autoscaling.model.TagDescription;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
@@ -13,14 +22,7 @@ import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.Tag;
 import com.amazonaws.util.EC2MetadataUtils;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Preconditions;
 
 @Component
 public class EC2Context {
@@ -31,14 +33,12 @@ public class EC2Context {
     @AWSClient
     private AmazonAutoScalingClient autoScaling;
 
-
     /**
      * @return the instance id
      */
     public String getInstanceId() {
         return EC2MetadataUtils.getInstanceId();
     }
-
 
     /**
      * <br>
@@ -57,7 +57,6 @@ public class EC2Context {
         }
         return map;
     }
-
 
     /**
      * <br>
@@ -78,7 +77,6 @@ public class EC2Context {
         return result.getAutoScalingInstances().get(0).getAutoScalingGroupName();
     }
 
-
     /**
      * <br>
      * Needed AWS actions:
@@ -86,11 +84,11 @@ public class EC2Context {
      * <li>autoscaling:DescribeAutoScalingGroups</li>
      * </ul>
      *
-     * @param autoScalingGroupName
-     *         the name to search for
+     * @param autoScalingGroupName the name to search for
      * @return the members of the given auto scaling group
      */
     public List<String> getAutoScalingMembers(String autoScalingGroupName) {
+        Preconditions.checkArgument(autoScalingGroupName != null && !autoScalingGroupName.isEmpty());
         AutoScalingGroup autoScalingGroup = this.getAutoScalingGroup(autoScalingGroupName);
 
         List<String> list = new ArrayList<>();
@@ -102,7 +100,6 @@ public class EC2Context {
         return list;
     }
 
-
     /**
      * <br>
      * Needed AWS actions:
@@ -111,11 +108,11 @@ public class EC2Context {
      * <li>ec2:DescribeInstances</li>
      * </ul>
      *
-     * @param autoScalingGroupName
-     *         the name of the group
+     * @param autoScalingGroupName the name of the group
      * @return the list of private IP addresses of the members
      */
     public List<String> getPrivateAutoScalingMemberIPs(String autoScalingGroupName) {
+        Preconditions.checkArgument(autoScalingGroupName != null && !autoScalingGroupName.isEmpty());
         List<String> members = this.getAutoScalingMembers(autoScalingGroupName);
         DescribeInstancesRequest req = new DescribeInstancesRequest();
         req.setInstanceIds(members);
@@ -131,7 +128,6 @@ public class EC2Context {
         return list;
     }
 
-
     /**
      * <br>
      * Needed AWS actions:
@@ -139,11 +135,11 @@ public class EC2Context {
      * <li>autoscaling:DescribeAutoScalingGroups</li>
      * </ul>
      *
-     * @param autoScalingGroupName
-     *         the name to search for
+     * @param autoScalingGroupName the name to search for
      * @return the given auto scaling group
      */
     public AutoScalingGroup getAutoScalingGroup(String autoScalingGroupName) {
+        Preconditions.checkArgument(autoScalingGroupName != null && !autoScalingGroupName.isEmpty());
         DescribeAutoScalingGroupsRequest req = new DescribeAutoScalingGroupsRequest();
         req.setAutoScalingGroupNames(Collections.singleton(autoScalingGroupName));
         DescribeAutoScalingGroupsResult result = this.autoScaling.describeAutoScalingGroups(req);
@@ -153,6 +149,24 @@ public class EC2Context {
         return result.getAutoScalingGroups().get(0);
     }
 
+    /**
+     * <br>
+     * Needed AWS actions:
+     * <ul>
+     * <li>autoscaling:DescribeAutoScalingGroups</li>
+     * </ul>
+     *
+     * @return the tags of the given auto sclaing group
+     */
+    public Map<String, String> getAutoScalingGroupTags(String autoScalingGroupName) {
+        Preconditions.checkArgument(autoScalingGroupName != null && !autoScalingGroupName.isEmpty());
+        AutoScalingGroup group = getAutoScalingGroup(autoScalingGroupName);
+        Map<String, String> tags = new HashMap<>();
+        for (TagDescription tagDescription : group.getTags()) {
+            tags.put(tagDescription.getKey(), tagDescription.getValue());
+        }
+        return tags;
+    }
 
     /**
      * <br>
