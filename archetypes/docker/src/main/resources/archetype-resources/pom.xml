@@ -171,7 +171,7 @@
                                                 <args>-cp</args>
                                                 <args>${project.artifactId}.jar:lib/*</args>
                                                 <args>-Xmx${maxmem}</args>
-                                                <args>-XX:OnOutOfMemoryError='kill -9 %p'</args>
+                                                <args>-XX:+ExitOnOutOfMemoryError</args>
                                                 <args>-DstartupMode=run</args>
                                                 <args>-Djava.net.preferIPv4Stack=true</args>
                                                 <args>${mainClass}</args>
