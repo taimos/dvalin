@@ -1,3 +1,6 @@
+# Version 1.8
+* add monitoring library with AWS CloudWatch support (#23)
+
 # Version 1.7
 * AWS tooling for ec2 and CloudFormation
 * Document IAM actions needed in AWS
