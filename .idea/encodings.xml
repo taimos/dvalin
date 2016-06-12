@@ -4,7 +4,6 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/basic" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/archetypes/basic" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/basic/src/main/resources/META-INF/maven/archetype-metadata.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/docker" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cloud" charset="UTF-8" />
@@ -22,6 +21,10 @@
     <file url="file://$PROJECT_DIR$/jaxrs-jwtauth" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mongodb" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/monitoring" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/monitoring/aws" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/monitoring/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/monitoring/logging" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/aws" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/core" charset="UTF-8" />

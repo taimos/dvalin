@@ -10,7 +10,6 @@
     <name>Archetype - dvalin-archetype-basic</name>
     <description>Maven archetype for a basic dvalin project</description>
     <properties>
-        <versioneye>573030f4ebad9c00123944f4</versioneye>
     </properties>
     <build>
         <extensions>

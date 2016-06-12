@@ -10,7 +10,6 @@
     <name>Archetype - dvalin-archetype-docker</name>
     <description>Maven archetype for a docker based dvalin project</description>
     <properties>
-        <versioneye>573054724a0faa000b7b7d4f</versioneye>
     </properties>
     <build>
         <extensions>

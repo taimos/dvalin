@@ -10,7 +10,6 @@
     <properties>
         <commonCodec.version>1.10</commonCodec.version>
         <beanUtils.version>1.9.2</beanUtils.version>
-        <versioneye>573030eaebad9c0012394479</versioneye>
     </properties>
     <dependencies>
         <dependency>

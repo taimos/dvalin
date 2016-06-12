@@ -15,6 +15,7 @@
         <option value="$PROJECT_DIR$/interconnect/test/pom.xml" />
         <option value="$PROJECT_DIR$/interconnect/demo/pom.xml" />
         <option value="$PROJECT_DIR$/archetypes/basic/pom.xml" />
+        <option value="$PROJECT_DIR$/monitoring/pom.xml" />
       </list>
     </option>
   </component>

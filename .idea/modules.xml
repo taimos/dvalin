@@ -19,6 +19,10 @@
       <module fileurl="file://$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" filepath="$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa/dvalin-jpa.iml" filepath="$PROJECT_DIR$/jpa/dvalin-jpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" filepath="$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/monitoring/aws/dvalin-monitoring-aws.iml" filepath="$PROJECT_DIR$/monitoring/aws/dvalin-monitoring-aws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/monitoring/core/dvalin-monitoring-core.iml" filepath="$PROJECT_DIR$/monitoring/core/dvalin-monitoring-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/monitoring/logging/dvalin-monitoring-logging.iml" filepath="$PROJECT_DIR$/monitoring/logging/dvalin-monitoring-logging.iml" />
+      <module fileurl="file://$PROJECT_DIR$/monitoring/dvalin-monitoring-parent.iml" filepath="$PROJECT_DIR$/monitoring/dvalin-monitoring-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/notification/aws/dvalin-notification-aws.iml" filepath="$PROJECT_DIR$/notification/aws/dvalin-notification-aws.iml" />
       <module fileurl="file://$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" filepath="$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/notification/dvalin-notification-parent.iml" filepath="$PROJECT_DIR$/notification/dvalin-notification-parent.iml" />

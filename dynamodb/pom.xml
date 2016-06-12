@@ -9,7 +9,6 @@
 	<name>DynamoDB support for dvalin</name>
 	<inceptionYear>2016</inceptionYear>
     <properties>
-        <versioneye>5730316b4a0faa000b7b756c</versioneye>
     </properties>
 	<dependencies>
         <dependency>

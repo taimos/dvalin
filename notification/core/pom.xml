@@ -8,7 +8,6 @@
     <artifactId>dvalin-notification-core</artifactId>
     <name>Dvalin notification service</name>
     <properties>
-        <versioneye>573031614a0faa0013dba414</versioneye>
     </properties>
     <dependencies>
         <dependency>

@@ -9,7 +9,6 @@
     <name>Test support for dvalin</name>
     <inceptionYear>2016</inceptionYear>
     <properties>
-        <versioneye>5730315c4a0faa000e61c852</versioneye>
     </properties>
     <dependencies>
         <dependency>
