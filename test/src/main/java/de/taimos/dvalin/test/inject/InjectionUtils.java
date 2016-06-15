@@ -5,6 +5,8 @@
 package de.taimos.dvalin.test.inject;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -25,9 +27,8 @@ public class InjectionUtils {
      */
     public static InjectionMock injectMocks(Object bean) {
         InjectionMock mock = new InjectionMock();
-        Class<?> beanClass = bean.getClass();
-        Field[] declaredFields = beanClass.getDeclaredFields();
-        for (Field field : declaredFields) {
+        List<Field> fields = getFields(bean.getClass());
+        for (Field field : fields) {
             if (field.isAnnotationPresent(Autowired.class)) {
                 Qualifier qualifierAnnotation = field.getAnnotation(Qualifier.class);
                 String qualifier = qualifierAnnotation == null ? null : qualifierAnnotation.value();
@@ -49,8 +50,7 @@ public class InjectionUtils {
      */
     public static void injectValue(Object bean, String field, String value) {
         try {
-            Class<?> beanClass = bean.getClass();
-            Field beanField = beanClass.getDeclaredField(field);
+            Field beanField = getField(bean.getClass(), field);
             if (beanField.isAnnotationPresent(Value.class) && beanField.getType().equals(String.class)) {
                 doInjection(bean, value, beanField);
             } else {
@@ -94,10 +94,9 @@ public class InjectionUtils {
      * @param dependency the object to inject
      */
     public static void inject(Object bean, String qualifier, Object dependency) {
-        Class<?> beanClass = bean.getClass();
-        Field[] declaredFields = beanClass.getDeclaredFields();
+        List<Field> fields = getFields(bean.getClass());
         boolean found = false;
-        for (Field field : declaredFields) {
+        for (Field field : fields) {
             if (field.isAnnotationPresent(Autowired.class) && field.getType().isAssignableFrom(dependency.getClass())) {
                 Qualifier qualifierAnnotation = field.getAnnotation(Qualifier.class);
                 if ((qualifierAnnotation == null) || qualifierAnnotation.value().equals(qualifier)) {
@@ -120,6 +119,28 @@ public class InjectionUtils {
             field.setAccessible(accessible);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Error injecting dependency due to access violation", e);
+        }
+    }
+
+    private static List<Field> getFields(Class beanClass) {
+        List<Field> fields = new ArrayList<>();
+        for (Field field : beanClass.getDeclaredFields()) {
+            fields.add(field);
+        }
+        if (!beanClass.getSuperclass().equals(Object.class)) {
+            fields.addAll(getFields(beanClass.getSuperclass()));
+        }
+        return fields;
+    }
+
+    private static Field getField(Class beanClass, String fieldName) throws NoSuchFieldException {
+        try {
+            return beanClass.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            if (!beanClass.getSuperclass().equals(Object.class)) {
+                return getField(beanClass.getSuperclass(), fieldName);
+            }
+            throw e;
         }
     }
 }

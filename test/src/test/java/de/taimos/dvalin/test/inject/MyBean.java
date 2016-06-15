@@ -9,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-public class MyBean {
+public class MyBean extends MySuperBean {
 
-	@Autowired
-	private BeanA aField;
-
-	@Autowired
+    @Autowired
 	private BeanB bField;
 
 	@Autowired
@@ -31,11 +28,7 @@ public class MyBean {
 	@Value("${expression}")
 	private Object value3;
 
-	public BeanA getaField() {
-		return this.aField;
-	}
-
-	public BeanB getbField() {
+    public BeanB getbField() {
 		return this.bField;
 	}
 
