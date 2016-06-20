@@ -16,6 +16,22 @@ It is recommended to set the dvalin version as property to make sure all modules
     <version>${dvalin.version}</version>
 </dependency>
 ```
+
+Then add dvalin as a BOM to the maven dependency management to ensure compatibly versions of used third-party libraries.
+
+```
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>de.taimos</groupId>
+            <artifactId>dvalin-parent</artifactId>
+            <version>${dvalin.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
  
 # Parts of dvalin
  

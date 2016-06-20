@@ -1,5 +1,6 @@
 # Version 1.8
 * add monitoring library with AWS CloudWatch support (#23)
+* add dependecyManagement section to use dvalin-parent as BOM (#27)
 
 # Version 1.7
 * AWS tooling for ec2 and CloudFormation
