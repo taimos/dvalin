@@ -24,6 +24,17 @@
         <connection></connection>
         <developerConnection></developerConnection>
     </scm>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.taimos</groupId>
+                <artifactId>dvalin-parent</artifactId>
+                <version>${dvalin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <!-- Dvalin dependencies -->
         <dependency>

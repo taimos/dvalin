@@ -8,7 +8,6 @@
     <artifactId>dvalin-interconnect-core</artifactId>
     <name>Dvalin interconnect core library</name>
     <properties>
-        <activemq.version>5.9.0</activemq.version>
     </properties>
     <dependencies>
         <dependency>

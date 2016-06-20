@@ -23,7 +23,6 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ses</artifactId>
-            <version>${aws.version}</version>
         </dependency>
     </dependencies>
 </project>
