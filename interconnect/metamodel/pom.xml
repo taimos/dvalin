@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-interconnect-parent</artifactId>
-        <version>1.8</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
     <artifactId>dvalin-interconnect-metamodel</artifactId>
     <name>Dvalin interconnect metamodel for transfer data model</name>
