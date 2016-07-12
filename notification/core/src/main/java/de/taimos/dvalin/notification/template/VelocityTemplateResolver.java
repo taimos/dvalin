@@ -14,6 +14,8 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import com.google.common.base.Preconditions;
 
 @Component
+// Velocity is deprecated since Spring 4.3
+@SuppressWarnings("deprecation")
 public class VelocityTemplateResolver implements ITemplateResolver {
 
     @Autowired
@@ -24,7 +26,7 @@ public class VelocityTemplateResolver implements ITemplateResolver {
     public String resolveTemplate(String location, Map<String, Object> context) {
         Preconditions.checkArgument(location != null && !location.isEmpty());
         try {
-            VelocityEngine engine = velocityEngineFactory.createVelocityEngine();
+            VelocityEngine engine = this.velocityEngineFactory.createVelocityEngine();
             return VelocityEngineUtils.mergeTemplateIntoString(engine, location, "UTF-8", context);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -35,7 +37,7 @@ public class VelocityTemplateResolver implements ITemplateResolver {
     public String resolveRawTemplate(String template, Map<String, Object> context) {
         try {
             StringWriter result = new StringWriter();
-            VelocityEngine engine = velocityEngineFactory.createVelocityEngine();
+            VelocityEngine engine = this.velocityEngineFactory.createVelocityEngine();
 
             VelocityContext velocityContext = new VelocityContext(context);
             engine.evaluate(velocityContext, result, "RawTemplate", template);
