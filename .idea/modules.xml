@@ -29,6 +29,9 @@
       <module fileurl="file://$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" filepath="$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/notification/dvalin-notification-parent.iml" filepath="$PROJECT_DIR$/notification/dvalin-notification-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/dvalin-parent.iml" filepath="$PROJECT_DIR$/dvalin-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/template/dvalin-template-parent.iml" filepath="$PROJECT_DIR$/template/dvalin-template-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" filepath="$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" filepath="$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/dvalin-test.iml" filepath="$PROJECT_DIR$/test/dvalin-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/interconnect-maven-plugin.iml" filepath="$PROJECT_DIR$/interconnect/interconnect-maven-plugin/interconnect-maven-plugin.iml" />
     </modules>

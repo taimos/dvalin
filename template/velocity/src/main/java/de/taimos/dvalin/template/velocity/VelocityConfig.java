@@ -1,9 +1,8 @@
-package de.taimos.dvalin.notification;
+package de.taimos.dvalin.template.velocity;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
-
 
 @Configuration
 public class VelocityConfig {
