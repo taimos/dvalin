@@ -1,6 +1,6 @@
 # Version 1.9
-* Change minimum version to Java 8
-* Update dependencies
+* Change minimum version to Java 8 (#30)
+* Update dependencies (#24)
     * Spring 4.3.1
     * Jackson 2.8.0
     * AWS 1.11.15
