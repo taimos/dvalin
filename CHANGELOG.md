@@ -1,3 +1,9 @@
+# Version 1.9
+* Update dependencies
+    * Spring 4.3.1
+    * Jackson 2.8.0
+    * AWS 1.11.15
+
 # Version 1.8
 * add monitoring library with AWS CloudWatch support (#23)
 * add dependecyManagement section to use dvalin-parent as BOM (#27)
