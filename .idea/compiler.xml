@@ -36,6 +36,7 @@
         <module name="dvalin-archetype-basic" />
         <module name="dvalin-archetype-docker" />
         <module name="dvalin-cloud-aws" />
+        <module name="dvalin-cluster-hazelcast" />
         <module name="dvalin-daemon" />
         <module name="dvalin-dynamodb" />
         <module name="dvalin-interconnect-core" />
@@ -62,6 +63,8 @@
       <module name="dvalin-archetype-parent" target="1.8" />
       <module name="dvalin-cloud-aws" target="1.8" />
       <module name="dvalin-cloud-parent" target="1.8" />
+      <module name="dvalin-cluster-hazelcast" target="1.8" />
+      <module name="dvalin-cluster-parent" target="1.8" />
       <module name="dvalin-daemon" target="1.8" />
       <module name="dvalin-dynamodb" target="1.8" />
       <module name="dvalin-interconnect-core" target="1.8" />

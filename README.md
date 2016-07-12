@@ -47,6 +47,7 @@ These libraries are:
 * `mongodb` - connect to MongoDB document store
 * `dynamodb`- connect to AWS DynamoDB data storage
 * `cloud` - basic tools to communicate with Cloud providers
+* `cluster` - basic tools to form a cluster
 * `notification` - notification service to send e-mails and use template engines
 * `monitoring` - monitoring service to report statistics of your service
 * `interconnect` - communication framework to connect micro services with each other
@@ -281,6 +282,14 @@ See `EC2Context` and `CloudFormation` beans for details.
 
 In addition you can let Dvalin signal the current CloudFormation stack by setting 
 the property `aws.cfnsignal` to `true`.
+
+## cluster
+
+The `cluster` libraries provide tools to form a cluster of services. Currently only Hazelcast is available 
+under `cluster-hazelcast` and can be added using maven. It adds hazelcast to the classpath and auto configuration for clusters.
+To form a cluster set the system property `hazelcast.cluster` to `true` and implement `ClusterInfoProvider` as a component.
+To connect to a cluster implement the same interface and set the property `hazelcast.client` to the name 
+of a cluster that the provider can resolve.
 
 ## notification
 

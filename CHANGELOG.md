@@ -1,4 +1,5 @@
 # Version 1.9
+* add library for Hazelcast clusters (#28)
 * Change minimum version to Java 8 (#30)
 * Update dependencies (#24)
     * Spring 4.3.1

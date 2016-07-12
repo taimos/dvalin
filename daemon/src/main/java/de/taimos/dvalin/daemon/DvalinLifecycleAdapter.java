@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+
 import de.taimos.daemon.DaemonLifecycleAdapter;
 import de.taimos.daemon.DaemonProperties;
 import de.taimos.daemon.DaemonStarter;
@@ -87,9 +89,12 @@ public abstract class DvalinLifecycleAdapter extends SpringDaemonAdapter {
     }
 
     private Collection<ISpringLifecycleListener> getLifecycleListeners() {
-        Map<String, ISpringLifecycleListener> map = this.getContext().getBeansOfType(ISpringLifecycleListener.class);
-        if (map != null) {
-            return map.values();
+        ApplicationContext context = this.getContext();
+        if (context != null) {
+            Map<String, ISpringLifecycleListener> map = context.getBeansOfType(ISpringLifecycleListener.class);
+            if (map != null) {
+                return map.values();
+            }
         }
         return Collections.EMPTY_LIST;
     }
