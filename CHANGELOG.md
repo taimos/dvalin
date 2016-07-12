@@ -1,4 +1,5 @@
 # Version 1.9
+* add XDocReport for PDF creation (#22)
 * add library for Hazelcast clusters (#28)
 * Change minimum version to Java 8 (#30)
 * Update dependencies (#24)

@@ -1,4 +1,4 @@
-package de.taimos.dvalin.notification.template;
+package de.taimos.dvalin.template.velocity;
 
 import java.io.IOException;
 import java.io.StringWriter;

@@ -30,6 +30,9 @@
     <file url="file://$PROJECT_DIR$/notification" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/aws" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/template" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/template/velocity" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/template/xdocreport" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>

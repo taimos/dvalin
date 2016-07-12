@@ -48,6 +48,7 @@ These libraries are:
 * `dynamodb`- connect to AWS DynamoDB data storage
 * `cloud` - basic tools to communicate with Cloud providers
 * `cluster` - basic tools to form a cluster
+* `template` - templating functionality
 * `notification` - notification service to send e-mails and use template engines
 * `monitoring` - monitoring service to report statistics of your service
 * `interconnect` - communication framework to connect micro services with each other
@@ -291,9 +292,25 @@ To form a cluster set the system property `hazelcast.cluster` to `true` and impl
 To connect to a cluster implement the same interface and set the property `hazelcast.client` to the name 
 of a cluster that the provider can resolve.
 
+## templating
+
+This component provides a templating engine based on Velocity and PDF generation based on XDocReport.
+
+### Template engine
+
+For templating the Velocity template engine is used. Inject the `ITemplateResolver` in your bean to process 
+templates. You can provide a location relative to the folder `/velocity` in your classpath or you provide 
+the template as String.
+
+### PDF generation
+
+For PDF generation XDocReport is used. Inject the `ReportService` tp create PDF files. You provide a location 
+relative to the folder `/xdocreport` in your classpath targetting a docx file. This file is then merged 
+with the given context and a PDF is created. 
+
 ## notification
 
-The notification component provides a templating engine and support for sending e-mails. The `notification-aws` 
+The notification component provides support for sending e-mails. The `notification-aws` 
 library provides an implementation of the `MailSender` that uses Amazon SimpleEmailService.
 
 ### E-Mail
@@ -303,12 +320,6 @@ Dvalin uses the standard Spring MailSender interface for its email support. The 
 used in integration tests. The `notification-aws` version uses SES to send emails. The region to use can 
 be specified by the property `aws.mailregion`. If it is not set, the region is derived using the strategy 
 defined above for the `AWSClient` annotation.
-
-### Template engine
-
-For templating the Velocity template engine is used. Inject the `ITemplateResolver` in your bean to process 
-templates. You can provide a location relative to the folder `/velocity` in your classpath or you provide 
-the template as String.
 
 ## monitoring
 
