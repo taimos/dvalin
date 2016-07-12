@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Dvalin by taimos</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Dvalin</h1>
+        <h2>Taimos microservices framework</h2>
+        <a href="https://github.com/taimos/dvalin" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <p><a href="https://travis-ci.org/taimos/dvalin"><img src="https://travis-ci.org/taimos/dvalin.svg" alt="Build Status"></a>
+<a href="https://codecov.io/github/taimos/dvalin?branch=master"><img src="https://codecov.io/github/taimos/dvalin/coverage.svg?branch=master" alt="codecov.io"></a></p>
+
+<h1>
+<a id="dvalin---taimos-microservice-framework" class="anchor" href="#dvalin---taimos-microservice-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>dvalin - Taimos Microservice Framework</h1>
+
+<p>Dvalin is a Java micro service framework based on several open-source frameworks to combine the best tools into one quick start suite for fast, reliable and scaling micro services.
+The core technology is the Spring framework and dvalin uses our Daemon Framework as the lifecycle management for the service process.</p>
+
+<p>To use dvalin in your project add the maven dependencies as shown below. 
+It is recommended to set the dvalin version as property to make sure all modules you use have the same version.</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;de.taimos&lt;/groupId&gt;
+    &lt;artifactId&gt;dvalin-MODULE&lt;/artifactId&gt;
+    &lt;version&gt;${dvalin.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>Then add dvalin as a BOM to the maven dependency management to ensure compatibly versions of used third-party libraries.</p>
+
+<pre><code>&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;de.taimos&lt;/groupId&gt;
+            &lt;artifactId&gt;dvalin-parent&lt;/artifactId&gt;
+            &lt;version&gt;${dvalin.version}&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+</code></pre>
+
+<h1>
+<a id="parts-of-dvalin" class="anchor" href="#parts-of-dvalin" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Parts of dvalin</h1>
+
+<p>Dvalin provides several independent but combineable libraries serving different purposes around the runtime and 
+interaction of micro services. By adding a library as a Maven dependency, it gets activated automatically and 
+all the needed Spring components are started.</p>
+
+<p>These libraries are:</p>
+
+<ul>
+<li>
+<code>daemon</code> - the core library for lifecycle and basic Spring enhancements</li>
+<li>
+<code>jaxrs</code>- implement JAX-RS based REST services using the Apache CXF framework</li>
+<li>
+<code>jpa</code> - connect to SQL databases using the popular Hibernate framework</li>
+<li>
+<code>mongodb</code> - connect to MongoDB document store</li>
+<li>
+<code>dynamodb</code>- connect to AWS DynamoDB data storage</li>
+<li>
+<code>cloud</code> - basic tools to communicate with Cloud providers</li>
+<li>
+<code>notification</code> - notification service to send e-mails and use template engines</li>
+<li>
+<code>monitoring</code> - monitoring service to report statistics of your service</li>
+<li>
+<code>interconnect</code> - communication framework to connect micro services with each other</li>
+<li>
+<code>test</code> - utilities for writing tests</li>
+</ul>
+
+<h2>
+<a id="daemon" class="anchor" href="#daemon" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>daemon</h2>
+
+<p>The <code>daemon</code> part includes the Taimos daemon framework into dvalin. You can use the following conditional annotations from the daemon framework:</p>
+
+<ul>
+<li>
+<code>@BeanAvailable</code> - Only create the annotated bean if the denoted bean is also available</li>
+<li>
+<code>@OnSystemProperty</code> - Only create the annotated bean if the denoted system property is set and if it optionally also has the given value</li>
+</ul>
+
+<p>The entry point for your application is the <code>DvalinLifecycleAdapter</code>. Just extend it and implement a main method that calls the static <code>start</code> method. 
+This configures your application to read properties from a file called <code>dvalin.properties</code>.</p>
+
+<h2>
+<a id="jaxrs" class="anchor" href="#jaxrs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jaxrs</h2>
+
+<p>The <code>jaxrs</code> library adds tooling to implement JAX-RS web services. It combines the powers of the Spring framework, 
+the Apache CXF framework, the Jackson JSON mapper and the Eclipse Jetty web server. To include it add the maven dependency to your POM file.
+It will then automatically configure a Jetty web server running on a given port and start a CXF JAX-RS handler into the running Jetty server. 
+By default all beans annotated with <code>@JaxRsComponent</code> will be registered as provider or endpoint respectively. 
+Additionally several extra features are implemented.</p>
+
+<p>You can subclass the <code>AbstractAPI</code> class to get easier access to some of the features.  </p>
+
+<h3>
+<a id="monitoring" class="anchor" href="#monitoring" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Monitoring</h3>
+
+<p>For every request an instance of <code>de.taimos.dvalin.jaxrs.monitoring.InvocationInstance</code> will be registered into the MessageContext. 
+It will contain a unique request id and will measure the runtime of the request for monitoring purpose.</p>
+
+<h3>
+<a id="providers" class="anchor" href="#providers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Providers</h3>
+
+<p>You can activate preconfigured JacksonProvider or WebExceptionMapper by subclassing the respective type and annotate it with <code>@JaxRsComponent</code>.</p>
+
+<h3>
+<a id="remote-service" class="anchor" href="#remote-service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Remote service</h3>
+
+<p>By annotating a private field of a JAX-RS client interface with <code>@RemoteService</code> dvalin will automatically create a JAX-RS client 
+proxy and then inject it like any other autowired bean into the desired location. You can provide the base URL of the service 
+or use defined system properties to resolve the URL of the service.</p>
+
+<h3>
+<a id="swagger" class="anchor" href="#swagger" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Swagger</h3>
+
+<p>The JAX-RS web service it automtically documented using the Swagger specification and published as <code>swagger.{json|yaml}</code> on the
+root of your API URL. Also a graphical Swagger ui is served under <code>/swagger-ui</code>.</p>
+
+<h3>
+<a id="websocket-support" class="anchor" href="#websocket-support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>WebSocket support</h3>
+
+<p>You can publish a WebSocket just by annotating any class with <code>@WebSocket</code>. If you like you can use the 
+abstract <code>ServerJSONWebSocketAdapter</code> as a base class. For the client side (e.g. in tests) you can use the <code>ClientSocketAdapter</code> 
+to connect the the published socket.</p>
+
+<h3>
+<a id="security" class="anchor" href="#security" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Security</h3>
+
+<p>There are several helper classes and beans to provide identity and access management functionality. </p>
+
+<h4>
+<a id="authentication" class="anchor" href="#authentication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authentication</h4>
+
+<p>You can subclass the abstract <code>AuthorizationProvider</code> and return SecurityContexts in the methods to 
+implement or you can provide implementations of predefined bean interfaces to activate ready-to-use 
+authentication filters for BasicAuth or token based authentication.</p>
+
+<p>These interfaces are the <code>IBasicAuthUserDAO</code> or the <code>ITokenAuthUserDAO</code>. If you put an implementation 
+in your Spring context the JAX-RS filter will be deployed using the <code>@BeanAvailable</code> annotation of the core library.</p>
+
+<h4>
+<a id="authorization" class="anchor" href="#authorization" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authorization</h4>
+
+<p>To limit access to sensitive resources you can use the <code>SecurityContextUtil</code> that provides methods to retrieve 
+information about the logged in user or to assert given roles. Additionally dvalin registers filters that 
+support the following annotations to limit access to resources.</p>
+
+<ul>
+<li>
+<code>@RolesAllowed</code> - only users having at least one of the provided roles are granted access</li>
+<li>
+<code>@LoggedIn</code> - only request that contain a valid logged in user are processed</li>
+</ul>
+
+<p>To help in protecting user credentials the class <code>HashedPassword</code> implements everything needed to store 
+password hashes secured by the SHA-512 function using a 512 bit salt and a dynamic number of iterations.</p>
+
+<h3>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h3>
+
+<p>Several settings of the dvalin framework can be customized using system properties which are described 
+in <code>de.taimos.dvalin.jaxrs.SpringCXFProperties</code>.</p>
+
+<h3>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h3>
+
+<p>For integration tests of your JAX-RS service there are several helpers implemented in dvalin. There 
+is an abstract <code>APITest</code> class that provides several helper methods to start web requests, open web sockets
+and assert responses from web service endpoints. To assert conditions across multiple threads you can use 
+the AsyncAssert class. To inject client proxies to your API under test just annotate a field in your test 
+class with <code>@TestProxy</code> and dvalin will create the desired proxy and link it to the server instance during test execution.  </p>
+
+<h3>
+<a id="json-web-tokens" class="anchor" href="#json-web-tokens" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JSON Web Tokens</h3>
+
+<p>For Web Token support include the additional dependency <code>dvalin-jaxrs-jwtauth</code> and set the following properties:</p>
+
+<ul>
+<li>
+<code>jwtauth.issuer</code> - the issuer of the tokens</li>
+<li>
+<code>jwtauth.secret</code> - the shared secret to sign web tokens with</li>
+<li>
+<code>jwtauth.timeout</code> - optional timeout of the tokens (defaults to one hour)</li>
+</ul>
+
+<p>You can then create WebTokens using the <code>JWTAuth</code> bean and they are automatically validated when set as Bearer type Authorization.</p>
+
+<h2>
+<a id="jpa" class="anchor" href="#jpa" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jpa</h2>
+
+<p>The <code>jpa</code> library adds JPA and Hibernate support including changeset management using liquibase. By setting some 
+system properties you get the full support to store and retrieve data from relational database systems. 
+Supported databases are currently HSQL, PostgreSQL and MySQL. You have to add the desired jdbc driver to your classpath manually.</p>
+
+<p>The following settings are possible:</p>
+
+<ul>
+<li>
+<code>ds.type</code> - {MYSQL|POSTGRESQL|HSQL} type of the database</li>
+<li>
+<code>ds.package</code> - root package of your entities (path notation with /)</li>
+<li>
+<code>ds.showsql</code> - {true|false} to log all SQL statements to the logger</li>
+<li>
+<code>ds.demodata</code> - {true|false} to insert data from the file <code>sql/demodata_${ds.type}.sql</code> on startup</li>
+</ul>
+
+<p>For MySQL the following extra setting are possible:</p>
+
+<ul>
+<li>
+<code>ds.mysql.host</code> - the hostname of the database server</li>
+<li>
+<code>ds.mysql.port</code> - the port number of the database server</li>
+<li>
+<code>ds.mysql.db</code> - the name of the database</li>
+<li>
+<code>ds.mysql.user</code> - the user name of the database server</li>
+<li>
+<code>ds.mysql.password</code> - the password of the database server</li>
+</ul>
+
+<p>For PostgreSQL the following extra setting are possible:</p>
+
+<ul>
+<li>
+<code>ds.pgsql.host</code> - the hostname of the database server</li>
+<li>
+<code>ds.pgsql.port</code> - the port number of the database server</li>
+<li>
+<code>ds.pgsql.db</code> - the name of the database</li>
+<li>
+<code>ds.pgsql.user</code> - the user name of the database server</li>
+<li>
+<code>ds.pgsql.password</code> - the password of the database server</li>
+</ul>
+
+<p>The library also provides a general purpose DAO interface (<code>IEntityDAO</code>) and an abstract implementation
+(<code>EntityDAOHibernate</code>) with many helper methods to ease the development of the data layer. For this to 
+work your entities have to implement the <code>IEntity</code> interface.</p>
+
+<p>If you use the JodaTime library you can annotate Date members with the <code>JodaDateTimeType</code> to activate 
+JodaTime support for JPA.</p>
+
+<p>All changesets contained or referenced in the file <code>liquibase/changelog.xml</code> are checked and applied 
+on startup by the liquibase database migration library.</p>
+
+<h2>
+<a id="mongodb" class="anchor" href="#mongodb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mongodb</h2>
+
+<p>The mongodb library adds support for the MongoDB document store. By adding the dependency you get the 
+full support to interact with MongoDB databases including an in-memory database for tests. </p>
+
+<h3>
+<a id="connection-properties" class="anchor" href="#connection-properties" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Connection properties</h3>
+
+<p>The following settings are possible:</p>
+
+<ul>
+<li>
+<code>mongodb.type</code> - {fake|real} connect to real MongoDB database or in-memory version using <code>Fongo</code>
+</li>
+<li>
+<code>mongodb.name</code> - the name of the database to use for data storage</li>
+<li>
+<code>mongobee.enabled</code> - {true|false} use mongobee for database migration</li>
+<li>
+<code>mongobee.basePackage</code> - the base package of the Mongobee changesets</li>
+<li>
+<code>mongodb.demodata</code> - {true|false} load demodata on startup from ND-JSON files</li>
+</ul>
+
+<p>For connections to real MongoDB databases, these extra properties can be set:</p>
+
+<ul>
+<li>
+<code>mongodb.host</code> - the host of the MongoDB instance (default: localhost)</li>
+<li>
+<code>mongodb.port</code> - the port of the MongoDB instance (default: 27017)</li>
+<li>
+<code>mongodb.uri</code> - instead of host and port you can specify the complete connection string</li>
+<li>
+<code>mongodb.socketTimeout</code> - the socket timeout of the connection (default: 10 seconds)</li>
+<li>
+<code>mongodb.connectTimeout</code> - the connection timeout of the connection attempt (default: 10 seconds)</li>
+</ul>
+
+<h3>
+<a id="abstract-entity-and-dao-interface" class="anchor" href="#abstract-entity-and-dao-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Abstract entity and DAO interface</h3>
+
+<p>The library provides a general purpose DAO interface (<code>ICrudDAO</code>) and an abstract implementation
+(<code>AbstractMongoDAO</code>) with many helper methods to ease the development of the data layer. For this to 
+work your entities have to extend the <code>AEntity</code> superclass. The DAOs created have integrated support 
+for JodaTime classes. If you want to use polymorphic types in your entities make sure to implement 
+<code>@IMappedSupertype</code> on the super class. This advises the Jackson mapper to include type information 
+into the created JSON for deserialization. </p>
+
+<h3>
+<a id="changesets" class="anchor" href="#changesets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changesets</h3>
+
+<p>For database migration purpose the mongobee library is included and is configured as denoted above 
+using system properties. See the mongobee documentation on how to implement changesets. 
+For Index creation take a look at the <code>ChangelogUtil</code> helper class.</p>
+
+<h3>
+<a id="mongodbinit" class="anchor" href="#mongodbinit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MongoDBInit</h3>
+
+<p>To prefill the database with startup data or test data for integration tests put file on your classpath 
+into the package <code>mongodb</code> and name them using the following pattern: <code>&lt;CollectionName&gt;.ndjson</code>
+If you set the system property <code>mongodb.demodata</code>to <code>true</code> dvalin will populate the given collections 
+with the objects contained in this new-line delimited files. Just put one JSON object per line. </p>
+
+<h3>
+<a id="documentlinks" class="anchor" href="#documentlinks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DocumentLinks</h3>
+
+<p>Another feature of dvalin's MongoDB support are DocumentLinks. These allow for references between your 
+documents. To include a reference in one of your entities just add a field of the generic type 
+<code>DocumentLink</code> and let your referenced entity extend <code>AReferenceableEntity</code> instead of <code>AEntity</code>. 
+Dvalin will then include a reference to the given document in your JSON which you can resolve 
+by injecting the <code>IDlinkDAO</code> wherever you want.</p>
+
+<h2>
+<a id="dynamodb" class="anchor" href="#dynamodb" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>dynamodb</h2>
+
+<p>The dynamodb library adds support for the AWS DynamoDB data store. By including the AWS cloud module you 
+get the full support to interact with DynamoDB using the SDK or the DynamoDBMapper.</p>
+
+<h3>
+<a id="abstract-dao-implementation" class="anchor" href="#abstract-dao-implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Abstract DAO implementation</h3>
+
+<p>The library provides a general purpose DAO implementation (<code>AbstractDynamoDAO</code>) with automatic initialization
+and table creation. If you set the <code>dynamodb.url</code> property the endpoint of the SDK is reconfigured. This 
+enables the use of the local DynamoDB version for development.</p>
+
+<h2>
+<a id="cloud" class="anchor" href="#cloud" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>cloud</h2>
+
+<p>The <code>cloud</code> libraries provide SDKs for cloud service providers. Currently only Amazon Web Services 
+is available under <code>cloud-aws</code> and can be added using maven. It provides the core dependency to the 
+Java AWS SDK and the annotation <code>@AWSClient</code> to inject clients to access the AWS API. Just annotate 
+a member extending <code>AmazonWebServiceClient</code> and dvalin will automatically inject a configured instance into your bean.</p>
+
+<p>Region selection occurs as follow:</p>
+
+<ul>
+<li>If present the <code>region</code> value of the annotation is evaluated as Spring expression</li>
+<li>If present the property <code>aws.region</code> is used</li>
+<li>If present the environment variable <code>AWS_DEFAULT_REGION</code> is used</li>
+<li>If present the environment variable <code>AWS_REGION</code> is used</li>
+<li>If running on an EC2 instance the current region is used</li>
+<li>The SDK's default region is used</li>
+</ul>
+
+<p>If <code>aws.accessKeyId</code> and <code>aws.secretKey</code> are present as properties they will be used to sign the requests
+to the AWS API. Otherwise the following chain will be used:</p>
+
+<ul>
+<li>Use environment variables</li>
+<li>Use system properties</li>
+<li>Use profile information</li>
+<li>Use EC2 instance profile</li>
+</ul>
+
+<h3>
+<a id="utility-beans" class="anchor" href="#utility-beans" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Utility beans</h3>
+
+<p>There are two utility beans that implement common use cases in EC2 and CloudFormation. 
+See <code>EC2Context</code> and <code>CloudFormation</code> beans for details.</p>
+
+<p>In addition you can let Dvalin signal the current CloudFormation stack by setting 
+the property <code>aws.cfnsignal</code> to <code>true</code>.</p>
+
+<h2>
+<a id="notification" class="anchor" href="#notification" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>notification</h2>
+
+<p>The notification component provides a templating engine and support for sending e-mails. The <code>notification-aws</code> 
+library provides an implementation of the <code>MailSender</code> that uses Amazon SimpleEmailService.</p>
+
+<h3>
+<a id="e-mail" class="anchor" href="#e-mail" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>E-Mail</h3>
+
+<p>Dvalin uses the standard Spring MailSender interface for its email support. The core library provides the 
+<code>TestMailSender</code> that stores the sent mails into a collection instead of sending them out. This can be 
+used in integration tests. The <code>notification-aws</code> version uses SES to send emails. The region to use can 
+be specified by the property <code>aws.mailregion</code>. If it is not set, the region is derived using the strategy 
+defined above for the <code>AWSClient</code> annotation.</p>
+
+<h3>
+<a id="template-engine" class="anchor" href="#template-engine" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Template engine</h3>
+
+<p>For templating the Velocity template engine is used. Inject the <code>ITemplateResolver</code> in your bean to process 
+templates. You can provide a location relative to the folder <code>/velocity</code> in your classpath or you provide 
+the template as String.</p>
+
+<h2>
+<a id="monitoring-1" class="anchor" href="#monitoring-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>monitoring</h2>
+
+<p>The monitoring service allows sending statistics to different backends to collect metering data.</p>
+
+<h3>
+<a id="backends" class="anchor" href="#backends" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Backends</h3>
+
+<p>Currently a logging backend and AWS CloudWatch are supported. To enable the backend put the desired 
+library on the classpath. Only one backend can be on the classpath simultaneously.</p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>To send metrics manually inject the <code>MetricSender</code> interface and call the <code>sendMetric</code> method. 
+You have to supply some coordinates for the metric and the value itself.</p>
+
+<p>Dvalin also provides AspectJ annotations that send metrics automatically.</p>
+
+<ul>
+<li>
+<code>@ExecutionTime</code> - method annotation that reports the execution time of the method</li>
+</ul>
+
+<h2>
+<a id="interconnect" class="anchor" href="#interconnect" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>interconnect</h2>
+
+<p><em>coming soon</em></p>
+
+<h2>
+<a id="test" class="anchor" href="#test" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>test</h2>
+
+<p>The <code>test</code> library provides utilities to help in writing test for dvalin based projects. It adds dependencies
+to Mockito, JUnit and Concordion.</p>
+
+<h3>
+<a id="base-class-for-mockito-unit-tests" class="anchor" href="#base-class-for-mockito-unit-tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Base class for Mockito unit tests</h3>
+
+<p>The class <code>AbstractMockitoTest</code> configures JUnit to use the Mockito runner and configures the log4j framework
+before test execution.</p>
+
+<h3>
+<a id="injectionutils" class="anchor" href="#injectionutils" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>InjectionUtils</h3>
+
+<p>The <code>InjectionUtils</code> helper class provides methods to inject dependencies into beans. This allows to fill 
+<code>@Autowired</code> annotated fields in unit tests with mocked objects. See the javadoc of the class for further 
+information about the features.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/taimos/dvalin/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/taimos/dvalin/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/taimos/dvalin"></a> is maintained by <a href="https://github.com/taimos">taimos</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
