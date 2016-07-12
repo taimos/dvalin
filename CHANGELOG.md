@@ -1,4 +1,5 @@
 # Version 1.9
+* Change minimum version to Java 8
 * Update dependencies
     * Spring 4.3.1
     * Jackson 2.8.0

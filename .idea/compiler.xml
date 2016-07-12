@@ -57,36 +57,33 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="basic" target="1.7" />
-      <module name="daemon" target="1.7" />
-      <module name="dvalin-archetype-basic" target="1.7" />
-      <module name="dvalin-archetype-docker" target="1.7" />
-      <module name="dvalin-archetype-parent" target="1.7" />
-      <module name="dvalin-cloud-aws" target="1.7" />
-      <module name="dvalin-cloud-parent" target="1.7" />
-      <module name="dvalin-daemon" target="1.7" />
-      <module name="dvalin-dynamodb" target="1.7" />
-      <module name="dvalin-interconnect-api" target="1.7" />
-      <module name="dvalin-interconnect-core" target="1.7" />
-      <module name="dvalin-interconnect-demo" target="1.7" />
-      <module name="dvalin-interconnect-metamodel" target="1.7" />
-      <module name="dvalin-interconnect-model" target="1.7" />
-      <module name="dvalin-interconnect-parent" target="1.7" />
-      <module name="dvalin-interconnect-test" target="1.7" />
-      <module name="dvalin-jaxrs" target="1.7" />
-      <module name="dvalin-jaxrs-jwtauth" target="1.7" />
-      <module name="dvalin-jpa" target="1.7" />
-      <module name="dvalin-mongodb" target="1.7" />
-      <module name="dvalin-monitoring-aws" target="1.7" />
-      <module name="dvalin-monitoring-core" target="1.7" />
-      <module name="dvalin-monitoring-logging" target="1.7" />
-      <module name="dvalin-monitoring-parent" target="1.7" />
-      <module name="dvalin-notification-aws" target="1.7" />
-      <module name="dvalin-notification-core" target="1.7" />
-      <module name="dvalin-notification-parent" target="1.7" />
-      <module name="dvalin-parent" target="1.7" />
-      <module name="dvalin-test" target="1.7" />
-      <module name="interconnect-maven-plugin" target="1.7" />
+      <module name="dvalin-archetype-basic" target="1.8" />
+      <module name="dvalin-archetype-docker" target="1.8" />
+      <module name="dvalin-archetype-parent" target="1.8" />
+      <module name="dvalin-cloud-aws" target="1.8" />
+      <module name="dvalin-cloud-parent" target="1.8" />
+      <module name="dvalin-daemon" target="1.8" />
+      <module name="dvalin-dynamodb" target="1.8" />
+      <module name="dvalin-interconnect-core" target="1.8" />
+      <module name="dvalin-interconnect-demo" target="1.8" />
+      <module name="dvalin-interconnect-metamodel" target="1.8" />
+      <module name="dvalin-interconnect-model" target="1.8" />
+      <module name="dvalin-interconnect-parent" target="1.8" />
+      <module name="dvalin-interconnect-test" target="1.8" />
+      <module name="dvalin-jaxrs" target="1.8" />
+      <module name="dvalin-jaxrs-jwtauth" target="1.8" />
+      <module name="dvalin-jpa" target="1.8" />
+      <module name="dvalin-mongodb" target="1.8" />
+      <module name="dvalin-monitoring-aws" target="1.8" />
+      <module name="dvalin-monitoring-core" target="1.8" />
+      <module name="dvalin-monitoring-logging" target="1.8" />
+      <module name="dvalin-monitoring-parent" target="1.8" />
+      <module name="dvalin-notification-aws" target="1.8" />
+      <module name="dvalin-notification-core" target="1.8" />
+      <module name="dvalin-notification-parent" target="1.8" />
+      <module name="dvalin-parent" target="1.8" />
+      <module name="dvalin-test" target="1.8" />
+      <module name="interconnect-maven-plugin" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

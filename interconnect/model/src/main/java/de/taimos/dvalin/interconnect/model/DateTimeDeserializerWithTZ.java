@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
@@ -51,7 +50,7 @@ public class DateTimeDeserializerWithTZ extends StdScalarDeserializer<DateTime> 
 	}
 
 	@Override
-	public DateTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public DateTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
 		JsonToken t = jp.getCurrentToken();
 		if (t == JsonToken.VALUE_NUMBER_INT) {
 			return new DateTime(jp.getLongValue(), DateTimeZone.forTimeZone(ctxt.getTimeZone()));
@@ -67,11 +66,13 @@ public class DateTimeDeserializerWithTZ extends StdScalarDeserializer<DateTime> 
 			}
 			return new DateTime(str, DateTimeZone.forTimeZone(ctxt.getTimeZone()));
 		}
-		throw ctxt.mappingException(this.handledType());
+		ctxt.handleUnexpectedToken(this.handledType(), jp);
+        // never reached
+        return null;
 	}
 
 	@Override
-	public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException, JsonProcessingException {
+	public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException {
 		return typeDeserializer.deserializeTypedFromAny(jp, ctxt);
 	}
 }
