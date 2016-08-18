@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.demo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ public class HandlerTest extends ADaemonTest<Handler> {
 
     @Test
     public void testUserlist() throws DaemonError {
-        IVOQueryResultIVO_v1<UserIVO_v1> users = handler().findUsers(new FindUserIVO_v1.FindUserIVO_v1Builder().build());
+        IVOQueryResultIVO_v1<UserIVO_v1> users = this.handler().findUsers(new FindUserIVO_v1.FindUserIVO_v1Builder().build());
         Assert.assertEquals(0, users.getElements().size());
     }
 
@@ -57,7 +57,7 @@ public class HandlerTest extends ADaemonTest<Handler> {
 
         CreateUserIVO_v1.CreateUserIVO_v1Builder b = new CreateUserIVO_v1.CreateUserIVO_v1Builder();
         b.withValue(uB.build());
-        UserIVO_v1 user = handler().createUser(b.build());
+        UserIVO_v1 user = this.handler().createUser(b.build());
 
         Assert.assertEquals(name, user.getName());
     }

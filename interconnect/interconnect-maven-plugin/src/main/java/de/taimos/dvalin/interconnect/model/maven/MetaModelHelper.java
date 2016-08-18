@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model.maven;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,20 +85,20 @@ public class MetaModelHelper {
 	 */
 	public static final Set<String> SUPPORTED_PRIMITIVE_TYPES = Sets.newHashSet(BigDecimal.class.getSimpleName(), String.class.getSimpleName(), DateTime.class.getSimpleName(), Boolean.class.getSimpleName(), Long.class.getSimpleName());
 
-	private IVODef ivod;
-	private List<MemberDef> allMemberDefs = new ArrayList<>();
-	private List<MemberDef> noCollectionMemberDefs = new ArrayList<>();
-	private List<ImplementsDef> implementsDef = new ArrayList<>();
-	private List<EnumMemberDef> enumMemberDefs = new ArrayList<>();
-	private List<IVOMemberDef> ivoMemberDefs = new ArrayList<>();
-	private List<InterconnectObjectMemberDef> interconnectObjectMemberDefs = new ArrayList<>();
-	private List<CollectionMemberDef> collectionMemberDefs = new ArrayList<>();
-	private List<MapMemberDef> mapMemberDefs = new ArrayList<>();
-	private List<MemberDef> filterableMemberDefs = new ArrayList<>();
-	private List<MemberDef> entityLinkLabel = new ArrayList<>();
-	private Set<String> imports = new TreeSet<>();
-	private Set<String> iimports = new TreeSet<>();
-	private Set<String> fimports = new TreeSet<>();
+	private final IVODef ivod;
+	private final List<MemberDef> allMemberDefs = new ArrayList<>();
+	private final List<MemberDef> noCollectionMemberDefs = new ArrayList<>();
+	private final List<ImplementsDef> implementsDef = new ArrayList<>();
+	private final List<EnumMemberDef> enumMemberDefs = new ArrayList<>();
+	private final List<IVOMemberDef> ivoMemberDefs = new ArrayList<>();
+	private final List<InterconnectObjectMemberDef> interconnectObjectMemberDefs = new ArrayList<>();
+	private final List<CollectionMemberDef> collectionMemberDefs = new ArrayList<>();
+	private final List<MapMemberDef> mapMemberDefs = new ArrayList<>();
+	private final List<MemberDef> filterableMemberDefs = new ArrayList<>();
+	private final List<MemberDef> entityLinkLabel = new ArrayList<>();
+	private final Set<String> imports = new TreeSet<>();
+	private final Set<String> iimports = new TreeSet<>();
+	private final Set<String> fimports = new TreeSet<>();
 	private FileType type = FileType.IVO;
 
 

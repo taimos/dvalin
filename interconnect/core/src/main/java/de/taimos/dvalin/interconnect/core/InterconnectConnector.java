@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -98,7 +98,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToDestination(final Destination destination, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToDestination(final Destination destination, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(destination, "Destination");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         final String body = InterconnectMapper.toJson(ico);
@@ -125,7 +125,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         final String body = InterconnectMapper.toJson(ico);
@@ -150,7 +150,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         final String body = InterconnectMapper.toJson(ico);
@@ -175,7 +175,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final String replyToQueueName, final String correlationId) throws InfrastructureException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final String replyToQueueName, final String correlationId) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         final String body = InterconnectMapper.toJson(ico);
@@ -198,7 +198,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders) throws InfrastructureException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         final String body = InterconnectMapper.toJson(ico);
@@ -220,7 +220,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToQueue(final String queueName, final InterconnectObject ico) throws InfrastructureException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToQueue(final String queueName, final InterconnectObject ico) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         InterconnectConnector.sendToQueue(queueName, ico, null);
@@ -237,7 +237,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToTopic(final String topicName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToTopic(final String topicName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(topicName, "Topic name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         final String body = InterconnectMapper.toJson(ico);
@@ -260,7 +260,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToTopic(final String topicName, final InterconnectObject ico, final Map<String, Object> customHeaders) throws InfrastructureException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToTopic(final String topicName, final InterconnectObject ico, final Map<String, Object> customHeaders) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(topicName, "Topic name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         final String body = InterconnectMapper.toJson(ico);
@@ -282,7 +282,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static void sendToTopic(final String topicName, final InterconnectObject ico) throws InfrastructureException, JsonGenerationException, JsonMappingException, IOException {
+    public static void sendToTopic(final String topicName, final InterconnectObject ico) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(topicName, "Topic name");
         Preconditions.checkNotNull(ico, "Interconnect Object");
         InterconnectConnector.sendToTopic(topicName, ico, null);
@@ -300,7 +300,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static InterconnectObject receiveFromQueue(final String queueName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static InterconnectObject receiveFromQueue(final String queueName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         final TextMessage response = MessageConnector.receiveFromQueue(queueName, selector, timeout, secure);
         try {
@@ -322,7 +322,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static Response receiveFromQueueEnhanced(final String queueName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static Response receiveFromQueueEnhanced(final String queueName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         final TextMessage response = MessageConnector.receiveFromQueue(queueName, selector, timeout, secure);
         try {
@@ -345,7 +345,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static List<InterconnectObject> receiveBulkFromQueue(final String queueName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static List<InterconnectObject> receiveBulkFromQueue(final String queueName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         final List<TextMessage> responses = MessageConnector.receiveBulkFromQueue(queueName, selector, maxSize, timeout, secure);
         final List<InterconnectObject> icos = new ArrayList<>(responses.size());
@@ -372,7 +372,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static List<Response> receiveBulkFromQueueEnhanced(final String queueName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static List<Response> receiveBulkFromQueueEnhanced(final String queueName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(queueName, "Queue name");
         final List<TextMessage> responses = MessageConnector.receiveBulkFromQueue(queueName, selector, maxSize, timeout, secure);
         final List<Response> enhanceds = new ArrayList<>(responses.size());
@@ -398,7 +398,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static InterconnectObject receiveFromTopic(final String topicName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static InterconnectObject receiveFromTopic(final String topicName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(topicName, "Topic name");
         final TextMessage response = MessageConnector.receiveFromTopic(topicName, selector, timeout, secure);
         try {
@@ -420,7 +420,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static Response receiveFromTopicEnhanced(final String topicName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static Response receiveFromTopicEnhanced(final String topicName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(topicName, "Topic name");
         final TextMessage response = MessageConnector.receiveFromTopic(topicName, selector, timeout, secure);
         try {
@@ -443,7 +443,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static List<InterconnectObject> receiveBulkFromTopic(final String topicName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static List<InterconnectObject> receiveBulkFromTopic(final String topicName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(topicName, "Topic name");
         final List<TextMessage> responses = MessageConnector.receiveBulkFromTopic(topicName, selector, maxSize, timeout, secure);
         final List<InterconnectObject> icos = new ArrayList<>(responses.size());
@@ -470,7 +470,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static List<Response> receiveBulkFromTopicEnhanced(final String topicName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static List<Response> receiveBulkFromTopicEnhanced(final String topicName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(topicName, "Topic name");
         final List<TextMessage> responses = MessageConnector.receiveBulkFromTopic(topicName, selector, maxSize, timeout, secure);
         final List<Response> enhanceds = new ArrayList<>(responses.size());
@@ -538,7 +538,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO, final Map<String, Object> customHeaders, final boolean secure, final long receiveTimeout, final long sendTimeout, final int priority) throws InfrastructureException, CryptoException, JsonGenerationException, JsonMappingException, IOException {
+    public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO, final Map<String, Object> customHeaders, final boolean secure, final long receiveTimeout, final long sendTimeout, final int priority) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(uuid, "Universally unique identifier of the request");
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(requestICO, "Request Interconnect Object");
@@ -570,7 +570,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO, final Map<String, Object> customHeaders) throws InfrastructureException, JsonGenerationException, JsonMappingException, IOException {
+    public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO, final Map<String, Object> customHeaders) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(uuid, "Universally unique identifier of the request");
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(requestICO, "Request Interconnect Object");
@@ -601,7 +601,7 @@ public final class InterconnectConnector {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO) throws InfrastructureException, JsonGenerationException, JsonMappingException, IOException {
+    public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(uuid, "Universally unique identifier of the request");
         Preconditions.checkNotNull(queueName, "Queue name");
         Preconditions.checkNotNull(requestICO, "Request Interconnect Object");

@@ -20,6 +20,12 @@ package de.taimos.dvalin.interconnect.demo;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.taimos.dvalin.interconnect.core.daemon.Interconnect;
 import de.taimos.dvalin.interconnect.core.spring.RequestHandler;
 import de.taimos.dvalin.interconnect.demo.api.IRegistrationService;
@@ -35,18 +41,13 @@ import de.taimos.dvalin.interconnect.demo.model.requests.UpdateUserIVO_v1;
 import de.taimos.dvalin.interconnect.model.ivo.util.IVOQueryResultIVO_v1;
 import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RequestHandler
 public class Handler extends ADaemonHandler implements IUserService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    private static ConcurrentHashMap<Long, UserIVO_v1> users = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, UserIVO_v1> users = new ConcurrentHashMap<>();
 
     @Interconnect
     private IRegistrationService regService;
@@ -67,7 +68,7 @@ public class Handler extends ADaemonHandler implements IUserService {
         RegUserIVO_v1.RegUserIVO_v1Builder regB = new RegUserIVO_v1.RegUserIVO_v1Builder();
         regB.withName(createdUser.getName());
         regB.withUserId(createdUser.getIdAsLong());
-        regService.registerUser(regB.build());
+        this.regService.registerUser(regB.build());
 
         users.put(createdUser.getIdAsLong(), createdUser);
         return createdUser;
@@ -101,7 +102,7 @@ public class Handler extends ADaemonHandler implements IUserService {
 
     @Override
     public IVOQueryResultIVO_v1<UserIVO_v1> findUsers(FindUserIVO_v1 query) throws DaemonError {
-        LOGGER.info("Fetching users");
+        this.LOGGER.info("Fetching users");
         // TODO filter
         ArrayList<UserIVO_v1> usersList = new ArrayList<>(users.values());
         return IVOQueryResultIVO_v1.create(usersList, usersList.size());

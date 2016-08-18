@@ -160,7 +160,7 @@ public class EC2Context {
      */
     public Map<String, String> getAutoScalingGroupTags(String autoScalingGroupName) {
         Preconditions.checkArgument(autoScalingGroupName != null && !autoScalingGroupName.isEmpty());
-        AutoScalingGroup group = getAutoScalingGroup(autoScalingGroupName);
+        AutoScalingGroup group = this.getAutoScalingGroup(autoScalingGroupName);
         Map<String, String> tags = new HashMap<>();
         for (TagDescription tagDescription : group.getTags()) {
             tags.put(tagDescription.getKey(), tagDescription.getValue());

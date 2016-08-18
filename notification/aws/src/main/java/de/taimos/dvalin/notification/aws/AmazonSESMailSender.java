@@ -66,7 +66,7 @@ public class AmazonSESMailSender implements MailSender {
         Body sesBody = new Body().withHtml(new Content(message.getText()));
         Content subject = new Content(message.getSubject());
         req.setMessage(new Message().withSubject(subject).withBody(sesBody));
-        SendEmailResult emailResult = sesClient.sendEmail(req);
+        SendEmailResult emailResult = this.sesClient.sendEmail(req);
         LOGGER.info("Sent mail over SES with message id {}", emailResult.getMessageId());
     }
 
@@ -74,7 +74,7 @@ public class AmazonSESMailSender implements MailSender {
     @Override
     public void send(SimpleMailMessage... simpleMailMessages) throws MailException {
         for (SimpleMailMessage message : simpleMailMessages) {
-            send(message);
+            this.send(message);
         }
     }
 }

@@ -29,7 +29,7 @@ public abstract class JWTAuthenticationHandler extends AuthorizationProvider {
             return null;
         }
         try {
-            return loginUser(msg, this.auth.validateToken(auth));
+            return this.loginUser(msg, this.auth.validateToken(auth));
         } catch (ParseException e) {
             return null;
         }

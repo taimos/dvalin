@@ -48,7 +48,7 @@ import de.taimos.dvalin.jaxrs.MapperFactory;
 @Produces(MediaType.WILDCARD)
 public class JacksonProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
 
-    private ObjectMapper mapper = MapperFactory.createDefault();
+    private final ObjectMapper mapper = MapperFactory.createDefault();
 
 
     @Override

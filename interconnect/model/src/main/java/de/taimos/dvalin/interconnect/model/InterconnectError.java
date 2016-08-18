@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,10 +52,10 @@ public class InterconnectError implements InterconnectObject {
 
 
 	/** the type of error */
-	private InterconnectErrorType type;
+	private final InterconnectErrorType type;
 
 	/** a description of the problem */
-	private String message;
+	private final String message;
 
 
 	/**
@@ -96,7 +96,7 @@ public class InterconnectError implements InterconnectObject {
 	 * @throws JsonMappingException if the object cannot be mapped to a JSON string
 	 * @throws IOException if an I/O related problem occurred
 	 */
-	public String toJson() throws JsonGenerationException, JsonMappingException, IOException {
+	public String toJson() throws IOException {
 		return InterconnectMapper.toJson(this);
 	}
 
@@ -109,7 +109,7 @@ public class InterconnectError implements InterconnectObject {
 	 * @throws JsonMappingException if the given JSON data cannot be mapped to an InterconnectError object
 	 * @throws IOException if an I/O related problem occurred
 	 */
-	public static InterconnectError fromJson(String json) throws JsonParseException, JsonMappingException, IOException {
+	public static InterconnectError fromJson(String json) throws IOException {
 		return InterconnectMapper.fromJson(json, InterconnectError.class);
 	}
 

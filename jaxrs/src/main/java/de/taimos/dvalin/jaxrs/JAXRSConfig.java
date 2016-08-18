@@ -1,12 +1,13 @@
 package de.taimos.dvalin.jaxrs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.annotation.Annotation;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
-import java.lang.annotation.Annotation;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Configuration
@@ -27,7 +28,7 @@ public class JAXRSConfig {
     public ServiceAnnotationClassesProvider createServiceAnnotationClassesProvider() {
         ServiceAnnotationClassesProvider provider = new ServiceAnnotationClassesProvider();
         try {
-            provider.setServiceAnnotation((Class<? extends Annotation>) Class.forName(serviceAnnotation));
+            provider.setServiceAnnotation((Class<? extends Annotation>) Class.forName(this.serviceAnnotation));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Failed to load JAX-RS service annotation", e);
         }

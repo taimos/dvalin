@@ -60,9 +60,9 @@ public class AWSMetricSenderTest {
                 Assert.assertEquals(Double.valueOf(val), datum.getValue());
                 return null;
             }
-        }).when(cloudWatch).putMetricData(Mockito.any(PutMetricDataRequest.class));
-
-        sender.sendMetric(info, (double) val);
+        }).when(this.cloudWatch).putMetricData(Mockito.any(PutMetricDataRequest.class));
+    
+        this.sender.sendMetric(info, (double) val);
     }
 
     @Test
@@ -95,9 +95,9 @@ public class AWSMetricSenderTest {
                 Assert.assertEquals(dimensionValue, dimension.getValue());
                 return null;
             }
-        }).when(cloudWatch).putMetricData(Mockito.any(PutMetricDataRequest.class));
-
-        sender.sendMetric(info, (double) val);
+        }).when(this.cloudWatch).putMetricData(Mockito.any(PutMetricDataRequest.class));
+    
+        this.sender.sendMetric(info, (double) val);
     }
 
     @Test(expected = IllegalArgumentException.class)

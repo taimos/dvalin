@@ -14,7 +14,7 @@ import de.taimos.daemon.spring.annotations.TestComponent;
 @TestComponent
 public class TestMailSender implements MailSender {
 
-    private List<SimpleMailMessage> messages = new ArrayList<>();
+    private final List<SimpleMailMessage> messages = new ArrayList<>();
 
     @PostConstruct
     public void init(){
@@ -23,18 +23,18 @@ public class TestMailSender implements MailSender {
 
     @Override
     public void send(SimpleMailMessage simpleMailMessage) throws MailException {
-        messages.add(simpleMailMessage);
+        this.messages.add(simpleMailMessage);
     }
 
     @Override
     public void send(SimpleMailMessage... simpleMailMessages) throws MailException {
         for (SimpleMailMessage message : simpleMailMessages) {
-            send(message);
+            this.send(message);
         }
     }
 
     public List<SimpleMailMessage> getMessages() {
-        return messages;
+        return this.messages;
     }
 
     public void clear() {

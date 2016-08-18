@@ -36,6 +36,15 @@ package de.taimos.dvalin.jaxrs.remote;
  * #L%
  */
 
+import java.beans.PropertyDescriptor;
+import java.io.Serializable;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -55,15 +64,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringValueResolver;
-
-import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
 
 @SuppressWarnings("serial")
 @Component
@@ -161,8 +161,8 @@ public class RemoteServiceBeanPostProcessor implements InstantiationAwareBeanPos
      */
     private class RemoteServiceElement extends InjectionMetadata.InjectedElement {
 
-        private String serviceName;
-        private String baseURL;
+        private final String serviceName;
+        private final String baseURL;
 
 
         public RemoteServiceElement(Member member, AnnotatedElement ae, PropertyDescriptor pd) {

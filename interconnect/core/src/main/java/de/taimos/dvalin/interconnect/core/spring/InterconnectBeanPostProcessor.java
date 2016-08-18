@@ -25,9 +25,9 @@ package de.taimos.dvalin.interconnect.core.spring;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,7 +75,7 @@ public class InterconnectBeanPostProcessor implements InstantiationAwareBeanPost
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         Assert.notNull(beanFactory, "BeanFactory must not be null");
         this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
-        proxyFactory = beanFactory.getBean(DaemonProxyFactory.class);
+        this.proxyFactory = beanFactory.getBean(DaemonProxyFactory.class);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class InterconnectBeanPostProcessor implements InstantiationAwareBeanPost
             if (!IDaemon.class.isAssignableFrom(dependencyType)) {
                 throw new RuntimeException("Field has to be of type IDaemon but was of type " + dependencyType.getCanonicalName());
             }
-            return proxyFactory.create((Class<? extends IDaemon>) dependencyType);
+            return InterconnectBeanPostProcessor.this.proxyFactory.create((Class<? extends IDaemon>) dependencyType);
         }
     }
 

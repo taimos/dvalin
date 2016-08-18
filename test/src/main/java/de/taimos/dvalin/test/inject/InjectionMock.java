@@ -49,7 +49,7 @@ public class InjectionMock {
      * @return the mock object or <em>null</em> if none is found
      */
     public Object getMock(String field) {
-        return mocks.containsKey(field) ? mocks.get(field).mock : null;
+        return this.mocks.containsKey(field) ? this.mocks.get(field).mock : null;
     }
 
     /**
@@ -60,7 +60,7 @@ public class InjectionMock {
      * @return the mock for the given target class or <em>null</em> if none is found
      */
     public <T> T getMock(Class<T> clazz) {
-        return getMock(clazz, null);
+        return this.getMock(clazz, null);
     }
 
     /**
@@ -72,7 +72,7 @@ public class InjectionMock {
      * @return the mock for the given target class and qualifier or <em>null</em> if none is found
      */
     public <T> T getMock(Class<T> clazz, String qualifier) {
-        for (InjectedMock mock : mocks.values()) {
+        for (InjectedMock mock : this.mocks.values()) {
             if (mock.targetType.isAssignableFrom(clazz) && (qualifier == null || qualifier.equals(mock.qualifier))) {
                 return (T) mock.mock;
             }

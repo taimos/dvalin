@@ -26,8 +26,8 @@ public class MetricAspects {
     @Around("@annotation(executionTime)")
     public Object meterExecutionTime(ProceedingJoinPoint pjp, ExecutionTime executionTime) throws Throwable {
         MetricInfo info = new MetricInfo(executionTime.namespace(), executionTime.metric(), MetricUnit.Milliseconds);
-        if (executionTime.serviceNameDimension() && !StringUtils.isEmpty(serviceName)) {
-            info.withDimension("service", serviceName);
+        if (executionTime.serviceNameDimension() && !StringUtils.isEmpty(this.serviceName)) {
+            info.withDimension("service", this.serviceName);
         }
 
         long nanos = System.nanoTime();

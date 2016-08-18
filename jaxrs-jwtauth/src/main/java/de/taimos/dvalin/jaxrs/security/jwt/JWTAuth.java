@@ -43,7 +43,7 @@ public class JWTAuth {
     public SignedJWT signToken(JWTClaimsSet claims) {
         try {
             SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claims);
-            signedJWT.sign(new MACSigner(jwtSharedSecret));
+            signedJWT.sign(new MACSigner(this.jwtSharedSecret));
             return signedJWT;
         } catch (JOSEException e) {
             throw new RuntimeException("Error signing JSON Web Token", e);
@@ -57,8 +57,8 @@ public class JWTAuth {
      * @return the created and signed JSON Web Token as string
      */
     public String signToken(AuthenticatedUser user) {
-        Date expiry = new Date(System.currentTimeMillis() + jwtTimeout);
-        JWTClaimsSet claimsSet = user.toClaimSet(jwtIssuer, expiry);
+        Date expiry = new Date(System.currentTimeMillis() + this.jwtTimeout);
+        JWTClaimsSet claimsSet = user.toClaimSet(this.jwtIssuer, expiry);
         SignedJWT jwt = this.signToken(claimsSet);
         return jwt.serialize();
     }
@@ -73,7 +73,7 @@ public class JWTAuth {
     public SignedJWT verifyToken(String jwtString) throws ParseException {
         try {
             SignedJWT jwt = SignedJWT.parse(jwtString);
-            if (jwt.verify(new MACVerifier(jwtSharedSecret))) {
+            if (jwt.verify(new MACVerifier(this.jwtSharedSecret))) {
                 return jwt;
             }
             return null;

@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ public final class InterconnectMapper {
     /**
      * JSON mapper.
      */
-    private static ObjectMapper mapper = createMapper();
+    private static final ObjectMapper mapper = createMapper();
 
 
     /**
@@ -60,7 +60,7 @@ public final class InterconnectMapper {
      * @throws JsonMappingException if the mapping of the JSON data to the IVO failed
      * @throws IOException          if an I/O related problem occurred
      */
-    public static InterconnectObject fromJson(String data) throws JsonParseException, JsonMappingException, IOException {
+    public static InterconnectObject fromJson(String data) throws IOException {
         return InterconnectMapper.fromJson(data, InterconnectObject.class);
     }
 
@@ -75,7 +75,7 @@ public final class InterconnectMapper {
      * @throws JsonMappingException if the mapping of the JSON data to the IVO failed
      * @throws IOException          if an I/O related problem occurred
      */
-    public static <T extends InterconnectObject> T fromJson(String data, Class<T> clazz) throws JsonParseException, JsonMappingException, IOException {
+    public static <T extends InterconnectObject> T fromJson(String data, Class<T> clazz) throws IOException {
         return InterconnectMapper.mapper.readValue(data, clazz);
     }
 
@@ -88,7 +88,7 @@ public final class InterconnectMapper {
      * @throws JsonMappingException    if the object could not be mapped to a JSON string
      * @throws IOException             if an I/O related problem occurred
      */
-    public static String toJson(InterconnectObject object) throws JsonGenerationException, JsonMappingException, IOException {
+    public static String toJson(InterconnectObject object) throws IOException {
         return InterconnectMapper.mapper.writeValueAsString(object);
     }
 

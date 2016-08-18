@@ -19,6 +19,6 @@ public class SignalCloudFormationLifecycle extends SpringLifecycleAdapter {
 
     @Override
     public void started() {
-        cloudFormation.signalReady();
+        this.cloudFormation.signalReady();
     }
 }

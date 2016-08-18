@@ -1,10 +1,11 @@
 package de.taimos.dvalin.mongo.config;
 
-import com.github.mongobee.Mongobee;
-import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.github.mongobee.Mongobee;
+import com.mongodb.MongoClient;
 
 
 @Configuration
@@ -25,7 +26,7 @@ public class MongoDBConfig {
         Mongobee bee = new Mongobee(mongoClient);
         bee.setDbName(this.dbName);
         bee.setEnabled(this.beeEnabled);
-        bee.setChangeLogsScanPackage(beeBasePackage);
+        bee.setChangeLogsScanPackage(this.beeBasePackage);
         return bee;
     }
 

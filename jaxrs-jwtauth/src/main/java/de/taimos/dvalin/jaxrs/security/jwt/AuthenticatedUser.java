@@ -37,7 +37,7 @@ public final class AuthenticatedUser implements IUser {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
@@ -45,7 +45,7 @@ public final class AuthenticatedUser implements IUser {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -53,7 +53,7 @@ public final class AuthenticatedUser implements IUser {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
     public void setDisplayName(String displayName) {
@@ -61,7 +61,7 @@ public final class AuthenticatedUser implements IUser {
     }
 
     public String[] getRoles() {
-        return roles;
+        return this.roles;
     }
 
     public void setRoles(String[] roles) {
@@ -72,10 +72,10 @@ public final class AuthenticatedUser implements IUser {
         JWTClaimsSet.Builder b = new JWTClaimsSet.Builder();
         b.issuer(issuer);
         b.expirationTime(expiry);
-        b.subject(id);
-        b.claim(CLAIM_USERNAME, username);
-        b.claim(CLAIM_DISPLAY_NAME, displayName);
-        b.claim(CLAIM_ROLES, roles);
+        b.subject(this.id);
+        b.claim(CLAIM_USERNAME, this.username);
+        b.claim(CLAIM_DISPLAY_NAME, this.displayName);
+        b.claim(CLAIM_ROLES, this.roles);
         return b.build();
     }
 }

@@ -12,7 +12,7 @@ public class DateTool {
     private static final String PATTERN_DATE = "dd.MM.yyyy";
     private static final String PATTERN_TIME = "HH:mm";
 
-    private DateTimeZone zone = DateTime.now().getZone();
+    private final DateTimeZone zone = DateTime.now().getZone();
 
     public String dateLocal(DateTime dt) {
         if (dt == null) {

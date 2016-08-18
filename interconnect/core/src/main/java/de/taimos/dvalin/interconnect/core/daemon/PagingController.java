@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core.daemon;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -156,10 +156,7 @@ public final class PagingController<E extends IVO> implements Iterator<E> {
             this.batch = list.getElements();
 
             // check if we are at the end of the query
-            if (this.batch.size() == 0) {
-                return false;
-            }
-            return true;
+            return this.batch.size() != 0;
         }
         return true;
     }

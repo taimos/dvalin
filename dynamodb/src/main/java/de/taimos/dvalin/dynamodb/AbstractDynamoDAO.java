@@ -34,14 +34,14 @@ public abstract class AbstractDynamoDAO<T> {
         this.mapper = new DynamoDBMapper(this.client);
         try {
             DescribeTableResult tableResult = this.client.describeTable(this.getTableName());
-            LOGGER.info("DynamoDB table exists: {}", tableResult.getTable());
+            this.LOGGER.info("DynamoDB table exists: {}", tableResult.getTable());
         } catch (ResourceNotFoundException e) {
             CreateTableRequest request = this.mapper.generateCreateTableRequest(this.getEntityClass());
-            LOGGER.info("Create DynamoDB table: {}", request);
-            request.setProvisionedThroughput(getProvisionedThroughput());
+            this.LOGGER.info("Create DynamoDB table: {}", request);
+            request.setProvisionedThroughput(this.getProvisionedThroughput());
             this.modifyCreateTableRequest(request);
             CreateTableResult table = this.client.createTable(request);
-            LOGGER.info("Created table: {}", table.getTableDescription());
+            this.LOGGER.info("Created table: {}", table.getTableDescription());
         }
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractDynamoDAO<T> {
      * @return the name of the table to use
      */
     protected String getTableName() {
-        Class<T> entityClass = getEntityClass();
+        Class<T> entityClass = this.getEntityClass();
         if (!entityClass.isAnnotationPresent(DynamoDBTable.class)) {
             throw new IllegalStateException("Used getTableName on entity without @DynamoDBTable annotation");
         }

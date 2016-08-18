@@ -1,12 +1,14 @@
 package de.taimos.dvalin.mongo.config;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientURI;
-import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
+
+import de.taimos.daemon.spring.conditional.OnSystemProperty;
 
 
 @OnSystemProperty(propertyName = "mongodb.type", propertyValue = "real")
@@ -29,7 +31,7 @@ public class RealClientConfig {
         builder.socketTimeout(this.socketTimeout);
         builder.connectTimeout(this.connectTimeout);
 
-        return new MongoClient(new MongoClientURI(mongoURI, builder));
+        return new MongoClient(new MongoClientURI(this.mongoURI, builder));
     }
 
 
