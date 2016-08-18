@@ -1,3 +1,14 @@
+# Version 1.10
+* Update dependencies
+    * daemon framework 2.9
+    * Spring 4.3.2
+    * Jackson 2.8.1
+    * CXF 3.1.7
+    * Mongo 3.3.0
+    * Fongo 2.0.7
+    * Hazelcast 3.7
+    * AWS 1.11.27
+
 # Version 1.9
 * add XDocReport for PDF creation (#22)
 * add library for Hazelcast clusters (#28)
