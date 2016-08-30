@@ -26,6 +26,7 @@ import javax.ws.rs.core.Context;
 
 import org.apache.cxf.jaxrs.ext.MessageContext;
 
+@Deprecated
 public interface IContextAware {
 
     @Context

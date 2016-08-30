@@ -1,3 +1,7 @@
+# Version 1.11
+* refactor JAX-RS context
+* AbstractAPI is now deprecated
+
 # Version 1.10
 * Update dependencies
     * daemon framework 2.9
