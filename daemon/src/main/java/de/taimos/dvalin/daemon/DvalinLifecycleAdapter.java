@@ -19,8 +19,8 @@ import de.taimos.daemon.spring.SpringDaemonAdapter;
  */
 public abstract class DvalinLifecycleAdapter extends SpringDaemonAdapter {
 
-    public static void start(String serviceName, DaemonLifecycleAdapter lifecycleAdapter) {
-        Log4jLoggingConfigurer.setup();
+    public static void start(String serviceName, DvalinLifecycleAdapter lifecycleAdapter) {
+        lifecycleAdapter.setupLogging();
         DaemonStarter.startDaemon(serviceName, lifecycleAdapter);
     }
 
@@ -86,6 +86,10 @@ public abstract class DvalinLifecycleAdapter extends SpringDaemonAdapter {
             listener.signalUSR2();
         }
         super.signalUSR2();
+    }
+    
+    protected void setupLogging() {
+        Log4jLoggingConfigurer.setup();
     }
 
     private Collection<ISpringLifecycleListener> getLifecycleListeners() {
