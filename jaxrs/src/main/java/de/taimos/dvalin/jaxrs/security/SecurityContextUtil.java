@@ -37,8 +37,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.taimos.dvalin.jaxrs.monitoring.InvocationInstance;
+import de.taimos.dvalin.jaxrs.context.DvalinRSContext;
 import de.taimos.restutils.RESTAssert;
 
+/**
+ * @deprecated inject {@link DvalinRSContext} to replace super methods
+ */
+@Deprecated
 public class SecurityContextUtil {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
