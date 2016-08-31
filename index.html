@@ -1,34 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>Dvalin by taimos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>Dvalin by taimos</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>Dvalin</h1>
-        <h2>Taimos microservices framework</h2>
-        <a href="https://github.com/taimos/dvalin" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+    <section class="page-header">
+      <h1 class="project-name">Dvalin</h1>
+      <h2 class="project-tagline">Taimos microservices framework</h2>
+      <a href="https://github.com/taimos/dvalin" class="btn">View on GitHub</a>
+      <a href="https://github.com/taimos/dvalin/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/taimos/dvalin/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <p><a href="https://travis-ci.org/taimos/dvalin"><img src="https://travis-ci.org/taimos/dvalin.svg" alt="Build Status"></a>
+    <section class="main-content">
+      <p><a href="https://travis-ci.org/taimos/dvalin"><img src="https://travis-ci.org/taimos/dvalin.svg" alt="Build Status"></a>
 <a href="https://codecov.io/github/taimos/dvalin?branch=master"><img src="https://codecov.io/github/taimos/dvalin/coverage.svg?branch=master" alt="codecov.io"></a></p>
 
 <h1>
@@ -85,6 +76,10 @@ all the needed Spring components are started.</p>
 <li>
 <code>cloud</code> - basic tools to communicate with Cloud providers</li>
 <li>
+<code>cluster</code> - basic tools to form a cluster</li>
+<li>
+<code>template</code> - templating functionality</li>
+<li>
 <code>notification</code> - notification service to send e-mails and use template engines</li>
 <li>
 <code>monitoring</code> - monitoring service to report statistics of your service</li>
@@ -109,6 +104,9 @@ all the needed Spring components are started.</p>
 <p>The entry point for your application is the <code>DvalinLifecycleAdapter</code>. Just extend it and implement a main method that calls the static <code>start</code> method. 
 This configures your application to read properties from a file called <code>dvalin.properties</code>.</p>
 
+<p>By overriding the <code>setupLogging()</code> Method you can enable the <code>StructuredLogConfigurer</code> instead of the default Log4j configuration. 
+Logging will the use the console and print all entries in JSON format. The <code>DvalinLogger</code> can be used to modify the MDC for a single log line.</p>
+
 <h2>
 <a id="jaxrs" class="anchor" href="#jaxrs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jaxrs</h2>
 
@@ -118,7 +116,7 @@ It will then automatically configure a Jetty web server running on a given port 
 By default all beans annotated with <code>@JaxRsComponent</code> will be registered as provider or endpoint respectively. 
 Additionally several extra features are implemented.</p>
 
-<p>You can subclass the <code>AbstractAPI</code> class to get easier access to some of the features.  </p>
+<p>You can inject the <code>DvalinRSContext</code> to get easier access to some of the features.  </p>
 
 <h3>
 <a id="monitoring" class="anchor" href="#monitoring" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Monitoring</h3>
@@ -169,7 +167,7 @@ in your Spring context the JAX-RS filter will be deployed using the <code>@BeanA
 <h4>
 <a id="authorization" class="anchor" href="#authorization" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authorization</h4>
 
-<p>To limit access to sensitive resources you can use the <code>SecurityContextUtil</code> that provides methods to retrieve 
+<p>To limit access to sensitive resources you can use the injectable <code>DvalinRSContext</code> that provides methods to retrieve 
 information about the logged in user or to assert given roles. Additionally dvalin registers filters that 
 support the following annotations to limit access to resources.</p>
 
@@ -400,9 +398,37 @@ See <code>EC2Context</code> and <code>CloudFormation</code> beans for details.</
 the property <code>aws.cfnsignal</code> to <code>true</code>.</p>
 
 <h2>
+<a id="cluster" class="anchor" href="#cluster" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>cluster</h2>
+
+<p>The <code>cluster</code> libraries provide tools to form a cluster of services. Currently only Hazelcast is available 
+under <code>cluster-hazelcast</code> and can be added using maven. It adds hazelcast to the classpath and auto configuration for clusters.
+To form a cluster set the system property <code>hazelcast.cluster</code> to <code>true</code> and implement <code>ClusterInfoProvider</code> as a component.
+To connect to a cluster implement the same interface and set the property <code>hazelcast.client</code> to the name 
+of a cluster that the provider can resolve.</p>
+
+<h2>
+<a id="templating" class="anchor" href="#templating" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>templating</h2>
+
+<p>This component provides a templating engine based on Velocity and PDF generation based on XDocReport.</p>
+
+<h3>
+<a id="template-engine" class="anchor" href="#template-engine" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Template engine</h3>
+
+<p>For templating the Velocity template engine is used. Inject the <code>ITemplateResolver</code> in your bean to process 
+templates. You can provide a location relative to the folder <code>/velocity</code> in your classpath or you provide 
+the template as String.</p>
+
+<h3>
+<a id="pdf-generation" class="anchor" href="#pdf-generation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PDF generation</h3>
+
+<p>For PDF generation XDocReport is used. Inject the <code>ReportService</code> tp create PDF files. You provide a location 
+relative to the folder <code>/xdocreport</code> in your classpath targetting a docx file. This file is then merged 
+with the given context and a PDF is created. </p>
+
+<h2>
 <a id="notification" class="anchor" href="#notification" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>notification</h2>
 
-<p>The notification component provides a templating engine and support for sending e-mails. The <code>notification-aws</code> 
+<p>The notification component provides support for sending e-mails. The <code>notification-aws</code> 
 library provides an implementation of the <code>MailSender</code> that uses Amazon SimpleEmailService.</p>
 
 <h3>
@@ -413,13 +439,6 @@ library provides an implementation of the <code>MailSender</code> that uses Amaz
 used in integration tests. The <code>notification-aws</code> version uses SES to send emails. The region to use can 
 be specified by the property <code>aws.mailregion</code>. If it is not set, the region is derived using the strategy 
 defined above for the <code>AWSClient</code> annotation.</p>
-
-<h3>
-<a id="template-engine" class="anchor" href="#template-engine" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Template engine</h3>
-
-<p>For templating the Velocity template engine is used. Inject the <code>ITemplateResolver</code> in your bean to process 
-templates. You can provide a location relative to the folder <code>/velocity</code> in your classpath or you provide 
-the template as String.</p>
 
 <h2>
 <a id="monitoring-1" class="anchor" href="#monitoring-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>monitoring</h2>
@@ -468,24 +487,14 @@ before test execution.</p>
 <p>The <code>InjectionUtils</code> helper class provides methods to inject dependencies into beans. This allows to fill 
 <code>@Autowired</code> annotated fields in unit tests with mocked objects. See the javadoc of the class for further 
 information about the features.</p>
-        </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/taimos/dvalin/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/taimos/dvalin/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/taimos/dvalin">Dvalin</a> is maintained by <a href="https://github.com/taimos">taimos</a>.</span>
 
-          <p class="repo-owner"><a href="https://github.com/taimos/dvalin"></a> is maintained by <a href="https://github.com/taimos">taimos</a>.</p>
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
+    </section>
 
   
   </body>
