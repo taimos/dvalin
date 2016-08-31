@@ -53,6 +53,8 @@
         <module name="dvalin-monitoring-logging" />
         <module name="dvalin-notification-aws" />
         <module name="dvalin-notification-core" />
+        <module name="dvalin-orchestration-core" />
+        <module name="dvalin-orchestration-etcd" />
         <module name="dvalin-template-velocity" />
         <module name="dvalin-template-xdocreport" />
         <module name="dvalin-test" />
@@ -86,6 +88,9 @@
       <module name="dvalin-notification-aws" target="1.8" />
       <module name="dvalin-notification-core" target="1.8" />
       <module name="dvalin-notification-parent" target="1.8" />
+      <module name="dvalin-orchestration-core" target="1.8" />
+      <module name="dvalin-orchestration-etcd" target="1.8" />
+      <module name="dvalin-orchestration-parent" target="1.8" />
       <module name="dvalin-parent" target="1.8" />
       <module name="dvalin-template-parent" target="1.8" />
       <module name="dvalin-template-velocity" target="1.8" />
