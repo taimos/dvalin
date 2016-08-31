@@ -72,7 +72,7 @@ It will then automatically configure a Jetty web server running on a given port 
 By default all beans annotated with `@JaxRsComponent` will be registered as provider or endpoint respectively. 
 Additionally several extra features are implemented.
 
-You can subclass the `AbstractAPI` class to get easier access to some of the features.  
+You can inject the `DvalinRSContext` to get easier access to some of the features.  
 
 ### Monitoring
 
@@ -115,7 +115,7 @@ in your Spring context the JAX-RS filter will be deployed using the `@BeanAvaila
 
 #### Authorization
 
-To limit access to sensitive resources you can use the `SecurityContextUtil` that provides methods to retrieve 
+To limit access to sensitive resources you can use the injectable `DvalinRSContext` that provides methods to retrieve 
 information about the logged in user or to assert given roles. Additionally dvalin registers filters that 
 support the following annotations to limit access to resources.
 
