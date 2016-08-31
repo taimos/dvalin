@@ -1,6 +1,7 @@
 # Version 1.11
 * refactor JAX-RS context
 * AbstractAPI is now deprecated
+* add structured logging
 
 # Version 1.10
 * Update dependencies
