@@ -4,15 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import de.taimos.daemon.LifecyclePhase;
-
 public interface ServiceDiscovery {
     
     // methods concering the current service instance
     
-    void registerInstance(LifecyclePhase phase);
+    void registerInstance();
     
-    void updateInstance(LifecyclePhase phase);
+    void updateInstance();
     
     void unregisterInstance();
     
@@ -27,9 +25,5 @@ public interface ServiceDiscovery {
     void addListenerForService(String serviceName, ServiceListener listener);
     
     void removeListenerForService(String serviceName, ServiceListener listener);
-    
-    void addListenerForServiceInstance(String serviceName, String instanceId, ServiceListener listener);
-    
-    void removeListenerForServiceInstance(String serviceName, String instanceId, ServiceListener listener);
     
 }

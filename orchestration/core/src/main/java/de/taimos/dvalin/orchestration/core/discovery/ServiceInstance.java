@@ -35,4 +35,14 @@ public class ServiceInstance {
     public ServiceInstance withPhase(LifecyclePhase newPhase) {
         return new ServiceInstance(this.host, this.serviceName, this.instanceId, newPhase);
     }
+    
+    @Override
+    public String toString() {
+        return "ServiceInstance{" +
+            "host='" + host + '\'' +
+            ", serviceName='" + serviceName + '\'' +
+            ", instanceId='" + instanceId + '\'' +
+            ", phase=" + phase +
+            '}';
+    }
 }
