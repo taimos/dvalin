@@ -559,6 +559,8 @@
         <module>daemon</module>
         <module>test</module>
         <module>cloud</module>
+        <module>cluster</module>
+        <module>orchestration</module>
         <module>template</module>
         <module>notification</module>
         <module>jaxrs</module>
@@ -569,6 +571,5 @@
         <module>dynamodb</module>
         <module>interconnect</module>
         <module>archetypes</module>
-        <module>cluster</module>
     </modules>
 </project>
