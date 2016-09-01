@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +40,7 @@ import de.taimos.dvalin.orchestration.core.discovery.ServiceListener;
 import mousio.etcd4j.EtcdClient;
 import mousio.etcd4j.promises.EtcdResponsePromise;
 import mousio.etcd4j.responses.EtcdAuthenticationException;
+import mousio.etcd4j.responses.EtcdErrorCode;
 import mousio.etcd4j.responses.EtcdException;
 import mousio.etcd4j.responses.EtcdKeysResponse;
 
@@ -62,6 +65,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
     private Map<String, Object> properties;
     
     private final Multimap<String, ServiceListener> serviceListeners = ArrayListMultimap.create();
+    private final ConcurrentMap<String, Long> etcdIndex = new ConcurrentHashMap<>();
     
     @PostConstruct
     public void init() {
@@ -172,16 +176,15 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
                 while (this.serviceListeners.containsKey(serviceName)) {
                     LOGGER.info("Polling for service updates for service {}", serviceName);
                     try {
-                        //                        long currentIndex = 1;
                         EtcdResponsePromise<EtcdKeysResponse> send = this.client.get(serviceKey)
-                            .waitForChange(/*currentIndex*/)
+                            .waitForChange(this.etcdIndex.getOrDefault(serviceName, 1L))
                             .timeout(10, TimeUnit.SECONDS)
                             .recursive()
                             .send();
                         
                         try {
                             EtcdKeysResponse response = send.get();
-                            //                                currentIndex = response.node.getModifiedIndex()+1;
+                            this.etcdIndex.put(serviceName, response.node.getModifiedIndex() + 1);
                             Matcher matcher = keyPattern.matcher(response.node.getKey());
                             if (matcher.matches()) {
                                 String instanceId = matcher.group(1);
@@ -213,7 +216,12 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
                         } catch (EtcdAuthenticationException e) {
                             LOGGER.warn("ETCD authentication error", e);
                         } catch (EtcdException e) {
-                            LOGGER.warn("ETCD error", e);
+                            if (e.getErrorCode() == EtcdErrorCode.EventIndexCleared) {
+                                LOGGER.info("Skipped events as index was outdated");
+                                this.etcdIndex.put(serviceName, e.getIndex());
+                            } else {
+                                LOGGER.warn("ETCD error", e);
+                            }
                         }
                     } catch (IOException e) {
                         LOGGER.warn("Error waiting for instance updates", e);
