@@ -52,6 +52,7 @@ These libraries are:
 * `notification` - notification service to send e-mails and use template engines
 * `monitoring` - monitoring service to report statistics of your service
 * `interconnect` - communication framework to connect micro services with each other
+* `orchestration` - orchestration tools like service discovery and global configuration
 * `test` - utilities for writing tests
 
 ## daemon
@@ -345,6 +346,16 @@ Dvalin also provides AspectJ annotations that send metrics automatically.
 ## interconnect
 
 *coming soon*
+
+## orchestration
+
+The `orchestration` libraries provide tools for orchestration like service discovery and global configuration.
+Currently only etcd is available under `orchestration-etcd` and can be added using maven. 
+To use it set the system property `orchestration.etcd.peers` to a comma separated list of peer URIs.
+You can then autowire instances of `ServiceDiscovery` and `GlobalConfiguration`.
+
+Other bindings are planned for the future.
+
 
 ## test
 
