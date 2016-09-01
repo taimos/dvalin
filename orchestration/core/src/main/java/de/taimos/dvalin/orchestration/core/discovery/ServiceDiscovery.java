@@ -16,6 +16,8 @@ public interface ServiceDiscovery {
     
     void setAdditionalProperties(Map<String, Object> properties);
     
+    Optional<Map<String, Object>> getAdditionalProperties();
+    
     // methods to fetch information about other instances
     
     List<ServiceInstance> getInstancesForService(String serviceName);

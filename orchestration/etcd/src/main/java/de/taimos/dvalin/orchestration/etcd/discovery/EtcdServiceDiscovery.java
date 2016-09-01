@@ -120,6 +120,11 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
     }
     
     @Override
+    public Optional<Map<String, Object>> getAdditionalProperties() {
+        return Optional.ofNullable(this.properties);
+    }
+    
+    @Override
     public List<ServiceInstance> getInstancesForService(String serviceName) {
         List<ServiceInstance> list = new ArrayList<>();
         try {
