@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,11 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
     public void init() {
         List<URI> uris = Arrays.stream(this.peers.split(",")).map(URI::create).collect(Collectors.toList());
         this.client = new EtcdClient(uris.toArray(new URI[0]));
+    }
+    
+    @PreDestroy
+    public void shutdown() {
+        this.serviceListeners.clear();
     }
     
     @Override
@@ -174,7 +180,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
                 String serviceKey = this.getServiceKey(serviceName);
                 Pattern keyPattern = Pattern.compile(serviceKey + "/([A-Fa-f0-9\\-]+)");
                 while (this.serviceListeners.containsKey(serviceName)) {
-                    LOGGER.info("Polling for service updates for service {}", serviceName);
+                    LOGGER.debug("Polling for service updates for service {}", serviceName);
                     try {
                         EtcdResponsePromise<EtcdKeysResponse> send = this.client.get(serviceKey)
                             .waitForChange(this.etcdIndex.getOrDefault(serviceName, 1L))
