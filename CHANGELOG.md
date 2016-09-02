@@ -2,6 +2,8 @@
 * refactor JAX-RS context
 * AbstractAPI is now deprecated
 * add structured logging
+* add orchestration module (#38)
+* add push service (#12)
 
 # Version 1.10
 * Update dependencies

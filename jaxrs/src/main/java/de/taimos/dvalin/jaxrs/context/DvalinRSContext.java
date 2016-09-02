@@ -2,6 +2,8 @@ package de.taimos.dvalin.jaxrs.context;
 
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.cxf.jaxrs.ext.MessageContext;
@@ -83,5 +85,15 @@ public interface DvalinRSContext {
      * @return the {@link MessageContext} of the current request
      */
     MessageContext getMessageContext();
+    
+    /**
+     * @return the {@link HttpServletRequest} of the current request
+     */
+    HttpServletRequest getHttpServletRequest();
+    
+    /**
+     * @return the {@link HttpServletResponse} of the current request
+     */
+    HttpServletResponse getHttpServletResponse();
     
 }

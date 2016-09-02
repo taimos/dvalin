@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.RedirectionException;
@@ -99,13 +100,23 @@ public class JAXRSContextImpl implements DvalinRSContext {
     
     @Override
     public String getCurrentURI() {
-        HttpServletRequest request = this.getMessageContext().getHttpServletRequest();
+        HttpServletRequest request = this.getHttpServletRequest();
         final String path = request.getRequestURI();
         final String query = request.getQueryString();
         if (query != null) {
             return this.getServerURL() + path + "?" + query;
         }
         return this.getServerURL() + path;
+    }
+    
+    @Override
+    public HttpServletRequest getHttpServletRequest() {
+        return this.getMessageContext().getHttpServletRequest();
+    }
+    
+    @Override
+    public HttpServletResponse getHttpServletResponse() {
+        return this.getMessageContext().getHttpServletResponse();
     }
     
     @Override

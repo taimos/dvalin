@@ -52,6 +52,7 @@ These libraries are:
 * `notification` - notification service to send e-mails and use template engines
 * `monitoring` - monitoring service to report statistics of your service
 * `interconnect` - communication framework to connect micro services with each other
+* `orchestration` - orchestration tools like service discovery and global configuration
 * `test` - utilities for writing tests
 
 ## daemon
@@ -313,8 +314,14 @@ with the given context and a PDF is created.
 
 ## notification
 
-The notification component provides support for sending e-mails. The `notification-aws` 
-library provides an implementation of the `MailSender` that uses Amazon SimpleEmailService.
+The notification component provides support for sending e-mails and push messages. The `notification-aws` 
+library provides implementations of the `MailSender` using Amazon SimpleEmailService and the `PushService` 
+using Amazon SimpleNotificationService.
+
+To use the AWS push implementation provide the configuration `aws.pushApplicationARN` containing the 
+ARN of the platform application in SNS.
+ 
+For the MailSender you can override the current AWS region using the `aws.mailregion` property.
 
 ### E-Mail
 
@@ -345,6 +352,16 @@ Dvalin also provides AspectJ annotations that send metrics automatically.
 ## interconnect
 
 *coming soon*
+
+## orchestration
+
+The `orchestration` libraries provide tools for orchestration like service discovery and global configuration.
+Currently only etcd is available under `orchestration-etcd` and can be added using maven. 
+To use it set the system property `orchestration.etcd.peers` to a comma separated list of peer URIs.
+You can then autowire instances of `ServiceDiscovery` and `GlobalConfiguration`.
+
+Other bindings are planned for the future.
+
 
 ## test
 
