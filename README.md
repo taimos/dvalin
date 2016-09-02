@@ -318,10 +318,6 @@ The notification component provides support for sending e-mails and push message
 library provides implementations of the `MailSender` using Amazon SimpleEmailService and the `PushService` 
 using Amazon SimpleNotificationService.
 
-To use the AWS push implementation provide the configuration `aws.pushApplicationARN` containing the 
-ARN of the platform application in SNS.
- 
-For the MailSender you can override the current AWS region using the `aws.mailregion` property.
 
 ### E-Mail
 
@@ -330,6 +326,11 @@ Dvalin uses the standard Spring MailSender interface for its email support. The 
 used in integration tests. The `notification-aws` version uses SES to send emails. The region to use can 
 be specified by the property `aws.mailregion`. If it is not set, the region is derived using the strategy 
 defined above for the `AWSClient` annotation.
+
+### Push Notifications
+
+To use the AWS push implementation provide the configuration `aws.pushApplicationARN` containing the 
+ARN of the platform application in SNS.
 
 ## monitoring
 
