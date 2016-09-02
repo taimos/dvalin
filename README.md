@@ -314,8 +314,14 @@ with the given context and a PDF is created.
 
 ## notification
 
-The notification component provides support for sending e-mails. The `notification-aws` 
-library provides an implementation of the `MailSender` that uses Amazon SimpleEmailService.
+The notification component provides support for sending e-mails and push messages. The `notification-aws` 
+library provides implementations of the `MailSender` using Amazon SimpleEmailService and the `PushService` 
+using Amazon SimpleNotificationService.
+
+To use the AWS push implementation provide the configuration `aws.pushApplicationARN` containing the 
+ARN of the platform application in SNS.
+ 
+For the MailSender you can override the current AWS region using the `aws.mailregion` property.
 
 ### E-Mail
 
