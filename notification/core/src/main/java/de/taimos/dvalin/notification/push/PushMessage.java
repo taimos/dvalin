@@ -24,7 +24,7 @@ public abstract class PushMessage {
         MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         MAPPER.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-        MAPPER.enable(new MapperFeature[]{MapperFeature.AUTO_DETECT_GETTERS});
+        MAPPER.enable(MapperFeature.AUTO_DETECT_GETTERS);
     }
     
     public abstract String getType();

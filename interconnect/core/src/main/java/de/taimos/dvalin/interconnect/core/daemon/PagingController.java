@@ -163,7 +163,7 @@ public final class PagingController<E extends IVO> implements Iterator<E> {
 
     @Override
     public E next() {
-        if (this.hasNext() != true) {
+        if (!this.hasNext()) {
             throw new NoSuchElementException();
         }
         this.batchIndex++;

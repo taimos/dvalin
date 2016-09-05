@@ -1,6 +1,7 @@
 # Version 1.12
 * JAXRSContextImpl has to be normal component not Prod only (#42)
 * added @TestComponent for PushService (#43)
+* fixed some code quality issues
 
 # Version 1.11
 * refactor JAX-RS context

@@ -6,6 +6,7 @@ package de.taimos.dvalin.test.inject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.mockito.Mockito;
@@ -124,9 +125,7 @@ public class InjectionUtils {
 
     private static List<Field> getFields(Class beanClass) {
         List<Field> fields = new ArrayList<>();
-        for (Field field : beanClass.getDeclaredFields()) {
-            fields.add(field);
-        }
+        Collections.addAll(fields, beanClass.getDeclaredFields());
         if (!beanClass.getSuperclass().equals(Object.class)) {
             fields.addAll(getFields(beanClass.getSuperclass()));
         }

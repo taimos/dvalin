@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,6 @@ import com.github.mongobee.Mongobee;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.ListIndexesIterable;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.util.JSON;
 
 public class Tester extends ABaseTest {
@@ -109,9 +108,7 @@ public class Tester extends ABaseTest {
         Assert.assertNull(find2);
 
         ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName).getCollection("TestObject").listIndexes();
-        MongoCursor<Document> iterator = listIndexes.iterator();
-        while (iterator.hasNext()) {
-            Object index = iterator.next();
+        for (Document index : listIndexes) {
             System.out.println(index.toString());
         }
     }

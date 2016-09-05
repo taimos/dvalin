@@ -20,16 +20,17 @@ package de.taimos.dvalin.jaxrs.security.basicauth;
  * #L%
  */
 
-import de.taimos.daemon.spring.conditional.BeanAvailable;
-import de.taimos.dvalin.jaxrs.JaxRsComponent;
-import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.HttpHeaders;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.HttpHeaders;
+import de.taimos.daemon.spring.conditional.BeanAvailable;
+import de.taimos.dvalin.jaxrs.JaxRsComponent;
+import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
 
 @JaxRsComponent
 @BeanAvailable(IBasicAuthUserDAO.class)
@@ -47,7 +48,7 @@ public class BasicAuthFilter extends AuthorizationProvider {
     protected SecurityContext handleAuthHeader(ContainerRequestContext requestContext, Message msg, String type, String auth) {
         if (auth != null && type.toLowerCase().equals("basic")) {
             String decoded = new String(Base64.decodeBase64(auth));
-            if (decoded == null || !decoded.contains(":")) {
+            if (!decoded.contains(":")) {
                 return null;
             }
             String username = decoded.substring(0, decoded.indexOf(":"));

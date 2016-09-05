@@ -1,11 +1,8 @@
 package de.taimos.dvalin.jpa.config;
 
-import de.taimos.daemon.spring.conditional.BeanAvailable;
-import liquibase.exception.LiquibaseException;
-import liquibase.integration.spring.SpringLiquibase;
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +15,7 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
-import java.util.List;
+import liquibase.integration.spring.SpringLiquibase;
 
 
 @Configuration

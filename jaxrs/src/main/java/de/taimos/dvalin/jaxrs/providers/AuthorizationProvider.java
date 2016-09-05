@@ -62,7 +62,7 @@ public abstract class AuthorizationProvider implements ContainerRequestFilter {
 
         HttpHeaders head = new HttpHeadersImpl(m);
         String authHeader = head.getHeaderString(WSConstants.HEADER_AUTHORIZATION);
-        if ((authHeader != null) && !authHeader.isEmpty() && (authHeader.indexOf(" ") != -1)) {
+        if ((authHeader != null) && !authHeader.isEmpty() && (authHeader.contains(" "))) {
             int index = authHeader.indexOf(" ");
             String type = authHeader.substring(0, index);
             String auth = authHeader.substring(index + 1);

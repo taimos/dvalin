@@ -4,6 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
+import org.bson.types.ObjectId;
+import org.jongo.Jongo;
+import org.jongo.MongoCollection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+
+import de.taimos.dvalin.mongo.JongoFactory;
+
 /*
  * #%L
  * Spring DAO Mongo
@@ -23,20 +36,6 @@ import java.util.List;
  * limitations under the License.
  * #L%
  */
-
-import javax.annotation.PostConstruct;
-
-import org.bson.types.ObjectId;
-import org.jongo.Jongo;
-import org.jongo.MongoCollection;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.mongodb.DB;
-import com.mongodb.MongoClient;
-
-import de.taimos.dvalin.mongo.JongoFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 
 @Repository

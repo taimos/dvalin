@@ -233,9 +233,7 @@ public class InterconnectRequestMock implements IRequestMock {
                     if (daemonMethod.invoke(mockInstance, ico) == null) {
                         return;
                     }
-                } catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | IllegalArgumentException | SecurityException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -252,7 +250,7 @@ public class InterconnectRequestMock implements IRequestMock {
                 InterconnectContext.setRequestClass(IVO.class);
             }
             final IDaemonHandler mockInstance;
-            if (this.singleton == true) {
+            if (this.singleton) {
                 mockInstance =  (ASingletonHandlerMock) this.beanFactory.getBean(this.beanName);
             } else {
                 // TODO check Spring startup state to prevent errors from prototype mocks

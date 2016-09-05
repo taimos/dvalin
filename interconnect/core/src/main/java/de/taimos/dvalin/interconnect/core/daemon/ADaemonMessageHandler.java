@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core.daemon;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -168,11 +168,11 @@ public abstract class ADaemonMessageHandler {
             }
             final IDaemonHandler handler = this.createRequestHandler();
             final StringBuilder sbInvokeLog = new StringBuilder();
-            sbInvokeLog.append("Invoke " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")");
+            sbInvokeLog.append("Invoke ").append(method.getMethod().getName()).append("(").append(icoClass.getSimpleName()).append(")");
             if (ivoIn instanceof IPageable) {
-                sbInvokeLog.append(" at Page " + ((IPageable) ivoIn).getOffset() + ";" + ((IPageable) ivoIn).getLimit());
+                sbInvokeLog.append(" at Page ").append(((IPageable) ivoIn).getOffset()).append(";").append(((IPageable) ivoIn).getLimit());
             }
-            sbInvokeLog.append(" with " + InterconnectContext.getContext());
+            sbInvokeLog.append(" with ").append(InterconnectContext.getContext());
             this.getLogger().info(sbInvokeLog.toString());
             if (method.getType() == DaemonScanner.Type.voit) {
                 this.handleReceiver(handler, method, ivoIn);

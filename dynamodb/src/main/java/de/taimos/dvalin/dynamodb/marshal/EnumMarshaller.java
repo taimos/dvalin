@@ -8,7 +8,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshaller;
 
 /**
  * {@link DynamoDBMarshaller} to (de-)serialize enums using the string representation
+ * @deprecated Replaced by {@link com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConvertedEnum}
  */
+@Deprecated
 public class EnumMarshaller implements DynamoDBMarshaller<Enum> {
 
     @Override

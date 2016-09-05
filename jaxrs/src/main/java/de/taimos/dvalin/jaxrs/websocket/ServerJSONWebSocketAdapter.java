@@ -58,7 +58,6 @@ public abstract class ServerJSONWebSocketAdapter<T> extends WebSocketAdapter {
         } catch (IOException e1) {
             ServerJSONWebSocketAdapter.LOGGER.info("Got invalid message", e1);
             this.onWebSocketInvalidMessage(message);
-            return;
         }
     }
 
