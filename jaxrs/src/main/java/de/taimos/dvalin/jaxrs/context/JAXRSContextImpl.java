@@ -17,15 +17,15 @@ import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.apache.cxf.jaxrs.ext.MessageContextImpl;
 import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.google.common.base.Charsets;
 
-import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.jaxrs.monitoring.InvocationInstance;
 import de.taimos.dvalin.jaxrs.security.IUser;
 import de.taimos.restutils.RESTAssert;
 
-@ProdComponent
+@Component
 public class JAXRSContextImpl implements DvalinRSContext {
     
     @Value("${server.url:http://localhost:${jaxrs.bindport:${svc.port:8080}}}")
