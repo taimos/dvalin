@@ -8,6 +8,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
+import java.util.UUID;
+
 
 @Configuration
 @OnSystemProperty(propertyName = "ds.type", propertyValue = "HSQL")
@@ -16,7 +18,8 @@ public class DatabaseHSQL {
     @Bean
     public DataSource dataSource() {
         EmbeddedDatabaseFactoryBean factoryBean = new EmbeddedDatabaseFactoryBean();
-        factoryBean.setDatabaseName("dataSource");
+        // randomize database name to get a new one each time
+        factoryBean.setDatabaseName(UUID.randomUUID().toString());
         factoryBean.setDatabaseType(EmbeddedDatabaseType.HSQL);
         factoryBean.afterPropertiesSet();
         return factoryBean.getObject();
