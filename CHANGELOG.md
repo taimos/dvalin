@@ -1,3 +1,6 @@
+# Version 1.13
+* randomize database name for HSQL to get a new instance every time
+
 # Version 1.12
 * JAXRSContextImpl has to be normal component not Prod only (#42)
 * added @TestComponent for PushService (#43)
