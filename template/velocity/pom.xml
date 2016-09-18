@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-template-parent</artifactId>
-        <version>1.13-SNAPSHOT</version>
+        <version>1.13</version>
     </parent>
     <artifactId>dvalin-template-velocity</artifactId>
     <name>Dvalin Velocity support</name>
