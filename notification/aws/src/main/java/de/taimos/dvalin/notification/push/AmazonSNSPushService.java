@@ -15,6 +15,7 @@ import com.amazonaws.services.sns.model.InvalidParameterException;
 import com.amazonaws.services.sns.model.PublishRequest;
 
 import de.taimos.daemon.spring.annotations.ProdComponent;
+import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.cloud.aws.AWSClient;
 
 /**
@@ -27,6 +28,7 @@ import de.taimos.dvalin.cloud.aws.AWSClient;
  * </ul>
  */
 @ProdComponent
+@OnSystemProperty(propertyName = "aws.pushApplicationARN")
 public class AmazonSNSPushService implements PushService {
     
     public static final Logger LOGGER = LoggerFactory.getLogger(AmazonSNSPushService.class);
