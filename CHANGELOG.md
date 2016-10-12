@@ -1,6 +1,11 @@
 # Version 1.14
 * Only start PushService when property is present (#45)
-
+* Update dependencies
+    * AWS 1.11.41
+    * daemon framework 2.10
+    * Spring 4.3.3
+    * Jackson 2.8.3
+    
 # Version 1.13
 * randomize database name for HSQL to get a new instance every time
 
