@@ -1,3 +1,6 @@
+# Version 1.14
+* Only start PushService when property is present (#45)
+
 # Version 1.13
 * randomize database name for HSQL to get a new instance every time
 
