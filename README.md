@@ -329,8 +329,11 @@ defined above for the `AWSClient` annotation.
 
 ### Push Notifications
 
-To use the AWS push implementation provide the configuration `aws.pushApplicationARN` containing the 
-ARN of the platform application in SNS.
+To use the AWS push implementation provide configurations containing the ARN of the platform application in SNS.
+
+* `aws.pushApplicationARN.GCM` - the ARN of the GCM application 
+* `aws.pushApplicationARN.APNS` - the ARN of the APNS application 
+* `aws.pushApplicationARN.APNS_SANDBOX` - the ARN of the APNS_SANDBOX application 
 
 ## monitoring
 
