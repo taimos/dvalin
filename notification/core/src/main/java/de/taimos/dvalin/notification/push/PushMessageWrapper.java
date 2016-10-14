@@ -10,7 +10,7 @@ public class PushMessageWrapper {
     
     private static ObjectMapper MAPPER = new ObjectMapper();
     
-    private Map<String, PushMessage> payload = new HashMap<>();
+    private Map<Platform, PushMessage> payload = new HashMap<>();
     
     public void addPushMessage(PushMessage message) {
         this.payload.put(message.getType(), message);
@@ -18,8 +18,8 @@ public class PushMessageWrapper {
     
     public String toMessage() throws IOException {
         Map<String, String> snsMessage = new HashMap<>();
-        for (Map.Entry<String, PushMessage> entry : this.payload.entrySet()) {
-            snsMessage.put(entry.getKey(), entry.getValue().getPushMessage());
+        for (Map.Entry<Platform, PushMessage> entry : this.payload.entrySet()) {
+            snsMessage.put(entry.getKey().name(), entry.getValue().getPushMessage());
         }
         return MAPPER.writeValueAsString(snsMessage);
     }

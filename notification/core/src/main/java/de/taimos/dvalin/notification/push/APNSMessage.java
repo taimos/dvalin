@@ -5,10 +5,7 @@ import java.util.Map;
 
 public class APNSMessage extends PushMessage {
     
-    public static final String TYPE_APNS = "APNS";
-    public static final String TYPE_APNS_SANDBOX = "APNS_SANDBOX";
-    
-    private final String type;
+    private final Platform type;
     
     private final String message;
     private String title;
@@ -17,10 +14,10 @@ public class APNSMessage extends PushMessage {
     private final Map<String, Object> customData = new HashMap<>();
     
     public APNSMessage(String message) {
-        this(TYPE_APNS, message);
+        this(Platform.APNS, message);
     }
     
-    public APNSMessage(String type, String message) {
+    public APNSMessage(Platform type, String message) {
         this.type = type;
         this.message = message;
     }
@@ -55,7 +52,7 @@ public class APNSMessage extends PushMessage {
     }
     
     @Override
-    public String getType() {
+    public Platform getType() {
         return this.type;
     }
 }
