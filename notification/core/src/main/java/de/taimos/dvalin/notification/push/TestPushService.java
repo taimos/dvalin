@@ -15,16 +15,22 @@ import de.taimos.daemon.spring.annotations.TestComponent;
 public class TestPushService implements PushService {
     
     public class TestDevice {
+        private Platform platform;
         private String id;
         private String token;
         private String userData;
         
-        public TestDevice(String id, String token, String userData) {
+        public TestDevice(Platform platform, String id, String token, String userData) {
+            this.platform = platform;
             this.id = id;
             this.token = token;
             this.userData = userData;
         }
-        
+    
+        public Platform getPlatform() {
+            return this.platform;
+        }
+    
         public String getId() {
             return this.id;
         }
@@ -59,8 +65,8 @@ public class TestPushService implements PushService {
         return this.devices;
     }
     
-    public void addDevice(String id, String deviceToken, String userData) {
-        this.devices.add(new TestDevice(id, deviceToken, userData));
+    public void addDevice(Platform platform, String id, String deviceToken, String userData) {
+        this.devices.add(new TestDevice(platform, id, deviceToken, userData));
     }
     
     public TestDevice getDeviceById(String id) {
@@ -73,14 +79,14 @@ public class TestPushService implements PushService {
     }
     
     @Override
-    public String registerDevice(String deviceToken, String userData) {
+    public String registerDevice(Platform platform, String deviceToken, String userData) {
         for (TestDevice device : this.devices) {
             if (device.getToken().equals(deviceToken)) {
                 return device.getId();
             }
         }
         String newId = UUID.randomUUID().toString();
-        this.addDevice(newId, deviceToken, userData);
+        this.addDevice(platform, newId, deviceToken, userData);
         return newId;
     }
     

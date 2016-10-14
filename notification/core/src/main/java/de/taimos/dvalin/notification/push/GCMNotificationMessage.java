@@ -47,7 +47,7 @@ public class GCMNotificationMessage extends PushMessage {
     }
     
     @Override
-    public String getType() {
-        return "GCM";
+    public Platform getType() {
+        return Platform.GCM;
     }
 }

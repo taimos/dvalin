@@ -15,7 +15,6 @@ import com.amazonaws.services.sns.model.InvalidParameterException;
 import com.amazonaws.services.sns.model.PublishRequest;
 
 import de.taimos.daemon.spring.annotations.ProdComponent;
-import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.cloud.aws.AWSClient;
 
 /**
@@ -28,7 +27,6 @@ import de.taimos.dvalin.cloud.aws.AWSClient;
  * </ul>
  */
 @ProdComponent
-@OnSystemProperty(propertyName = "aws.pushApplicationARN")
 public class AmazonSNSPushService implements PushService {
     
     public static final Logger LOGGER = LoggerFactory.getLogger(AmazonSNSPushService.class);
@@ -38,18 +36,23 @@ public class AmazonSNSPushService implements PushService {
     @AWSClient
     private AmazonSNSClient snsClient;
     
-    @Value("${aws.pushApplicationARN}")
-    private String applicationARN;
+    @Value("${aws.pushApplicationARN.GCM:}")
+    private String pushARN_GCM;
+    @Value("${aws.pushApplicationARN.APNS:}")
+    private String pushARN_APNS;
+    @Value("${aws.pushApplicationARN.APNS_SANDBOX:}")
+    private String pushARN_APNS_SANDBOX;
     
     @Override
-    public String registerDevice(String deviceToken, String userData) {
+    public String registerDevice(Platform platform, String deviceToken, String userData) {
         try {
-            LOGGER.info("Creating platform endpoint with device token {}", deviceToken);
-            CreatePlatformEndpointRequest cpeReq = new CreatePlatformEndpointRequest()
-                .withPlatformApplicationArn(this.applicationARN)
-                .withToken(deviceToken);
+            LOGGER.info("Creating platform endpoint with device token {} for platform", deviceToken, platform);
             
-            cpeReq.withCustomUserData(userData);
+            CreatePlatformEndpointRequest cpeReq = new CreatePlatformEndpointRequest()
+                .withPlatformApplicationArn(this.getApplicationARN(platform))
+                .withToken(deviceToken)
+                .withCustomUserData(userData);
+            
             CreatePlatformEndpointResult cpeRes = this.snsClient.createPlatformEndpoint(cpeReq);
             return cpeRes.getEndpointArn();
         } catch (InvalidParameterException ipe) {
@@ -67,6 +70,25 @@ public class AmazonSNSPushService implements PushService {
                 throw ipe;
             }
         }
+    }
+    
+    private String getApplicationARN(Platform platform) {
+        String arn = null;
+        switch (platform) {
+        case GCM:
+            arn = this.pushARN_GCM;
+            break;
+        case APNS:
+            arn = this.pushARN_APNS;
+            break;
+        case APNS_SANDBOX:
+            arn = this.pushARN_APNS_SANDBOX;
+            break;
+        }
+        if (arn != null && !arn.isEmpty()) {
+            return arn;
+        }
+        throw new RuntimeException("Missing application ARN for " + platform);
     }
     
     @Override

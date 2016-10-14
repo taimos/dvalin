@@ -27,7 +27,7 @@ public abstract class PushMessage {
         MAPPER.enable(MapperFeature.AUTO_DETECT_GETTERS);
     }
     
-    public abstract String getType();
+    public abstract Platform getType();
     
     protected abstract Map<String, Object> getPayload();
     

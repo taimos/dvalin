@@ -5,11 +5,12 @@ public interface PushService {
     /**
      * register a device with the notification service. If the token is already registered, the existing internal id is returned
      *
+     * @param platform    the platform of the device
      * @param deviceToken the device token
      * @param userData    the custom data to save with the device
      * @return the internal id of the registration
      */
-    String registerDevice(String deviceToken, String userData);
+    String registerDevice(Platform platform, String deviceToken, String userData);
     
     /**
      * send the message to the given device
