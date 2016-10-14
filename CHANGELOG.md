@@ -1,3 +1,6 @@
+# Version 1.15
+* fix handling of different pushARN for different platforms (#47)
+
 # Version 1.14
 * Only start PushService when property is present (#45)
 * Update dependencies
