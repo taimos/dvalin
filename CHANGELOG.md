@@ -1,3 +1,6 @@
+# Version 1.16
+* Fix handling of InvalidParameterException on SNS endpoint creation
+
 # Version 1.15
 * fix handling of different pushARN for different platforms (#47)
 
