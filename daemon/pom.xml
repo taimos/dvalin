@@ -3,7 +3,7 @@
     <parent>
         <artifactId>dvalin-parent</artifactId>
         <groupId>de.taimos</groupId>
-        <version>1.16-SNAPSHOT</version>
+        <version>1.16</version>
     </parent>
     <artifactId>dvalin-daemon</artifactId>
     <name>Daemon support for dvalin</name>

@@ -6,7 +6,7 @@
         <version>5</version>
     </parent>
     <artifactId>dvalin-parent</artifactId>
-    <version>1.16-SNAPSHOT</version>
+    <version>1.16</version>
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
     <inceptionYear>2015</inceptionYear>
@@ -74,7 +74,7 @@
         <connection>scm:git:git@github.com:taimos/dvalin.git</connection>
         <developerConnection>scm:git:git@github.com:taimos/dvalin.git</developerConnection>
         <url>scm:git:git@github.com:taimos/dvalin.git</url>
-        <tag>HEAD</tag>
+        <tag>v1.16</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
