@@ -1,5 +1,7 @@
 # Version 1.16
 * Fix handling of InvalidParameterException on SNS endpoint creation
+* add additional test helper
+* move test helper from `jaxrs` to `test`
 * Update dependencies
     * Spring 4.3.4
     * Powermock 1.6.6

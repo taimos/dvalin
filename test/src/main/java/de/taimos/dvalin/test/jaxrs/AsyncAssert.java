@@ -1,4 +1,4 @@
-package de.taimos.dvalin.jaxrs.test;
+package de.taimos.dvalin.test.jaxrs;
 
 /*
  * #%L

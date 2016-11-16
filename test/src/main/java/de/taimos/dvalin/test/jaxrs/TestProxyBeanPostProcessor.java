@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.taimos.dvalin.jaxrs.test;
+package de.taimos.dvalin.test.jaxrs;
 
 /*
  * #%L
@@ -49,7 +49,6 @@ import java.util.List;
 
 import javax.ws.rs.ext.Provider;
 
-import de.taimos.daemon.spring.annotations.TestComponent;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -67,6 +66,8 @@ import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringValueResolver;
+
+import de.taimos.daemon.spring.annotations.TestComponent;
 
 @SuppressWarnings("serial")
 @TestComponent
