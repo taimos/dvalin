@@ -50,16 +50,16 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>4.3.3.RELEASE</org.springframework.version>
-        <jackson.version>2.8.3</jackson.version>
-        <joda.time.version>2.9.4</joda.time.version>
+        <org.springframework.version>4.3.4.RELEASE</org.springframework.version>
+        <jackson.version>2.8.5</jackson.version>
+        <joda.time.version>2.9.6</joda.time.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <daemon.version>2.10</daemon.version>
+        <daemon.version>2.11</daemon.version>
         <mockito.version>1.10.19</mockito.version>
         <junit.version>4.12</junit.version>
-        <aws.version>1.11.41</aws.version>
+        <aws.version>1.11.55</aws.version>
         <activemq.version>5.9.0</activemq.version>
-        <cxf.version>3.1.7</cxf.version>
+        <cxf.version>3.1.8</cxf.version>
         <jetty.version>9.2.15.v20160210</jetty.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
 
@@ -89,7 +89,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>19.0</version>
+                <version>20.0</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -104,7 +104,7 @@
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.2</version>
+                <version>1.9.3</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -442,12 +442,12 @@
             <dependency>
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-module-junit4</artifactId>
-                <version>1.6.5</version>
+                <version>1.6.6</version>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-api-mockito</artifactId>
-                <version>1.6.5</version>
+                <version>1.6.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

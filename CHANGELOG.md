@@ -1,6 +1,16 @@
 # Version 1.16
 * Fix handling of InvalidParameterException on SNS endpoint creation
-
+* Update dependencies
+    * Spring 4.3.4
+    * Powermock 1.6.6
+    * Daemon framework 2.11
+    * AWS 1.11.55
+    * Jackson 2.8.5
+    * JodaTime 2.9.6
+    * Guava 20.0
+    * Commons Beanutils 1.9.3
+    * Apache CXF 3.1.8
+    
 # Version 1.15
 * fix handling of different pushARN for different platforms (#47)
 
