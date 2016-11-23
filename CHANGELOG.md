@@ -1,3 +1,6 @@
+# Version 1.17
+* add WebAssert to assert WebExceptions in tests
+
 # Version 1.16
 * Fix handling of InvalidParameterException on SNS endpoint creation
 * add additional test helper
