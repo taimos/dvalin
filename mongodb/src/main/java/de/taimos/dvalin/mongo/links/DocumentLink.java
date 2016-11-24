@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo.links;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@ package de.taimos.dvalin.mongo.links;
  * limitations under the License.
  * #L%
  */
+
+import java.io.Serializable;
 
 /**
  * Link to another document of a {@link AReferenceableEntity}<br>
@@ -28,7 +30,7 @@ package de.taimos.dvalin.mongo.links;
  * @param <T> the target type
  * @author Thorsten Hoeger
  */
-public class DocumentLink<T extends AReferenceableEntity<T>> {
+public class DocumentLink<T extends AReferenceableEntity<T>> implements Serializable {
 
     private Class<T> targetClass;
     private String objectId;

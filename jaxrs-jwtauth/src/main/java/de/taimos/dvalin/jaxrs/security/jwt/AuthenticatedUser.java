@@ -61,11 +61,11 @@ public final class AuthenticatedUser implements IUser {
     }
 
     public String[] getRoles() {
-        return this.roles;
+        return this.roles.clone();
     }
 
     public void setRoles(String[] roles) {
-        this.roles = roles;
+        this.roles = roles.clone();
     }
 
     public JWTClaimsSet toClaimSet(String issuer, Date expiry) {

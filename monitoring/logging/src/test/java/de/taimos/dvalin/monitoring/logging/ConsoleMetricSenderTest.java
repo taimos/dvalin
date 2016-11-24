@@ -1,6 +1,7 @@
 package de.taimos.dvalin.monitoring.logging;
 
 import java.lang.reflect.Field;
+import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class ConsoleMetricSenderTest {
         MetricInfo info = new MetricInfo(ns, metric, unit);
         info.withDimension(dimensionName, dimensionValue);
 
-        final int val = (int) (Math.random() * 100);
+        final int val = new Random().nextInt(100);
 
         this.sender.sendMetric(info, (double) val);
     }

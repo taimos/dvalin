@@ -14,7 +14,7 @@ import de.taimos.daemon.spring.annotations.TestComponent;
 @TestComponent
 public class TestPushService implements PushService {
     
-    public class TestDevice {
+    public static class TestDevice {
         private Platform platform;
         private String id;
         private String token;

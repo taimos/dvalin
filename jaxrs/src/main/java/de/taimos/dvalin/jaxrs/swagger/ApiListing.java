@@ -42,8 +42,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.taimos.daemon.DaemonProperties;
@@ -57,7 +55,6 @@ import io.swagger.core.filter.SpecFilter;
 import io.swagger.core.filter.SwaggerSpecFilter;
 import io.swagger.jaxrs.Reader;
 import io.swagger.jaxrs.config.DefaultReaderConfig;
-import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.models.Info;
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
@@ -72,8 +69,6 @@ import io.swagger.util.Yaml;
 @Path("/")
 @JaxRsComponent
 public class ApiListing {
-
-    Logger LOGGER = LoggerFactory.getLogger(ApiListingResource.class);
 
     @Autowired
     private SwaggerScanner scanner;

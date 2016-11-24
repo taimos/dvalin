@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 public class IVORefreshSender {
 
-    private static IVORefreshSender instance;
+    private static IVORefreshSender instance = new IVORefreshSender();
 
     private volatile PooledConnectionFactory pooledConnectionFactory;
 
@@ -55,9 +55,6 @@ public class IVORefreshSender {
      * @return the singleton
      */
     public static IVORefreshSender getInstance() {
-        if (IVORefreshSender.instance == null) {
-            IVORefreshSender.instance = new IVORefreshSender();
-        }
         return IVORefreshSender.instance;
     }
 

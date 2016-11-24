@@ -1,5 +1,8 @@
 # Version 1.17
 * add WebAssert to assert WebExceptions in tests
+* use DaemonFramework 2.12 with JSON log support
+* Update dependencies
+    * AWS 1.11.60
 
 # Version 1.16
 * Fix handling of InvalidParameterException on SNS endpoint creation

@@ -9,7 +9,7 @@ public class GCMNotificationMessage extends PushMessage {
     private String title;
     private String icon;
     
-    private Map<String, String> customData;
+    private Map<String, String> customData = new HashMap<>();
     
     public GCMNotificationMessage(String message) {
         this.message = message;
@@ -25,24 +25,19 @@ public class GCMNotificationMessage extends PushMessage {
     }
     
     public void addCustomData(String key, String value) {
-        if (this.customData == null) {
-            this.customData = new HashMap<>();
-        }
         this.customData.put(key, value);
     }
     
     @Override
     protected Map<String, Object> getPayload() {
         Map<String, Object> notification = new HashMap<>();
-        notification.put("body",this.message);
-        notification.put("title",this.title);
-        notification.put("icon",this.icon);
+        notification.put("body", this.message);
+        notification.put("title", this.title);
+        notification.put("icon", this.icon);
         
         Map<String, Object> map = new HashMap<>();
         map.put("notification", notification);
-        if (this.customData != null) {
-            map.put("data", this.customData);
-        }
+        map.put("data", this.customData);
         return map;
     }
     

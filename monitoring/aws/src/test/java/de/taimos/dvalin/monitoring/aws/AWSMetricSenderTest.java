@@ -2,6 +2,7 @@ package de.taimos.dvalin.monitoring.aws;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,7 +46,7 @@ public class AWSMetricSenderTest {
         final MetricUnit unit = MetricUnit.Count;
         MetricInfo info = new MetricInfo(ns, metric, unit);
 
-        final int val = (int) (Math.random() * 100);
+        final int val = new Random().nextInt(100);
 
         Mockito.doAnswer(new Answer<Object>() {
             @Override
@@ -75,7 +76,7 @@ public class AWSMetricSenderTest {
         MetricInfo info = new MetricInfo(ns, metric, unit);
         info.withDimension(dimensionName, dimensionValue);
 
-        final int val = (int) (Math.random() * 100);
+        final int val = new Random().nextInt(100);
 
         Mockito.doAnswer(new Answer<Object>() {
             @Override

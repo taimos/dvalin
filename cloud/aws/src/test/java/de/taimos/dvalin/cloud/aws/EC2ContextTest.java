@@ -44,7 +44,9 @@ public class EC2ContextTest {
     private AmazonEC2Client ec2Mock;
     @Mock
     private AmazonAutoScalingClient asgMock;
-
+    
+    final private String instanceId = "instanceId";
+    
     @Before
     public void setUp() throws Exception {
         this.context = new EC2Context();
@@ -56,23 +58,23 @@ public class EC2ContextTest {
         Field asgField = EC2Context.class.getDeclaredField("autoScaling");
         asgField.setAccessible(true);
         asgField.set(this.context, this.asgMock);
+    
+        PowerMockito.mockStatic(EC2MetadataUtils.class);
+        PowerMockito.when(EC2MetadataUtils.getInstanceId()).thenReturn(this.instanceId);
     }
 
     @Test
     public void getHostId() throws Exception {
-        String awsInstanceId = "awsInstanceId";
-        PowerMockito.mockStatic(EC2MetadataUtils.class);
-        PowerMockito.when(EC2MetadataUtils.getInstanceId()).thenReturn(awsInstanceId);
-        Assert.assertEquals(awsInstanceId, this.context.getInstanceId());
+        Assert.assertEquals("instanceId", this.context.getInstanceId());
     }
 
     @Test
     public void getHostTags() throws Exception {
         String tagName = "foo";
         String tagValue = "bar";
-
+    
         DescribeInstancesResult res = new DescribeInstancesResult();
-        Instance instance = new Instance().withInstanceId("instanceId").withTags(new Tag(tagName, tagValue));
+        Instance instance = new Instance().withInstanceId(this.instanceId).withTags(new Tag(tagName, tagValue));
         res.withReservations(new Reservation().withInstances(instance));
         Mockito.when(this.ec2Mock.describeInstances(Mockito.any(DescribeInstancesRequest.class))).thenReturn(res);
 
@@ -85,7 +87,7 @@ public class EC2ContextTest {
     @Test(expected = IllegalStateException.class)
     public void testInvalidResponsesWithMultipleReservations() throws Exception {
         DescribeInstancesResult res = new DescribeInstancesResult();
-        Instance instance = new Instance().withInstanceId("instanceId");
+        Instance instance = new Instance().withInstanceId(this.instanceId);
         res.withReservations(new Reservation().withInstances(instance), new Reservation().withInstances(instance));
         Mockito.when(this.ec2Mock.describeInstances(Mockito.any(DescribeInstancesRequest.class))).thenReturn(res);
         this.context.getInstanceTags();

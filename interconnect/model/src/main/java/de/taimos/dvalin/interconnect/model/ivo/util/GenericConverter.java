@@ -12,9 +12,9 @@ package de.taimos.dvalin.interconnect.model.ivo.util;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 
@@ -54,9 +55,10 @@ public class GenericConverter {
 
     private static <Destination, Origin> Destination copy(Origin origin, Destination result) {
         HashMap<Field, Field> map = GenericConverter.resolveFieldMapFromOrigin(origin, result);
-        for (Field originField : map.keySet()) {
+        for (Map.Entry<Field, Field> entry : map.entrySet()) {
+            Field originField = entry.getKey();
+            Field destinationField = entry.getValue();
             originField.setAccessible(true);
-            Field destinationField = map.get(originField);
             // not all field can be/have to be copied
             if (destinationField != null) {
                 GenericConverter.copyValue(origin, result, originField, destinationField);

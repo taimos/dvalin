@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ package de.taimos.dvalin.interconnect.model;
  */
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -63,8 +64,8 @@ public final class MessageCryptoUtil {
 
 		try {
 			final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.ENCRYPT_MODE);
-			final byte[] encrypted = cipher.doFinal(data.getBytes());
-			return new String(Base64.encodeBase64String(encrypted));
+			final byte[] encrypted = cipher.doFinal(data.getBytes(Charset.forName("UTF-8")));
+			return Base64.encodeBase64String(encrypted);
 		} catch (final Exception e) {
 			throw new CryptoException("Encryption of data failed!", e);
 		}
@@ -83,7 +84,7 @@ public final class MessageCryptoUtil {
 
 		try {
 			final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.DECRYPT_MODE);
-			return new String(cipher.doFinal(Base64.decodeBase64(data)));
+			return new String(cipher.doFinal(Base64.decodeBase64(data)), Charset.forName("UTF-8"));
 		} catch (final Exception e) {
 			throw new CryptoException("Decryption of data failed!", e);
 		}
@@ -106,7 +107,7 @@ public final class MessageCryptoUtil {
 		try {
 			final String toEnc = msg + MessageCryptoUtil.SIGNATURE;
 			final MessageDigest mdEnc = MessageDigest.getInstance("MD5");
-			mdEnc.update(toEnc.getBytes(), 0, toEnc.length());
+			mdEnc.update(toEnc.getBytes(Charset.forName("UTF-8")), 0, toEnc.length());
 			return new BigInteger(1, mdEnc.digest()).toString(16);
 		} catch (final Exception e) {
 			throw new CryptoException("Creating signature failed", e);
@@ -142,7 +143,7 @@ public final class MessageCryptoUtil {
 		try {
 			System.out.println("Select (k=generate key; c=crypt; d=decrypt):");
 			System.out.println();
-			Scanner scan = new Scanner(System.in);
+			Scanner scan = new Scanner(System.in, "UTF-8");
 			if (!scan.hasNextLine()) {
 				return;
 			}

@@ -20,6 +20,8 @@ package de.taimos.dvalin.jaxrs.security.basicauth;
  * #L%
  */
 
+import java.nio.charset.Charset;
+
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 
@@ -47,7 +49,7 @@ public class BasicAuthFilter extends AuthorizationProvider {
     @Override
     protected SecurityContext handleAuthHeader(ContainerRequestContext requestContext, Message msg, String type, String auth) {
         if (auth != null && type.toLowerCase().equals("basic")) {
-            String decoded = new String(Base64.decodeBase64(auth));
+            String decoded = new String(Base64.decodeBase64(auth), Charset.forName("UTF-8"));
             if (!decoded.contains(":")) {
                 return null;
             }
