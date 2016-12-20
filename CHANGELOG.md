@@ -1,3 +1,10 @@
+# Version 1.18
+* add KMS encryption support
+* Update dependencies
+    * AWS 1.11.69
+    * JodaTime 2.9.7
+    * slf4j 1.7.22
+
 # Version 1.17
 * add WebAssert to assert WebExceptions in tests
 * use DaemonFramework 2.12 with JSON log support
