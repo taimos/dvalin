@@ -20,7 +20,8 @@ import de.taimos.dvalin.cloud.aws.AWSClient;
 @OnSystemProperty(propertyName = "aws.kmsKeyId")
 public class CryptoService {
     
-    public static final String DAEMON_NAME = "DaemonName";
+    private static final String DAEMON_NAME = "DaemonName";
+    
     @AWSClient
     private AWSKMSClient kmsClient;
     
