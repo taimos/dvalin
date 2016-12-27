@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-archetype-parent</artifactId>
-        <version>1.18</version>
+        <version>1.19-SNAPSHOT</version>
     </parent>
     <artifactId>dvalin-archetype-docker</artifactId>
     <packaging>maven-archetype</packaging>
