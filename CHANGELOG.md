@@ -1,4 +1,5 @@
 # Version 1.18
+* add abstract Zendesk JAX-RS endpoint
 * add KMS encryption support
 * Update dependencies
     * AWS 1.11.69
