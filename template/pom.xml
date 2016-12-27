@@ -16,5 +16,6 @@
     <modules>
         <module>velocity</module>
         <module>xdocreport</module>
+        <module>jasperreports</module>
     </modules>
 </project>
