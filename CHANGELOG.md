@@ -1,3 +1,10 @@
+# Version 1.19
+* add `getRemoteAddress` method to `DvalinRSContext`
+* Update dependencies
+    * Spring 4.3.5
+    * Daemon framework 2.13
+    * Apache CXF 3.1.9
+
 # Version 1.18
 * add JasperReports engine
 * add abstract Zendesk JAX-RS endpoint

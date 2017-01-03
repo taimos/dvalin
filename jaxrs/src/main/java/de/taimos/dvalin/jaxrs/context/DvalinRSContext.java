@@ -96,4 +96,9 @@ public interface DvalinRSContext {
      */
     HttpServletResponse getHttpServletResponse();
     
+    /**
+     * @return the remote IP of the client. This parses the 'X-Forwarded-For' header when using a proxy.
+     */
+    String getRemoteAddress();
+    
 }
