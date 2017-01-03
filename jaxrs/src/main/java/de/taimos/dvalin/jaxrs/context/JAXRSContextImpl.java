@@ -123,4 +123,17 @@ public class JAXRSContextImpl implements DvalinRSContext {
     public MessageContext getMessageContext() {
         return new MessageContextImpl(PhaseInterceptorChain.getCurrentMessage());
     }
+    
+    @Override
+    public String getRemoteAddress() {
+        HttpServletRequest req = this.getHttpServletRequest();
+        String header = req.getHeader("X-Forwarded-For");
+        if (header != null) {
+            String[] ips = header.split(",");
+            if (ips.length > 0) {
+                return ips[0];
+            }
+        }
+        return req.getRemoteAddr();
+    }
 }
