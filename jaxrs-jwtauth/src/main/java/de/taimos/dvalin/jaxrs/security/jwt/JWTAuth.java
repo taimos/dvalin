@@ -3,6 +3,7 @@ package de.taimos.dvalin.jaxrs.security.jwt;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.nimbusds.jose.JOSEException;
@@ -15,7 +16,7 @@ import com.nimbusds.jwt.SignedJWT;
 
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
-import de.taimos.dvalin.jaxrs.security.SecurityContextUtil;
+import de.taimos.dvalin.jaxrs.context.DvalinRSContext;
 
 /**
  * Created by thoeger on 06.01.16.
@@ -32,6 +33,9 @@ public class JWTAuth {
 
     @Value("${jwtauth.issuer}")
     private String jwtIssuer;
+    
+    @Autowired
+    private DvalinRSContext context;
 
 
     /**
@@ -104,7 +108,7 @@ public class JWTAuth {
      * @return the user or null if not available
      */
     public AuthenticatedUser getCurrentUser() {
-        return (AuthenticatedUser) SecurityContextUtil.getUserObject();
+        return (AuthenticatedUser) this.context.getCurrentUser();
     }
 
 
