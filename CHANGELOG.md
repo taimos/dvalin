@@ -4,6 +4,8 @@
     * Spring 4.3.5
     * Daemon framework 2.13
     * Apache CXF 3.1.9
+    * Jackson 2.8.6
+    * AWS 1.11.86
 
 # Version 1.18
 * add JasperReports engine
