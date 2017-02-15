@@ -49,10 +49,17 @@ public class Tester extends ABaseTest {
     @BeforeClass
     public static void init() {
         try {
-            System.setProperty("mongodb.name", ABaseTest.dbName);
             Field mongoField = AbstractMongoDAO.class.getDeclaredField("mongo");
             mongoField.setAccessible(true);
             mongoField.set(Tester.dao, ABaseTest.mongo);
+            
+            Field jongoField = AbstractMongoDAO.class.getDeclaredField("jongo");
+            jongoField.setAccessible(true);
+            jongoField.set(Tester.dao, JongoFactory.createDefault(ABaseTest.mongo.getDB(ABaseTest.dbName)));
+        
+            Field dbField = AbstractMongoDAO.class.getDeclaredField("db");
+            dbField.setAccessible(true);
+            dbField.set(Tester.dao, ABaseTest.mongo.getDatabase(ABaseTest.dbName));
 
             Mongobee bee = new Mongobee(ABaseTest.mongo);
             bee.setChangeLogsScanPackage("de.taimos.dvalin.mongo.changelog");

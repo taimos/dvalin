@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,13 +38,14 @@ import org.jongo.ResultHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StreamUtils;
 
-import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceCommand.OutputType;
 import com.mongodb.MapReduceOutput;
 import com.mongodb.MongoClient;
-import com.mongodb.gridfs.GridFS;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
 
 /**
  * Copyright 2015 Hoegernet<br>
@@ -58,20 +59,16 @@ import com.mongodb.gridfs.GridFS;
 public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T> {
 
     @Autowired
-    private MongoClient mongo;
-
+    protected MongoClient mongo;
+    @Autowired
     private Jongo jongo;
-    private DB db;
+    @Autowired
+    private MongoDatabase db;
+    
     protected MongoCollection collection;
 
     @PostConstruct
     public final void init() {
-        String dbName = System.getProperty("mongodb.name");
-        if (dbName == null) {
-            throw new RuntimeException("Missing database name; Set system property 'mongodb.name'");
-        }
-        this.db = this.mongo.getDB(dbName);
-        this.jongo = this.createJongo(this.db);
         this.collection = this.jongo.getCollection(this.getCollectionName());
         this.customInit();
     }
@@ -375,21 +372,12 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     protected void afterDelete(String id) {
         //
     }
-
-    protected GridFS getGridFSBucket(String bucket) {
+    
+    protected GridFSBucket getGridFSBucket(String bucket) {
         if (bucket == null || bucket.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        return new GridFS(db, bucket);
+        return GridFSBuckets.create(this.db, bucket);
     }
 
-    /**
-     * creates the Jongo driver instance. Override to manipulate the Jongo driver
-     *
-     * @param db the database to use with the created Jongo
-     * @return the created Jongo driver
-     */
-    protected Jongo createJongo(DB db) {
-        return JongoFactory.createDefault(db);
-    }
 }

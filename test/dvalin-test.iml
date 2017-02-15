@@ -98,7 +98,7 @@
     <orderEntry type="library" name="Maven: xom:xom:1.2.5" level="project" />
     <orderEntry type="library" name="Maven: ognl:ognl:2.6.9" level="project" />
     <orderEntry type="library" name="Maven: org.concordion:concordion-extensions:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:20.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:21.0" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.7" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.23" level="project" />

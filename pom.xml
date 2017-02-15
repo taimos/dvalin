@@ -65,9 +65,9 @@
 
         <bson.version>2.7.0</bson.version>
         <jongo.version>1.3.0</jongo.version>
-        <mongo.version>3.3.0</mongo.version>
-        <mongobee.version>0.10</mongobee.version>
-        <fongo.version>2.0.7</fongo.version>
+        <mongo.version>3.4.2</mongo.version>
+        <mongobee.version>0.12</mongobee.version>
+        <fongo.version>2.0.12</fongo.version>
         <xdocreport.version>1.0.6</xdocreport.version>
     </properties>
     <scm>

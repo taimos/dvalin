@@ -1,8 +1,12 @@
 # Version 1.20
+* **Rework MongoDB support for new driver version (INCLUDING BREAKING CHANGES)**
 * Update dependencies
     * AWS 1.11.90
     * Slf4j 1.7.23
     * Guava 21.0
+    * MongoDB Driver 3.4.2
+    * Mongobee 0.12
+    * Fongo 2.0.12
 
 # Version 1.19
 * add `getRemoteAddress` method to `DvalinRSContext`
