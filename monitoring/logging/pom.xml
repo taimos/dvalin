@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-monitoring-parent</artifactId>
-        <version>1.20</version>
+        <version>1.21-SNAPSHOT</version>
     </parent>
     <artifactId>dvalin-monitoring-logging</artifactId>
     <name>Dvalin monitoring service implementation for logging framework</name>
