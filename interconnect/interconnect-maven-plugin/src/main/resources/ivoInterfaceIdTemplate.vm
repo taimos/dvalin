@@ -3,6 +3,7 @@ package ${ivod.pkgName}.requests;
 #foreach ( $imp in $mmh.getIImports() )
 import $imp;
 #end
+import java.util.List;
 import ${ivod.pkgName}.${mmh.getIVOClazzName()};
 
 /**
@@ -19,21 +20,21 @@ import ${ivod.pkgName}.${mmh.getIVOClazzName()};
 public interface $mmh.getModIVOInterfaceName() $mmh.getIImplements() {
 
 	/**
-	 * property constant for id
-	 * property comment: the brand id
+	 * property constant for ids
+	 * property comment: the id
 	 */
-	public static final String PROP_ID = "id";
+	public static final String PROP_IDS = "ids";
 
 
 	/**
-	 * the brand id
+	 * the list of ids
 	 * This field is required.
 	 *
-	 * @return the value for id
+	 * @return the value for ids
 	 *
 	 */
 	@Nonnull
-	public String getId();
+	public List<String> getIds();
 
 
 	/**

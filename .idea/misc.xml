@@ -17,7 +17,14 @@
     </option>
   </component>
   <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoFilterTemplate.vm" />
     <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoIdTemplate.vm" />
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoInterfaceFilterTemplate.vm" />
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoInterfaceIdTemplate.vm" />
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoInterfaceObjectTemplate.vm" />
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivointerfacetemplate.vm" />
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoObjectTemplate.vm" />
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivotemplate.vm" />
   </component>
   <component name="ProjectResources">
     <resource url="http://maven.apache.org/xsd/assembly-1.1.2.xsd" location="" />

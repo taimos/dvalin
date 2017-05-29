@@ -1,8 +1,8 @@
-package de.taimos.dvalin.interconnect.model.service;
+package de.taimos.dvalin.interconnect.model.metamodel;
 
 /*
  * #%L
- * Dvalin interconnect transfer data model
+ * Dvalin interconnect metamodel for transfer data model
  * %%
  * Copyright (C) 2016 Taimos GmbH
  * %%
@@ -20,21 +20,24 @@ package de.taimos.dvalin.interconnect.model.service;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.ivo.daemon.PingIVO;
-import de.taimos.dvalin.interconnect.model.ivo.daemon.PongIVO;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * @see Daemon
+ * the filterable types
+ *
  */
-public interface IDaemon {
-
-	// marker interface
-
+@XmlType
+public enum FilterableType {
 	/**
-	 * @param req {@link PingIVO}
-	 * @return {@link PongIVO}
+	 * not filterable
 	 */
-	@DaemonRequestMethod(idempotent = true)
-    PongIVO alive(PingIVO req) throws DaemonError;
-
+	none,
+	/**
+     * filterable by single value
+	 */
+	single,
+    /**
+     * filterable by collection of values
+     */
+    multi;
 }

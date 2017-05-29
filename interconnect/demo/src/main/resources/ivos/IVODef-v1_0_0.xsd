@@ -20,10 +20,17 @@
     </xs:annotation>
     <xs:sequence/>
     <xs:attribute name="comment" type="xs:string" use="required"/>
-    <xs:attribute name="filterRequired" type="xs:boolean"/>
-    <xs:attribute name="filterable" type="xs:boolean"/>
-    <xs:attribute name="javaTransient" type="xs:boolean"/>
-    <xs:attribute name="jsonTransient" type="xs:boolean"/>
+    <xs:attribute name="filterable" type="ivo:filterableType"/>
+    <xs:attribute name="javaTransient" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation><![CDATA[(return): the javaTransientFlag]]></xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="jsonTransient" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation><![CDATA[(return): the jsonTransientFlag]]></xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="orderTransient" type="xs:boolean"/>
     <xs:attribute name="required" type="xs:boolean"/>
@@ -47,9 +54,17 @@
     <xs:complexContent>
       <xs:extension base="ivo:memberDef">
         <xs:sequence>
-          <xs:element name="content" type="ivo:contentDef"/>
+          <xs:element name="content" type="ivo:contentDef">
+            <xs:annotation>
+              <xs:documentation><![CDATA[(return): the contentDef]]></xs:documentation>
+            </xs:annotation>
+          </xs:element>
         </xs:sequence>
-        <xs:attribute name="collection" type="ivo:collectionType" use="required"/>
+        <xs:attribute name="collection" type="ivo:collectionType" use="required">
+          <xs:annotation>
+            <xs:documentation><![CDATA[(return): the collectionType]]></xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -230,29 +245,49 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:simpleType name="collectionType">
+  <xs:simpleType name="filterableType">
+    <xs:annotation>
+      <xs:documentation><![CDATA[the filterable types]]></xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Set"/>
+      <xs:enumeration value="multi"/>
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="single"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="collectionType">
+    <xs:annotation>
+      <xs:documentation><![CDATA[the supported collection types]]></xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
       <xs:enumeration value="List"/>
+      <xs:enumeration value="Set"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="contentType">
+    <xs:annotation>
+      <xs:documentation><![CDATA[the supported content types]]></xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Decimal"/>
       <xs:enumeration value="Boolean"/>
-      <xs:enumeration value="Date"/>
-      <xs:enumeration value="IVO"/>
-      <xs:enumeration value="Enum"/>
-      <xs:enumeration value="UUID"/>
       <xs:enumeration value="Long"/>
-      <xs:enumeration value="String"/>
+      <xs:enumeration value="Enum"/>
       <xs:enumeration value="InterconnectObject"/>
       <xs:enumeration value="Integer"/>
+      <xs:enumeration value="UUID"/>
+      <xs:enumeration value="Date"/>
+      <xs:enumeration value="Decimal"/>
+      <xs:enumeration value="String"/>
+      <xs:enumeration value="IVO"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="mapType">
+    <xs:annotation>
+      <xs:documentation><![CDATA[the supported map types]]></xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="Multimap"/>
       <xs:enumeration value="Map"/>

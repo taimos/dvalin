@@ -3,6 +3,7 @@ package ${ivod.pkgName}.requests;
 #foreach ( $imp in $mmh.getImports() )
 import $imp;
 #end
+import java.util.Set;
 import ${ivod.pkgName}.${mmh.getIVOClazzName()};
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 
@@ -43,29 +44,32 @@ private static final long serialVersionUID = ${ivod.version}L;
 	*/
 	public abstract static class Abstract${mmh.getModIVOClazzName()}Builder<E extends Abstract${mmh.getModIVOClazzName()}Builder<?>> $mmh.getParentBuilder() $mmh.getBuilderImplements() {
 #foreach ( $att in $mmh.getFilterableMemberDefs() )
+#if ($att.filterable == 'single')
 		private $mmh.getType( $att, true ) $att.name;
+#else
+		private Set<$mmh.getType( $att, true )> $att.name;
+#end
 #end
 
 #foreach ( $att in $mmh.getFilterableMemberDefs() )
 		/**
-#if ( $att.filterRequired )
-		 * This field is required.
-#else
 		 * This field is optional.
-#end
 		 * @param  $att.name the value to set
-		 * @return the builder
+		 * @return the builder $att.filterable
 		 *
 		 **/
-#if ( $att.filterRequired )
-		@Nonnull
-#else
 	 	@Nullable
-#end
+#if ($att.filterable == 'single')
 		public E with$mmh.upperCaseFirst( $att.name )($mmh.getType( $att, false ) p$att.name) {
 			this.$att.name = p$att.name;
 			return (E) this;
 		}
+#else
+		public E with$mmh.upperCaseFirst( $att.name )(Set<$mmh.getType( $att, false )> p$att.name) {
+			this.$att.name = p$att.name;
+			return (E) this;
+		}
+#end
 #end
 
 		protected void internalFillFromIVO($mmh.getModIVOClazzName() ivo) {
@@ -84,7 +88,11 @@ private static final long serialVersionUID = ${ivod.version}L;
 	}
 
 #foreach ( $att in $mmh.getFilterableMemberDefs() )
+#if ($att.filterable == 'single')
 	private final #if ( $att.javaTransientFlag ) transient #end $mmh.getType( $att, false ) $att.name;
+#else
+	private final #if ( $att.javaTransientFlag ) transient #end Set<$mmh.getType( $att, false )> $att.name;
+#end
 #end
 
 
@@ -99,9 +107,15 @@ private static final long serialVersionUID = ${ivod.version}L;
 	@JsonIgnore
 #end
 	@Override
+#if ($att.filterable == 'single')
 	public $mmh.getType( $att, false ) get$mmh.upperCaseFirst( $att.name )() {
 		return this.$att.name;
 	}
+#else
+	public Set<$mmh.getType( $att, false )> get$mmh.upperCaseFirst( $att.name )() {
+		return this.$att.name;
+	}
+#end
 
 #end
 

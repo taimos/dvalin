@@ -3,8 +3,6 @@ package $ivod.pkgName;
 #foreach ( $imp in $mmh.getImports() )
 import $imp;
 #end
-#if ($ivod.identity)
-#end
 
 /**
  * $ivod.comment
@@ -68,6 +66,13 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 			return (E) this;
 		}
 
+		/**
+         * @return the id
+         **/
+        public String getId() {
+            return this.id;
+        }
+
 #end
 #if ( $ivod.auditing )
 		/**
@@ -86,6 +91,13 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 		}
 
 		/**
+         * @return the id
+         **/
+        public Integer getVersion() {
+            return this.version;
+        }
+
+		/**
 		 * This field is optional, thus may be null.
 		 * The last change date
 		 *
@@ -101,6 +113,13 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 		}
 
 		/**
+         * @return the last change
+         **/
+        public DateTime getLastChange() {
+            return this.lastChange;
+        }
+
+		/**
 		 * This field is optional, thus may be null.
 		 * The last change user id
 		 *
@@ -114,6 +133,13 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 			this.lastChangeUserId = plastChangeUserId;
 			return (E) this;
 		}
+
+		/**
+         * @return the last change user id
+         **/
+        public Long getLastChangeUserId() {
+            return this.lastChangeUserId;
+        }
 
 #end
 #foreach ( $att in $mmh.allMemberDefs )
@@ -138,6 +164,13 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 		public E with$mmh.upperCaseFirst( $att.name )($mmh.getType( $att, false ) p$att.name) {
 			this.$att.name = p$att.name;
 			return (E) this;
+		}
+
+		/**
+		 * @return the field value
+		 **/
+		public $mmh.getType( $att, false ) get$mmh.upperCaseFirst( $att.name )() {
+			return this.$att.name;
 		}
 
 #end

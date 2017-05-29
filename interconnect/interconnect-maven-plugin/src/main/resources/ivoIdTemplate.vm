@@ -116,7 +116,7 @@ private static final long serialVersionUID = ${ivod.version}L;
 		this.ids = builder.ids;
 	}
 
-	public String getIds() {
+	public List<String> getIds() {
 		return this.ids;
 	}
 

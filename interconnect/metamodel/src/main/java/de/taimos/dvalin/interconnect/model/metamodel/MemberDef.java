@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -36,8 +37,7 @@ public abstract class MemberDef implements IFilterableMember {
     private Boolean jsonTransientFlag = false;
     private Boolean orderTransient;
     private Boolean required = false;
-    private Boolean filterable = false;
-    private Boolean filterRequired = false;
+    private FilterableType filterable = FilterableType.none;
 
 
     /**
@@ -134,36 +134,22 @@ public abstract class MemberDef implements IFilterableMember {
      * @return the filterable
      */
     @XmlAttribute(required = false)
-    public Boolean getFilterable() {
+    public FilterableType getFilterable() {
         return this.filterable;
     }
 
     /**
      * @param filterable the filterable to set
      */
-    public void setFilterable(Boolean filterable) {
+    @Nonnull
+    public void setFilterable(FilterableType filterable) {
         this.filterable = filterable;
     }
 
     @Override
     @XmlTransient
     public Boolean isAFilterMember() {
-        return this.filterable;
-    }
-
-    /**
-     * @return the filterRequired
-     */
-    @XmlAttribute(required = false)
-    public Boolean getFilterRequired() {
-        return this.filterRequired;
-    }
-
-    /**
-     * @param filterRequired the filterRequired to set
-     */
-    public void setFilterRequired(Boolean filterRequired) {
-        this.filterRequired = filterRequired;
+        return this.filterable != FilterableType.none;
     }
 
 }

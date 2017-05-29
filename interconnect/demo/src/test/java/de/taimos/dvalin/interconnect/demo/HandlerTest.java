@@ -51,15 +51,18 @@ public class HandlerTest extends ADaemonTest<Handler> {
     @Test
     public void testCreateUser() throws DaemonError {
         String name = UUID.randomUUID().toString();
+        String city = UUID.randomUUID().toString();
 
         UserIVO_v1.UserIVO_v1Builder uB = new UserIVO_v1.UserIVO_v1Builder();
         uB.withName(name);
+        uB.withCity(city);
 
         CreateUserIVO_v1.CreateUserIVO_v1Builder b = new CreateUserIVO_v1.CreateUserIVO_v1Builder();
         b.withValue(uB.build());
         UserIVO_v1 user = this.handler().createUser(b.build());
 
         Assert.assertEquals(name, user.getName());
+        Assert.assertEquals(city, user.getCity());
     }
 
 }

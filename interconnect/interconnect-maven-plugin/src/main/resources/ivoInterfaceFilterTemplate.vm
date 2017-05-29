@@ -3,6 +3,7 @@ package ${ivod.pkgName}.requests;
 #foreach ( $imp in $mmh.getIImports() )
 import $imp;
 #end
+import java.util.Set;
 import ${ivod.pkgName}.${mmh.getIVOClazzName()};
 
 /**
@@ -35,7 +36,11 @@ public interface $mmh.getModIVOInterfaceName() $mmh.getIImplements() {
 	 *
 	 **/
 	@Nullable
+#if ($att.filterable == 'single')
 	public $mmh.getType( $att, true ) get$mmh.upperCaseFirst( $att.name )();
+#else
+	public Set<$mmh.getType( $att, true )> get$mmh.upperCaseFirst( $att.name )();
+#end
 
 #end
 

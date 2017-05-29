@@ -86,18 +86,18 @@ public class Handler extends ADaemonHandler implements IUserService {
 
     @Override
     public UserIVO_v1 findById(FindUserByIdIVO_v1 ivo) throws DaemonError {
-        if (!users.containsKey(Long.valueOf(ivo.getId()))) {
+        if (!users.containsKey(Long.valueOf(ivo.getIds().get(0)))) {
             throw new DaemonError(UserError.USER_NOT_FOUND);
         }
-        return users.get(Long.valueOf(ivo.getId()));
+        return users.get(Long.valueOf(ivo.getIds().get(0)));
     }
 
     @Override
     public void deleteUser(DeleteUserIVO_v1 ivo) throws DaemonError {
-        if (!users.containsKey(Long.valueOf(ivo.getId()))) {
+        if (!users.containsKey(Long.valueOf(ivo.getIds().get(0)))) {
             throw new DaemonError(UserError.USER_NOT_FOUND);
         }
-        users.remove(Long.valueOf(ivo.getId()));
+        users.remove(Long.valueOf(ivo.getIds().get(0)));
     }
 
     @Override
