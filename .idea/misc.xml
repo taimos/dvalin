@@ -16,6 +16,9 @@
       </list>
     </option>
   </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoIdTemplate.vm" />
+  </component>
   <component name="ProjectResources">
     <resource url="http://maven.apache.org/xsd/assembly-1.1.2.xsd" location="" />
   </component>

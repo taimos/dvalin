@@ -3,6 +3,9 @@ package ${ivod.pkgName}.requests;
 #foreach ( $imp in $mmh.getImports() )
 import $imp;
 #end
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 import ${ivod.pkgName}.${mmh.getIVOClazzName()};
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 
@@ -42,8 +45,10 @@ private static final long serialVersionUID = ${ivod.version}L;
 	* @param <E> type of builder
 	*/
 	public abstract static class Abstract${mmh.getModIVOClazzName()}Builder<E extends Abstract${mmh.getModIVOClazzName()}Builder<?>> $mmh.getParentBuilder() $mmh.getBuilderImplements() {
-		private String id;
-		/**
+
+        private List<String> ids = new ArrayList<>();
+
+        /**
 		 * This field is required.
 		 * the id
 		 *
@@ -54,35 +59,65 @@ private static final long serialVersionUID = ${ivod.version}L;
 		@Nonnull
 		@SuppressWarnings("unchecked")
 		public E withId(String id) {
-			this.id = id;
+			this.ids = Collections.singletonList(id);
 			return (E) this;
 		}
 
+        /**
+        * This field is required.
+        * the list of ids
+        *
+        * @param ids the value to set
+        * @return the builder
+        *
+        **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        public E withIds(List<String> ids) {
+            this.ids = ids;
+            return (E) this;
+        }
+
+        /**
+        * This field is required.
+        * the id
+        *
+        * @param id the value to add
+        * @return the builder
+        *
+        **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        public E addId(String id) {
+            this.ids.add(id);
+            return (E) this;
+        }
+
 
 		protected void internalFillFromIVO(${mmh.getModIVOClazzName()} ivo) {
-			this.withId(ivo.id);
+			this.withIds(ivo.ids);
 		}
 
 		/**
 		 * @return the entry
 		 **/
 		public ${mmh.getModIVOClazzName()} build() {
-			if (this.id == null) {
-				throw new IllegalStateException("The attribute id must not be null!");
+			if (this.ids == null) {
+				throw new IllegalStateException("The attribute ids must not be null!");
 			}
 			${mmh.getModIVOClazzName()} result = new ${mmh.getModIVOClazzName()}(this);
 			return result;
 		}
 	}
 
-	private final  String id;
+	private final List<String> ids;
 
 	protected ${mmh.getModIVOClazzName()}(Abstract${mmh.getModIVOClazzName()}Builder<?> builder) {
-		this.id = builder.id;
+		this.ids = builder.ids;
 	}
 
-	public String getId() {
-		return this.id;
+	public String getIds() {
+		return this.ids;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -98,19 +133,4 @@ private static final long serialVersionUID = ${ivod.version}L;
 		return (${mmh.getModIVOClazzName()}) super.clone();
 	}
 
-
-#if ( $ivod.identity && !$ivod.parentName )
-	@Override
-	public String toString() {
-		return this.getClass().getName() + " " + this.id;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof $mmh.getModIVOClazzName()) {
-			return this.id.equals((($mmh.getModIVOClazzName())obj).id);
-		}
-		return false;
-	}
-#end
 }
