@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ public interface ICrudDAO<T extends AEntity> {
     T findById(String id);
 
     /**
-     * saves the goven element
+     * saves the given element
      *
      * @param object the element to save
      * @return the saved element
@@ -66,5 +66,15 @@ public interface ICrudDAO<T extends AEntity> {
      * @return a list of all elements in this collection
      */
     List<T> findList();
-
+    
+    /**
+     * @param sortProp the sort parameter
+     * @param sortDirection the sort direction
+     * @param limit the limit
+     * @param skip the number of documents to skip
+     * @return list of sorted stored contracts
+     */
+    List<T> findList(String sortProp, Integer sortDirection, Integer limit, Integer skip);
+    
+    
 }

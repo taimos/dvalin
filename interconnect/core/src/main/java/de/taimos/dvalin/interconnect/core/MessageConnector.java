@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,6 +62,10 @@ public final class MessageConnector {
      * name of the system property that contains the interconnect broker URL
      */
     public static final String SYSPROP_IBROKERURL = "interconnect.jms.broker";
+    /**
+     * name of the system property that contains the interconnect update topic name
+     */
+    public static final String SYSPROP_UPDATE_TOPIC = "interconnect.jms.updatetopic";
     /**
      * the default request timeout
      */

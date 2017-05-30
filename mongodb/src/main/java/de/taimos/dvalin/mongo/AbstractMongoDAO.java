@@ -70,10 +70,10 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     @PostConstruct
     public final void init() {
         this.collection = this.jongo.getCollection(this.getCollectionName());
-        this.customInit();
+        this.customInit(this.db, this.jongo);
     }
 
-    protected void customInit() {
+    protected void customInit(MongoDatabase db, Jongo jongo) {
         // implement if needed
     }
 
@@ -153,7 +153,12 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
         Iterable<T> as = this.collection.find().sort("{_id:1}").as(this.getEntityClass());
         return this.convertIterable(as);
     }
-
+    
+    @Override
+    public List<T> findList(String sortProp, Integer sortDirection, Integer limit, Integer skip) {
+        return this.findSortedByQuery("{}", "{" + sortProp + ":" + sortDirection + "}", skip, limit);
+    }
+    
     /**
      * converts the given {@link Iterable} to a {@link List}
      *

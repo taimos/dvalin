@@ -20,7 +20,7 @@ public class MongoDBConfig {
     @Value("${mongodb.name}")
     private String dbName;
     
-    @Value("${mongobee.basePackage}")
+    @Value("${mongobee.basePackage:}")
     private String beeBasePackage;
     
     @Bean

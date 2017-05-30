@@ -43,11 +43,6 @@ public class IVORefreshSender {
 
     private volatile PooledConnectionFactory pooledConnectionFactory;
 
-    /**
-     * the tcc update topic
-     */
-    public static final String TCC_UPDATE_TOPIC = "TCCUpdateTopic";
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
@@ -63,7 +58,7 @@ public class IVORefreshSender {
             final String mqUrl = System.getProperty(MessageConnector.SYSPROP_IBROKERURL);
             final ActiveMQConnectionFactory mqFactory;
             if (mqUrl == null) {
-                this.logger.warn("No " + MessageConnector.SYSPROP_IBROKERURL + " configuredd, using tcp://localhost:61616.");
+                this.logger.warn("No " + MessageConnector.SYSPROP_IBROKERURL + " configured, using tcp://localhost:61616.");
                 mqFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             } else {
                 mqFactory = new ActiveMQConnectionFactory(mqUrl);
@@ -101,7 +96,7 @@ public class IVORefreshSender {
             Session updateSession = null;
             try {
                 updateSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                final Topic updateTopic = updateSession.createTopic(IVORefreshSender.TCC_UPDATE_TOPIC);
+                final Topic updateTopic = updateSession.createTopic(System.getProperty(MessageConnector.SYSPROP_UPDATE_TOPIC));
                 MessageProducer utopicmp = null;
                 try {
                     utopicmp = updateSession.createProducer(updateTopic);
