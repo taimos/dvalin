@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model.maven;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,7 @@ import java.io.OutputStreamWriter;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -70,7 +71,9 @@ public class GeneratorHelper {
 	static <T> T parseXML(Class<T> clazz, Log log, File f) throws MojoExecutionException {
 		try {
 			JAXBContext jcontext = JAXBContext.newInstance(clazz);
-			return (T) jcontext.createUnmarshaller().unmarshal(f);
+            Unmarshaller unmarshaller = jcontext.createUnmarshaller();
+            unmarshaller.setEventHandler(validationEvent -> false);
+            return (T) unmarshaller.unmarshal(f);
 		} catch (Exception e) {
 			log.error("Failed to read input file " + f.getAbsolutePath(), e);
 			throw new MojoExecutionException("Failed to read input file " + f.getAbsolutePath(), e);

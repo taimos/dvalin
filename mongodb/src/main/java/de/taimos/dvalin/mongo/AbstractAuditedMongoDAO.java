@@ -15,7 +15,7 @@ import com.mongodb.client.MongoDatabase;
 
 public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends AbstractMongoDAO<T> implements ICrudAuditedDAO<T> {
     
-    private MongoCollection jongoHistoryCollection;
+    protected MongoCollection jongoHistoryCollection;
     private com.mongodb.client.MongoCollection historyCollection;
     private Mapper jongoMapper;
     

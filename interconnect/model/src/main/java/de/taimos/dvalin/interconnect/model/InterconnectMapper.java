@@ -91,6 +91,20 @@ public final class InterconnectMapper {
     public static String toJson(InterconnectObject object) throws IOException {
         return InterconnectMapper.mapper.writeValueAsString(object);
     }
+    
+    
+    /**
+     * Returns a clone of the given object using JSON (de)serialization.
+     *
+     * @param object the object to be cloned
+     * @return a clone of this object.
+     * @throws JsonGenerationException if the JSON data could not be generated
+     * @throws JsonMappingException    if the object could not be mapped to a JSON string
+     * @throws IOException             if an I/O related problem occurred
+     */
+    public static <T extends InterconnectObject> T cloneObject(T object) throws IOException {
+        return InterconnectMapper.fromJson(InterconnectMapper.toJson(object), (Class<T>) object.getClass());
+    }
 
     private static ObjectMapper createMapper() {
         ObjectMapper mapper = new ObjectMapper();

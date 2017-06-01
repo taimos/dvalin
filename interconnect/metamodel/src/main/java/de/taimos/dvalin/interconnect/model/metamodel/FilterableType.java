@@ -21,12 +21,16 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  */
 
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.FilterableTypeAdapter;
 
 /**
  * the filterable types
  *
  */
 @XmlType
+@XmlJavaTypeAdapter(FilterableTypeAdapter.class)
 public enum FilterableType {
 	/**
 	 * not filterable

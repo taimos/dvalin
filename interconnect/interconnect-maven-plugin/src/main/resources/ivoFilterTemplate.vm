@@ -64,10 +64,26 @@ private static final long serialVersionUID = ${ivod.version}L;
 			this.$att.name = p$att.name;
 			return (E) this;
 		}
+
+
+		/**
+		 * @return the field value
+		 **/
+		public $mmh.getType( $att, false ) get$mmh.upperCaseFirst( $att.name )() {
+			return this.$att.name;
+		}
 #else
 		public E with$mmh.upperCaseFirst( $att.name )(Set<$mmh.getType( $att, false )> p$att.name) {
 			this.$att.name = p$att.name;
 			return (E) this;
+		}
+
+
+		/**
+		 * @return the field value
+		 **/
+		public Set<$mmh.getType( $att, false )> get$mmh.upperCaseFirst( $att.name )() {
+			return this.$att.name;
 		}
 #end
 #end

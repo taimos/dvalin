@@ -93,6 +93,12 @@ private static final long serialVersionUID = ${ivod.version}L;
             return (E) this;
         }
 
+		/**
+		 * @return the ids
+		 **/
+		public List<String> getIds() {
+			return this.ids;
+		}
 
 		protected void internalFillFromIVO(${mmh.getModIVOClazzName()} ivo) {
 			this.withIds(ivo.ids);
