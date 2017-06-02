@@ -32,6 +32,9 @@ public abstract class DvalinLifecycleAdapter extends SpringDaemonAdapter {
 
     @Override
     public IPropertyProvider getPropertyProvider() {
+        if (EnvPropertyProvider.isConfigured()) {
+            return new EnvPropertyProvider();
+        }
         return new FilePropertyProvider("dvalin.properties");
     }
 

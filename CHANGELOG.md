@@ -2,6 +2,7 @@
 * Interconnect improvements
 * add Audited version of MongoDB DAOs
 * enhance Hazelcast configuration
+* add configuration via environment variables
 
 # Version 1.20
 * **Rework MongoDB support for new driver version (INCLUDING BREAKING CHANGES)**
