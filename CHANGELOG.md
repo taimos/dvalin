@@ -3,6 +3,7 @@
 * add Audited version of MongoDB DAOs
 * enhance Hazelcast configuration
 * add configuration via environment variables
+    * changed all properties to lowercase only (backwards compatible)
 
 # Version 1.20
 * **Rework MongoDB support for new driver version (INCLUDING BREAKING CHANGES)**

@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo.config;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,10 +38,10 @@ public class RealClientConfig {
     @Value("${mongodb.uri:mongodb://${mongodb.host:localhost}:${mongodb.port:27017}}")
     private String mongoURI;
 
-    @Value("${mongodb.socketTimeout:10000}")
+    @Value("${mongodb.sockettimeout:${mongodb.socketTimeout:10000}}")
     private int socketTimeout;
 
-    @Value("${mongodb.connectTimeout:10000}")
+    @Value("${mongodb.connecttimeout:${mongodb.connectTimeout:10000}}")
     private int connectTimeout;
 
 

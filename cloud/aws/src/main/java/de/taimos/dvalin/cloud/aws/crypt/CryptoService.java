@@ -9,9 +9,9 @@ package de.taimos.dvalin.cloud.aws.crypt;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,7 @@ import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.cloud.aws.AWSClient;
 
 @Service
-@OnSystemProperty(propertyName = "aws.kmsKeyId")
+@OnSystemProperty(propertyName = "aws.kmskeyid")
 public class CryptoService {
     
     private static final String DAEMON_NAME = "DaemonName";
@@ -45,7 +45,7 @@ public class CryptoService {
     @AWSClient
     private AWSKMSClient kmsClient;
     
-    @Value("${aws.kmsKeyId}")
+    @Value("${aws.kmskeyid}")
     private String kmsKeyId;
     
     public ByteBuffer encrypt(String stringToEncrypt, Map<String, String> aeadContext) {

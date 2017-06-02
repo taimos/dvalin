@@ -201,7 +201,7 @@ The following settings are possible:
 * `mongodb.type` - {fake|real} connect to real MongoDB database or in-memory version using `Fongo`
 * `mongodb.name` - the name of the database to use for data storage
 * `mongobee.enabled` - {true|false} use mongobee for database migration
-* `mongobee.basePackage` - the base package of the Mongobee changesets
+* `mongobee.basepackage` - the base package of the Mongobee changesets
 * `mongodb.demodata` - {true|false} load demodata on startup from ND-JSON files
 
 For connections to real MongoDB databases, these extra properties can be set:
@@ -209,8 +209,8 @@ For connections to real MongoDB databases, these extra properties can be set:
 * `mongodb.host` - the host of the MongoDB instance (default: localhost)
 * `mongodb.port` - the port of the MongoDB instance (default: 27017)
 * `mongodb.uri` - instead of host and port you can specify the complete connection string
-* `mongodb.socketTimeout` - the socket timeout of the connection (default: 10 seconds)
-* `mongodb.connectTimeout` - the connection timeout of the connection attempt (default: 10 seconds)
+* `mongodb.sockettimeout` - the socket timeout of the connection (default: 10 seconds)
+* `mongodb.connecttimeout` - the connection timeout of the connection attempt (default: 10 seconds)
 
 
 ### Abstract entity and DAO interface
@@ -343,9 +343,9 @@ defined above for the `AWSClient` annotation.
 
 To use the AWS push implementation provide configurations containing the ARN of the platform application in SNS.
 
-* `aws.pushApplicationARN.GCM` - the ARN of the GCM application 
-* `aws.pushApplicationARN.APNS` - the ARN of the APNS application 
-* `aws.pushApplicationARN.APNS_SANDBOX` - the ARN of the APNS_SANDBOX application 
+* `aws.push.applicationarn.gcm` - the ARN of the GCM application 
+* `aws.push.applicationarn.apns` - the ARN of the APNS application 
+* `aws.push.applicationarn.apns.sandbox` - the ARN of the APNS_SANDBOX application 
 
 ## monitoring
 

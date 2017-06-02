@@ -9,9 +9,9 @@ package de.taimos.dvalin.notification.push;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,11 +54,11 @@ public class AmazonSNSPushService implements PushService {
     @AWSClient
     private AmazonSNSClient snsClient;
     
-    @Value("${aws.pushApplicationARN.GCM:}")
+    @Value("${aws.push.applicationarn.gcm:${aws.pushApplicationARN.GCM:}}")
     private String pushARN_GCM;
-    @Value("${aws.pushApplicationARN.APNS:}")
+    @Value("${aws.push.applicationarn.apns:${aws.pushApplicationARN.APNS:}}")
     private String pushARN_APNS;
-    @Value("${aws.pushApplicationARN.APNS_SANDBOX:}")
+    @Value("${aws.push.applicationarn.apns.sandbox:${aws.pushApplicationARN.APNS_SANDBOX:}}")
     private String pushARN_APNS_SANDBOX;
     
     @Override
