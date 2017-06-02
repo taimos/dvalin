@@ -1,3 +1,8 @@
+# Version 1.21 (current master)
+* Interconnect improvements
+* add Audited version of MongoDB DAOs
+* enhance Hazelcast configuration
+
 # Version 1.20
 * **Rework MongoDB support for new driver version (INCLUDING BREAKING CHANGES)**
 * Update dependencies

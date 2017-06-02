@@ -12,7 +12,10 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
+import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.NetworkConfig;
+import com.hazelcast.config.QueueConfig;
+import com.hazelcast.config.TopicConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.LifecycleListener;
@@ -28,6 +31,21 @@ public class HazelcastConfig {
 
     @Autowired(required = false)
     private List<LifecycleListener> lifecycleListeners;
+    @Autowired(required = false)
+    private List<ConfigProvider> configProviders;
+    
+    @Value("${hazelcast.port:}")
+    private String hazelcastPort;
+
+    @Value("${hazelcast.portcount:}")
+    private String hazelcastPortcount;
+    
+    @Autowired(required = false)
+    private List<QueueConfig> queueConfigs;
+    @Autowired(required = false)
+    private List<TopicConfig> topicConfigs;
+    @Autowired(required = false)
+    private List<MapConfig> mapConfigs;
 
     @Bean
     @BeanAvailable(value = ClusterInfoProvider.class)
@@ -61,9 +79,27 @@ public class HazelcastConfig {
         if (hazelcastPublicIp != null) {
             networkConfig.setPublicAddress(hazelcastPublicIp);
         }
+    
+        if (this.hazelcastPort != null) {
+            networkConfig.setPort(Integer.parseInt(this.hazelcastPort));
+        }
 
-        // Only use port 5701
-        networkConfig.setPortAutoIncrement(false);
+        if (this.hazelcastPortcount != null) {
+            networkConfig.setPortCount(Integer.parseInt(this.hazelcastPortcount));
+            networkConfig.setPortAutoIncrement(true);
+        } else {
+            networkConfig.setPortAutoIncrement(false);
+        }
+    
+        if (this.queueConfigs != null) {
+            this.queueConfigs.forEach(cfg::addQueueConfig);
+        }
+        if (this.topicConfigs != null) {
+            this.topicConfigs.forEach(cfg::addTopicConfig);
+        }
+        if (this.mapConfigs != null) {
+            this.mapConfigs.forEach(cfg::addMapConfig);
+        }
 
         JoinConfig joinConfig = networkConfig.getJoin();
         joinConfig.getMulticastConfig().setEnabled(false);
@@ -71,6 +107,11 @@ public class HazelcastConfig {
         joinConfig.setTcpIpConfig(new DynamicMemberConfig(infoProvider));
 
         cfg.getSerializationConfig().addSerializerConfig(OptionalSerializer.createConfig());
+    
+        if (this.configProviders != null) {
+            this.configProviders.forEach(configProvider -> configProvider.configure(cfg));
+        }
+        
         HazelcastInstance instance = Hazelcast.newHazelcastInstance(cfg);
         if (this.lifecycleListeners != null) {
             this.lifecycleListeners.forEach(instance.getLifecycleService()::addLifecycleListener);
