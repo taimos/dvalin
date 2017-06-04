@@ -3,8 +3,15 @@
 * add Audited version of MongoDB DAOs
 * enhance Hazelcast configuration
 * add configuration via environment variables
-    * changed all properties to lowercase only (backwards compatible)
-
+    * changed all properties to lowercase (backwards compatible)
+* Update dependencies
+    * Spring 4.3.8
+    * JodaTime 2.9.9
+    * AWS 1.11.140
+    * Slf4j 1.7.25
+    * Fongo 2.1.0
+    * ActiveMQ 5.14.0
+    
 # Version 1.20
 * **Rework MongoDB support for new driver version (INCLUDING BREAKING CHANGES)**
 * Update dependencies
