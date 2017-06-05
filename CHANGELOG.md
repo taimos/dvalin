@@ -11,6 +11,7 @@
     * Slf4j 1.7.25
     * Fongo 2.1.0
     * ActiveMQ 5.14.0
+    * Daemon framework 2.14
     
 # Version 1.20
 * **Rework MongoDB support for new driver version (INCLUDING BREAKING CHANGES)**
