@@ -1,4 +1,6 @@
-# Version 1.21 (current master)
+# Version 1.22 (current master)
+
+# Version 1.21
 * Interconnect improvements
 * add Audited version of MongoDB DAOs
 * enhance Hazelcast configuration
