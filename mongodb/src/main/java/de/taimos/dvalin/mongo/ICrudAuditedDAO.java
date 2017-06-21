@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,11 +31,18 @@ import java.util.List;
  * @param <E> an {@link AEntity}
  */
 public interface ICrudAuditedDAO<E extends AAuditedEntity> extends ICrudDAO<E> {
-	
+
 	/**
 	 * @param id the id of the document to get the history elements for
 	 * @return the history elements for a document
 	 */
 	public List<E> findHistoryElements(String id);
-	
+
+    /**
+     * @param id the id of the document to get the element for
+     * @param version the version of the document to get
+     * @return the correct version of a document
+     */
+    public E findVersion(String id, Integer version);
+
 }

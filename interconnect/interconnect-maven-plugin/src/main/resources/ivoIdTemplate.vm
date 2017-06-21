@@ -47,6 +47,9 @@ private static final long serialVersionUID = ${ivod.version}L;
 	public abstract static class Abstract${mmh.getModIVOClazzName()}Builder<E extends Abstract${mmh.getModIVOClazzName()}Builder<?>> $mmh.getParentBuilder() $mmh.getBuilderImplements() {
 
         private List<String> ids = new ArrayList<>();
+#if ( $ivod.auditing )        
+		private Integer version;
+#end		
 
         /**
 		 * This field is required.
@@ -100,8 +103,35 @@ private static final long serialVersionUID = ${ivod.version}L;
 			return this.ids;
 		}
 
+#if ( $ivod.auditing )
+		/**
+		 * This field is optional, thus may be null.
+		 * the exact version to look for
+		 *
+		 * @param pversion the value to set
+		 * @return the builder
+		 *
+		 **/
+	 	@Nullable
+		@SuppressWarnings("unchecked")
+		public E withVersion(Integer pversion) {
+			this.version = pversion;
+			return (E) this;
+		}
+
+		/**
+		 * @return the field value
+		 **/
+		public Integer getVersion() {
+			return this.version;
+		}
+#end		
+
 		protected void internalFillFromIVO(${mmh.getModIVOClazzName()} ivo) {
 			this.withIds(ivo.ids);
+#if ( $ivod.auditing )
+			this.withVersion(ivo.version);
+#end			
 		}
 
 		/**
@@ -117,14 +147,26 @@ private static final long serialVersionUID = ${ivod.version}L;
 	}
 
 	private final List<String> ids;
+#if ( $ivod.auditing )
+	private final Integer version;
+#end	
 
 	protected ${mmh.getModIVOClazzName()}(Abstract${mmh.getModIVOClazzName()}Builder<?> builder) {
 		this.ids = builder.ids;
+#if ( $ivod.auditing )
+		this.version = builder.version;
+#end
 	}
 
 	public List<String> getIds() {
 		return this.ids;
 	}
+
+#if ( $ivod.auditing )
+	public Integer getVersion() {
+		return this.version;
+	}
+#end
 
 	@SuppressWarnings("unchecked")
 	@Override
