@@ -1,4 +1,5 @@
 # Version 1.22 (current master)
+* enhanced support to get versioned element from MongoDB DAOs
 
 # Version 1.21
 * Interconnect improvements
