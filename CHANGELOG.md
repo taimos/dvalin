@@ -1,5 +1,6 @@
 # Version 1.22 (current master)
 * enhanced support to get versioned element from MongoDB DAOs
+* adds an option to send messages to an alternative topic via IVORefreshSender
 
 # Version 1.21
 * Interconnect improvements
