@@ -28,21 +28,21 @@ import java.util.Map;
  */
 public class ConverterUtil {
 
-    private static final Map<String, IValueConverter> valueModifiers = new HashMap<>();
+    private static final Map<String, IValueConverter> valueConverters = new HashMap<>();
 
     static {
-        ConverterUtil.addValueModifier(new CollectionValueConverter());
-        ConverterUtil.addValueModifier(new MapValueConverter());
-        ConverterUtil.addValueModifier(new PrimitiveValueConverter());
-        ConverterUtil.addValueModifier(new MongoObjValueConverter());
-        ConverterUtil.addValueModifier(new IVOValueConverter());
+        ConverterUtil.addValueConverter(new CollectionValueConverter());
+        ConverterUtil.addValueConverter(new MapValueConverter());
+        ConverterUtil.addValueConverter(new PrimitiveValueConverter());
+        ConverterUtil.addValueConverter(new MongoObjValueConverter());
+        ConverterUtil.addValueConverter(new IVOValueConverter());
     }
 
     /**
      * @param modifier add an special value modifier
      */
-    public static void addValueModifier(IValueConverter modifier) {
-        ConverterUtil.valueModifiers.put(modifier.getClass().getSimpleName(), modifier);
+    public static void addValueConverter(IValueConverter modifier) {
+        ConverterUtil.valueConverters.put(modifier.getClass().getSimpleName(), modifier);
     }
 
     /**
@@ -57,7 +57,7 @@ public class ConverterUtil {
         if(originalFieldValue == null) {
             return null;
         }
-        for(IValueConverter vm : ConverterUtil.valueModifiers.values()) {
+        for(IValueConverter vm : ConverterUtil.valueConverters.values()) {
             Object result = vm.convert(originalFieldValue, target, originalField, targetField);
             if(result != null) {
                 return result;
