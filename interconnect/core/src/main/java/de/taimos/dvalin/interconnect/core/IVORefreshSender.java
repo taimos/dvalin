@@ -23,41 +23,26 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
-import java.io.Serializable;
-
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.Topic;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.*;
+import java.io.Serializable;
+
 public class IVORefreshSender {
 
     private static IVORefreshSender instance = new IVORefreshSender();
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private volatile PooledConnectionFactory pooledConnectionFactory;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
-    /**
-     * @return the singleton
-     */
-    public static IVORefreshSender getInstance() {
-        return IVORefreshSender.instance;
-    }
 
     private IVORefreshSender() {
         try {
             final String mqUrl = System.getProperty(MessageConnector.SYSPROP_IBROKERURL);
             final ActiveMQConnectionFactory mqFactory;
-            if (mqUrl == null) {
+            if(mqUrl == null) {
                 this.logger.warn("No " + MessageConnector.SYSPROP_IBROKERURL + " configured, using tcp://localhost:61616.");
                 mqFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             } else {
@@ -74,9 +59,16 @@ public class IVORefreshSender {
 
             // start connection pool
             this.pooledConnectionFactory.start();
-        } catch (Exception e) {
+        } catch(Exception e) {
             this.logger.error("Failed to setup the message queues", e);
         }
+    }
+
+    /**
+     * @return the singleton
+     */
+    public static IVORefreshSender getInstance() {
+        return IVORefreshSender.instance;
     }
 
     /**
@@ -90,13 +82,21 @@ public class IVORefreshSender {
      * @param object the object
      */
     public void send(Serializable object) {
+        this.send(object, System.getProperty(MessageConnector.SYSPROP_UPDATE_TOPIC));
+    }
+
+    /**
+     * @param object    the object
+     * @param topicName name of the topic you want to use
+     */
+    public void send(Serializable object, String topicName) {
         Connection connection = null;
         try {
             connection = this.pooledConnectionFactory.createConnection();
             Session updateSession = null;
             try {
                 updateSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                final Topic updateTopic = updateSession.createTopic(System.getProperty(MessageConnector.SYSPROP_UPDATE_TOPIC));
+                final Topic updateTopic = updateSession.createTopic(topicName);
                 MessageProducer utopicmp = null;
                 try {
                     utopicmp = updateSession.createProducer(updateTopic);
@@ -105,30 +105,30 @@ public class IVORefreshSender {
                     utopicmp.send(updateSession.createObjectMessage(object));
 
                 } finally {
-                    if (utopicmp != null) {
+                    if(utopicmp != null) {
                         try {
                             utopicmp.close();
-                        } catch (final JMSException e) {
+                        } catch(final JMSException e) {
                             this.logger.warn("Can not close producer", e);
                         }
                     }
                 }
             } finally {
-                if (updateSession != null) {
+                if(updateSession != null) {
                     try {
                         updateSession.close();
-                    } catch (final JMSException e) {
+                    } catch(final JMSException e) {
                         this.logger.warn("Can not close session", e);
                     }
                 }
             }
-        } catch (JMSException e) {
+        } catch(JMSException e) {
             this.logger.error("Can not send message", e);
         } finally {
-            if (connection != null) {
+            if(connection != null) {
                 try {
                     connection.close();
-                } catch (final JMSException e) {
+                } catch(final JMSException e) {
                     this.logger.warn("Can not close connection", e);
                 }
             }
