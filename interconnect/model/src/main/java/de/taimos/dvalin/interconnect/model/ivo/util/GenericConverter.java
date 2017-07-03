@@ -1,6 +1,3 @@
-/**
- *
- */
 package de.taimos.dvalin.interconnect.model.ivo.util;
 
 /*
@@ -23,21 +20,20 @@ package de.taimos.dvalin.interconnect.model.ivo.util;
  * #L%
  */
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import de.taimos.dvalin.interconnect.model.ivo.util.converter.ConverterUtil;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Map.Entry;
 
-import org.joda.time.DateTime;
-
-import de.taimos.dvalin.interconnect.model.ivo.IVO;
-
+/**
+ * @author psigloch
+ */
 public class GenericConverter {
 
     /**
@@ -47,142 +43,97 @@ public class GenericConverter {
      * @param destinationClass destination for reference
      * @return new object copied from origin to destination
      */
+    @SuppressWarnings("unchecked")
     public static <Destination, Origin> Destination convert(Origin origin, Class<Destination> destinationClass) {
-        Destination result = GenericConverter.createInstance(destinationClass);
+        Class targetClazz = destinationClass;
+        boolean usesBuilder = false;
+
+        //if there is a builder present, use it
+        JsonDeserialize annotation = destinationClass.getAnnotation(JsonDeserialize.class);
+        if(annotation != null) {
+            targetClazz = annotation.builder();
+            usesBuilder = true;
+        }
+        Object result = GenericConverter.createNewClassInstance(targetClazz);
         result = GenericConverter.copy(origin, result);
-        return result;
+        if(usesBuilder) {
+            return GenericConverter.invokeBuilderMethod(result);
+        }
+        return (Destination) result;
     }
 
-    private static <Destination, Origin> Destination copy(Origin origin, Destination result) {
-        HashMap<Field, Field> map = GenericConverter.resolveFieldMapFromOrigin(origin, result);
-        for (Map.Entry<Field, Field> entry : map.entrySet()) {
-            Field originField = entry.getKey();
-            Field destinationField = entry.getValue();
-            originField.setAccessible(true);
-            // not all field can be/have to be copied
-            if (destinationField != null) {
-                GenericConverter.copyValue(origin, result, originField, destinationField);
+    private static <Destination, Origin> Destination copy(Origin origin, Destination target) {
+        HashMap<Field, Field> map = GenericConverter.prepareFieldMapping(origin, target);
+        for(Entry<Field, Field> entry : map.entrySet()) {
+            //we only want fields which are present in both objects
+            if(entry.getValue() != null && entry.getKey() != null) {
+                try {
+                    entry.getKey().setAccessible(true);
+                    Object originalFieldValue = GenericConverter.getFieldValue(origin, entry.getKey());
+                    entry.getValue().set(target, ConverterUtil.modifyValue(originalFieldValue, target, entry.getKey(), entry.getValue()));
+                } catch(IllegalAccessException e) {
+                    throw new RuntimeException("Failed to access field:" + entry.getKey().getName(), e);
+                }
             }
         }
-        return result;
+        return target;
     }
 
-    @SuppressWarnings({"deprecation", "rawtypes"})
-    private static <Destination, Origin> void copyValue(Origin origin, Destination result, Field originField, Field destinationField) {
-        try {
-            Object originalValue = GenericConverter.extractValue(origin, originField);
 
-            if (originalValue == null) {
-                destinationField.set(result, null);
-            } else if (originalValue instanceof Collection<?>) {
-                Class<? extends Object> class1 = null;
-                for (Object object : ((Collection) originalValue)) {
-                    class1 = object.getClass();
-                }
-                if ((class1 != null) && class1.isAssignableFrom(String.class)) {
-                    // TODO implement
-                }
-            } else if (originalValue instanceof IVO) {
-                destinationField.set(result, GenericConverter.convert(originalValue, destinationField.getType()));
-            } else if ((originalValue instanceof BigDecimal) && (String.class.isAssignableFrom(destinationField.getType()))) {
-                destinationField.set(result, ConvertingUtils.convertBigDecimalToString((BigDecimal) originalValue));
-            } else if ((originalValue instanceof String) && (BigDecimal.class.isAssignableFrom(destinationField.getType()))) {
-                destinationField.set(result, ConvertingUtils.convertStringToBigDecimal((String) originalValue));
-            } else if ((originalValue instanceof Date) && (DateTime.class.isAssignableFrom(destinationField.getType()))) {
-                destinationField.set(result, new DateTime(originalValue));
-            } else if ((originalValue instanceof DateTime) && (Date.class.isAssignableFrom(destinationField.getType()))) {
-                destinationField.set(result, new DateTime(originalValue).toDate());
-            } else {
-                destinationField.set(result, originalValue);
+    private static Object getFieldValue(Object object, Field field) throws IllegalAccessException {
+        try {
+            String capitalizedFieldName = field.getName();
+            if((capitalizedFieldName != null) && (capitalizedFieldName.length() > 0)) {
+                capitalizedFieldName = capitalizedFieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + capitalizedFieldName.substring(1);
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private static Object extractValue(Object object, Field field) throws IllegalAccessException {
-        Object value = null;
-        try {
-            Method getter = GenericConverter.getGetter(object.getClass(), field.getName());
+            Method getter = object.getClass().getMethod("get" + capitalizedFieldName);
             getter.setAccessible(true);
-            value = getter.invoke(object);
-        } catch (NoSuchMethodException | InvocationTargetException e) {
+            return getter.invoke(object);
+        } catch(NoSuchMethodException | InvocationTargetException e) {
+            //since we don't know if there is a getter which does additional work, this is only fallback behaviour
             field.setAccessible(true);
-            value = field.get(object);
+            return field.get(object);
         }
-        return value;
     }
 
-    private static String capitalize(String name) {
-        if ((name == null) || (name.length() == 0)) {
-            return name;
-        }
-        return name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
-    }
-
-    // Almost the same as in VOAnalyzer, but NoSuchMethodException is passed to the caller, logger used
-    private static Method getGetter(Class<?> clazz, String fieldname) throws NoSuchMethodException {
-        Method m = null;
+    @SuppressWarnings("unchecked")
+    private static <Destination> Destination invokeBuilderMethod(Object result) {
         try {
-            m = clazz.getMethod("get" + GenericConverter.capitalize(fieldname));
-        } catch (SecurityException e) {
-            // Logger.error("fetch of getter failed", e);
+            Method method = result.getClass().getMethod("build");
+            return (Destination) method.invoke(result);
+        } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("No build method found");
         }
-        return m;
     }
 
-    private static <Destination, Origin> HashMap<Field, Field> resolveFieldMapFromOrigin(Origin origin, Destination destination) {
+    private static Object createNewClassInstance(Class destinationClass) {
+        try {
+            return destinationClass.newInstance();
+        } catch(InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to instanciate the target class:" + destinationClass.getName(), e);
+        }
+    }
+
+    private static <Destination, Origin> HashMap<Field, Field> prepareFieldMapping(Origin origin, Destination destination) {
         HashMap<String, Field> createFieldMap = GenericConverter.createFieldMap(origin);
         HashMap<String, Field> createFieldMap2 = GenericConverter.createFieldMap(destination);
 
         HashMap<Field, Field> result = new HashMap<>();
-        for (Field field : createFieldMap.values()) {
-
-            if (createFieldMap2.containsKey(field.getName())) {
+        for(Field field : createFieldMap.values()) {
+            if(createFieldMap2.containsKey(field.getName())) {
                 result.put(field, createFieldMap2.get(field.getName()));
             }
-            if (field.getName().equals("version")) {
-                result.put(field, createFieldMap2.get("_version"));
-            }
-            if (field.getName().equals("_version")) {
-                result.put(field, createFieldMap2.get("version"));
-            }
-            if (field.getName().equals("lastChange")) {
-                result.put(field, createFieldMap2.get("_lastChange"));
-            }
-            if (field.getName().equals("_lastChange")) {
-                result.put(field, createFieldMap2.get("lastChange"));
-            }
-            if (field.getName().equals("lastChangeUserId")) {
-                result.put(field, createFieldMap2.get("_lastChangeUserId"));
-            }
-            if (field.getName().equals("_lastChangeUserId")) {
-                result.put(field, createFieldMap2.get("lastChangeUserId"));
-            }
-        }
-
-        return result;
-    }
-
-    private static <Destination> Destination createInstance(Class<Destination> destinationClass) {
-        Destination result = null;
-        try {
-
-            result = destinationClass.newInstance();
-
-        } catch (InstantiationException | IllegalAccessException e) {
-            // Instantiation error, failed to copy the element
-            // throw new DaemonError(TMTErrors.jmsProblem);
         }
         return result;
     }
 
     private static HashMap<String, Field> createFieldMap(Object element) {
         HashMap<String, Field> result = new HashMap<>();
-        for (Class<?> obj = element.getClass(); !obj.equals(Object.class); obj = obj.getSuperclass()) {
-            for (Field field : obj.getDeclaredFields()) {
-                if (!Modifier.isStatic(field.getModifiers())) {
+        //we need all fields, even those from the superclasses
+        for(Class<?> clazz = element.getClass(); !clazz.equals(Object.class); clazz = clazz.getSuperclass()) {
+            for(Field field : clazz.getDeclaredFields()) {
+                //but we skip static fields
+                if(!Modifier.isStatic(field.getModifiers())) {
                     field.setAccessible(true);
                     result.put(field.getName(), field);
                 }
@@ -190,5 +141,4 @@ public class GenericConverter {
         }
         return result;
     }
-
 }
