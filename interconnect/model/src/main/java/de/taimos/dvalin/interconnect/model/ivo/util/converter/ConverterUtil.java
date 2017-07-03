@@ -34,7 +34,6 @@ public class ConverterUtil {
         ConverterUtil.addValueConverter(new CollectionValueConverter());
         ConverterUtil.addValueConverter(new MapValueConverter());
         ConverterUtil.addValueConverter(new PrimitiveValueConverter());
-        ConverterUtil.addValueConverter(new MongoObjValueConverter());
         ConverterUtil.addValueConverter(new IVOValueConverter());
     }
 
