@@ -2,6 +2,7 @@
 * enhanced support to get versioned element from MongoDB DAOs
 * improved and reworked GenericConverter
 * adds an option to send messages to an alternative topic via IVORefreshSender
+* fixes problem with last change user type and naming discrepancy
 
 # Version 1.21
 * Interconnect improvements

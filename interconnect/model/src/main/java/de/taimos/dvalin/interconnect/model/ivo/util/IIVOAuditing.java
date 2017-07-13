@@ -24,11 +24,10 @@ package de.taimos.dvalin.interconnect.model.ivo.util;
  */
 
 
-import javax.annotation.Nullable;
-
+import de.taimos.dvalin.interconnect.model.ivo.IVO;
 import org.joda.time.DateTime;
 
-import de.taimos.dvalin.interconnect.model.ivo.IVO;
+import javax.annotation.Nullable;
 
 public interface IIVOAuditing extends IVO {
 
@@ -43,7 +42,7 @@ public interface IIVOAuditing extends IVO {
     /**
      * property constant for lastChange property comment: The last change date
      */
-    String PROP_LASTCHANGEUSERID = "lastChangeUserId";
+    String PROP_LASTCHANGEUSER = "lastChangeUser";
 
 
     /**
@@ -63,11 +62,11 @@ public interface IIVOAuditing extends IVO {
     DateTime getLastChange();
 
     /**
-     * The last change user id This field is optional, thus may be null.
+     * The last change user This field is optional, thus may be null.
      *
-     * @return the last change user id
+     * @return the last change user
      **/
     @Nullable
-    Long getLastChangeUserId();
+    String getLastChangeUser();
 
 }
