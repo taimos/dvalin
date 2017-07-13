@@ -129,7 +129,7 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 		 **/
 	 	@Nullable
 		@SuppressWarnings("unchecked")
-		public E withLastChangeUser(Long plastChangeUser) {
+		public E withLastChangeUser(String plastChangeUser) {
 			this.lastChangeUser = plastChangeUser;
 			return (E) this;
 		}
