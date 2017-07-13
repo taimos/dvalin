@@ -48,7 +48,7 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 #if ( $ivod.auditing )
 		private Integer version;
 		private DateTime lastChange;
-		private Long lastChangeUserId;
+		private String lastChangeUser;
 #end
 #if ( $ivod.identity && !$ivod.parentName )
 		private String id;
@@ -123,22 +123,22 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 		 * This field is optional, thus may be null.
 		 * The last change user id
 		 *
-		 * @param plastChangeUserId the value to set
+		 * @param plastChangeUser the value to set
 		 * @return the builder
 		 *
 		 **/
 	 	@Nullable
 		@SuppressWarnings("unchecked")
-		public E withLastChangeUserId(Long plastChangeUserId) {
-			this.lastChangeUserId = plastChangeUserId;
+		public E withLastChangeUser(String plastChangeUser) {
+			this.lastChangeUser = plastChangeUser;
 			return (E) this;
 		}
 
 		/**
          * @return the last change user id
          **/
-        public Long getLastChangeUserId() {
-            return this.lastChangeUserId;
+        public String getLastChangeUser() {
+            return this.lastChangeUser;
         }
 
 #end
@@ -188,7 +188,7 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 #if ( $ivod.auditing )
 			this.withVersion(ivo.version);
 			this.withLastChange(ivo.lastChange);
-			this.withLastChangeUserId(ivo.lastChangeUserId);
+			this.withLastChangeUser(ivo.lastChangeUser);
 #end
 		}
 
@@ -221,7 +221,7 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 #if ( $ivod.auditing )
 	private final  Integer version;
 	private final  DateTime lastChange;
-	private final  Long lastChangeUserId;
+	private final  String lastChangeUser;
 #end
 
 	protected $mmh.getIVOClazzName()(Abstract${mmh.getIVOClazzName()}Builder<?> builder) {
@@ -237,7 +237,7 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 #if ( $ivod.auditing )
 		this.version = builder.version;
 		this.lastChange = builder.lastChange;
-		this.lastChangeUserId = builder.lastChangeUserId;
+		this.lastChangeUser = builder.lastChangeUser;
 #end
 	}
 
@@ -270,8 +270,8 @@ public class $mmh.getIVOClazzName() extends $mmh.getParent() implements I$mmh.ge
 	}
 
 	@Override
-	public Long getLastChangeUserId() {
-		return this.lastChangeUserId;
+	public String getLastChangeUser() {
+		return this.lastChangeUser;
 	}
 
 #end
