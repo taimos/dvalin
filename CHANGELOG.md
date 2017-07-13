@@ -1,4 +1,6 @@
-# Version 1.22 (current master)
+# Version 1.23 (current master)
+
+# Version 1.22
 * enhanced support to get versioned element from MongoDB DAOs
 * improved and reworked GenericConverter
 * adds an option to send messages to an alternative topic via IVORefreshSender
