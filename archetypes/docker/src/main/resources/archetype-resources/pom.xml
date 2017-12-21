@@ -127,13 +127,13 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.19.0</version>
+                <version>0.22.1</version>
                 <configuration>
                     <images>
                         <image>
                             <name>${dockerImage}:v${project.version}</name>
                             <build>
-                                <from>java:8-alpine</from>
+                                <from>openjdk:8-jdk-alpine</from>
                                 <maintainer>${project.organization.name}</maintainer>
                                 <tags>
                                     <tag>latest</tag>
@@ -190,7 +190,7 @@
                         <id>build</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>build-nofork</goal>
+                            <goal>build</goal>
                         </goals>
                     </execution>
                     <execution>
