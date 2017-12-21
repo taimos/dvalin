@@ -55,6 +55,7 @@
       <module name="dvalin-cluster-parent" target="1.8" />
       <module name="dvalin-daemon" target="1.8" />
       <module name="dvalin-dynamodb" target="1.8" />
+      <module name="dvalin-examples-parent" target="1.8" />
       <module name="dvalin-interconnect-core" target="1.8" />
       <module name="dvalin-interconnect-demo" target="1.8" />
       <module name="dvalin-interconnect-metamodel" target="1.8" />
