@@ -3,7 +3,7 @@
     * AWS 1.11.1253
     * Spring 4.3.10
     * Jackson 2.8.10
-* Create example implementations
+* Create example implementations in extra repo
 
 # Version 1.22
 * enhanced support to get versioned element from MongoDB DAOs

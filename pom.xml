@@ -571,6 +571,5 @@
         <module>dynamodb</module>
         <module>interconnect</module>
         <module>archetypes</module>
-        <module>examples</module>
     </modules>
 </project>

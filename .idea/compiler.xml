@@ -23,7 +23,6 @@
         <module name="dvalin-daemon" />
         <module name="dvalin-dynamodb" />
         <module name="dvalin-interconnect-core" />
-        <module name="dvalin-interconnect-demo" />
         <module name="dvalin-interconnect-metamodel" />
         <module name="dvalin-interconnect-model" />
         <module name="dvalin-interconnect-test" />
@@ -55,6 +54,7 @@
       <module name="dvalin-cluster-parent" target="1.8" />
       <module name="dvalin-daemon" target="1.8" />
       <module name="dvalin-dynamodb" target="1.8" />
+      <module name="dvalin-examples-jaxrs-hello-world" target="1.8" />
       <module name="dvalin-examples-parent" target="1.8" />
       <module name="dvalin-interconnect-core" target="1.8" />
       <module name="dvalin-interconnect-demo" target="1.8" />
