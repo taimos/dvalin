@@ -1,8 +1,9 @@
 # Version 1.23 (current master)
 * Update dependencies
-    * AWS 1.11.182
+    * AWS 1.11.1253
     * Spring 4.3.10
     * Jackson 2.8.10
+* Create example implementations
 
 # Version 1.22
 * enhanced support to get versioned element from MongoDB DAOs
