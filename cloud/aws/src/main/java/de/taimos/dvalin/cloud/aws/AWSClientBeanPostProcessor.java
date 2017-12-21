@@ -65,14 +65,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringValueResolver;
 
 import com.amazonaws.AmazonWebServiceClient;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 
 @Component
 @SuppressWarnings("serial")
@@ -190,25 +182,12 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             if (!AmazonWebServiceClient.class.isAssignableFrom(dependencyType)) {
                 throw new RuntimeException("Field has to be of type AmazonWebServiceClient but was of type " + dependencyType.getCanonicalName());
             }
-            Region region = this.getRegion(this.client);
-            this.LOGGER.info("Using AWS region {}", region.toString());
-
-            AWSCredentials cred = this.getStaticCredentials();
-
-            final AWSCredentialsProvider provider;
-            if (cred != null) {
-                provider = new AWSCredentialsProviderChain(new AWSStaticCredentialsProvider(cred));
-            } else {
-                provider = new DefaultAWSCredentialsProviderChain();
-            }
-            AmazonWebServiceClient client = region.createClient((Class<? extends AmazonWebServiceClient>) dependencyType, provider, null);
-            String endpoint = this.getCustomEndpoint(this.client);
-            if (endpoint != null) {
-                client.setEndpoint(endpoint);
-            }
-            return client;
+            AWSClientFactory factory = new AWSClientFactory();
+            factory.withRegion(this.getRegionName(this.client));
+            factory.withEndpoint(this.getCustomEndpoint(this.client));
+            return factory.create(dependencyType);
         }
-
+    
         private String getCustomEndpoint(AWSClient client) {
             if (!client.endpoint().isEmpty()) {
                 try {
@@ -222,26 +201,13 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             }
             return null;
         }
-
-        private AWSCredentials getStaticCredentials() {
-            try {
-                String accessKey = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.accessKeyId}");
-                String secretKey = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.secretKey}");
-                if (!accessKey.isEmpty() && !secretKey.isEmpty()) {
-					return new BasicAWSCredentials(accessKey, secretKey);
-				}
-            } catch (IllegalArgumentException e) {
-                //
-            }
-            return null;
-        }
-
-        private Region getRegion(AWSClient client) {
+    
+        private String getRegionName(AWSClient client) {
             if (!client.region().isEmpty()) {
                 try {
                     String regionString = AWSClientBeanPostProcessor.this.resolver.resolveStringValue(this.client.region());
                     if (!regionString.isEmpty()) {
-                        return Region.getRegion(Regions.fromName(regionString));
+                        return regionString;
                     }
                 } catch (IllegalArgumentException e) {
                     this.LOGGER.warn("Failed to read regionProperty", e);
@@ -250,22 +216,12 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             try {
                 String regionString = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.region}");
                 if (!regionString.isEmpty()) {
-                    return Region.getRegion(Regions.fromName(regionString));
+                    return regionString;
                 }
             } catch (IllegalArgumentException e) {
-                this.LOGGER.info("Did not find aws.region system property");
+                this.LOGGER.debug("Did not find aws.region system property");
             }
-            if (System.getenv("AWS_DEFAULT_REGION") != null) {
-                return Region.getRegion(Regions.fromName(System.getenv("AWS_DEFAULT_REGION")));
-            }
-            if (System.getenv("AWS_REGION") != null) {
-                return Region.getRegion(Regions.fromName(System.getenv("AWS_REGION")));
-            }
-            Region currentRegion = Regions.getCurrentRegion();
-            if (currentRegion != null) {
-                return currentRegion;
-            }
-            return Region.getRegion(Regions.DEFAULT_REGION);
+            return null;
         }
     }
 
