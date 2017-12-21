@@ -287,6 +287,12 @@ See `EC2Context` and `CloudFormation` beans for details.
 In addition you can let Dvalin signal the current CloudFormation stack by setting 
 the property `aws.cfnsignal` to `true`.
 
+### ParameterStore
+
+To use the SimpleSystemsManager Parameter Store as configuration source, set the `ParameterStorePropertyProvider` in your main class.
+It will list all visible parameters and use the last part of the name (without the path) as a key.
+To support local configuration, environment variables override values from SSM. 
+
 ## cluster
 
 The `cluster` libraries provide tools to form a cluster of services. Currently only Hazelcast is available 

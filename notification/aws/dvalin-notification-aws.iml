@@ -38,6 +38,7 @@
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-autoscaling:1.11.253" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-cloudformation:1.11.253" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-kms:1.11.253" level="project" />
+    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-ssm:1.11.253" level="project" />
     <orderEntry type="module" module-name="dvalin-notification-core" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context-support:4.3.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.3.10.RELEASE" level="project" />
