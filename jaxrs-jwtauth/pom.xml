@@ -23,5 +23,12 @@
             <version>4.11</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>de.taimos</groupId>
+            <artifactId>dvalin-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 </project>

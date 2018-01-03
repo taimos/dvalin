@@ -9,9 +9,9 @@ package de.taimos.dvalin.jaxrs.security.jwt;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ import de.taimos.dvalin.jaxrs.context.DvalinRSContext;
  */
 @JaxRsComponent
 @OnSystemProperty(propertyName = "jwtauth.secret")
-public class JWTAuth {
+public class JWTAuth implements IJWTAuth {
 
     @Value("${jwtauth.secret}")
     private String jwtSharedSecret;
@@ -105,14 +105,8 @@ public class JWTAuth {
             throw new RuntimeException("Error verifying JSON Web Token", e);
         }
     }
-
-    /**
-     * Check the given JWT and parse it into a user object
-     *
-     * @param jwtString the JSON Web Token
-     * @return the parsed and verified token or null if token is invalid or expired
-     * @throws ParseException if the token cannot be parsed
-     */
+    
+    @Override
     public AuthenticatedUser validateToken(String jwtString) throws ParseException {
         final SignedJWT jwt = this.verifyToken(jwtString);
         JWTClaimsSet claims = jwt.getJWTClaimsSet();
