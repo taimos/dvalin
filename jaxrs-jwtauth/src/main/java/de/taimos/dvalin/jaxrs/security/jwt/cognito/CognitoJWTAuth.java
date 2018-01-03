@@ -35,6 +35,9 @@ public class CognitoJWTAuth implements IJWTAuth {
     @Value("${jwtauth.cognito.region}")
     private String cognitoPoolRegion;
     
+    @Value("${jwtauth.cognito.roles:cognito:groups}")
+    private String cognitoRoles;
+    
     private String issuer;
     
     private final Map<String, RSAKey> webKeys = new HashMap<>();
@@ -47,7 +50,7 @@ public class CognitoJWTAuth implements IJWTAuth {
             JSONObject jwksBody = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(WS.getResponseAsBytes(httpResponse));
             
             JSONArray keys = (JSONArray) jwksBody.get("keys");
-    
+            
             for (Object key : keys) {
                 RSAKey jwk = RSAKey.parse((JSONObject) key);
                 this.webKeys.put(jwk.getKeyID(), jwk);
@@ -60,45 +63,32 @@ public class CognitoJWTAuth implements IJWTAuth {
     @Override
     public CognitoUser validateToken(String jwtString) throws ParseException {
         SignedJWT jwt = SignedJWT.parse(jwtString);
-    
+        
         if (!jwt.getJWTClaimsSet().getIssuer().equals(this.issuer)) {
             throw new IllegalArgumentException("Invalid issuer for JWT: " + jwt.getJWTClaimsSet().getIssuer());
         }
-    
+        
         String tokenUse = jwt.getJWTClaimsSet().getStringClaim("token_use");
         if (!tokenUse.equals("access") && !tokenUse.equals("id")) {
             throw new IllegalArgumentException("Invalid token usage type: " + tokenUse);
         }
-    
+        
         String kid = jwt.getHeader().getKeyID();
         if (!this.webKeys.containsKey(kid)) {
             throw new IllegalArgumentException("No key for kid: " + kid);
         }
-    
+        
         try {
-            if(jwt.verify(new RSASSAVerifier(this.webKeys.get(kid)))){
+            if (jwt.verify(new RSASSAVerifier(this.webKeys.get(kid)))) {
                 JWTClaimsSet claims = jwt.getJWTClaimsSet();
                 if (!claims.getExpirationTime().before(new Date())) {
-                    return this.parseClaims(claims);
+                    return CognitoUser.parseClaims(claims, this.cognitoRoles);
                 }
             }
             return null;
         } catch (JOSEException e) {
             throw new IllegalArgumentException("Cannot verify JWT", e);
         }
-    }
-    
-    private CognitoUser parseClaims(JWTClaimsSet claims) throws ParseException {
-        CognitoUser user = new CognitoUser();
-        user.setSubject(claims.getSubject());
-        user.setUsername(claims.getStringClaim("cognito:username"));
-        user.setEmail(claims.getStringClaim("email"));
-        user.setEmailVerified(claims.getBooleanClaim("email_verified"));
-    
-        user.setCustomFields(claims.getClaims());
-        
-        // TODO: 02.01.18 cognito:groups
-        return user;
     }
     
 }
