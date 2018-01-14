@@ -48,7 +48,7 @@ import com.google.common.base.Preconditions;
 public class EC2Context {
 
     @AWSClient
-    private AmazonEC2Client ec2;
+    private AmazonEC2Client ec2Client;
 
     @AWSClient
     private AmazonAutoScalingClient autoScalingClient;
@@ -136,7 +136,7 @@ public class EC2Context {
         List<String> members = this.getAutoScalingMembers(autoScalingGroupName);
         DescribeInstancesRequest req = new DescribeInstancesRequest();
         req.setInstanceIds(members);
-        DescribeInstancesResult result = this.ec2.describeInstances(req);
+        DescribeInstancesResult result = this.ec2Client.describeInstances(req);
         List<String> list = new ArrayList<>();
         for (Reservation reservation : result.getReservations()) {
             for (Instance instance : reservation.getInstances()) {
@@ -200,7 +200,7 @@ public class EC2Context {
     public Instance getInstance() {
         DescribeInstancesRequest req = new DescribeInstancesRequest();
         req.setInstanceIds(Collections.singleton(this.getInstanceId()));
-        DescribeInstancesResult result = this.ec2.describeInstances(req);
+        DescribeInstancesResult result = this.ec2Client.describeInstances(req);
         if (result.getReservations().size() != 1) {
             throw new IllegalStateException("Found multiple instances");
         }
