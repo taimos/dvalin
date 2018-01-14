@@ -33,7 +33,7 @@ public class AWSClientFactory<T extends AmazonWebServiceClient> {
     
     public T create(Class<T> clientClass) {
         String region = this.getRegion();
-        this.LOGGER.debug("Using AWS region {}", region);
+        LOGGER.debug("Using AWS region {}", region);
     
         final AwsClientBuilder clientBuilder;
         try {
@@ -43,7 +43,7 @@ public class AWSClientFactory<T extends AmazonWebServiceClient> {
         }
     
         if (!StringUtils.isEmpty(this.endpoint)) {
-            this.LOGGER.debug("Using customer AWS endpoint {}", this.endpoint);
+            LOGGER.debug("Using customer AWS endpoint {}", this.endpoint);
             clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(this.endpoint, region));
         } else {
             clientBuilder.setRegion(region);

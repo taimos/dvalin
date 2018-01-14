@@ -9,9 +9,9 @@ package de.taimos.dvalin.cloud.aws;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,7 @@ public class EC2Context {
     private AmazonEC2Client ec2;
 
     @AWSClient
-    private AmazonAutoScalingClient autoScaling;
+    private AmazonAutoScalingClient autoScalingClient;
 
     /**
      * @return the instance id
@@ -90,7 +90,7 @@ public class EC2Context {
     public String getAutoScalingGroup() {
         DescribeAutoScalingInstancesRequest req = new DescribeAutoScalingInstancesRequest();
         req.setInstanceIds(Collections.singleton(this.getInstanceId()));
-        DescribeAutoScalingInstancesResult result = this.autoScaling.describeAutoScalingInstances(req);
+        DescribeAutoScalingInstancesResult result = this.autoScalingClient.describeAutoScalingInstances(req);
         if (result.getAutoScalingInstances().size() != 1) {
             throw new IllegalStateException("Found multiple auto scaling instances");
         }
@@ -162,7 +162,7 @@ public class EC2Context {
         Preconditions.checkArgument(autoScalingGroupName != null && !autoScalingGroupName.isEmpty());
         DescribeAutoScalingGroupsRequest req = new DescribeAutoScalingGroupsRequest();
         req.setAutoScalingGroupNames(Collections.singleton(autoScalingGroupName));
-        DescribeAutoScalingGroupsResult result = this.autoScaling.describeAutoScalingGroups(req);
+        DescribeAutoScalingGroupsResult result = this.autoScalingClient.describeAutoScalingGroups(req);
         if (result.getAutoScalingGroups().size() != 1) {
             throw new IllegalStateException("Found multiple auto scaling groups");
         }

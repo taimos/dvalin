@@ -92,7 +92,7 @@ public final class URLUtils {
             iPath = schemeless.contains("/") ? schemeless.indexOf('/') + beginIndex : -1;
         } else {
             scheme = "http";
-            iPort = url.lastIndexOf(":");
+            iPort = url.lastIndexOf(':');
             iPath = url.indexOf('/');
         }
 

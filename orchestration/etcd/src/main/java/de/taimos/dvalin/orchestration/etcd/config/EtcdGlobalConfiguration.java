@@ -9,9 +9,9 @@ package de.taimos.dvalin.orchestration.etcd.config;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -87,44 +87,8 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
                         .timeout(10, TimeUnit.SECONDS)
                         .recursive()
                         .send();
-                    
-                    try {
-                        EtcdKeysResponse response = send.get();
-                        this.etcdIndex.set(response.node.getModifiedIndex() + 1);
-                        String key = response.node.getKey();
-                        if (key.startsWith(BASE_KEY)) {
-                            String configKey = key.substring(BASE_KEY.length() + 1);
-                            
-                            switch (response.action) {
-                            case set:
-                            case create:
-                            case update:
-                            case compareAndSwap:
-                                if (response.getPrevNode() != null) {
-                                    this.getListeners().forEach(l -> l.changed(configKey, response.getPrevNode().getValue(), response.getNode().getValue()));
-                                } else {
-                                    this.getListeners().forEach(l -> l.added(configKey, response.getNode().getValue()));
-                                }
-                                break;
-                            case delete:
-                            case expire:
-                            case compareAndDelete:
-                                this.getListeners().forEach(l -> l.removed(configKey, response.getPrevNode().getValue()));
-                                break;
-                            }
-                        }
-                    } catch (TimeoutException e) {
-                        // do nothing and retry
-                    } catch (EtcdAuthenticationException e) {
-                        LOGGER.warn("ETCD authentication error", e);
-                    } catch (EtcdException e) {
-                        if (e.getErrorCode() == EtcdErrorCode.EventIndexCleared) {
-                            LOGGER.info("Skipped events as index was outdated");
-                            this.etcdIndex.set(e.getIndex());
-                        } else {
-                            LOGGER.warn("ETCD error", e);
-                        }
-                    }
+    
+                    this.parseWaitResponse(send);
                 } catch (IOException e) {
                     LOGGER.warn("Error waiting for instance updates", e);
                 }
@@ -151,7 +115,6 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
         try {
             EtcdKeysResponse response = this.client.get(BASE_KEY).timeout(10, TimeUnit.SECONDS).send().get();
             response.getNode().getNodes().forEach(node -> {
-                System.out.println(node);
                 String configKey = node.getKey().substring(BASE_KEY.length() + 1);
                 LOGGER.debug("Population initial configuration with {} = {}", configKey, node.getValue());
                 this.configuration.putIfAbsent(configKey, node.getValue());
@@ -161,6 +124,49 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
             this.running.set(false);
             throw new RuntimeException(e);
         }
+    }
+    
+    private void parseWaitResponse(EtcdResponsePromise<EtcdKeysResponse> send) throws IOException {
+        try {
+			EtcdKeysResponse response = send.get();
+			this.etcdIndex.set(response.node.getModifiedIndex() + 1);
+			String key = response.node.getKey();
+			if (key.startsWith(BASE_KEY)) {
+				String configKey = key.substring(BASE_KEY.length() + 1);
+				
+				switch (response.action) {
+				case set:
+				case create:
+				case update:
+				case compareAndSwap:
+					if (response.getPrevNode() != null) {
+						this.getListeners().forEach(l -> l.changed(configKey, response.getPrevNode().getValue(), response.getNode().getValue()));
+					} else {
+						this.getListeners().forEach(l -> l.added(configKey, response.getNode().getValue()));
+					}
+					break;
+				case delete:
+				case expire:
+				case compareAndDelete:
+					this.getListeners().forEach(l -> l.removed(configKey, response.getPrevNode().getValue()));
+					break;
+				case get:
+					// Does not happen
+					break;
+				}
+			}
+		} catch (TimeoutException e) {
+			// do nothing and retry
+		} catch (EtcdAuthenticationException e) {
+			LOGGER.warn("ETCD authentication error", e);
+		} catch (EtcdException e) {
+			if (e.getErrorCode() == EtcdErrorCode.EventIndexCleared) {
+				LOGGER.info("Skipped events as index was outdated");
+				this.etcdIndex.set(e.getIndex());
+			} else {
+				LOGGER.warn("ETCD error", e);
+			}
+		}
     }
     
     @PreDestroy

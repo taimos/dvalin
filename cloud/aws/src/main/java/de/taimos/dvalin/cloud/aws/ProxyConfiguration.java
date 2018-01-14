@@ -82,4 +82,7 @@ class ProxyConfiguration {
         return null;
     }
     
+    private ProxyConfiguration() {
+        // do not create instances
+    }
 }
