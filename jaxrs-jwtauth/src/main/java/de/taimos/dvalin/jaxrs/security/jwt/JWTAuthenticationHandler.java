@@ -29,7 +29,6 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.security.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.taimos.daemon.spring.conditional.BeanAvailable;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
 
@@ -37,11 +36,15 @@ import de.taimos.dvalin.jaxrs.providers.AuthorizationProvider;
  * Created by thoeger on 06.01.16.
  */
 @JaxRsComponent
-@BeanAvailable(IJWTAuth.class)
-public abstract class JWTAuthenticationHandler extends AuthorizationProvider {
+public class JWTAuthenticationHandler extends AuthorizationProvider {
 
     @Autowired
     private IJWTAuth auth;
+
+    @Override
+    protected boolean isAuthorizationMandatory() {
+        return false;
+    }
 
     @Override
     protected SecurityContext handleAuthHeader(ContainerRequestContext requestContext, Message msg, String type, String auth) {
@@ -54,7 +57,6 @@ public abstract class JWTAuthenticationHandler extends AuthorizationProvider {
             return null;
         }
     }
-
 
     @Override
     protected SecurityContext handleOther(ContainerRequestContext requestContext, Message msg, HttpHeaders head) {
