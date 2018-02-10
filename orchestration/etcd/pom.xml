@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-orchestration-parent</artifactId>
-        <version>1.23</version>
+        <version>1.24-SNAPSHOT</version>
     </parent>
     <artifactId>dvalin-orchestration-etcd</artifactId>
     <name>Dvalin service orchestration with etcd</name>
