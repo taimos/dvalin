@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,19 +20,30 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.BigDecimalMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.BooleanMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.CollectionMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.DateMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.EnumMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IVOMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IntegerMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.InterconnectObjectMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LongMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MapMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.StringMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.UUIDMemberDef;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 /**
  * IVO definition for the meta model
  */
 @XmlRootElement(name = "ivo")
-public class IVODef {
+public class IVODef implements IGeneratorDefinition {
 
     private String comment;
     private String name;
@@ -45,16 +56,16 @@ public class IVODef {
     private String parentName;
     private Integer parentVersion;
     private String parentPkgName;
-    private Boolean identity;
+    private Boolean identity = false;
     private String filterPkgName;
     private String parentFilterPkgName;
     private Boolean auditing = false;
     private Boolean interfaceOnly = false;
-    private Boolean pageable = false;
     private Boolean generateFindById = false;
     private Boolean generateDelete = false;
     private Boolean generateUpdate = false;
     private Boolean generateCreate = false;
+    private Boolean generateSave = false;
     private Boolean generateFilter = false;
 
 
@@ -93,7 +104,7 @@ public class IVODef {
      */
     @XmlElements({@XmlElement(name = "interconnectObject", type = InterconnectObjectMemberDef.class), @XmlElement(name = "uuid", type = UUIDMemberDef.class), @XmlElement(name = "integer", type = IntegerMemberDef.class), @XmlElement(name = "map", type = MapMemberDef.class), @XmlElement(name = "implements", type = ImplementsDef.class), @XmlElement(name = "decimal", type = BigDecimalMemberDef.class), @XmlElement(name = "boolean", type = BooleanMemberDef.class), @XmlElement(name = "collection", type = CollectionMemberDef.class), @XmlElement(name = "date", type = DateMemberDef.class), @XmlElement(name = "enum", type = EnumMemberDef.class), @XmlElement(name = "long", type = LongMemberDef.class), @XmlElement(name = "ivo", type = IVOMemberDef.class), @XmlElement(name = "string", type = StringMemberDef.class)})
     public List<Object> getChildren() {
-        return this.children == null ? null : Collections.unmodifiableList(this.children);
+        return this.children;
     }
 
     /**
@@ -101,6 +112,11 @@ public class IVODef {
      */
     public void setChildren(List<Object> children) {
         this.children = children;
+    }
+
+    @Override
+    public String getPackageName() {
+        return this.getPkgName();
     }
 
     /**
@@ -299,21 +315,6 @@ public class IVODef {
     }
 
     /**
-     * @return true if pageable
-     */
-    @XmlAttribute(required = false)
-    public Boolean getPageable() {
-        return this.pageable;
-    }
-
-    /**
-     * @param pageable set to true if this is a pageable request
-     */
-    public void setPageable(Boolean pageable) {
-        this.pageable = pageable;
-    }
-
-    /**
      * @return the generateFindById
      */
     @XmlAttribute(required = false)
@@ -388,4 +389,49 @@ public class IVODef {
         this.generateFilter = generateFilter;
     }
 
+    /**
+     * @return the generateSave
+     */
+    @XmlAttribute(required = false)
+    public Boolean getGenerateSave() {
+        return this.generateSave;
+    }
+
+    /**
+     * @param generateSave the generateSave to set
+     */
+    public void setGenerateSave(Boolean generateSave) {
+        this.generateSave = generateSave;
+    }
+
+    /**
+     * @return true if ivo is deprecated
+     */
+    public boolean isDeprecated() {
+        return (this.getRemovalDate() != null) && !this.getRemovalDate().isEmpty();
+    }
+
+    /**
+     * @param asInterface true if interface should be used
+     * @return the type string
+     */
+    public String getIVOClazzName(boolean asInterface) {
+        return (asInterface ? "I" : "") + this.getName() + "IVO_v" + this.getVersion();
+    }
+
+    public String getIVOPath(boolean asInterface) {
+        return this.getPkgName() + "." + this.getIVOClazzName(true);
+    }
+
+    /**
+     * @param asInterface true if interface should be used
+     * @return the type string
+     */
+    public String getParentClazzName(boolean asInterface) {
+        return (asInterface ? "I" : "") + this.getParentName() + "IVO_v" + this.getParentVersion();
+    }
+
+    public String getParentPath(boolean asInterface) {
+        return this.getParentPkgName() + "." + this.getParentClazzName(true);
+    }
 }
