@@ -20,19 +20,6 @@ package de.taimos.dvalin.interconnect.model.maven;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
-import de.taimos.dvalin.interconnect.model.maven.model.ModelTools;
-import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.event.implement.IncludeRelativePath;
-import org.apache.velocity.runtime.RuntimeConstants;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,6 +30,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.event.implement.IncludeRelativePath;
+import org.apache.velocity.runtime.RuntimeConstants;
+
+import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ModelTools;
+import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
 
 /**
  * @author psigloch
@@ -73,8 +75,8 @@ public class GeneratorHelper {
                 if(!pckDir.exists()) {
                     pckDir.mkdirs();
                 }
-                try(OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(pckDir.getAbsolutePath() + "\\" + templateEntry.getKey() + ".java"), "UTF-8")) {
-                    log.info("Creating file "+ pckDir.getAbsolutePath() + "\\" + templateEntry.getKey() + ".java");
+                try(OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java"), "UTF-8")) {
+                    log.info("Creating file "+ pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java");
                     VelocityContext context = new VelocityContext();
                     context.put("model", model);
                     context.put("tool", new ModelTools());

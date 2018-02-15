@@ -1,5 +1,14 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.maven.plugin.logging.Log;
+
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
 import de.taimos.dvalin.interconnect.model.maven.GeneratorHelper;
@@ -8,13 +17,6 @@ import de.taimos.dvalin.interconnect.model.metamodel.ContentDef;
 import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
 import de.taimos.dvalin.interconnect.model.metamodel.ImplementsDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MemberDef;
-import org.apache.maven.plugin.logging.Log;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author psigloch
@@ -38,7 +40,7 @@ public class FilterIVOModel extends TemplateIVOModel {
 
     @Override
     public String getTargetFolder() {
-        return super.getTargetFolder() + "/requests";
+        return super.getTargetFolder() + File.separator + "requests";
     }
 
     @Override

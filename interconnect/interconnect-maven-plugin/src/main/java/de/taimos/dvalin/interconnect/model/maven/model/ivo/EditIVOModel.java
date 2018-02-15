@@ -1,14 +1,16 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.maven.plugin.logging.Log;
+
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 import de.taimos.dvalin.interconnect.model.maven.GeneratorHelper;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
 import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
 import de.taimos.dvalin.interconnect.model.metamodel.ImplementsDef;
-import org.apache.maven.plugin.logging.Log;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Copyright 2018 Cinovo AG<br>
@@ -34,7 +36,7 @@ public class EditIVOModel extends TemplateIVOModel {
 
     @Override
     public String getTargetFolder() {
-        return super.getTargetFolder() + "/requests";
+        return super.getTargetFolder() + File.separator + "requests";
     }
 
     @Override

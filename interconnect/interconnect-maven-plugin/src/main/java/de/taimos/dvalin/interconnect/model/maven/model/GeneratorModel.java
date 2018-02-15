@@ -1,11 +1,13 @@
 package de.taimos.dvalin.interconnect.model.maven.model;
 
-import de.taimos.dvalin.interconnect.model.maven.imports.Imports;
-import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
-import org.apache.maven.plugin.logging.Log;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+
+import org.apache.maven.plugin.logging.Log;
+
+import de.taimos.dvalin.interconnect.model.maven.imports.Imports;
+import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
 
 /**
  * Copyright 2018 Cinovo AG<br>
@@ -34,7 +36,7 @@ public abstract class GeneratorModel<T extends IGeneratorDefinition> {
      * @return subdirectory path
      */
     public String getTargetFolder() {
-        return GeneratorModel.DEFAULT_TARGET_DIR + this.definition.getPackageName().replace('.', '/');
+        return GeneratorModel.DEFAULT_TARGET_DIR + this.definition.getPackageName().replace('.', File.separatorChar);
     }
 
     /**
@@ -44,7 +46,7 @@ public abstract class GeneratorModel<T extends IGeneratorDefinition> {
      */
     public void init(T ivoDefinition, Imports<T> imports, Log logger) {
         if(ivoDefinition == null || imports == null) {
-            throw new RuntimeException("Failed. Generateor was not correctly initialized");
+            throw new RuntimeException("Failed. Generator was not correctly initialized");
         }
         this.logger = logger;
         this.definition = ivoDefinition;
