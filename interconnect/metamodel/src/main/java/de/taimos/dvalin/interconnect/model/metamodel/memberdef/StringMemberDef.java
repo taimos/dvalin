@@ -1,4 +1,4 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /*
  * #%L
@@ -20,46 +20,42 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.metamodel.ILabelMember;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Defines an interface to be implemented by a clazzdef
+ * string member of a class definition
  */
 @XmlType
-public class ImplementsDef {
+public class StringMemberDef extends MemberDef implements ILabelMember {
 
-    private String name;
-    private String pkgName;
+    private Boolean useAsLabel = false;
 
 
     /**
-     * @return the name
+     * @return the useAsLabel
      */
-    @XmlAttribute(required = true)
-    public String getName() {
-        return this.name;
+    @XmlAttribute(required = false)
+    public Boolean getUseAsLabel() {
+        return this.useAsLabel;
     }
 
     /**
-     * @param name the name to set
+     * @param useAsLabel the useAsLabel to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setUseAsLabel(Boolean useAsLabel) {
+        this.useAsLabel = useAsLabel;
     }
 
-    /**
-     * @return the pkgName
-     */
-    @XmlAttribute(required = true)
-    public String getPkgName() {
-        return this.pkgName;
+    @Override
+    public Boolean useAsLabel() {
+        return this.getUseAsLabel();
     }
 
-    /**
-     * @param pkgName the pkgName to set
-     */
-    public void setPkgName(String pkgName) {
-        this.pkgName = pkgName;
+    @Override
+    public String getTypeAsString(boolean isInterface) {
+        return String.class.getSimpleName();
     }
 }

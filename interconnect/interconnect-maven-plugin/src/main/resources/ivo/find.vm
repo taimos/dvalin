@@ -1,0 +1,157 @@
+package ${model.getPackageName()}.requests;
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+import java.util.Set;
+import ${model.getPackageName()}.${model.getClazzName()};
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ */
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonDeserialize(builder = ${clazzName}.${clazzName}Builder.class)
+public class ${clazzName} extends ${model.getParentClazzName()} implements I${clazzName} {
+
+    private static final long serialVersionUID = ${model.getSerialVersion()}L;
+
+	/**
+	* Builder for the read-only ivo
+	*
+	*/
+#if ($model.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+	@JsonPOJOBuilder()
+	public static class ${clazzName}Builder extends Abstract${clazzName}Builder<${clazzName}Builder> implements IVOBuilder {
+
+		// nothing to do here, really
+
+	}
+
+	/**
+	* Abstract Builder for the read-only ivo
+	*
+	* @param <E> type of builder
+	*/
+	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>> $model.getParentBuilder() implements IPageableBuilder {
+#foreach ( $field in $model.getFilterableFields() )
+#if ($field.filterable == 'single')
+		private $field.getTypeAsString(true) $field.name;
+#else
+		private Set<$field.getTypeAsString(true)> $field.name;
+#end
+#end
+
+#foreach ( $field in $model.getFilterableFields() )
+		/**
+		 * This field is optional.
+		 * @param  $field.name the value to set
+		 * @return the builder $field.filterable
+		 *
+		 **/
+	 	@Nullable
+#if ($field.filterable == 'single')
+		public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+			this.$field.name = p$field.name;
+			return (E) this;
+		}
+
+
+		/**
+		 * @return the field value
+		 **/
+		public $field.getTypeAsString(false) get$tool.upperCaseFirst( $field.name )() {
+			return this.$field.name;
+		}
+#else
+		public E with$tool.upperCaseFirst( $field.name )(Set<$field.getTypeAsString(true)> p$field.name) {
+			this.$field.name = p$field.name;
+			return (E) this;
+		}
+
+
+		/**
+		 * @return the field value
+		 **/
+		public Set<$field.getTypeAsString(true)> get$tool.upperCaseFirst( $field.name )() {
+			return this.$field.name;
+		}
+#end
+#end
+
+		protected void internalFillFromIVO($clazzName ivo) {
+#foreach ( $field in $model.getFilterableFields() )
+		this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
+#end
+		}
+
+		/**
+		 * @return the entry
+		 **/
+		public ${clazzName} build() {
+			${clazzName} result = new ${clazzName}(this);
+			return result;
+		}
+	}
+
+#foreach ( $field in $model.getFilterableFields() )
+#if ($field.filterable == 'single')
+	private final #if ( $field.javaTransientFlag ) transient #end $field.getTypeAsString(false) $field.name;
+#else
+	private final #if ( $field.javaTransientFlag ) transient #end Set<$field.getTypeAsString(true)> $field.name;
+#end
+#end
+
+
+	protected ${clazzName}(Abstract${clazzName}Builder<?> builder) {
+#foreach ( $field in $model.getFilterableFields() )
+		this.$field.name = builder.$field.name;
+#end
+	}
+
+#foreach ( $field in $model.getFilterableFields() )
+#if ( $field.jsonTransientFlag )
+	@JsonIgnore
+#end
+	@Override
+#if ($field.filterable == 'single')
+	public $field.getTypeAsString(false) get$tool.upperCaseFirst( $field.name )() {
+		return this.$field.name;
+	}
+#else
+	public Set<$field.getTypeAsString(true)> get$tool.upperCaseFirst( $field.name )() {
+		return this.$field.name;
+	}
+#end
+
+#end
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IPageableBuilder createPageableBuilder() {
+		return (IPageableBuilder) createBuilder();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${clazzName}Builder builder = new ${clazzName}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+	@Override
+	public ${clazzName} clone() {
+		return (${clazzName}) super.clone();
+	}
+
+}

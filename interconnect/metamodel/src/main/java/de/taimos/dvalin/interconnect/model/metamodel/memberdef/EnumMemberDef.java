@@ -1,4 +1,4 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /*
  * #%L
@@ -24,28 +24,28 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Defines an interface to be implemented by a clazzdef
+ * Enum clazz member definition
  */
 @XmlType
-public class ImplementsDef {
+public class EnumMemberDef extends MemberDef {
 
-    private String name;
+    private String clazz;
     private String pkgName;
 
 
     /**
-     * @return the name
+     * @return the clazz
      */
     @XmlAttribute(required = true)
-    public String getName() {
-        return this.name;
+    public String getClazz() {
+        return this.clazz;
     }
 
     /**
-     * @param name the name to set
+     * @param clazz the clazz to set
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
     }
 
     /**
@@ -61,5 +61,10 @@ public class ImplementsDef {
      */
     public void setPkgName(String pkgName) {
         this.pkgName = pkgName;
+    }
+
+    @Override
+    public String getTypeAsString(boolean isInterface) {
+        return this.getClazz();
     }
 }

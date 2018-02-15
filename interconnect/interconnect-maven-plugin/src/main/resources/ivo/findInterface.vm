@@ -1,0 +1,51 @@
+package ${model.getPackageName()}.requests;
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+import java.util.Set;
+import ${model.getPackageName()}.${model.getClazzName()};
+
+/**
+* $model.getComment()
+*
+* @author $model.getAuthor()
+*/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+public interface $clazzName $model.getInterfaceImplements(true) {
+
+#foreach ( $field in $model.getFilterableFields() )
+	/**
+	 * property constant for $field.name
+	 * property comment: $field.comment
+	 */
+	public static final String PROP_$field.name.toUpperCase() = "$field.name";
+#end
+
+#foreach ( $field in $model.getFilterableFields() )
+	/**
+	 * $field.comment
+	 * This field is optional, thus may be null.
+	 *
+	 * @return the value for $field.name
+	 *
+	 **/
+	@Nullable
+#if ($field.filterable == 'single')
+	public $field.getTypeAsString( true ) get$tool.upperCaseFirst( $field.name )();
+#else
+	public Set<$field.getTypeAsString( true )> get$tool.upperCaseFirst( $field.name )();
+#end
+
+#end
+	/**
+	 * @return a clone
+	 */
+	public $clazzName clone();
+
+}

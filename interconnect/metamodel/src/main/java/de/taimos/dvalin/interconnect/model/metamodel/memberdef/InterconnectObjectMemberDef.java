@@ -1,4 +1,4 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /*
  * #%L
@@ -21,45 +21,48 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  */
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
 
 /**
- * Defines an interface to be implemented by a clazzdef
+ * Interconnect object member
  */
-@XmlType
-public class ImplementsDef {
+public class InterconnectObjectMemberDef extends MemberDef {
 
-    private String name;
+    private String clazz;
     private String pkgName;
 
 
     /**
-     * @return the name
+     * @return the package name
      */
-    @XmlAttribute(required = true)
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the pkgName
-     */
-    @XmlAttribute(required = true)
+    @XmlAttribute(required = false)
     public String getPkgName() {
         return this.pkgName;
     }
 
     /**
-     * @param pkgName the pkgName to set
+     * @param pkgName the package name
      */
     public void setPkgName(String pkgName) {
         this.pkgName = pkgName;
+    }
+
+    /**
+     * @return the clazz
+     */
+    @XmlAttribute(required = true)
+    public String getClazz() {
+        return this.clazz;
+    }
+
+    /**
+     * @param clazz the clazz to set
+     */
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    @Override
+    public String getTypeAsString(boolean isInterface) {
+        return this.getClazz();
     }
 }
