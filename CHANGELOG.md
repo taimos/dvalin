@@ -1,6 +1,8 @@
-# Version 1.23 (current master)
+# current master
+
+# Version 1.23
 * Update dependencies
-    * AWS 1.11.253
+    * AWS 1.11.275
     * Spring 4.3.10
     * Jackson 2.8.10
 * Create example implementations in extra repo
