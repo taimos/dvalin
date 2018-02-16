@@ -1,4 +1,7 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+/**
+ *
+ */
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /*
  * #%L
@@ -20,24 +23,11 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+public interface ILabelMember {
 
-import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.CollectionTypeAdapter;
+    /**
+     * @return use this field as label for entity Links
+     */
+    Boolean useAsLabel();
 
-/**
- * the supported collection types
- *
- */
-@XmlType
-@XmlJavaTypeAdapter(CollectionTypeAdapter.class)
-public enum CollectionType {
-	/**
-	 * a set
-	 */
-	Set,
-	/**
-	 * a list
-	 */
-	List
 }

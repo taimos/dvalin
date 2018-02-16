@@ -1,7 +1,5 @@
-/**
- *
- */
-package de.taimos.dvalin.interconnect.model.metamodel;
+@XmlSchema(xmlns = {}, namespace = "http://www.taimos.de/xsd/IVODef/1.0.0", elementFormDefault = XmlNsForm.QUALIFIED, attributeFormDefault = XmlNsForm.UNSET)
+package de.taimos.dvalin.interconnect.model.metamodel.defs;
 
 /*
  * #%L
@@ -12,9 +10,9 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,11 +21,6 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
-public interface IFilterableMember {
+import javax.xml.bind.annotation.XmlNsForm;
+import javax.xml.bind.annotation.XmlSchema;
 
-    /**
-     * @return is this member part of a default filter
-     */
-    Boolean isAFilterMember();
-
-}

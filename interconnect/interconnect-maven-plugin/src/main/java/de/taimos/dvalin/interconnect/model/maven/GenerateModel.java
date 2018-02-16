@@ -20,11 +20,14 @@ package de.taimos.dvalin.interconnect.model.maven;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.maven.model.event.EventModel;
+import de.taimos.dvalin.interconnect.model.maven.model.event.InterfaceEventModel;
 import de.taimos.dvalin.interconnect.model.maven.model.ivo.EditIVOModel;
 import de.taimos.dvalin.interconnect.model.maven.model.ivo.FilterIVOModel;
 import de.taimos.dvalin.interconnect.model.maven.model.ivo.IVOModel;
 import de.taimos.dvalin.interconnect.model.maven.model.ivo.InterfaceIVOModel;
-import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
@@ -108,11 +111,31 @@ public class GenerateModel extends AbstractMojo {
                 switch(type) {
                     case IVO:
                         this.getLog().info("Generating files for IVO in " + defFile.getAbsolutePath());
-                        this.processFileAsIVO(defFile);
+                        try {
+                            this.processFileAsIVO(defFile);
+                        } catch(MojoExecutionException e) {
+                            if(e.getCause().getMessage().contains("event")) {
+                                this.getLog().warn("An event file was found in the ivo directory. Please fix this.");
+                                this.processFileAsEvent(defFile);
+                            } else {
+                                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
+                                throw e;
+                            }
+                        }
                         break;
                     case EVENT:
                         this.getLog().info("Generating files for Event in " + defFile.getAbsolutePath());
-                        this.processFileAsEvent(defFile);
+                        try {
+                            this.processFileAsEvent(defFile);
+                        } catch(MojoExecutionException e) {
+                            if(e.getCause().getMessage().contains("ivo")) {
+                                this.getLog().warn("An ivo file was found in the ivo directory. Please fix this.");
+                                this.processFileAsIVO(defFile);
+                            } else {
+                                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
+                                throw e;
+                            }
+                        }
                         break;
                 }
             }
@@ -131,10 +154,10 @@ public class GenerateModel extends AbstractMojo {
         return this.outputDirectory;
     }
 
-    protected void processFileAsEvent(File f) {
-        //        IVODef ivod = GeneratorHelper.parseXML(IVODef.class, this.getLog(), f);
-        //        GeneratorHelper.writeFile(getLog(), new IVOModel(ivod), this.outputDirectory + GenerateModel.TARGET_DIR_IVO);
-        //        GeneratorHelper.writeFile(getLog(), new FilterIVOModel(ivod), this.outputDirectory + GenerateModel.TARGET_DIR_IVO);
+    protected void processFileAsEvent(File f) throws MojoExecutionException {
+        EventDef eventd = GeneratorHelper.parseXML(EventDef.class, this.getLog(), f);
+        GeneratorHelper.writeFile(this.getLog(), new InterfaceEventModel(eventd, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(this.getLog(), new EventModel(eventd, this.getLog()), this.getOutputDirectory());
     }
 
 

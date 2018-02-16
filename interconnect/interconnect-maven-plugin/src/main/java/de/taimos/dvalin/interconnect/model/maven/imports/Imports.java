@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import de.taimos.dvalin.interconnect.model.ToBeRemoved;
+import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel;
 import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
 import org.joda.time.DateTime;
 
@@ -33,8 +34,9 @@ public abstract class Imports<T extends IGeneratorDefinition> extends TreeSet<St
 
     /**
      * @param definition init imports from the given definition
+     * @param model      the model
      */
-    public abstract void initFromDefintion(T definition);
+    public abstract <K extends AbstractInterconnectModel> void initFromDefintion(T definition, K model);
 
 
     /**
@@ -54,14 +56,14 @@ public abstract class Imports<T extends IGeneratorDefinition> extends TreeSet<St
     /**
      * add nonnull
      */
-    public void withNunnull() {
+    public void withNonnull() {
         this.with(Nonnull.class);
     }
 
     /**
      * adds tobereomoced
      */
-    public void withToBeReomoved() {
+    public void withToBeRemoved() {
         this.with(ToBeRemoved.class);
     }
 

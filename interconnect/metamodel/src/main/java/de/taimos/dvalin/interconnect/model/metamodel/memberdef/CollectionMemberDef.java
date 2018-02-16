@@ -20,10 +20,6 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.metamodel.CollectionType;
-import de.taimos.dvalin.interconnect.model.metamodel.ContentDef;
-import de.taimos.dvalin.interconnect.model.metamodel.IMultiMember;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;

@@ -1,4 +1,4 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+package de.taimos.dvalin.interconnect.model.metamodel.defs;
 
 /*
  * #%L
@@ -20,6 +20,8 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.BigDecimalMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.BooleanMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.CollectionMemberDef;
@@ -102,7 +104,20 @@ public class IVODef implements IGeneratorDefinition {
     /**
      * @return the children
      */
-    @XmlElements({@XmlElement(name = "interconnectObject", type = InterconnectObjectMemberDef.class), @XmlElement(name = "uuid", type = UUIDMemberDef.class), @XmlElement(name = "integer", type = IntegerMemberDef.class), @XmlElement(name = "map", type = MapMemberDef.class), @XmlElement(name = "implements", type = ImplementsDef.class), @XmlElement(name = "decimal", type = BigDecimalMemberDef.class), @XmlElement(name = "boolean", type = BooleanMemberDef.class), @XmlElement(name = "collection", type = CollectionMemberDef.class), @XmlElement(name = "date", type = DateMemberDef.class), @XmlElement(name = "enum", type = EnumMemberDef.class), @XmlElement(name = "long", type = LongMemberDef.class), @XmlElement(name = "ivo", type = IVOMemberDef.class), @XmlElement(name = "string", type = StringMemberDef.class)})
+    @XmlElements({
+        @XmlElement(name = "interconnectObject", type = InterconnectObjectMemberDef.class),
+        @XmlElement(name = "uuid", type = UUIDMemberDef.class),
+        @XmlElement(name = "integer", type = IntegerMemberDef.class),
+        @XmlElement(name = "map", type = MapMemberDef.class),
+        @XmlElement(name = "implements", type = ImplementsDef.class),
+        @XmlElement(name = "decimal", type = BigDecimalMemberDef.class),
+        @XmlElement(name = "boolean", type = BooleanMemberDef.class),
+        @XmlElement(name = "collection", type = CollectionMemberDef.class),
+        @XmlElement(name = "date", type = DateMemberDef.class),
+        @XmlElement(name = "enum", type = EnumMemberDef.class),
+        @XmlElement(name = "long", type = LongMemberDef.class),
+        @XmlElement(name = "ivo", type = IVOMemberDef.class),
+        @XmlElement(name = "string", type = StringMemberDef.class)})
     public List<Object> getChildren() {
         return this.children;
     }
@@ -213,7 +228,7 @@ public class IVODef implements IGeneratorDefinition {
      * @return the identity
      */
     @XmlAttribute(required = false)
-    public Boolean getIdentity() {
+    public boolean getIdentity() {
         return this.identity;
     }
 
@@ -273,7 +288,7 @@ public class IVODef implements IGeneratorDefinition {
      * @return the auditing
      */
     @XmlAttribute
-    public Boolean getAuditing() {
+    public boolean getAuditing() {
         return this.auditing;
     }
 
@@ -402,36 +417,5 @@ public class IVODef implements IGeneratorDefinition {
      */
     public void setGenerateSave(Boolean generateSave) {
         this.generateSave = generateSave;
-    }
-
-    /**
-     * @return true if ivo is deprecated
-     */
-    public boolean isDeprecated() {
-        return (this.getRemovalDate() != null) && !this.getRemovalDate().isEmpty();
-    }
-
-    /**
-     * @param asInterface true if interface should be used
-     * @return the type string
-     */
-    public String getIVOClazzName(boolean asInterface) {
-        return (asInterface ? "I" : "") + this.getName() + "IVO_v" + this.getVersion();
-    }
-
-    public String getIVOPath(boolean asInterface) {
-        return this.getPkgName() + "." + this.getIVOClazzName(true);
-    }
-
-    /**
-     * @param asInterface true if interface should be used
-     * @return the type string
-     */
-    public String getParentClazzName(boolean asInterface) {
-        return (asInterface ? "I" : "") + this.getParentName() + "IVO_v" + this.getParentVersion();
-    }
-
-    public String getParentPath(boolean asInterface) {
-        return this.getParentPkgName() + "." + this.getParentClazzName(true);
     }
 }

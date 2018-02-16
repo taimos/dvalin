@@ -1,5 +1,14 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+import de.taimos.dvalin.interconnect.model.ivo.IPageable;
+import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ContentDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MemberDef;
+import org.apache.maven.plugin.logging.Log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,21 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.plugin.logging.Log;
-
-import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
-import de.taimos.dvalin.interconnect.model.ivo.IPageable;
-import de.taimos.dvalin.interconnect.model.maven.GeneratorHelper;
-import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
-import de.taimos.dvalin.interconnect.model.metamodel.ContentDef;
-import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
-import de.taimos.dvalin.interconnect.model.metamodel.ImplementsDef;
-import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MemberDef;
-
 /**
  * @author psigloch
  */
-public class FilterIVOModel extends TemplateIVOModel {
+public class FilterIVOModel extends AbstractIVOModel {
 
     private static final String FIND_BY = "ivo/findBy.vm";
     private static final String FIND_BY_INTERFACE = "ivo/findByInterface.vm";
@@ -48,7 +46,7 @@ public class FilterIVOModel extends TemplateIVOModel {
         if(Boolean.TRUE.equals(this.definition.getInterfaceOnly())) {
             return null;
         }
-        if((this.definition.getRemovalDate() == null) || this.definition.getRemovalDate().isEmpty() || GeneratorHelper.keepGeneratedFiles(this.definition.getRemovalDate())) {
+        if(this.genereateFile()) {
             Map<String, String> result = new HashMap<>();
             if(this.definition.getGenerateFindById()) {
                 result.put(this.getFileName("ByIdIVO_v", true), FilterIVOModel.FIND_BY_INTERFACE);
@@ -75,7 +73,9 @@ public class FilterIVOModel extends TemplateIVOModel {
         return (isInterface ? "I" : "") + "Find" + this.definition.getName() + subString + this.definition.getVersion();
     }
 
+    @Override
     protected void beforeChildHandling() {
+        super.beforeChildHandling();
         this.definition.getChildren().addAll(new FilterMemberDef());
     }
 
@@ -109,7 +109,7 @@ public class FilterIVOModel extends TemplateIVOModel {
         StringBuilder builder = new StringBuilder();
         if(this.definition.getCompatibleBaseVersion() != null) {
             builder.append(", ");
-            builder.append(this.definition.getIVOClazzName(true));
+            builder.append(this.getInterfaceClazzName());
         }
         for(ImplementsDef i : this.implementsDef) {
             builder.append(", ");
@@ -130,11 +130,11 @@ public class FilterIVOModel extends TemplateIVOModel {
 
     @Override
     public String getParentClazzName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : this.definition.getParentClazzName(false);
+        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentClazzName();
     }
 
     @Override
     public String getParentInterfaceName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : this.definition.getParentClazzName(true);
+        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentInterfaceName();
     }
 }

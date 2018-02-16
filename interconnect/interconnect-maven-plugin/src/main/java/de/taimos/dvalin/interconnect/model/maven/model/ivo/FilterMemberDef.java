@@ -1,7 +1,7 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
 import de.taimos.dvalin.interconnect.model.ivo.Direction;
-import de.taimos.dvalin.interconnect.model.metamodel.FilterableType;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.FilterableType;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.DateMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.EnumMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IntegerMemberDef;

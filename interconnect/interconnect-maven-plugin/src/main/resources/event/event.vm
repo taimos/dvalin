@@ -28,7 +28,7 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 	@ToBeRemoved(date="$model.getRemoveDate()")
 #end
 	@JsonPOJOBuilder()
-	public static class ${model.getClazzName()}Builder extends Abstract${model.getClazzName()}Builder<${model.getClazzName()}Builder> implements IVOBuilder {
+	public static class ${model.getClazzName()}Builder extends Abstract${model.getClazzName()}Builder<${model.getClazzName()}Builder> implements IEventBuilder {
 		// nothing to do here, really
 	}
 
@@ -41,103 +41,6 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 
 #foreach ( $field in $model.getAllFields() )
 		private $field.getTypeAsString(false) $field.getName();
-#end
-#if ( $model.isAudited() )
-		private Integer version;
-		private DateTime lastChange;
-		private String lastChangeUser;
-#end
-#if ( $model.isIdentity() && !$model.hasParentClazz() )
-		private String id;
-
-		/**
-		 * the id
-		 *
-		 * @param pid the value to set
-		 * @return the builder
-		 *
-		 **/
-		@SuppressWarnings("unchecked")
-		public E withId(String pid) {
-			this.id = pid;
-			return (E) this;
-		}
-
-		/**
-         * @return the id
-         **/
-        public String getId() {
-            return this.id;
-        }
-
-#end
-#if ( $model.isAudited() )
-		/**
-		 * This field is optional, thus may be null.
-		 * The version
-		 *
-		 * @param pversion the value to set
-		 * @return the builder
-		 *
-		 **/
-	 	@Nullable
-		@SuppressWarnings("unchecked")
-		public E withVersion(Integer pversion) {
-			this.version = pversion;
-			return (E) this;
-		}
-
-		/**
-         * @return the id
-         **/
-        public Integer getVersion() {
-            return this.version;
-        }
-
-		/**
-		 * This field is optional, thus may be null.
-		 * The last change date
-		 *
-		 * @param plastChange the value to set
-		 * @return the builder
-		 *
-		 **/
-	 	@Nullable
-		@SuppressWarnings("unchecked")
-		public E withLastChange(DateTime plastChange) {
-			this.lastChange = plastChange;
-			return (E) this;
-		}
-
-		/**
-         * @return the last change
-         **/
-        public DateTime getLastChange() {
-            return this.lastChange;
-        }
-
-		/**
-		 * This field is optional, thus may be null.
-		 * The last change user id
-		 *
-		 * @param plastChangeUser the value to set
-		 * @return the builder
-		 *
-		 **/
-	 	@Nullable
-		@SuppressWarnings("unchecked")
-		public E withLastChangeUser(String plastChangeUser) {
-			this.lastChangeUser = plastChangeUser;
-			return (E) this;
-		}
-
-		/**
-         * @return the last change user id
-         **/
-        public String getLastChangeUser() {
-            return this.lastChangeUser;
-        }
-
 #end
 #foreach (  $field in $model.getAllFields() )
 		/**
@@ -179,14 +82,6 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #foreach ( $field in $model.getAllFields() )
 			this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
 #end
-#if ( $model.isIdentity() && !$model.hasParentClazz() )
-			this.withId(ivo.id);
-#end
-#if ( $model.isAudited )
-			this.withVersion(ivo.version);
-			this.withLastChange(ivo.lastChange);
-			this.withLastChangeUser(ivo.lastChangeUser);
-#end
 		}
 
 		/**
@@ -212,14 +107,6 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #foreach ( $field in $model.getAllFields() )
 	private final #if ( $field.javaTransientFlag ) transient #end $field.getTypeAsString( false ) $field.name;
 #end
-#if ( $model.isIdentity() && !$model.hasParentClazz() )
-	private final  String id;
-#end
-#if ( $model.isAudited() )
-	private final  Integer version;
-	private final  DateTime lastChange;
-	private final  String lastChangeUser;
-#end
 
 	protected $model.getClazzName()(Abstract${model.getClazzName()}Builder<?> builder) {
 #if ( $model.hasParentClazz() )
@@ -228,50 +115,8 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #foreach ( $field in $model.getAllFields() )
 		this.$field.name = builder.$field.name;
 #end
-#if ( $model.isIdentity() && !$model.hasParentClazz() )
-		this.id = builder.id;
-#end
-#if ( $model.isAudited() )
-		this.version = builder.version;
-		this.lastChange = builder.lastChange;
-		this.lastChangeUser = builder.lastChangeUser;
-#end
 	}
 
-#if ( $model.isIdentity() && !$model.hasParentClazz() )
-	@Override
-	public String getId() {
-		return this.id;
-	}
-
-	@Override
-	public long getIdAsLong() {
-		try {
-			return Long.parseLong(this.id);
-		} catch (NumberFormatException e) {
-			// string not parsable
-			return -1;
-		}
-	}
-
-#end
-#if ( $model.isAudited() )
-	@Override
-	public Integer getVersion() {
-		return this.version;
-	}
-
-	@Override
-	public DateTime getLastChange() {
-		return this.lastChange;
-	}
-
-	@Override
-	public String getLastChangeUser() {
-		return this.lastChangeUser;
-	}
-
-#end
 #foreach ( $field in $model.getNoCollectionFields() )
 #if ( $field.jsonTransientFlag )
 	@JsonIgnore
@@ -313,38 +158,17 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IVOBuilder> T createBuilder() {
+	public <T extends IEventBuilder> T createBuilder() {
 		${model.getClazzName()}Builder builder = new ${model.getClazzName()}Builder();
 		builder.internalFillFromIVO(this);
 		return (T) builder;
 	}
 
-#if ( $model.isIdentity() && !$model.hasParentClazz() )
-	@Override
-	public String toString() {
-		return this.getClass().getName() + " " + this.id;
-	}
-#end
 
 	@Override
 	public $model.getClazzName() clone() {
 		return ($model.getClazzName()) super.clone();
 	}
 
-#if ( $model.isIdentity() && !$model.hasParentClazz() )
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof $model.getClazzName()) {
-			return this.id.equals((($model.getClazzName())obj).id);
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-        return this.id.hashCode();
-	}
-#end
-
-#if ( $model.hasIVOEndAddition())#parse($model.getIVOEndAddition())#end
+#if ( $model.hasEventEndAddition())#parse($model.getEventEndAddition())#end
 }

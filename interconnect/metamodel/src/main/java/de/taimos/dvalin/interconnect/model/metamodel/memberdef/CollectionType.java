@@ -1,4 +1,4 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /*
  * #%L
@@ -20,28 +20,24 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.CollectionTypeAdapter;
+
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.FilterableTypeAdapter;
-
 /**
- * the filterable types
+ * the supported collection types
  *
  */
 @XmlType
-@XmlJavaTypeAdapter(FilterableTypeAdapter.class)
-public enum FilterableType {
+@XmlJavaTypeAdapter(CollectionTypeAdapter.class)
+public enum CollectionType {
 	/**
-	 * not filterable
+	 * a set
 	 */
-	none,
+	Set,
 	/**
-     * filterable by single value
+	 * a list
 	 */
-	single,
-    /**
-     * filterable by collection of values
-     */
-    multi;
+	List
 }

@@ -1,10 +1,11 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
+import de.taimos.dvalin.interconnect.model.ivo.IIdentity;
+import de.taimos.dvalin.interconnect.model.ivo.IVO;
 import de.taimos.dvalin.interconnect.model.ivo.util.IIVOAuditing;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOInterfaceImports;
-import de.taimos.dvalin.interconnect.model.ivo.IIdentity;
-import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
-import de.taimos.dvalin.interconnect.model.metamodel.ImplementsDef;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
 import org.apache.maven.plugin.logging.Log;
 
 import java.util.HashMap;
@@ -16,13 +17,13 @@ import java.util.Map;
  *
  * @author psigloch
  */
-public class InterfaceIVOModel extends TemplateIVOModel {
+public class InterfaceIVOModel extends AbstractIVOModel {
 
     private static final String IVO_INTERFACE = "ivo/ivoInterface.vm";
 
     /**
      * @param definition the definition
-     * @param logger the logger
+     * @param logger     the logger
      */
     public InterfaceIVOModel(IVODef definition, Log logger) {
         this.init(definition, new IVOInterfaceImports(), logger);
@@ -36,47 +37,30 @@ public class InterfaceIVOModel extends TemplateIVOModel {
     @Override
     public Map<String, String> generateClazzWithTemplates() {
         Map<String, String> result = new HashMap<>();
-        result.put(this.definition.getIVOClazzName(true), InterfaceIVOModel.IVO_INTERFACE);
+        result.put(this.getInterfaceClazzName(), InterfaceIVOModel.IVO_INTERFACE);
         return result;
     }
 
-    @Override
-    public String getParentClazzName() {
-        return this.definition.getParentName() == null ? null : this.definition.getParentClazzName(true);
-    }
-
-    /**
-     * velocity use
-     * @return the interface implementations
-     */
-    public String getInterfaceImplements() {
-        StringBuilder builder = new StringBuilder();
-
-        if((this.getParentClazzName() != null)) {
-            builder.append(", ");
-            builder.append(this.getParentInterfaceName());
-        }
-        if(this.definition.getCompatibleBaseVersion() != null) {
-            builder.append(", ");
-            builder.append(this.definition.getIVOClazzName(true));
-        }
+    protected void beforeChildHandling() {
+        super.beforeChildHandling();
+        this.definition.getChildren().add(this.getDefaultImplements());
         if(this.isAudited()) {
-            builder.append(", ");
-            builder.append(IIVOAuditing.class.getSimpleName());
+            this.definition.getChildren().add(this.getImplementsDef(IIVOAuditing.class));
         }
         if(this.isIdentity() && !this.hasParentClazz()) {
-            builder.append(", ");
-            builder.append(IIdentity.class.getSimpleName());
+            this.definition.getChildren().add(this.getImplementsDef(IIdentity.class));
         }
-        for(ImplementsDef i : this.implementsDef) {
-            builder.append(", ");
-            builder.append(i.getName());
-        }
-
-        if(builder.toString().trim().length() < 1) {
-            return "";
-        }
-
-        return "extends " + builder.substring(2);
     }
+
+    private ImplementsDef getDefaultImplements() {
+        if(this.hasParentClazz()) {
+            ImplementsDef def = new ImplementsDef();
+            def.setName(this.getParentInterfaceName());
+            def.setPkgName(this.definition.getParentPkgName());
+            return def;
+        }
+        return this.getImplementsDef(IVO.class);
+    }
+
+
 }

@@ -20,8 +20,6 @@ package de.taimos.dvalin.interconnect.model.event;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.ivo.IVO;
-
 /**
  * Common interface to be implemented by all event builders
  */
@@ -30,6 +28,6 @@ public interface IEventBuilder {
     /**
      * @return the initialized event
      */
-    IVO build();
+    IEvent build();
 
 }

@@ -1,4 +1,4 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /*
  * #%L

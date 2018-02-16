@@ -1,4 +1,4 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /**
  * Copyright 2018 Working-Horse<br>

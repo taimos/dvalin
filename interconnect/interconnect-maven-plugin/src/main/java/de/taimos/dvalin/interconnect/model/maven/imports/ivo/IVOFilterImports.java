@@ -4,7 +4,8 @@ import de.taimos.dvalin.interconnect.model.ivo.Direction;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
 import de.taimos.dvalin.interconnect.model.ivo.IPageableBuilder;
 import de.taimos.dvalin.interconnect.model.ivo.IVOBuilder;
-import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
+import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 
 import java.util.Collection;
 
@@ -22,27 +23,27 @@ public class IVOFilterImports extends IVOInterfaceImports {
         this.withJsonPOJOBuilder();
         this.with(Collection.class);
         this.with(IVOBuilder.class);
+        this.with(IPageable.class);
+        this.with(IPageableBuilder.class);
+        this.with(Direction.class);
     }
 
-    public void initFromDefintion(IVODef ivoDefinition) {
-        super.initFromDefintion(ivoDefinition);
+    @Override
+    public void initFromDefintion(IVODef ivoDefinition, AbstractInterconnectModel model) {
+        super.initFromDefintion(ivoDefinition, model);
 
         if((ivoDefinition.getFilterPkgName() != null) && !ivoDefinition.getFilterPkgName().equals(ivoDefinition.getPkgName())) {
-            this.with(ivoDefinition.getIVOPath(true));
-            this.with(ivoDefinition.getIVOPath(false));
+            this.with(model.getInterfaceClazzPath());
+            this.with(model.getClazzPath());
         }
 
-        if(ivoDefinition.getParentName() != null) {
+        if(model.hasParentClazz()) {
             if((ivoDefinition.getFilterPkgName() != null) && ((ivoDefinition.getParentFilterPkgName() == null) || ivoDefinition.getParentFilterPkgName().equals(ivoDefinition.getFilterPkgName()))) {
                 this.with(ivoDefinition.getFilterPkgName() + "." + this.getParentIVOFilterName(ivoDefinition) + "." + this.getParentIVONFName(ivoDefinition));
             } else if(ivoDefinition.getFilterPkgName() != null) {
                 this.with(ivoDefinition.getParentFilterPkgName() + "." + this.getParentIVOFilterName(ivoDefinition) + "." + this.getParentIVONFName(ivoDefinition));
             }
         }
-
-        this.with(IPageable.class);
-        this.with(IPageableBuilder.class);
-        this.with(Direction.class);
     }
 
     /**

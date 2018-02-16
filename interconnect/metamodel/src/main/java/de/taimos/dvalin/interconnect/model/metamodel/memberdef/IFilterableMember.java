@@ -1,4 +1,7 @@
-package de.taimos.dvalin.interconnect.model.metamodel;
+/**
+ *
+ */
+package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 /*
  * #%L
@@ -20,23 +23,11 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+public interface IFilterableMember {
 
-import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.MapTypeAdapter;
+    /**
+     * @return is this member part of a default filter
+     */
+    Boolean isAFilterMember();
 
-/**
- * the supported map types
- */
-@XmlType
-@XmlJavaTypeAdapter(MapTypeAdapter.class)
-public enum MapType {
-	/**
-	 * a normal map
-	 */
-	Map,
-	/**
-	 * a guava multimap
-	 */
-	Multimap
 }

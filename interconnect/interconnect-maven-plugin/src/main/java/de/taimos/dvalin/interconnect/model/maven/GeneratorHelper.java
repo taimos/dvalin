@@ -20,20 +20,9 @@ package de.taimos.dvalin.interconnect.model.maven;
  * #L%
  */
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
+import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ModelTools;
+import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.velocity.Template;
@@ -42,9 +31,14 @@ import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.event.implement.IncludeRelativePath;
 import org.apache.velocity.runtime.RuntimeConstants;
 
-import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
-import de.taimos.dvalin.interconnect.model.maven.model.ModelTools;
-import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author psigloch
@@ -57,7 +51,7 @@ public class GeneratorHelper {
      * @param targetDir the target path for generation
      * @throws MojoExecutionException on errors
      */
-    public static void writeFile(Log log, GeneratorModel<?> model, String targetDir) throws MojoExecutionException {
+    public static void writeFile(Log log, GeneratorModel<?, ?> model, String targetDir) throws MojoExecutionException {
         if(model.generateClazzWithTemplates() == null || model.generateClazzWithTemplates().size() < 1) {
             return;
         }
@@ -71,12 +65,12 @@ public class GeneratorHelper {
             }
             try {
                 File pckDir = new File(targetDir + model.getTargetFolder());
-                log.info("Writing to Folder "+ pckDir.getAbsolutePath());
+                log.info("Writing to Folder " + pckDir.getAbsolutePath());
                 if(!pckDir.exists()) {
                     pckDir.mkdirs();
                 }
                 try(OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java"), "UTF-8")) {
-                    log.info("Creating file "+ pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java");
+                    log.info("Creating file " + pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java");
                     VelocityContext context = new VelocityContext();
                     context.put("model", model);
                     context.put("tool", new ModelTools());
@@ -106,7 +100,8 @@ public class GeneratorHelper {
      * @param log   the logger
      * @param f     the file to parse
      * @param <T>   the generator definition
-     * @return
+     * @return the parsed IGeneratorDefinition
+     * @throws MojoExecutionException on error
      */
     @SuppressWarnings("unchecked")
     public static <T extends IGeneratorDefinition> T parseXML(Class<T> clazz, Log log, File f) throws MojoExecutionException {
@@ -116,23 +111,8 @@ public class GeneratorHelper {
             unmarshaller.setEventHandler(validationEvent -> false);
             return (T) unmarshaller.unmarshal(f);
         } catch(Exception e) {
-            log.error("Failed to read input file " + f.getAbsolutePath(), e);
             throw new MojoExecutionException("Failed to read input file " + f.getAbsolutePath(), e);
         }
     }
 
-    /**
-     * @param dateString the date string to check
-     * @return whether the file should me removed or not
-     */
-    public static boolean keepGeneratedFiles(String dateString) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-        Date removalDate;
-        try {
-            removalDate = format.parse(dateString);
-        } catch(ParseException e) {
-            throw new IllegalArgumentException("Failed to parse the removal date - should be yyyy/MM/dd, is " + dateString);
-        }
-        return removalDate.compareTo(Calendar.getInstance().getTime()) > 0;
-    }
 }

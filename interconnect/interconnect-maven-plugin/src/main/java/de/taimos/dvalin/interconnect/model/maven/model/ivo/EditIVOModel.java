@@ -1,16 +1,13 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
+import org.apache.maven.plugin.logging.Log;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.maven.plugin.logging.Log;
-
-import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
-import de.taimos.dvalin.interconnect.model.maven.GeneratorHelper;
-import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
-import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
-import de.taimos.dvalin.interconnect.model.metamodel.ImplementsDef;
 
 /**
  * Copyright 2018 Cinovo AG<br>
@@ -18,7 +15,7 @@ import de.taimos.dvalin.interconnect.model.metamodel.ImplementsDef;
  *
  * @author psigloch
  */
-public class EditIVOModel extends TemplateIVOModel {
+public class EditIVOModel extends AbstractIVOModel {
 
     private static final String FIND_BY = "ivo/findBy.vm";
     private static final String FIND_BY_INTERFACE = "ivo/findByInterface.vm";
@@ -44,7 +41,7 @@ public class EditIVOModel extends TemplateIVOModel {
         if(Boolean.TRUE.equals(this.definition.getInterfaceOnly())) {
             return null;
         }
-        if((this.definition.getRemovalDate() == null) || this.definition.getRemovalDate().isEmpty() || GeneratorHelper.keepGeneratedFiles(this.definition.getRemovalDate())) {
+        if(this.genereateFile()) {
             Map<String, String> result = new HashMap<>();
 
             if(this.definition.getGenerateSave()) {
@@ -85,35 +82,13 @@ public class EditIVOModel extends TemplateIVOModel {
         return this.getInterfaceImplements();
     }
 
-    /**
-     * velocity use
-     * @return the interface implementatinos
-     */
-    public String getInterfaceImplements() {
-        StringBuilder builder = new StringBuilder();
-        if(this.definition.getCompatibleBaseVersion() != null) {
-            builder.append(", ");
-            builder.append(this.definition.getIVOClazzName(true));
-        }
-        for(ImplementsDef i : this.implementsDef) {
-            builder.append(", ");
-            builder.append(i.getName());
-        }
-
-        if(builder.length() < 1) {
-            return "";
-        }
-
-        return "extends " + builder.substring(2);
-    }
-
     @Override
     public String getParentClazzName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : this.definition.getParentClazzName(false);
+        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentClazzName();
     }
 
     @Override
     public String getParentInterfaceName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : this.definition.getParentClazzName(true);
+        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentInterfaceName();
     }
 }

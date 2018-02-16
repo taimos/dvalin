@@ -53,7 +53,6 @@ public abstract class AbstractEvent implements IEvent {
         try {
             return (IEvent) super.clone();
         } catch(CloneNotSupportedException e) {
-            // cannot happen
             throw new RuntimeException("Cloning of event failed", e);
         }
     }

@@ -20,9 +20,6 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.metamodel.FilterableType;
-import de.taimos.dvalin.interconnect.model.metamodel.IFilterableMember;
-
 import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
