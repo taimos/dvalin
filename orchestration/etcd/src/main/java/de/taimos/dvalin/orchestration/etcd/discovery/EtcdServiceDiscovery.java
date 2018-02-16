@@ -9,9 +9,9 @@ package de.taimos.dvalin.orchestration.etcd.discovery;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -207,54 +207,58 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
                             .timeout(10, TimeUnit.SECONDS)
                             .recursive()
                             .send();
-                        
-                        try {
-                            EtcdKeysResponse response = send.get();
-                            this.etcdIndex.put(serviceName, response.node.getModifiedIndex() + 1);
-                            Matcher matcher = keyPattern.matcher(response.node.getKey());
-                            if (matcher.matches()) {
-                                String instanceId = matcher.group(1);
-                                
-                                switch (response.action) {
-                                case set:
-                                case create:
-                                case update:
-                                case compareAndSwap:
-                                    HostInfo info = this.parseHostInfo(response.getNode().getValue());
-                                    ServiceInstance instance = new ServiceInstance(info.getHost(), serviceName, instanceId, LifecyclePhase.valueOf(info.getStatus()));
-                                    if (response.getPrevNode() != null) {
-                                        this.getListeners(serviceName).forEach(l -> l.instanceChanged(instance));
-                                    } else {
-                                        this.getListeners(serviceName).forEach(l -> l.instanceRegistered(instance));
-                                    }
-                                    break;
-                                case delete:
-                                case expire:
-                                case compareAndDelete:
-                                    HostInfo removedInfo = this.parseHostInfo(response.getPrevNode().getValue());
-                                    ServiceInstance removedInstance = new ServiceInstance(removedInfo.getHost(), serviceName, instanceId, LifecyclePhase.valueOf(removedInfo.getStatus()));
-                                    this.getListeners(serviceName).forEach(l -> l.instanceUnregistered(removedInstance));
-                                    break;
-                                }
-                            }
-                        } catch (TimeoutException e) {
-                            // do nothing and retry
-                        } catch (EtcdAuthenticationException e) {
-                            LOGGER.warn("ETCD authentication error", e);
-                        } catch (EtcdException e) {
-                            if (e.getErrorCode() == EtcdErrorCode.EventIndexCleared) {
-                                LOGGER.info("Skipped events as index was outdated");
-                                this.etcdIndex.put(serviceName, e.getIndex());
-                            } else {
-                                LOGGER.warn("ETCD error", e);
-                            }
-                        }
+    
+                        this.parseWaitResponse(serviceName, keyPattern, send);
                     } catch (IOException e) {
                         LOGGER.warn("Error waiting for instance updates", e);
                     }
                 }
             }, "etcd-poller-" + serviceName).start();
         }
+    }
+    
+    private void parseWaitResponse(String serviceName, Pattern keyPattern, EtcdResponsePromise<EtcdKeysResponse> send) throws IOException {
+        try {
+			EtcdKeysResponse response = send.get();
+			this.etcdIndex.put(serviceName, response.node.getModifiedIndex() + 1);
+			Matcher matcher = keyPattern.matcher(response.node.getKey());
+			if (matcher.matches()) {
+				String instanceId = matcher.group(1);
+				
+				switch (response.action) {
+				case set:
+				case create:
+				case update:
+				case compareAndSwap:
+					HostInfo info = this.parseHostInfo(response.getNode().getValue());
+					ServiceInstance instance = new ServiceInstance(info.getHost(), serviceName, instanceId, LifecyclePhase.valueOf(info.getStatus()));
+					if (response.getPrevNode() != null) {
+						this.getListeners(serviceName).forEach(l -> l.instanceChanged(instance));
+					} else {
+						this.getListeners(serviceName).forEach(l -> l.instanceRegistered(instance));
+					}
+					break;
+				case delete:
+				case expire:
+				case compareAndDelete:
+					HostInfo removedInfo = this.parseHostInfo(response.getPrevNode().getValue());
+					ServiceInstance removedInstance = new ServiceInstance(removedInfo.getHost(), serviceName, instanceId, LifecyclePhase.valueOf(removedInfo.getStatus()));
+					this.getListeners(serviceName).forEach(l -> l.instanceUnregistered(removedInstance));
+					break;
+				}
+			}
+		} catch (TimeoutException e) {
+			// do nothing and retry
+		} catch (EtcdAuthenticationException e) {
+			LOGGER.warn("ETCD authentication error", e);
+		} catch (EtcdException e) {
+			if (e.getErrorCode() == EtcdErrorCode.EventIndexCleared) {
+				LOGGER.info("Skipped events as index was outdated");
+				this.etcdIndex.put(serviceName, e.getIndex());
+			} else {
+				LOGGER.warn("ETCD error", e);
+			}
+		}
     }
     
     @Override

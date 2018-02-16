@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-parent</artifactId>
-        <version>1.23-SNAPSHOT</version>
+        <version>1.24-SNAPSHOT</version>
     </parent>
     <artifactId>dvalin-interconnect-parent</artifactId>
     <packaging>pom</packaging>
@@ -19,6 +19,5 @@
         <module>interconnect-maven-plugin</module>
         <module>core</module>
         <module>test</module>
-        <module>demo</module>
     </modules>
 </project>

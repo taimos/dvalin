@@ -80,7 +80,7 @@ public class MongoDBInit {
             for (Resource res : resources) {
                 String filename = res.getFilename();
                 String collection = filename.substring(0, filename.length() - 7);
-                MongoDBInit.LOGGER.info("Found collection file: " + collection);
+                MongoDBInit.LOGGER.info("Found collection file: {}", collection);
                 MongoCollection<DBObject> dbCollection = db.getCollection(collection, DBObject.class);
                 try (Scanner scan = new Scanner(res.getInputStream(), "UTF-8")) {
                     int lines = 0;
@@ -91,12 +91,12 @@ public class MongoDBInit {
                             DBObject dbObject = (DBObject) parse;
                             dbCollection.insertOne(dbObject);
                         } else {
-                            MongoDBInit.LOGGER.error("Invalid object found: " + parse);
+                            MongoDBInit.LOGGER.error("Invalid object found: {}", parse);
                             throw new RuntimeException("Invalid object");
                         }
                         lines++;
                     }
-                    MongoDBInit.LOGGER.info("Imported " + lines + " objects into collection " + collection);
+                    MongoDBInit.LOGGER.info("Imported {} objects into collection {}", lines, collection);
                 }
             }
         } catch (IOException e) {

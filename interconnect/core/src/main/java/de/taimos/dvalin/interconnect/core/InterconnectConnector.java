@@ -54,8 +54,11 @@ public final class InterconnectConnector {
      * name of the message header to specify interconnect ICO class
      */
     public static final String HEADER_ICO_CLASS = "InterconnectICOClass";
-
-
+    
+    private static final String INTERCONNECT_OBJECT_NULL_ERROR = "Interconnect Object was null";
+    private static final String QUEUE_NAME_NULL_ERROR = "Queue name was null";
+    private static final String TOPIC_NAME_NULL_ERROR = "Topic name was null";
+    
     /**
      * Singleton.
      */
@@ -99,8 +102,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToDestination(final Destination destination, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(destination, "Destination");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(destination, "Destination was null");
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         final String body = InterconnectMapper.toJson(ico);
         final Map<String, Object> headers;
         if (customHeaders == null) {
@@ -126,8 +129,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         final String body = InterconnectMapper.toJson(ico);
         final Map<String, Object> headers;
         if (customHeaders == null) {
@@ -151,8 +154,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         final String body = InterconnectMapper.toJson(ico);
         final Map<String, Object> headers;
         if (customHeaders == null) {
@@ -176,8 +179,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders, final String replyToQueueName, final String correlationId) throws InfrastructureException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         final String body = InterconnectMapper.toJson(ico);
         final Map<String, Object> headers;
         if (customHeaders == null) {
@@ -199,8 +202,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToQueue(final String queueName, final InterconnectObject ico, final Map<String, Object> customHeaders) throws InfrastructureException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         final String body = InterconnectMapper.toJson(ico);
         final Map<String, Object> headers;
         if (customHeaders == null) {
@@ -221,8 +224,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToQueue(final String queueName, final InterconnectObject ico) throws InfrastructureException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         InterconnectConnector.sendToQueue(queueName, ico, null);
     }
 
@@ -238,8 +241,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToTopic(final String topicName, final InterconnectObject ico, final Map<String, Object> customHeaders, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(topicName, "Topic name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(topicName, TOPIC_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         final String body = InterconnectMapper.toJson(ico);
         final Map<String, Object> headers;
         if (customHeaders == null) {
@@ -261,8 +264,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToTopic(final String topicName, final InterconnectObject ico, final Map<String, Object> customHeaders) throws InfrastructureException, IOException {
-        Preconditions.checkNotNull(topicName, "Topic name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(topicName, TOPIC_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         final String body = InterconnectMapper.toJson(ico);
         final Map<String, Object> headers;
         if (customHeaders == null) {
@@ -283,8 +286,8 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static void sendToTopic(final String topicName, final InterconnectObject ico) throws InfrastructureException, IOException {
-        Preconditions.checkNotNull(topicName, "Topic name");
-        Preconditions.checkNotNull(ico, "Interconnect Object");
+        Preconditions.checkNotNull(topicName, TOPIC_NAME_NULL_ERROR);
+        Preconditions.checkNotNull(ico, INTERCONNECT_OBJECT_NULL_ERROR);
         InterconnectConnector.sendToTopic(topicName, ico, null);
     }
 
@@ -301,7 +304,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static InterconnectObject receiveFromQueue(final String queueName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
         final TextMessage response = MessageConnector.receiveFromQueue(queueName, selector, timeout, secure);
         try {
             return InterconnectMapper.fromJson(response.getText());
@@ -323,7 +326,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static Response receiveFromQueueEnhanced(final String queueName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
         final TextMessage response = MessageConnector.receiveFromQueue(queueName, selector, timeout, secure);
         try {
             return new Response(InterconnectMapper.fromJson(response.getText()), response);
@@ -346,7 +349,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static List<InterconnectObject> receiveBulkFromQueue(final String queueName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
         final List<TextMessage> responses = MessageConnector.receiveBulkFromQueue(queueName, selector, maxSize, timeout, secure);
         final List<InterconnectObject> icos = new ArrayList<>(responses.size());
         try {
@@ -373,7 +376,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static List<Response> receiveBulkFromQueueEnhanced(final String queueName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(queueName, "Queue name");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
         final List<TextMessage> responses = MessageConnector.receiveBulkFromQueue(queueName, selector, maxSize, timeout, secure);
         final List<Response> enhanceds = new ArrayList<>(responses.size());
         try {
@@ -399,7 +402,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static InterconnectObject receiveFromTopic(final String topicName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(topicName, "Topic name");
+        Preconditions.checkNotNull(topicName, TOPIC_NAME_NULL_ERROR);
         final TextMessage response = MessageConnector.receiveFromTopic(topicName, selector, timeout, secure);
         try {
             return InterconnectMapper.fromJson(response.getText());
@@ -421,7 +424,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static Response receiveFromTopicEnhanced(final String topicName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(topicName, "Topic name");
+        Preconditions.checkNotNull(topicName, TOPIC_NAME_NULL_ERROR);
         final TextMessage response = MessageConnector.receiveFromTopic(topicName, selector, timeout, secure);
         try {
             return new Response(InterconnectMapper.fromJson(response.getText()), response);
@@ -444,7 +447,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static List<InterconnectObject> receiveBulkFromTopic(final String topicName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(topicName, "Topic name");
+        Preconditions.checkNotNull(topicName, TOPIC_NAME_NULL_ERROR);
         final List<TextMessage> responses = MessageConnector.receiveBulkFromTopic(topicName, selector, maxSize, timeout, secure);
         final List<InterconnectObject> icos = new ArrayList<>(responses.size());
         try {
@@ -471,7 +474,7 @@ public final class InterconnectConnector {
      * @throws IOException             if an I/O related problem occurred
      */
     public static List<Response> receiveBulkFromTopicEnhanced(final String topicName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, CryptoException, IOException {
-        Preconditions.checkNotNull(topicName, "Topic name");
+        Preconditions.checkNotNull(topicName, TOPIC_NAME_NULL_ERROR);
         final List<TextMessage> responses = MessageConnector.receiveBulkFromTopic(topicName, selector, maxSize, timeout, secure);
         final List<Response> enhanceds = new ArrayList<>(responses.size());
         try {
@@ -540,7 +543,7 @@ public final class InterconnectConnector {
      */
     public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO, final Map<String, Object> customHeaders, final boolean secure, final long receiveTimeout, final long sendTimeout, final int priority) throws InfrastructureException, CryptoException, IOException {
         Preconditions.checkNotNull(uuid, "Universally unique identifier of the request");
-        Preconditions.checkNotNull(queueName, "Queue name");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
         Preconditions.checkNotNull(requestICO, "Request Interconnect Object");
         final String body = InterconnectMapper.toJson(requestICO);
         final Map<String, Object> headers;
@@ -572,7 +575,7 @@ public final class InterconnectConnector {
      */
     public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO, final Map<String, Object> customHeaders) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(uuid, "Universally unique identifier of the request");
-        Preconditions.checkNotNull(queueName, "Queue name");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
         Preconditions.checkNotNull(requestICO, "Request Interconnect Object");
         final String body = InterconnectMapper.toJson(requestICO);
         final Map<String, Object> headers;
@@ -603,7 +606,7 @@ public final class InterconnectConnector {
      */
     public static InterconnectObject request(final UUID uuid, final String queueName, final InterconnectObject requestICO) throws InfrastructureException, IOException {
         Preconditions.checkNotNull(uuid, "Universally unique identifier of the request");
-        Preconditions.checkNotNull(queueName, "Queue name");
+        Preconditions.checkNotNull(queueName, QUEUE_NAME_NULL_ERROR);
         Preconditions.checkNotNull(requestICO, "Request Interconnect Object");
         return InterconnectConnector.request(uuid, queueName, requestICO, null);
     }

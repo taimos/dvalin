@@ -1,8 +1,13 @@
-# Version 1.23 (current master)
+# current master
+
+# Version 1.23
 * Update dependencies
-    * AWS 1.11.182
+    * AWS 1.11.275
     * Spring 4.3.10
     * Jackson 2.8.10
+* Create example implementations in extra repo
+* Support EC2 Parameter Store as Config Source (#54)
+* Support AWS Cognito as JWT source (#55)
 
 # Version 1.22
 * enhanced support to get versioned element from MongoDB DAOs

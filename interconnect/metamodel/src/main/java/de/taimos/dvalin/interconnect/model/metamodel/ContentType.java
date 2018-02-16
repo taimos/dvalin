@@ -20,10 +20,13 @@ package de.taimos.dvalin.interconnect.model.metamodel;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.ContentTypeAdapter;
+import org.joda.time.DateTime;
+
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.ContentTypeAdapter;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * the supported content types
@@ -34,41 +37,56 @@ public enum ContentType {
     /**
      * boolean
      */
-    Boolean,
+    Boolean(Boolean.class),
     /**
      * date
      */
-    Date,
+    Date(DateTime.class),
     /**
      * decimal
      */
-    Decimal,
+    Decimal(BigDecimal.class),
     /**
      * integer
      */
-    Integer,
+    Integer(Integer.class),
     /**
      * long
      */
-    Long,
+    Long(Long.class),
     /**
      * string
      */
-    String,
+    String(String.class),
     /**
      * IVOs (requires ivoName, package name and version)
      */
-    IVO,
+    IVO(null),
     /**
      * enums (requires clazz and the pacakge attribute)
      */
-    Enum,
+    Enum(null),
     /**
      * UUID
      */
-    UUID,
+    UUID(UUID.class),
     /**
      * interconnect objects (requires clazz and the package attribute)
      */
-    InterconnectObject
+    InterconnectObject(null);
+
+    private final Class<?> type;
+
+    ContentType(Class<?> type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the type as string
+     */
+    public String getType() {
+        return this.type == null ? null : this.type.getSimpleName();
+    }
+
+
 }

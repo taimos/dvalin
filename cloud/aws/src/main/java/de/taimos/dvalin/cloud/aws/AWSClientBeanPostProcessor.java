@@ -47,73 +47,53 @@ import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.InjectionMetadata;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringValueResolver;
 
 import com.amazonaws.AmazonWebServiceClient;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 
 @Component
 @SuppressWarnings("serial")
-public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostProcessor, EmbeddedValueResolverAware, BeanFactoryAware, Serializable {
-
-    private transient ConfigurableListableBeanFactory beanFactory;
+public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostProcessor, EmbeddedValueResolverAware, Serializable {
+    
     private StringValueResolver resolver;
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        Assert.notNull(beanFactory, "BeanFactory must not be null");
-        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
-    }
-
+    
     @Override
     public void setEmbeddedValueResolver(StringValueResolver resolver) {
         this.resolver = resolver;
     }
-
+    
     @Override
-    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
         return null;
     }
-
+    
     @Override
-    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) {
         return true;
     }
-
+    
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
         return bean;
     }
-
+    
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
         return bean;
     }
-
+    
     @Override
-    public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) {
         InjectionMetadata metadata = this.buildResourceMetadata(bean.getClass());
         try {
             metadata.inject(bean, beanName, pvs);
@@ -122,93 +102,86 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
         }
         return pvs;
     }
-
+    
     private InjectionMetadata buildResourceMetadata(Class<?> clazz) {
         LinkedList<InjectionMetadata.InjectedElement> elements = new LinkedList<>();
         Class<?> targetClass = clazz;
-
+        
         do {
             LinkedList<InjectionMetadata.InjectedElement> currElements = new LinkedList<>();
             for (Field field : targetClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(AWSClient.class)) {
-                    if (Modifier.isStatic(field.getModifiers())) {
-                        throw new IllegalStateException("@AWSClient annotation is not supported on static fields");
-                    }
-                    currElements.add(new AWSClientElement(field, null, field.getAnnotation(AWSClient.class)));
-                }
+                this.doScanField(currElements, field);
             }
             for (Method method : targetClass.getDeclaredMethods()) {
-                Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
-                if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {
-                    continue;
-                }
-                if (method.equals(ClassUtils.getMostSpecificMethod(method, clazz))) {
-                    if (bridgedMethod.isAnnotationPresent(AWSClient.class)) {
-                        if (Modifier.isStatic(method.getModifiers())) {
-                            throw new IllegalStateException("@AWSClient annotation is not supported on static methods");
-                        }
-                        if (method.getParameterTypes().length != 1) {
-                            throw new IllegalStateException("@AWSClient annotation requires a single-arg method: " + method);
-                        }
-                        PropertyDescriptor pd = BeanUtils.findPropertyForMethod(bridgedMethod, clazz);
-                        currElements.add(new AWSClientElement(method, pd, method.getAnnotation(AWSClient.class)));
-                    }
-                }
+                this.doScanMethod(clazz, currElements, method);
             }
             elements.addAll(0, currElements);
             targetClass = targetClass.getSuperclass();
         } while ((targetClass != null) && (targetClass != Object.class));
-
+        
         return new InjectionMetadata(clazz, elements);
     }
-
+    
+    private void doScanField(LinkedList<InjectionMetadata.InjectedElement> currElements, Field field) {
+        if (field.isAnnotationPresent(AWSClient.class)) {
+            if (Modifier.isStatic(field.getModifiers())) {
+                throw new IllegalStateException("@AWSClient annotation is not supported on static fields");
+            }
+            currElements.add(new AWSClientElement(field, null, field.getAnnotation(AWSClient.class)));
+        }
+    }
+    
+    private void doScanMethod(Class<?> clazz, LinkedList<InjectionMetadata.InjectedElement> currElements, Method method) {
+        Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
+        if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {
+            return;
+        }
+        if (method.equals(ClassUtils.getMostSpecificMethod(method, clazz)) && bridgedMethod.isAnnotationPresent(AWSClient.class)) {
+            if (Modifier.isStatic(method.getModifiers())) {
+                throw new IllegalStateException("@AWSClient annotation is not supported on static methods");
+            }
+            if (method.getParameterTypes().length != 1) {
+                throw new IllegalStateException("@AWSClient annotation requires a single-arg method: " + method);
+            }
+            PropertyDescriptor pd = BeanUtils.findPropertyForMethod(bridgedMethod, clazz);
+            currElements.add(new AWSClientElement(method, pd, method.getAnnotation(AWSClient.class)));
+        }
+    }
+    
     /**
      * Class representing injection information about an annotated field
      * or setter method, supporting the @Interconnect annotation.
      */
     private class AWSClientElement extends InjectionMetadata.InjectedElement {
-
+        
         private final Logger LOGGER = LoggerFactory.getLogger(AWSClientElement.class);
-
+        
         private final AWSClient client;
-
+        
         public AWSClientElement(Member member, PropertyDescriptor pd, AWSClient client) {
             super(member, pd);
             this.client = client;
         }
-
+        
         private DependencyDescriptor getDependencyDescriptor() {
             if (this.isField) {
                 return new DependencyDescriptor((Field) this.member, true);
             }
             return new DependencyDescriptor(new MethodParameter((Method) this.member, 0), true);
         }
-
+        
         @Override
         protected Object getResourceToInject(Object target, String requestingBeanName) {
             Class<?> dependencyType = this.getDependencyDescriptor().getDependencyType();
             if (!AmazonWebServiceClient.class.isAssignableFrom(dependencyType)) {
                 throw new RuntimeException("Field has to be of type AmazonWebServiceClient but was of type " + dependencyType.getCanonicalName());
             }
-            Region region = this.getRegion(this.client);
-            this.LOGGER.info("Using AWS region {}", region.toString());
-
-            AWSCredentials cred = this.getStaticCredentials();
-
-            final AWSCredentialsProvider provider;
-            if (cred != null) {
-                provider = new AWSCredentialsProviderChain(new AWSStaticCredentialsProvider(cred));
-            } else {
-                provider = new DefaultAWSCredentialsProviderChain();
-            }
-            AmazonWebServiceClient client = region.createClient((Class<? extends AmazonWebServiceClient>) dependencyType, provider, null);
-            String endpoint = this.getCustomEndpoint(this.client);
-            if (endpoint != null) {
-                client.setEndpoint(endpoint);
-            }
-            return client;
+            AWSClientFactory factory = new AWSClientFactory();
+            factory.withRegion(this.getRegionName(this.client));
+            factory.withEndpoint(this.getCustomEndpoint(this.client));
+            return factory.create(dependencyType);
         }
-
+        
         private String getCustomEndpoint(AWSClient client) {
             if (!client.endpoint().isEmpty()) {
                 try {
@@ -222,26 +195,13 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             }
             return null;
         }
-
-        private AWSCredentials getStaticCredentials() {
-            try {
-                String accessKey = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.accessKeyId}");
-                String secretKey = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.secretKey}");
-                if (!accessKey.isEmpty() && !secretKey.isEmpty()) {
-					return new BasicAWSCredentials(accessKey, secretKey);
-				}
-            } catch (IllegalArgumentException e) {
-                //
-            }
-            return null;
-        }
-
-        private Region getRegion(AWSClient client) {
+        
+        private String getRegionName(AWSClient client) {
             if (!client.region().isEmpty()) {
                 try {
                     String regionString = AWSClientBeanPostProcessor.this.resolver.resolveStringValue(this.client.region());
                     if (!regionString.isEmpty()) {
-                        return Region.getRegion(Regions.fromName(regionString));
+                        return regionString;
                     }
                 } catch (IllegalArgumentException e) {
                     this.LOGGER.warn("Failed to read regionProperty", e);
@@ -250,23 +210,13 @@ public class AWSClientBeanPostProcessor implements InstantiationAwareBeanPostPro
             try {
                 String regionString = AWSClientBeanPostProcessor.this.resolver.resolveStringValue("${aws.region}");
                 if (!regionString.isEmpty()) {
-                    return Region.getRegion(Regions.fromName(regionString));
+                    return regionString;
                 }
             } catch (IllegalArgumentException e) {
-                this.LOGGER.info("Did not find aws.region system property");
+                this.LOGGER.debug("Did not find aws.region system property");
             }
-            if (System.getenv("AWS_DEFAULT_REGION") != null) {
-                return Region.getRegion(Regions.fromName(System.getenv("AWS_DEFAULT_REGION")));
-            }
-            if (System.getenv("AWS_REGION") != null) {
-                return Region.getRegion(Regions.fromName(System.getenv("AWS_REGION")));
-            }
-            Region currentRegion = Regions.getCurrentRegion();
-            if (currentRegion != null) {
-                return currentRegion;
-            }
-            return Region.getRegion(Regions.DEFAULT_REGION);
+            return null;
         }
     }
-
+    
 }

@@ -12,9 +12,11 @@
     <file url="file://$PROJECT_DIR$/cluster/hazelcast" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/daemon" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/dynamodb" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/examples" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/examples/interconnect-demo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/examples/jaxrs-hello-world" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/core" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/interconnect/demo" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/metamodel" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/model" charset="UTF-8" />
