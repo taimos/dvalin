@@ -22,7 +22,6 @@ package de.taimos.dvalin.interconnect.core.config;
 
 import de.taimos.dvalin.interconnect.core.daemon.DaemonRequestResponse;
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonRequestResponse;
-import de.taimos.dvalin.interconnect.core.event.EventMessageListener;
 import de.taimos.dvalin.interconnect.core.spring.DaemonMessageListener;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -38,8 +37,6 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.jms.ConnectionFactory;
-import java.util.Collection;
-import java.util.HashSet;
 
 
 @Configuration
@@ -55,12 +52,6 @@ public class JMSConfig {
 
     @Value("${serviceName}")
     private String serviceName;
-
-    @Value("${interconnect.jms.virtualtopic.prefix:VirtualTopic}")
-    private String virtualTopicPrefix;
-    @Value("${interconnect.jms.virtualtopic.consumerprefix:Consumer}")
-    private String consumerPrefix;
-
 
     @Bean
     public ConnectionFactory jmsConnectionFactory() {
@@ -115,27 +106,5 @@ public class JMSConfig {
         dmlc.setMessageListener(messageListener);
         return dmlc;
     }
-
-    @Bean
-    public Collection<DefaultMessageListenerContainer> jmsEventListeners(PooledConnectionFactory jmsFactory, EventMessageListener eventMessageListener) {
-        Collection<DefaultMessageListenerContainer> result = new HashSet<>();
-        if(eventMessageListener == null) {
-            return result;
-        }
-
-        for(String domain : eventMessageListener.getDomains()) {
-            ActiveMQQueue virtualTopic = new ActiveMQQueue(this.consumerPrefix + "." + this.serviceName + "." + this.virtualTopicPrefix + "." + domain);
-
-            DefaultMessageListenerContainer dmlc = new DefaultMessageListenerContainer();
-            dmlc.setConnectionFactory(jmsFactory);
-            dmlc.setErrorHandler(eventMessageListener);
-            dmlc.setConcurrency(this.consumers);
-            dmlc.setDestination(virtualTopic);
-            dmlc.setMessageListener(eventMessageListener);
-            result.add(dmlc);
-        }
-        return result;
-    }
-
 
 }

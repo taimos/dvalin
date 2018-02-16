@@ -19,27 +19,31 @@ package de.taimos.dvalin.interconnect.core.event;
  * limitations under the License.
  * #L%
  */
+
 import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.interconnect.core.MessageConnector;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.IEventHandler;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
+import org.springframework.jms.listener.MessageListenerContainer;
 import org.springframework.util.ErrorHandler;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @ProdComponent("eventMessageListener")
@@ -47,10 +51,23 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Value("${interconnect.jms.consumers:2-8}")
+    private String consumers;
+
+    @Value("${serviceName}")
+    private String serviceName;
+
+    @Value("${interconnect.jms.virtualtopic.prefix:VirtualTopic}")
+    private String virtualTopicPrefix;
+    @Value("${interconnect.jms.virtualtopic.consumerprefix:Consumer}")
+    private String consumerPrefix;
+
+    @Autowired
+    private PooledConnectionFactory jmsFactory;
     @Autowired
     private Collection<IEventHandler<IEvent>> eventHandlers;
 
-    private MultiValueMap<Class<IEvent>, IEventHandler<IEvent>> eventHandlerMap;
+    private HashSet<MessageListenerContainer> listeners;
 
     /** */
     public EventMessageListener() {
@@ -59,34 +76,23 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
 
     /** */
     @PostConstruct
-    public void start() {
-        this.eventHandlerMap = new LinkedMultiValueMap<>();
-        for(IEventHandler<IEvent> eventHandler : this.eventHandlers) {
-            if(eventHandler == null || eventHandler.getEventType() == null) {
-                continue;
-            }
-            this.eventHandlerMap.add(eventHandler.getEventType(), eventHandler);
+    public void initEventListeners() {
+        this.listeners = new HashSet<>();
+        for(String domain : this.getDomains()) {
+            DefaultMessageListenerContainer dmlc = this.createQueueListener(domain);
+            this.listeners.add(dmlc);
         }
     }
 
-    /**
-     * @return a list of domains to subsscribe to
-     */
-    public Collection<String> getDomains() {
-        Set<String> result = new HashSet<>();
-        for(IEventHandler<IEvent> eventHandler : this.eventHandlers) {
-            if(eventHandler == null || eventHandler.getEventType() == null) {
-                continue;
-            }
-            Annotation domainAnnotation = eventHandler.getEventType().getAnnotation(EventDomain.class);
-            if(domainAnnotation != null && !((EventDomain) domainAnnotation).name().isEmpty()) {
-                result.add(((EventDomain) domainAnnotation).name());
-            }
+
+    /** */
+    @PreDestroy
+    public void stopEventListeners() {
+        for(MessageListenerContainer listener : this.listeners) {
+            listener.stop();
         }
-        return result;
     }
 
-    @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
     @Override
     public void onMessage(Message message) {
         try {
@@ -98,9 +104,8 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
                     MessageConnector.decryptMessage(textMessage);
                 }
                 final IEvent eventIn = InterconnectMapper.fromJson(textMessage.getText(), IEvent.class);
-                List<IEventHandler<IEvent>> eventHandlers = this.eventHandlerMap.get(eventIn.getClass());
-                if(eventHandlers != null) {
-                    for(IEventHandler<IEvent> eventHandler : eventHandlers) {
+                for(IEventHandler<IEvent> eventHandler : this.eventHandlers) {
+                    if(eventHandler != null && eventHandler.getEventType().equals(eventIn.getClass())) {
                         eventHandler.handleEvent(eventIn);
                     }
                 }
@@ -114,5 +119,32 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
     @Override
     public void handleError(Throwable throwable) {
         this.logger.warn("An error during event handling occured", throwable);
+    }
+
+    private DefaultMessageListenerContainer createQueueListener(String domain) {
+        ActiveMQQueue virtualTopic = new ActiveMQQueue(this.consumerPrefix + "." + this.serviceName + "." + this.virtualTopicPrefix + "." + domain);
+        DefaultMessageListenerContainer dmlc = new DefaultMessageListenerContainer();
+        dmlc.setConnectionFactory(this.jmsFactory);
+        dmlc.setErrorHandler(this);
+        dmlc.setConcurrency(this.consumers);
+        dmlc.setDestination(virtualTopic);
+        dmlc.setMessageListener(this);
+        dmlc.afterPropertiesSet();
+        dmlc.start();
+        return dmlc;
+    }
+
+    private Collection<String> getDomains() {
+        Set<String> result = new HashSet<>();
+        for(IEventHandler<IEvent> eventHandler : this.eventHandlers) {
+            if(eventHandler == null || eventHandler.getEventType() == null) {
+                continue;
+            }
+            Annotation domainAnnotation = eventHandler.getEventType().getAnnotation(EventDomain.class);
+            if(domainAnnotation != null && !((EventDomain) domainAnnotation).name().isEmpty()) {
+                result.add(((EventDomain) domainAnnotation).name());
+            }
+        }
+        return result;
     }
 }
