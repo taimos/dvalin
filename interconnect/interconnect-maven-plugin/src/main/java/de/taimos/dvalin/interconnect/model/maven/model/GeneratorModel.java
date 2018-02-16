@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Copyright 2018 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 public abstract class GeneratorModel<T extends IGeneratorDefinition, K extends Imports<T>> {

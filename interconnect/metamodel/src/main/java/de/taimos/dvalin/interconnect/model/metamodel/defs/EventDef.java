@@ -19,9 +19,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * Copyright 2018 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 @XmlRootElement(name = "event")

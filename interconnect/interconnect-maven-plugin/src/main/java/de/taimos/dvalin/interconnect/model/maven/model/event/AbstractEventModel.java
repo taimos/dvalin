@@ -5,9 +5,6 @@ import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel
 import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
 
 /**
- * Copyright 2018 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 public abstract class AbstractEventModel extends AbstractInterconnectModel<EventDef, BaseEventImports> {

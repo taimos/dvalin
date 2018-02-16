@@ -35,9 +35,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Copyright 2018 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, K extends Imports<T>> extends GeneratorModel<T, K> {

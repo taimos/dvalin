@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Copyright 2018 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 public class InterfaceEventModel extends AbstractEventModel {

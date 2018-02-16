@@ -1,9 +1,6 @@
 package de.taimos.dvalin.interconnect.model.maven.model;
 
 /**
- * Copyright 2018 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 public class ModelTools {

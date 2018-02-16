@@ -26,9 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Copyright 2017 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 public class CollectionValueConverter implements IValueConverter {

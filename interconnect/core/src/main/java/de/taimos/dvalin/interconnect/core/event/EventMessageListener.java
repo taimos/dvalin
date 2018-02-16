@@ -105,7 +105,7 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
                 }
                 final IEvent eventIn = InterconnectMapper.fromJson(textMessage.getText(), IEvent.class);
                 for(IEventHandler<IEvent> eventHandler : this.eventHandlers) {
-                    if(eventHandler != null && eventHandler.getEventType().equals(eventIn.getClass())) {
+                    if(eventHandler != null && eventHandler.getEventType().isAssignableFrom(eventIn.getClass())) {
                         eventHandler.handleEvent(eventIn);
                     }
                 }

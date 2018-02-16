@@ -12,9 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Copyright 2018 Working-Horse<br>
- * <br>
- *
  * @author psigloch
  */
 public class InterfaceIVOModel extends AbstractIVOModel {

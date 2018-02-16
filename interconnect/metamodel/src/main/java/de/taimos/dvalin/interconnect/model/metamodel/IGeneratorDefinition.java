@@ -3,9 +3,6 @@ package de.taimos.dvalin.interconnect.model.metamodel;
 import java.util.List;
 
 /**
- * Copyright 2018 Cinovo AG<br>
- * <br>
- *
  * @author psigloch
  */
 public interface IGeneratorDefinition {
