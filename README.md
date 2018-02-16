@@ -58,6 +58,7 @@ These libraries are:
 * [`interconnect`](./interconnect) - communication framework to connect micro services with each other
 * [`orchestration`](./orchestration) - orchestration tools like service discovery and global configuration
 * [`test`](./test) - utilities for writing tests
+* [`i18n`](./i18n) - internationalization and localization support
 
 # Contributing
 
