@@ -235,7 +235,7 @@ public class IVODef implements IGeneratorDefinition {
     /**
      * @param identity the identity to set
      */
-    public void setIdentity(Boolean identity) {
+    public void setIdentity(boolean identity) {
         this.identity = identity;
     }
 
@@ -295,7 +295,7 @@ public class IVODef implements IGeneratorDefinition {
     /**
      * @param auditing the auditing to set
      */
-    public void setAuditing(Boolean auditing) {
+    public void setAuditing(boolean auditing) {
         this.auditing = auditing;
     }
 

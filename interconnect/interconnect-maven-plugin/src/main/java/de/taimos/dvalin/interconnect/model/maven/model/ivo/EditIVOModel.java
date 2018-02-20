@@ -1,6 +1,7 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+import de.taimos.dvalin.interconnect.model.ivo.IIdentity;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import org.apache.maven.plugin.logging.Log;
@@ -66,17 +67,31 @@ public class EditIVOModel extends AbstractIVOModel {
         return null;
     }
 
+    @Override
+    protected void beforeChildHandling() {
+        super.beforeChildHandling();
+        this.imports.remove(IIdentity.class);
+    }
+
     private String getFileName(String prefix, boolean isInterface) {
         return (isInterface ? "I" : "") + prefix + this.definition.getName() + "IVO_v" + this.definition.getVersion();
     }
 
     /**
      * velocity use
+     *
      * @param multiFilter use multifilter
      * @return the interface implementatinos
      */
     public String getInterfaceImplements(boolean multiFilter) {
         return this.getInterfaceImplements();
+    }
+
+    /**
+     * @return wheteher the ivo has a parent object or not
+     */
+    public boolean hasParentClazz() {
+        return this.definition.getParentName() != null;
     }
 
     @Override

@@ -17,7 +17,7 @@ import ${model.getPackageName()}.${model.getClazzName()};
 @ToBeRemoved(date="$model.getRemoveDate()")
 #end
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public interface ${clazzName} $model.getInterfaceImplements(false) {
+public interface ${clazzName} extends IVO {
 
 	/**
 	 * property constant for ids

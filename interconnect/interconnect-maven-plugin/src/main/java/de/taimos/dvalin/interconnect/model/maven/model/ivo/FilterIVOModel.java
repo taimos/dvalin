@@ -1,6 +1,7 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+import de.taimos.dvalin.interconnect.model.ivo.IIdentity;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
@@ -112,6 +113,9 @@ public class FilterIVOModel extends AbstractIVOModel {
             builder.append(this.getInterfaceClazzName());
         }
         for(ImplementsDef i : this.implementsDef) {
+            if(i.getName().equalsIgnoreCase(IIdentity.class.getSimpleName())) {
+                continue;
+            }
             builder.append(", ");
             builder.append(i.getName());
         }
@@ -126,6 +130,13 @@ public class FilterIVOModel extends AbstractIVOModel {
         }
 
         return "extends " + builder.substring(2);
+    }
+
+    /**
+     * @return wheteher the ivo has a parent object or not
+     */
+    public boolean hasParentClazz() {
+        return this.definition.getParentName() != null;
     }
 
     @Override

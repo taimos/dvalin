@@ -1,5 +1,6 @@
 package de.taimos.dvalin.interconnect.model.maven.imports.ivo;
 
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 import de.taimos.dvalin.interconnect.model.ivo.Direction;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
 import de.taimos.dvalin.interconnect.model.ivo.IPageableBuilder;
@@ -43,6 +44,10 @@ public class IVOFilterImports extends IVOInterfaceImports {
             } else if(ivoDefinition.getFilterPkgName() != null) {
                 this.with(ivoDefinition.getParentFilterPkgName() + "." + this.getParentIVOFilterName(ivoDefinition) + "." + this.getParentIVONFName(ivoDefinition));
             }
+        }
+        if(!model.hasParentClazz()) {
+            System.err.println("ADDED ABSTRACTIVO");
+            this.with(AbstractIVO.class);
         }
     }
 
