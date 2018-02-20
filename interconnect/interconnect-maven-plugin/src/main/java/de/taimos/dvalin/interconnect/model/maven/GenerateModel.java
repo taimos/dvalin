@@ -20,6 +20,7 @@ package de.taimos.dvalin.interconnect.model.maven;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
 import de.taimos.dvalin.interconnect.model.maven.model.event.EventModel;
 import de.taimos.dvalin.interconnect.model.maven.model.event.InterfaceEventModel;
 import de.taimos.dvalin.interconnect.model.maven.model.ivo.EditIVOModel;
@@ -88,9 +89,6 @@ public class GenerateModel extends AbstractMojo {
                 for(File f : dir) {
                     this.processDirectory(f, type);
                 }
-                File path = new File(this.getOutputDirectory());
-                this.project.addCompileSourceRoot(path.getAbsolutePath());
-                this.buildContext.refresh(path);
             }
         } catch(Exception e) {
             throw new MojoExecutionException("Failed...", e);
@@ -113,6 +111,9 @@ public class GenerateModel extends AbstractMojo {
                         this.getLog().info("Generating files for IVO in " + defFile.getAbsolutePath());
                         try {
                             this.processFileAsIVO(defFile);
+                            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
+                            this.project.addCompileSourceRoot(path.getAbsolutePath());
+                            this.buildContext.refresh(path);
                         } catch(MojoExecutionException e) {
                             if(e.getCause().getMessage().contains("event")) {
                                 this.getLog().warn("An event file was found in the ivo directory. Please fix this.");
@@ -127,6 +128,9 @@ public class GenerateModel extends AbstractMojo {
                         this.getLog().info("Generating files for Event in " + defFile.getAbsolutePath());
                         try {
                             this.processFileAsEvent(defFile);
+                            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
+                            this.project.addCompileSourceRoot(path.getAbsolutePath());
+                            this.buildContext.refresh(path);
                         } catch(MojoExecutionException e) {
                             if(e.getCause().getMessage().contains("ivo")) {
                                 this.getLog().warn("An ivo file was found in the ivo directory. Please fix this.");

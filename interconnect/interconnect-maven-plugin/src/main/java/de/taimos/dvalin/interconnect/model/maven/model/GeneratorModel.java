@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public abstract class GeneratorModel<T extends IGeneratorDefinition, K extends Imports<T>> {
 
-    private static final String DEFAULT_TARGET_DIR = "/generated-sources/model/";
+    public static final String DEFAULT_TARGET_DIR = "/generated-sources/model/";
 
     protected K imports;
     protected T definition;

@@ -65,7 +65,6 @@ public class GeneratorHelper {
             }
             try {
                 File pckDir = new File(targetDir + model.getTargetFolder());
-                log.info("Writing to Folder " + pckDir.getAbsolutePath());
                 if(!pckDir.exists()) {
                     pckDir.mkdirs();
                 }
