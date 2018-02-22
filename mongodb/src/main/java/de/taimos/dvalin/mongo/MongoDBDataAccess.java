@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.jongo.Find;
@@ -256,7 +257,7 @@ public class MongoDBDataAccess<T> {
      * @param params the parameters to replace # symbols
      * @return the first element found or <code>null</code> if none is found
      */
-    public final T findFirstByQuery(String query, String sort, Object... params) {
+    public final Optional<T> findFirstByQuery(String query, String sort, Object... params) {
         Find find = this.collection.find(query, params);
         if ((sort != null) && !sort.isEmpty()) {
             find.sort(sort);
@@ -264,17 +265,17 @@ public class MongoDBDataAccess<T> {
         Iterable<T> as = find.limit(1).as(this.entityClass);
         Iterator<T> iterator = as.iterator();
         if (iterator.hasNext()) {
-            return iterator.next();
+            return Optional.of(iterator.next());
         }
-        return null;
+        return Optional.empty();
     }
 
-    public final T findByObjectId(String id) {
-        return this.collection.findOne(new ObjectId(id)).as(this.entityClass);
+    public final Optional<T> findByObjectId(String id) {
+        return Optional.ofNullable(this.collection.findOne(new ObjectId(id)).as(this.entityClass));
     }
 
-    public final T findByStringId(String id) {
-        return this.collection.findOne("{\"_id\":#}", id).as(this.entityClass);
+    public final Optional<T> findByStringId(String id) {
+        return Optional.ofNullable(this.collection.findOne("{\"_id\":#}", id).as(this.entityClass));
     }
 
     public final T save(T object) {

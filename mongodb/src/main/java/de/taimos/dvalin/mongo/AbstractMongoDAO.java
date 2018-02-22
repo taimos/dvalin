@@ -228,12 +228,12 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the first element found or <code>null</code> if none is found
      */
     protected final T findFirstByQuery(String query, String sort, Object... params) {
-        return this.dataAccess.findFirstByQuery(query, sort, params);
+        return this.dataAccess.findFirstByQuery(query, sort, params).orElse(null);
     }
 
     @Override
     public final T findById(String id) {
-        return this.dataAccess.findByObjectId(id);
+        return this.dataAccess.findByObjectId(id).orElse(null);
     }
 
     @Override
