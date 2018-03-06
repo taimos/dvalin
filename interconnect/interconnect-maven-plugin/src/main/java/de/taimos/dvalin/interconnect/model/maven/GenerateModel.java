@@ -75,11 +75,15 @@ public class GenerateModel extends AbstractMojo {
 
         //handle ivo generation
         this.execute(this.ivoPaths, ModelType.IVO);
-        //fallback support for old configuration
-        this.execute(this.defdirs, ModelType.IVO);
 
         //handle event generation
         this.execute(this.eventPaths, ModelType.EVENT);
+
+        //fallback support for old configuration
+        if(this.defdirs != null && this.defdirs.length > 0) {
+            this.getLog().warn("Please be aware that you are still using a deprecated configuration. This configuration option might be removed in the future. Please use \"ivoPaths\" and \"enventPaths\" instead of \"defdirs\"!");
+            this.execute(this.defdirs, ModelType.IVO);
+        }
     }
 
     private void execute(File[] dir, ModelType type) throws MojoExecutionException {

@@ -15,6 +15,7 @@ import $imp;
 @ToBeRemoved(date="$model.getRemoveDate()")
 #end
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@EventDomain("$model.getDomain()")
 public interface $model.getInterfaceClazzName() $model.getInterfaceImplements(){
 
 #foreach ( $field in $model.getAllFields() )

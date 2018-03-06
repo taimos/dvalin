@@ -34,6 +34,7 @@ public class EventDef implements IGeneratorDefinition {
     private String parentName;
     private Integer parentVersion;
     private String parentPkgName;
+    private String domain;
 
     /**
      * @return the comment
@@ -158,6 +159,21 @@ public class EventDef implements IGeneratorDefinition {
      */
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    /**
+     * @return the domain
+     */
+    @XmlAttribute(required = true)
+    public String getDomain() {
+        return this.domain;
+    }
+
+    /**
+     * @param domain the domain to set
+     */
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
     /**

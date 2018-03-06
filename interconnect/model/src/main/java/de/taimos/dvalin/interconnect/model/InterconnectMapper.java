@@ -20,10 +20,6 @@ package de.taimos.dvalin.interconnect.model;
  * #L%
  */
 
-import java.io.IOException;
-
-import org.joda.time.DateTime;
-
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -32,6 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import org.joda.time.DateTime;
+
+import java.io.IOException;
 
 /**
  * Utility class mapping JSON data to {@link InterconnectObject} and vice versa.
@@ -91,8 +90,7 @@ public final class InterconnectMapper {
     public static String toJson(InterconnectObject object) throws IOException {
         return InterconnectMapper.mapper.writeValueAsString(object);
     }
-    
-    
+
     /**
      * Returns a clone of the given object using JSON (de)serialization.
      *

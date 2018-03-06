@@ -240,7 +240,7 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
      * @return all fields used within the ivo definition which are neither of type Collection or Map
      */
     public List getNoCollectionFields() {
-        return ListUtils.removeAll(this.allMemberDefs, this.collectionMemberDefs);
+        return ListUtils.removeAll(ListUtils.removeAll(this.allMemberDefs, this.collectionMemberDefs), this.mapMemberDefs);
     }
 
     /**

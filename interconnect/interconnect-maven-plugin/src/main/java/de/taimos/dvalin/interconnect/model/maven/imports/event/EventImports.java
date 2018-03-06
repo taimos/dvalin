@@ -1,6 +1,7 @@
 package de.taimos.dvalin.interconnect.model.maven.imports.event;
 
 import de.taimos.dvalin.interconnect.model.event.AbstractEvent;
+import de.taimos.dvalin.interconnect.model.event.AbstractEventBuilder;
 import de.taimos.dvalin.interconnect.model.event.IEventBuilder;
 import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
@@ -26,6 +27,7 @@ public class EventImports extends BaseEventImports {
         super.initFromDefintion(ivoDefinition, model);
         if(!model.hasParentClazz()) {
             this.with(AbstractEvent.class);
+            this.with(AbstractEventBuilder.class);
         }
     }
 }

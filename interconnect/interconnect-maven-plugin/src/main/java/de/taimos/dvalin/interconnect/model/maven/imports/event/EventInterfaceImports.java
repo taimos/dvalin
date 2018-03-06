@@ -1,5 +1,6 @@
 package de.taimos.dvalin.interconnect.model.maven.imports.event;
 
+import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel;
 import de.taimos.dvalin.interconnect.model.maven.model.event.AbstractEventModel;
@@ -17,6 +18,7 @@ public class EventInterfaceImports extends BaseEventImports {
         this.withNullable();
         this.withNonnull();
         this.withJsonTypeInfo();
+        this.with(EventDomain.class);
     }
 
     @Override

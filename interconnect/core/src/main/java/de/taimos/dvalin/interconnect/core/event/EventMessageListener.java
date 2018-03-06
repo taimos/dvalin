@@ -23,6 +23,7 @@ package de.taimos.dvalin.interconnect.core.event;
 import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.interconnect.core.MessageConnector;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
+import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.IEventHandler;
@@ -32,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.MessageListenerContainer;
 import org.springframework.util.ErrorHandler;
@@ -65,9 +68,10 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
     @Autowired
     private PooledConnectionFactory jmsFactory;
     @Autowired
-    private Collection<IEventHandler<IEvent>> eventHandlers;
+    private ApplicationContext applicationContext;
 
-    private HashSet<MessageListenerContainer> listeners;
+    private Set<IEventHandler> eventHandlers;
+    private Set<MessageListenerContainer> listeners;
 
     /** */
     public EventMessageListener() {
@@ -78,7 +82,15 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
     @PostConstruct
     public void initEventListeners() {
         this.listeners = new HashSet<>();
+        this.eventHandlers = new HashSet<>();
+        for(Object o : this.applicationContext.getBeansWithAnnotation(EventHandler.class).values()) {
+            if(o instanceof IEventHandler) {
+                this.eventHandlers.add((IEventHandler) o);
+            }
+        }
+
         for(String domain : this.getDomains()) {
+            this.logger.info("Registered EventListener for topic {}", domain);
             DefaultMessageListenerContainer dmlc = this.createQueueListener(domain);
             this.listeners.add(dmlc);
         }
@@ -103,10 +115,10 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
                 if(secure) {
                     MessageConnector.decryptMessage(textMessage);
                 }
-                final IEvent eventIn = InterconnectMapper.fromJson(textMessage.getText(), IEvent.class);
-                for(IEventHandler<IEvent> eventHandler : this.eventHandlers) {
-                    if(eventHandler != null && eventHandler.getEventType().isAssignableFrom(eventIn.getClass())) {
-                        eventHandler.handleEvent(eventIn);
+                final InterconnectObject eventIn = InterconnectMapper.fromJson(textMessage.getText(), InterconnectObject.class);
+                for(IEventHandler eventHandler : this.eventHandlers) {
+                    if(eventHandler != null && eventIn.getClass().isAssignableFrom(eventHandler.getEventType())) {
+                        eventHandler.handleEvent((IEvent) eventIn);
                     }
                 }
             }
@@ -136,15 +148,19 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
 
     private Collection<String> getDomains() {
         Set<String> result = new HashSet<>();
-        for(IEventHandler<IEvent> eventHandler : this.eventHandlers) {
+        if(this.eventHandlers == null || this.eventHandlers.isEmpty()) {
+            return result;
+        }
+        for(IEventHandler eventHandler : this.eventHandlers) {
             if(eventHandler == null || eventHandler.getEventType() == null) {
                 continue;
             }
-            Annotation domainAnnotation = eventHandler.getEventType().getAnnotation(EventDomain.class);
-            if(domainAnnotation != null && !((EventDomain) domainAnnotation).name().isEmpty()) {
-                result.add(((EventDomain) domainAnnotation).name());
+            Annotation domainAnnotation = AnnotationUtils.findAnnotation(eventHandler.getEventType(), EventDomain.class);
+            if(domainAnnotation != null && !((EventDomain) domainAnnotation).value().isEmpty()) {
+                result.add(((EventDomain) domainAnnotation).value());
             }
         }
         return result;
     }
+
 }

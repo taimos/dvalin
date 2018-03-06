@@ -20,7 +20,17 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.InterconnectMapper;
+import de.taimos.dvalin.interconnect.model.event.EventDomain;
+import de.taimos.dvalin.interconnect.model.event.IEvent;
+import org.springframework.core.annotation.AnnotationUtils;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 
 public class EventSender extends ToTopicSender {
 
@@ -43,12 +53,36 @@ public class EventSender extends ToTopicSender {
     }
 
 
-    /**
-     * @param object    the object
-     * @param topicName name of the topic you want to use
-     */
     @Override
     public void send(Serializable object, String topicName) {
-        super.send(object, this.virtualTopicPrefix + "." + topicName);
+        if(object instanceof IEvent) {
+            this.send((IEvent) object);
+        } else {
+            super.send(object, topicName);
+        }
+    }
+
+    /**
+     * @param object the object
+     */
+    public void send(IEvent object) {
+        Annotation domainAnnotation = AnnotationUtils.findAnnotation(object.getClass(), EventDomain.class);
+        if(domainAnnotation == null) {
+            this.logger.error("The event {} has no domain annotation", object.getClass().getSimpleName());
+            return;
+        }
+        if(((EventDomain) domainAnnotation).value().isEmpty()) {
+            this.logger.error("The domainname for the event {} is empty", object.getClass().getSimpleName());
+            return;
+        }
+        super.send(object, this.virtualTopicPrefix + "." + ((EventDomain) domainAnnotation).value());
+    }
+
+    protected Message getMessage(Serializable object, Session session) throws JMSException, IOException {
+        if(object instanceof IEvent) {
+            String json = InterconnectMapper.toJson((IEvent) object);
+            return session.createTextMessage(json);
+        }
+        return session.createObjectMessage(object);
     }
 }

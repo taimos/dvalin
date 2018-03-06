@@ -46,7 +46,6 @@ public class IVOFilterImports extends IVOInterfaceImports {
             }
         }
         if(!model.hasParentClazz()) {
-            System.err.println("ADDED ABSTRACTIVO");
             this.with(AbstractIVO.class);
         }
     }

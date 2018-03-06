@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ package de.taimos.dvalin.interconnect.core;
  * limitations under the License.
  * #L%
  */
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
@@ -27,14 +28,16 @@ import org.slf4j.LoggerFactory;
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.Topic;
+import java.io.IOException;
 import java.io.Serializable;
 
 public abstract class ToTopicSender {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private volatile PooledConnectionFactory pooledConnectionFactory;
+    protected volatile PooledConnectionFactory pooledConnectionFactory;
 
     protected ToTopicSender() {
         try {
@@ -69,11 +72,15 @@ public abstract class ToTopicSender {
         this.pooledConnectionFactory.stop();
     }
 
+    protected Message getMessage(Serializable object, Session session) throws JMSException, IOException {
+        return session.createObjectMessage(object);
+    }
+
     /**
      * @param object    the object
      * @param topicName name of the topic you want to use
      */
-    public void send(Serializable object, String topicName) {
+    protected void send(Serializable object, String topicName) {
         Connection connection = null;
         try {
             connection = this.pooledConnectionFactory.createConnection();
@@ -85,7 +92,7 @@ public abstract class ToTopicSender {
                 try {
                     topicmp = session.createProducer(topic);
                     topicmp.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-                    topicmp.send(session.createObjectMessage(object));
+                    topicmp.send(this.getMessage(object, session));
                 } finally {
                     if(topicmp != null) {
                         try {
@@ -104,7 +111,7 @@ public abstract class ToTopicSender {
                     }
                 }
             }
-        } catch(JMSException e) {
+        } catch(JMSException | IOException e) {
             this.logger.error("Can not send message", e);
         } finally {
             if(connection != null) {

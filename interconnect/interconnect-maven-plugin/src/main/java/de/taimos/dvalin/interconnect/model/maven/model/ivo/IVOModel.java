@@ -36,7 +36,6 @@ public class IVOModel extends AbstractIVOModel {
         return result;
     }
 
-
     @Override
     public String getParentClazzName() {
         return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : this.getParentClazzName();
@@ -52,11 +51,13 @@ public class IVOModel extends AbstractIVOModel {
         return this.definition.getParentName() == null ? AbstractIVO.class.getCanonicalName() : this.definition.getParentPkgName() + "." + this.getParentClazzName();
     }
 
-    /**
-     * @return wheteher the ivo has a parent object or not
-     */
+    @Override
     public boolean hasParentClazz() {
-        return this.definition.getParentName() != null;
+        boolean res = this.definition.getParentName() != null;
+        if(res) {
+            res = !this.definition.getParentName().trim().isEmpty();
+        }
+        return res;
     }
 
 

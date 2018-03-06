@@ -28,4 +28,11 @@ public abstract class AbstractEventModel extends AbstractInterconnectModel<Event
     public String getParentClazzPath() {
         return this.definition.getParentPkgName() + "." + this.getParentClazzName();
     }
+
+    /**
+     * @return the domain
+     */
+    public String getDomain() {
+        return this.definition.getDomain();
+    }
 }

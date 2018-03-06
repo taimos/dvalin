@@ -228,14 +228,14 @@ public class IVODef implements IGeneratorDefinition {
      * @return the identity
      */
     @XmlAttribute(required = false)
-    public boolean getIdentity() {
+    public Boolean getIdentity() {
         return this.identity;
     }
 
     /**
      * @param identity the identity to set
      */
-    public void setIdentity(boolean identity) {
+    public void setIdentity(Boolean identity) {
         this.identity = identity;
     }
 
@@ -288,14 +288,14 @@ public class IVODef implements IGeneratorDefinition {
      * @return the auditing
      */
     @XmlAttribute
-    public boolean getAuditing() {
+    public Boolean getAuditing() {
         return this.auditing;
     }
 
     /**
      * @param auditing the auditing to set
      */
-    public void setAuditing(boolean auditing) {
+    public void setAuditing(Boolean auditing) {
         this.auditing = auditing;
     }
 

@@ -50,6 +50,13 @@ public class EventModel extends AbstractEventModel {
     }
 
     /**
+     * @return the parent builder extends, or null
+     */
+    public String getParentBuilder() {
+        return this.hasParentClazz() ? "extends Abstract" + this.getParentClazzName() + "Builder<E>" : "extends AbstractEventBuilder<E>";
+    }
+
+    /**
      * @return wheteher the ivo has a parent object or not
      */
     public boolean hasParentClazz() {
