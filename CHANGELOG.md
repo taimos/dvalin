@@ -1,4 +1,9 @@
 # current master
+* Added support for internationalization, see the i18n module documentation
+* Interconnect improvements:
+    * Reworked IVO Generator for better readability and easier extensions
+    * Introduced Event generation via interconnect-maven-plugin
+    * Introduced Event support to interconnect-core 
 
 # Version 1.23
 * Update dependencies
