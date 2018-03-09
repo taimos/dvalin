@@ -77,7 +77,7 @@ public class DatabaseConfig {
     }
 
 
-    @Bean
+    @Bean("liquibase")
     public SpringLiquibase liquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
