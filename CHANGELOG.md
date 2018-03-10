@@ -1,5 +1,6 @@
 # current master
 * fixed a bug in jpa where liquibase could be executed after hibernate context was created
+* fix swagger default URL to contain correct port (#60)
 
 # Version 1.23
 * Update dependencies
