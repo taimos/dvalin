@@ -20,32 +20,19 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.bson.types.ObjectId;
-import org.jongo.Find;
 import org.jongo.Jongo;
-import org.jongo.MongoCollection;
 import org.jongo.ResultHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StreamUtils;
 
 import com.mongodb.DBObject;
-import com.mongodb.MapReduceCommand;
-import com.mongodb.MapReduceCommand.OutputType;
-import com.mongodb.MapReduceOutput;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
-import com.mongodb.client.gridfs.GridFSBuckets;
 
 /**
  * Copyright 2015 Hoegernet<br>
@@ -64,25 +51,17 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     private Jongo jongo;
     @Autowired
     private MongoDatabase db;
-    
-    protected MongoCollection collection;
+
+    protected MongoDBDataAccess<T> dataAccess;
 
     @PostConstruct
     public final void init() {
-        this.collection = this.jongo.getCollection(this.getCollectionName());
+        this.dataAccess = new MongoDBDataAccess<>(this.jongo, this.db, this.getEntityClass());
         this.customInit(this.db, this.jongo);
     }
 
     protected void customInit(MongoDatabase db, Jongo jongo) {
         // implement if needed
-    }
-
-    /**
-     * @return the name of the mongo collection<br>
-     * defaults to the entity's simple name
-     */
-    protected String getCollectionName() {
-        return this.getEntityClass().getSimpleName();
     }
 
     /**
@@ -100,7 +79,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return an {@link Iterable} with the result entries
      */
     protected final <R> Iterable<R> mapReduce(String name, final MapReduceResultHandler<R> conv) {
-        return this.mapReduce(name, null, null, null, conv);
+        return this.dataAccess.mapReduce(name, conv);
     }
 
     /**
@@ -118,60 +97,17 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @throws RuntimeException if resources cannot be read
      */
     protected final <R> Iterable<R> mapReduce(String name, DBObject query, DBObject sort, Map<String, Object> scope, final MapReduceResultHandler<R> conv) {
-        String map = this.getMRFunction(name, "map");
-        String reduce = this.getMRFunction(name, "reduce");
-
-        MapReduceCommand mrc = new MapReduceCommand(this.collection.getDBCollection(), map, reduce, null, OutputType.INLINE, query);
-        String finalizeFunction = this.getMRFunction(name, "finalize");
-        if (finalizeFunction != null) {
-            mrc.setFinalize(finalizeFunction);
-        }
-        if (sort != null) {
-            mrc.setSort(sort);
-        }
-        if (scope != null) {
-            mrc.setScope(scope);
-        }
-        MapReduceOutput mr = this.collection.getDBCollection().mapReduce(mrc);
-        return new ConverterIterable<R>(mr.results().iterator(), conv);
-    }
-
-    private String getMRFunction(String name, String type) {
-        try {
-            InputStream stream = this.getClass().getResourceAsStream("/mongodb/" + name + "." + type + ".js");
-            if (stream != null) {
-                return StreamUtils.copyToString(stream, Charset.defaultCharset());
-            }
-            return null;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read resource", e);
-        }
+        return this.dataAccess.mapReduce(name, query, sort, scope, conv);
     }
 
     @Override
     public final List<T> findList() {
-        Iterable<T> as = this.collection.find().sort("{_id:1}").as(this.getEntityClass());
-        return this.convertIterable(as);
+        return this.dataAccess.findList();
     }
-    
+
     @Override
     public List<T> findList(String sortProp, Integer sortDirection, Integer limit, Integer skip) {
-        return this.findSortedByQuery("{}", "{" + sortProp + ":" + sortDirection + "}", skip, limit);
-    }
-    
-    /**
-     * converts the given {@link Iterable} to a {@link List}
-     *
-     * @param <P> the element type
-     * @param as  the {@link Iterable}
-     * @return the converted {@link List}
-     */
-    protected final <P> List<P> convertIterable(Iterable<P> as) {
-        List<P> objects = new ArrayList<>();
-        for (P mp : as) {
-            objects.add(mp);
-        }
-        return objects;
+        return this.dataAccess.findList(sortProp, sortDirection, limit, skip);
     }
 
     /**
@@ -182,7 +118,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final List<T> findByQuery(String query, Object... params) {
-        return this.findSortedByQuery(query, null, params);
+        return this.dataAccess.findByQuery(query, params);
     }
 
     /**
@@ -194,7 +130,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final List<T> findSortedByQuery(String query, String sort, Object... params) {
-        return this.findSortedByQuery(query, sort, (Integer) null, (Integer) null, params);
+        return this.dataAccess.findSortedByQuery(query, sort, params);
     }
 
     /**
@@ -211,7 +147,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final <P> List<P> findSortedByQuery(String query, String sort, String projection, Class<P> as, Object... params) {
-        return this.findSortedByQuery(query, sort, null, null, projection, as, params);
+        return this.dataAccess.findSortedByQuery(query, sort, projection, as, params);
     }
 
     /**
@@ -228,7 +164,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final <P> List<P> findSortedByQuery(String query, String sort, String projection, ResultHandler<P> handler, Object... params) {
-        return this.findSortedByQuery(query, sort, null, null, projection, handler, params);
+        return this.dataAccess.findSortedByQuery(query, sort, projection, handler, params);
     }
 
     /**
@@ -242,7 +178,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final List<T> findSortedByQuery(String query, String sort, Integer skip, Integer limit, Object... params) {
-        return this.findSortedByQuery(query, sort, skip, limit, null, this.getEntityClass(), params);
+        return this.dataAccess.findSortedByQuery(query, sort, skip, limit, params);
     }
 
     /**
@@ -261,8 +197,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final <P> List<P> findSortedByQuery(String query, String sort, Integer skip, Integer limit, String projection, Class<P> as, Object... params) {
-        Find find = this.createFind(query, sort, skip, limit, projection, params);
-        return this.convertIterable(find.as(as));
+        return this.dataAccess.findSortedByQuery(query, sort, skip, limit, projection, as, params);
     }
 
     /**
@@ -281,25 +216,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the list of elements found
      */
     protected final <P> List<P> findSortedByQuery(String query, String sort, Integer skip, Integer limit, String projection, ResultHandler<P> handler, Object... params) {
-        Find find = this.createFind(query, sort, skip, limit, projection, params);
-        return this.convertIterable(find.map(handler));
-    }
-
-    private Find createFind(String query, String sort, Integer skip, Integer limit, String projection, Object... params) {
-        Find find = this.collection.find(query, params);
-        if ((sort != null) && !sort.isEmpty()) {
-            find.sort(sort);
-        }
-        if ((projection != null) && !projection.isEmpty()) {
-            find.projection(projection);
-        }
-        if (skip != null) {
-            find.skip(skip);
-        }
-        if (limit != null) {
-            find.limit(limit);
-        }
-        return find;
+        return this.dataAccess.findSortedByQuery(query, sort, skip, limit, projection, handler, params);
     }
 
     /**
@@ -311,29 +228,20 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
      * @return the first element found or <code>null</code> if none is found
      */
     protected final T findFirstByQuery(String query, String sort, Object... params) {
-        Find find = this.collection.find(query, params);
-        if ((sort != null) && !sort.isEmpty()) {
-            find.sort(sort);
-        }
-        Iterable<T> as = find.limit(1).as(this.getEntityClass());
-        Iterator<T> iterator = as.iterator();
-        if (iterator.hasNext()) {
-            return iterator.next();
-        }
-        return null;
+        return this.dataAccess.findFirstByQuery(query, sort, params).orElse(null);
     }
 
     @Override
     public final T findById(String id) {
-        return this.collection.findOne(new ObjectId(id)).as(this.getEntityClass());
+        return this.dataAccess.findByObjectId(id).orElse(null);
     }
 
     @Override
     public final T save(T object) {
         this.beforeSave(object);
-        this.collection.save(object);
-        this.afterSave(object);
-        return object;
+        T saved = this.dataAccess.save(object);
+        this.afterSave(saved);
+        return saved;
     }
 
     /**
@@ -364,7 +272,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     @Override
     public final void delete(String id) {
         this.beforeDelete(id);
-        this.collection.remove(new ObjectId(id));
+        this.dataAccess.deleteByObjectId(id);
         this.afterDelete(id);
     }
 
@@ -377,12 +285,9 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     protected void afterDelete(String id) {
         //
     }
-    
+
     protected GridFSBucket getGridFSBucket(String bucket) {
-        if (bucket == null || bucket.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        return GridFSBuckets.create(this.db, bucket);
+        return this.dataAccess.getGridFSBucket(bucket);
     }
 
 }

@@ -20,8 +20,8 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoDatabase;
+import java.util.List;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
@@ -31,7 +31,8 @@ import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
 import org.jongo.bson.BsonDocument;
 
-import java.util.List;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoDatabase;
 
 public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends AbstractMongoDAO<T> implements ICrudAuditedDAO<T> {
 
@@ -41,7 +42,7 @@ public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends 
 
     @Override
     protected void customInit(MongoDatabase db, Jongo jongo) {
-        String collectionName = this.getCollectionName() + "_history";
+        String collectionName = this.dataAccess.getCollectionName() + "_history";
         this.jongoHistoryCollection = jongo.getCollection(collectionName);
         this.historyCollection = db.getCollection(collectionName);
         this.jongoMapper = jongo.getMapper();
@@ -63,7 +64,7 @@ public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends 
     @Override
     public List<T> findHistoryElements(String id) {
         Iterable<T> as = this.jongoHistoryCollection.find("{originalId : #}", new ObjectId(id)).sort("{version: -1}").as(this.getEntityClass());
-        return this.convertIterable(as);
+        return this.dataAccess.convertIterable(as);
     }
 
     @Override

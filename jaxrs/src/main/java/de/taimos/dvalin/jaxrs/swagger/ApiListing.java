@@ -72,11 +72,11 @@ public class ApiListing {
 
     @Autowired
     private SwaggerScanner scanner;
+
     @Autowired(required = false)
     private SwaggerConfig config;
 
     private final AtomicReference<Swagger> swaggerCache = new AtomicReference<>();
-
 
     protected synchronized Swagger scan() {
         Set<Class<?>> classes = this.scanner.classes();
@@ -97,7 +97,8 @@ public class ApiListing {
     }
 
     private void configureServerURL(Swagger swagger) {
-        URLUtils.SplitURL split = URLUtils.splitURL(System.getProperty(SpringCXFProperties.SERVER_URL, "localhost"));
+        String serverUrl = System.getProperty(SpringCXFProperties.SERVER_URL, "http://localhost:" + System.getProperty(SpringCXFProperties.JAXRS_BINDPORT, System.getProperty("svc.port", "8080")));
+        URLUtils.SplitURL split = URLUtils.splitURL(serverUrl);
         swagger.scheme(Scheme.forValue(split.getScheme()));
         swagger.host(split.getHost() + ":" + split.getPort());
         swagger.basePath(System.getProperty(SpringCXFProperties.JAXRS_PATH));
@@ -174,7 +175,7 @@ public class ApiListing {
     }
 
     protected Map<String, List<String>> getQueryParams(MultivaluedMap<String, String> params) {
-        Map<String, List<String>> output = new HashMap<String, List<String>>();
+        Map<String, List<String>> output = new HashMap<>();
         if (params != null) {
             for (String key : params.keySet()) {
                 List<String> values = params.get(key);
@@ -185,7 +186,7 @@ public class ApiListing {
     }
 
     protected Map<String, String> getCookies(HttpHeaders headers) {
-        Map<String, String> output = new HashMap<String, String>();
+        Map<String, String> output = new HashMap<>();
         if (headers != null) {
             for (String key : headers.getCookies().keySet()) {
                 Cookie cookie = headers.getCookies().get(key);
@@ -196,7 +197,7 @@ public class ApiListing {
     }
 
     protected Map<String, List<String>> getHeaders(HttpHeaders headers) {
-        Map<String, List<String>> output = new HashMap<String, List<String>>();
+        Map<String, List<String>> output = new HashMap<>();
         if (headers != null) {
             for (String key : headers.getRequestHeaders().keySet()) {
                 List<String> values = headers.getRequestHeaders().get(key);
