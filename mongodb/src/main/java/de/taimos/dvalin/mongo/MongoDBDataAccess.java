@@ -306,6 +306,10 @@ public class MongoDBDataAccess<T> {
         this.collection.remove("{\"_id\":#}", id);
     }
 
+    public final void delete(String query, Object... parameter) {
+        this.collection.remove(query, parameter);
+    }
+
     public final Update update(ObjectId id) {
         return this.collection.update(id);
     }
