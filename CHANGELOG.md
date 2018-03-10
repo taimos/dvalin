@@ -1,4 +1,5 @@
 # current master
+* fixed a bug in jpa where liquibase could be executed after hibernate context was created
 
 # Version 1.23
 * Update dependencies
