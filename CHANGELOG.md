@@ -1,4 +1,9 @@
 # current master
+* Added support for internationalization, see the i18n module documentation
+* Interconnect improvements:
+    * Reworked IVO Generator for better readability and easier extensions
+    * Introduced Event generation via interconnect-maven-plugin
+    * Introduced Event support to interconnect-core 
 * fixed a bug in jpa where liquibase could be executed after hibernate context was created
 * fix swagger default URL to contain correct port (#60)
 * refactor MongoDB data access to utility class

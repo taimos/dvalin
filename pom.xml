@@ -570,6 +570,7 @@
         <module>jpa</module>
         <module>dynamodb</module>
         <module>interconnect</module>
+        <module>i18n</module>
         <module>archetypes</module>
     </modules>
 </project>

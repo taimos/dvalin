@@ -1,0 +1,56 @@
+package $model.getPackageName();
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ */
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@EventDomain("$model.getDomain()")
+public interface $model.getInterfaceClazzName() $model.getInterfaceImplements(){
+
+#foreach ( $field in $model.getAllFields() )
+	/**
+	 * property constant for $field.name
+	 * property comment: $field.comment
+	 */
+	public static final String PROP_$field.name.toUpperCase() = "$field.name";
+#end
+
+
+#foreach ( $field in $model.getAllFields() )
+	/**
+	 * $field.comment
+#if ( $field.required )
+	 * This field is required.
+#else
+	 * This field is optional, thus may be null.
+#end
+	 *
+	 * @return the value for $field.name
+	 *
+	 **/
+#if ( $field.required )
+    @Nonnull
+#else
+	@Nullable
+#end
+	public $field.getTypeAsString( true ) get$tool.upperCaseFirst( $field.name )();
+
+#end
+
+	/**
+	 * @return a clone
+	 */
+	public $model.getInterfaceClazzName() clone();
+
+}

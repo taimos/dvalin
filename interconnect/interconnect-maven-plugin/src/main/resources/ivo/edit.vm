@@ -1,0 +1,123 @@
+package ${model.getPackageName()}.requests;
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+import ${model.getPackageName()}.${model.getClazzName()};
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+
+/**
+* $model.getComment()
+*
+* @author $model.getAuthor()
+*/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonDeserialize(builder = ${clazzName}.${clazzName}Builder.class)
+public class ${clazzName} extends $model.getParentClazzName() implements I${clazzName} {
+
+private static final long serialVersionUID = ${model.getSerialVersion()}L;
+
+	/**
+	* Builder for the read-only ivo
+	*
+	*/
+#if ($model.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+	@JsonPOJOBuilder()
+	public static class ${clazzName}Builder extends Abstract${clazzName}Builder<${clazzName}Builder> implements IVOBuilder {
+
+		// nothing to do here, really
+
+	}
+
+	/**
+	* Abstract Builder for the read-only ivo
+	*
+	* @param <E> type of builder
+	*/
+	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>> $model.getParentBuilder() {
+		private ${model.getClazzName()} value;
+		/**
+		 * This field is required.
+		 * the object
+		 *
+		 * @param obj the value to set
+		 * @return the builder
+		 *
+		 **/
+		@Nonnull
+		@SuppressWarnings("unchecked")
+		public E withValue(${model.getClazzName()} obj) {
+			this.value = obj;
+			return (E) this;
+		}
+
+        /**
+         * @return the field value
+         **/
+        public ${model.getClazzName()} getValue() {
+            return this.value;
+        }
+
+		protected void internalFillFromIVO(${clazzName} ivo) {
+			this.withValue(ivo.value);
+		}
+
+		/**
+		 * @return the entry
+		 **/
+		public ${clazzName} build() {
+			if (this.value == null) {
+				throw new IllegalStateException("The attribute value must not be null!");
+			}
+			${clazzName} result = new ${clazzName}(this);
+			return result;
+		}
+	}
+
+	private final ${model.getClazzName()} value;
+
+	protected ${clazzName}(Abstract${clazzName}Builder<?> builder) {
+		this.value = builder.value;
+	}
+
+	public ${model.getClazzName()} getValue() {
+		return this.value;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${clazzName}Builder builder = new ${clazzName}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+	@Override
+	public ${clazzName} clone() {
+		return (${clazzName}) super.clone();
+	}
+
+
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " " + this.value;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof ${clazzName}) {
+			return this.value.equals(((${clazzName})obj).value);
+		}
+		return false;
+	}
+#end
+
+}

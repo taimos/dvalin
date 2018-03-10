@@ -1,0 +1,184 @@
+package ${model.getPackageName()}.requests;
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import ${model.getPackageName()}.${model.getClazzName()};
+import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
+
+/**
+* $model.getComment()
+*
+* @author $model.getAuthor()
+*/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonDeserialize(builder = ${clazzName}.${clazzName}Builder.class)
+public class ${clazzName} extends $model.getParentClazzName() implements I${clazzName} {
+
+private static final long serialVersionUID = ${model.getSerialVersion()}L;
+
+	/**
+	* Builder for the read-only ivo
+	*
+	*/
+#if ($model.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+	@JsonPOJOBuilder()
+	public static class ${clazzName}Builder extends Abstract${clazzName}Builder<${clazzName}Builder> implements IVOBuilder {
+
+		// nothing to do here, really
+
+	}
+
+	/**
+	* Abstract Builder for the read-only ivo
+	*
+	* @param <E> type of builder
+	*/
+	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>> $model.getParentBuilder() {
+
+        private List<String> ids = new ArrayList<>();
+#if ( $model.isAudited() )
+		private Integer version;
+#end
+
+        /**
+		 * This field is required.
+		 * the id
+		 *
+		 * @param id the value to set
+		 * @return the builder
+		 *
+		 **/
+		@Nonnull
+		@SuppressWarnings("unchecked")
+		public E withId(String id) {
+			this.ids = Collections.singletonList(id);
+			return (E) this;
+		}
+
+        /**
+        * This field is required.
+        * the list of ids
+        *
+        * @param ids the value to set
+        * @return the builder
+        *
+        **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        public E withIds(List<String> ids) {
+            this.ids = ids;
+            return (E) this;
+        }
+
+        /**
+        * This field is required.
+        * the id
+        *
+        * @param id the value to add
+        * @return the builder
+        *
+        **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        public E addId(String id) {
+            this.ids.add(id);
+            return (E) this;
+        }
+
+		/**
+		 * @return the ids
+		 **/
+		public List<String> getIds() {
+			return this.ids;
+		}
+
+#if ( $model.isAudited() )
+		/**
+		 * This field is optional, thus may be null.
+		 * the exact version to look for
+		 *
+		 * @param pversion the value to set
+		 * @return the builder
+		 *
+		 **/
+	 	@Nullable
+		@SuppressWarnings("unchecked")
+		public E withVersion(Integer pversion) {
+			this.version = pversion;
+			return (E) this;
+		}
+
+		/**
+		 * @return the field value
+		 **/
+		public Integer getVersion() {
+			return this.version;
+		}
+#end
+
+		protected void internalFillFromIVO(${clazzName} ivo) {
+			this.withIds(ivo.ids);
+#if ( $model.isAudited() )
+			this.withVersion(ivo.version);
+#end
+		}
+
+		/**
+		 * @return the entry
+		 **/
+		public ${clazzName} build() {
+			if (this.ids == null) {
+				throw new IllegalStateException("The attribute ids must not be null!");
+			}
+			${clazzName} result = new ${clazzName}(this);
+			return result;
+		}
+	}
+
+	private final List<String> ids;
+#if ( $model.isAudited() )
+	private final Integer version;
+#end
+
+	protected ${clazzName}(Abstract${clazzName}Builder<?> builder) {
+		this.ids = builder.ids;
+#if ( $model.isAudited() )
+		this.version = builder.version;
+#end
+	}
+
+	public List<String> getIds() {
+		return this.ids;
+	}
+
+#if ( $model.isAudited() )
+	public Integer getVersion() {
+		return this.version;
+	}
+#end
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${clazzName}Builder builder = new ${clazzName}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+	@Override
+	public ${clazzName} clone() {
+		return (${clazzName}) super.clone();
+	}
+
+}

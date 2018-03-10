@@ -1,0 +1,350 @@
+package $model.getPackageName();
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ */
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonDeserialize(builder = ${model.getClazzName()}.${model.getClazzName()}Builder.class)
+public class $model.getClazzName() extends $model.getParentClazzName() implements $model.getInterfaceClazzName() {
+
+	private static final long serialVersionUID = ${model.getSerialVersion()}L;
+
+	/**
+	* Builder for the read-only ivo
+	*
+	*/
+#if ($model.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+	@JsonPOJOBuilder()
+	public static class ${model.getClazzName()}Builder extends Abstract${model.getClazzName()}Builder<${model.getClazzName()}Builder> implements IVOBuilder {
+		// nothing to do here, really
+	}
+
+	/**
+	* Abstract Builder for the read-only ivo
+	*
+	* @param <E> type of builder
+	*/
+	public abstract static class Abstract${model.getClazzName()}Builder<E extends Abstract${model.getClazzName()}Builder<?>> $model.getParentBuilder() {
+
+#foreach ( $field in $model.getAllFields() )
+		private $field.getTypeAsString(false) $field.getName();
+#end
+#if ( $model.isAudited() )
+		private Integer version;
+		private DateTime lastChange;
+		private String lastChangeUser;
+#end
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+		private String id;
+
+		/**
+		 * the id
+		 *
+		 * @param pid the value to set
+		 * @return the builder
+		 *
+		 **/
+		@SuppressWarnings("unchecked")
+		public E withId(String pid) {
+			this.id = pid;
+			return (E) this;
+		}
+
+		/**
+         * @return the id
+         **/
+        public String getId() {
+            return this.id;
+        }
+
+#end
+#if ( $model.isAudited() )
+		/**
+		 * This field is optional, thus may be null.
+		 * The version
+		 *
+		 * @param pversion the value to set
+		 * @return the builder
+		 *
+		 **/
+	 	@Nullable
+		@SuppressWarnings("unchecked")
+		public E withVersion(Integer pversion) {
+			this.version = pversion;
+			return (E) this;
+		}
+
+		/**
+         * @return the id
+         **/
+        public Integer getVersion() {
+            return this.version;
+        }
+
+		/**
+		 * This field is optional, thus may be null.
+		 * The last change date
+		 *
+		 * @param plastChange the value to set
+		 * @return the builder
+		 *
+		 **/
+	 	@Nullable
+		@SuppressWarnings("unchecked")
+		public E withLastChange(DateTime plastChange) {
+			this.lastChange = plastChange;
+			return (E) this;
+		}
+
+		/**
+         * @return the last change
+         **/
+        public DateTime getLastChange() {
+            return this.lastChange;
+        }
+
+		/**
+		 * This field is optional, thus may be null.
+		 * The last change user id
+		 *
+		 * @param plastChangeUser the value to set
+		 * @return the builder
+		 *
+		 **/
+	 	@Nullable
+		@SuppressWarnings("unchecked")
+		public E withLastChangeUser(String plastChangeUser) {
+			this.lastChangeUser = plastChangeUser;
+			return (E) this;
+		}
+
+		/**
+         * @return the last change user id
+         **/
+        public String getLastChangeUser() {
+            return this.lastChangeUser;
+        }
+
+#end
+#foreach (  $field in $model.getAllFields() )
+		/**
+#if ( $field.required )
+		 * This field is required.
+#else
+		 * This field is optional, thus may be null.
+#end
+		 * $field.comment
+		 *
+		 * @param p$field.name the value to set
+		 * @return the builder
+		 *
+		 **/
+#if ( $field.required )
+		@Nonnull
+#else
+	 	@Nullable
+#end
+		@SuppressWarnings("unchecked")
+		public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+			this.$field.name = p$field.name;
+			return (E) this;
+		}
+
+		/**
+		 * @return the field value
+		 **/
+		public $field.getTypeAsString(false) get$tool.upperCaseFirst( $field.name )() {
+			return this.$field.name;
+		}
+
+#end
+
+		protected void internalFillFromIVO($model.getClazzName() ivo) {
+#if ( $model.hasParentClazz() )
+			super.internalFillFromIVO(ivo);
+#end
+#foreach ( $field in $model.getAllFields() )
+			this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
+#end
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+			this.withId(ivo.id);
+#end
+#if ( $model.isAudited )
+			this.withVersion(ivo.version);
+			this.withLastChange(ivo.lastChange);
+			this.withLastChangeUser(ivo.lastChangeUser);
+#end
+		}
+
+		/**
+		 * @return the entry
+		 **/
+#if ( $model.hasParentClazz() )
+		@Override
+#end
+		public $model.getClazzName() build() {
+#foreach ( $field in $model.getAllFields() )
+#if ( $field.required )
+			if (this.$field.name == null) {
+				throw new IllegalStateException("The attribute $field.name must not be null!");
+			}
+#end
+#end
+			$model.getClazzName() result = new $model.getClazzName()(this);
+			return result;
+		}
+
+	}
+
+#foreach ( $field in $model.getAllFields() )
+	private final #if ( $field.javaTransientFlag ) transient #end $field.getTypeAsString( false ) $field.name;
+#end
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+	private final  String id;
+#end
+#if ( $model.isAudited() )
+	private final  Integer version;
+	private final  DateTime lastChange;
+	private final  String lastChangeUser;
+#end
+
+	protected $model.getClazzName()(Abstract${model.getClazzName()}Builder<?> builder) {
+#if ( $model.hasParentClazz() )
+		super(builder);
+#end
+#foreach ( $field in $model.getAllFields() )
+		this.$field.name = builder.$field.name;
+#end
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+		this.id = builder.id;
+#end
+#if ( $model.isAudited() )
+		this.version = builder.version;
+		this.lastChange = builder.lastChange;
+		this.lastChangeUser = builder.lastChangeUser;
+#end
+	}
+
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+	@Override
+	public String getId() {
+		return this.id;
+	}
+
+	@Override
+	public long getIdAsLong() {
+		try {
+			return Long.parseLong(this.id);
+		} catch (NumberFormatException e) {
+			// string not parsable
+			return -1;
+		}
+	}
+
+#end
+#if ( $model.isAudited() )
+	@Override
+	public Integer getVersion() {
+		return this.version;
+	}
+
+	@Override
+	public DateTime getLastChange() {
+		return this.lastChange;
+	}
+
+	@Override
+	public String getLastChangeUser() {
+		return this.lastChangeUser;
+	}
+
+#end
+#foreach ( $field in $model.getNoCollectionFields() )
+#if ( $field.jsonTransientFlag )
+	@JsonIgnore
+#end
+	@Override
+	public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
+		return this.$field.name;
+	}
+
+#end
+#foreach ( $field in $model.getCollectionFields() )
+#if ( $field.jsonTransientFlag )
+	@JsonIgnore
+#end
+	@Override
+	public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
+#if( $field.collectionType == "List" )
+		return this.$field.name == null ? null : Collections.unmodifiableList(this.$field.name);
+#else
+		return this.$field.name == null ? null : Collections.unmodifiableSet(this.$field.name);
+#end
+	}
+
+#end
+#foreach ( $field in $model.getMapFields() )
+#if ( $field.jsonTransientFlag )
+	@JsonIgnore
+#end
+	@Override
+	public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
+#if( $field.mapType == "Map" )
+		return this.$field.name == null ? null : Collections.unmodifiableMap(this.$field.name);
+#else
+		return this.$field.name == null ? null : Multimaps.unmodifiableMultimap(this.$field.name);
+#end
+	}
+
+#end
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${model.getClazzName()}Builder builder = new ${model.getClazzName()}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " " + this.id;
+	}
+#end
+
+	@Override
+	public $model.getClazzName() clone() {
+		return ($model.getClazzName()) super.clone();
+	}
+
+#if ( $model.isIdentity() && !$model.hasParentClazz() )
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof $model.getClazzName()) {
+			return this.id.equals((($model.getClazzName())obj).id);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+        return this.id.hashCode();
+	}
+#end
+
+#if ( $model.hasIVOEndAddition())#parse($model.getIVOEndAddition())#end
+}

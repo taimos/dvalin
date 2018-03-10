@@ -20,12 +20,15 @@ package de.taimos.dvalin.interconnect.model.maven;
  * #L%
  */
 
-import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
+import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
+import de.taimos.dvalin.interconnect.model.maven.model.event.EventModel;
+import de.taimos.dvalin.interconnect.model.maven.model.event.InterfaceEventModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.EditIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.FilterIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.IVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.InterfaceIVOModel;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
+import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
@@ -33,178 +36,138 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
-import de.taimos.dvalin.interconnect.model.metamodel.IVODef;
+import java.io.File;
 
 /**
  * Interconnect IVO generator
  */
 @Mojo(name = "generateModel", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GenerateModel extends AbstractMojo {
-    
-    private static final String IVO_TEMPLATE = "ivotemplate.vm";
-    private static final String IVO_ID_TEMPLATE = "ivoIdTemplate.vm";
-    private static final String IVO_INTERFACE_ID_TEMPLATE = "ivoInterfaceIdTemplate.vm";
-    private static final String IVO_OBJECT_TEMPLATE = "ivoObjectTemplate.vm";
-    private static final String IVO_INTERFACE_OBJECT_TEMPLATE = "ivoInterfaceObjectTemplate.vm";
-    private static final String IVO_INTERFACE_TEMPLATE = "ivointerfacetemplate.vm";
-    private static final String TARGET_DIR = "/generated-sources/model/";
-    private static final String IVO_INTERFACE_FILTER_TEMPLATE = "ivoInterfaceFilterTemplate.vm";
-    private static final String IVO_FILTER_TEMPLATE = "ivoFilterTemplate.vm";
-    
+
+
+    private static final String TARGET_DIR_EVENT = "/generated-sources/model/event/";
+
     @Component
     private BuildContext buildContext;
-    
+
     @Parameter(required = true, property = "project.build.directory")
     private String outputDirectory;
-    
-    @Parameter(required = true)
+
+    @Parameter()
+    @Deprecated
     private File[] defdirs;
-    
+
+    @Parameter()
+    private File[] ivoPaths;
+
+    @Parameter()
+    private File[] eventPaths;
+
     @Parameter(required = true, property = "project", readonly = true)
     private MavenProject project;
-    
+
     @Override
     public void execute() throws MojoExecutionException {
+        Velocity.init(GeneratorHelper.getVelocityDefaultProps());
+
+        //handle ivo generation
+        this.execute(this.ivoPaths, ModelType.IVO);
+
+        //handle event generation
+        this.execute(this.eventPaths, ModelType.EVENT);
+
+        //fallback support for old configuration
+        if(this.defdirs != null && this.defdirs.length > 0) {
+            this.getLog().warn("Please be aware that you are still using a deprecated configuration. This configuration option might be removed in the future. Please use \"ivoPaths\" and \"enventPaths\" instead of \"defdirs\"!");
+            this.execute(this.defdirs, ModelType.IVO);
+        }
+    }
+
+    private void execute(File[] dir, ModelType type) throws MojoExecutionException {
         try {
-            for (File f : this.defdirs) {
-                this.processDirectory(f);
+            //support for old configuration
+            if(dir != null && dir.length > 0) {
+                for(File f : dir) {
+                    this.processDirectory(f, type);
+                }
             }
-            File path = new File(this.outputDirectory + GenerateModel.TARGET_DIR);
-            this.project.addCompileSourceRoot(path.getAbsolutePath());
-            this.buildContext.refresh(path);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch(Exception e) {
             throw new MojoExecutionException("Failed...", e);
         }
     }
-    
-    private void processDirectory(File f) throws MojoExecutionException {
+
+    private void processDirectory(File f, ModelType type) throws MojoExecutionException {
         this.getLog().info("Processing Directory: " + f.getAbsolutePath());
         File[] dirs = f.listFiles(File::isDirectory);
-        if (dirs != null) {
-            for (File file : dirs) {
-                this.processDirectory(file);
+        if(dirs != null) {
+            for(File file : dirs) {
+                this.processDirectory(file, type);
             }
         }
         File[] defFiles = f.listFiles((dir, name) -> name.endsWith(".xml"));
-        if (defFiles != null) {
-            for (File defFile : defFiles) {
-                this.getLog().info("Generating files for IVO in " + defFile.getAbsolutePath());
-                this.processFile(defFile);
+        if(defFiles != null) {
+            for(File defFile : defFiles) {
+                switch(type) {
+                    case IVO:
+                        this.getLog().info("Generating files for IVO in " + defFile.getAbsolutePath());
+                        try {
+                            this.processFileAsIVO(defFile);
+                            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
+                            this.project.addCompileSourceRoot(path.getAbsolutePath());
+                            this.buildContext.refresh(path);
+                        } catch(MojoExecutionException e) {
+                            if(e.getCause().getMessage().contains("event")) {
+                                this.getLog().warn("An event file was found in the ivo directory. Please fix this.");
+                                this.processFileAsEvent(defFile);
+                            } else {
+                                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
+                                throw e;
+                            }
+                        }
+                        break;
+                    case EVENT:
+                        this.getLog().info("Generating files for Event in " + defFile.getAbsolutePath());
+                        try {
+                            this.processFileAsEvent(defFile);
+                            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
+                            this.project.addCompileSourceRoot(path.getAbsolutePath());
+                            this.buildContext.refresh(path);
+                        } catch(MojoExecutionException e) {
+                            if(e.getCause().getMessage().contains("ivo")) {
+                                this.getLog().warn("An ivo file was found in the ivo directory. Please fix this.");
+                                this.processFileAsIVO(defFile);
+                            } else {
+                                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
+                                throw e;
+                            }
+                        }
+                        break;
+                }
             }
         }
     }
-    
-    private boolean notToBeRemoved(String dateString) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-        Date removalDate;
-        try {
-            removalDate = format.parse(dateString);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Failed to parse the removal date - should be yyyy/MM/dd, is " + dateString);
-        }
-        return removalDate.compareTo(Calendar.getInstance().getTime()) > 0;
-    }
-    
-    private void processFile(File f) throws MojoExecutionException {
+
+    protected void processFileAsIVO(File f) throws MojoExecutionException {
         IVODef ivod = GeneratorHelper.parseXML(IVODef.class, this.getLog(), f);
-        Velocity.init(GeneratorHelper.getDefaultProps());
-        VelocityContext metacontext = new VelocityContext();
-        metacontext.put("ivod", ivod);
-        metacontext.put("mmh", new MetaModelHelper(ivod));
-        
-        GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_INTERFACE_TEMPLATE, ivod.getPkgName(), "I" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-        
-        if ((ivod.getRemovalDate() == null) || ivod.getRemovalDate().isEmpty() || this.notToBeRemoved(ivod.getRemovalDate())) {
-            if (!Boolean.TRUE.equals(ivod.getInterfaceOnly())) {
-                GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_TEMPLATE, ivod.getPkgName(), ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-                this.generateFindById(ivod, metacontext);
-                this.generateCreate(ivod, metacontext);
-                this.generateDelete(ivod, metacontext);
-                this.generateUpdate(ivod, metacontext);
-                this.generateFilter(ivod, metacontext);
-                this.generateFindByIDAudited(ivod, metacontext);
-            }
-            
-        } else {
-            this.getLog().info("IVO " + ivod.getName() + "_v" + ivod.getVersion() + " is beyond removal date, only the interface is generated.");
-        }
+        GeneratorHelper.writeFile(this.getLog(), new InterfaceIVOModel(ivod, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(this.getLog(), new IVOModel(ivod, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(this.getLog(), new FilterIVOModel(ivod, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(this.getLog(), new EditIVOModel(ivod, this.getLog()), this.getOutputDirectory());
     }
-    
-    /**
-     * @param ivod
-     * @param metacontext
-     * @throws MojoExecutionException
-     */
-    private void generateFindById(IVODef ivod, VelocityContext metacontext) throws MojoExecutionException {
-        if (Boolean.TRUE.equals(ivod.getGenerateFindById())) {
-            ((MetaModelHelper) metacontext.get("mmh")).setType(FileType.FINDBY);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_INTERFACE_ID_TEMPLATE, ivod.getPkgName() + "/requests", "IFind" + ivod.getName() + "ByIdIVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_ID_TEMPLATE, ivod.getPkgName() + "/requests", "Find" + ivod.getName() + "ByIdIVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-        }
+
+    protected String getOutputDirectory() {
+        return this.outputDirectory;
     }
-    
-    /**
-     * @param ivod
-     * @param metacontext
-     * @throws MojoExecutionException
-     */
-    private void generateCreate(IVODef ivod, VelocityContext metacontext) throws MojoExecutionException {
-        if (Boolean.TRUE.equals(ivod.getGenerateCreate())) {
-            ((MetaModelHelper) metacontext.get("mmh")).setType(FileType.CREATE);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_INTERFACE_OBJECT_TEMPLATE, ivod.getPkgName() + "/requests", "ICreate" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_OBJECT_TEMPLATE, ivod.getPkgName() + "/requests", "Create" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-        }
+
+    protected void processFileAsEvent(File f) throws MojoExecutionException {
+        EventDef eventd = GeneratorHelper.parseXML(EventDef.class, this.getLog(), f);
+        GeneratorHelper.writeFile(this.getLog(), new InterfaceEventModel(eventd, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(this.getLog(), new EventModel(eventd, this.getLog()), this.getOutputDirectory());
     }
-    
-    /**
-     * @param ivod
-     * @param metacontext
-     * @throws MojoExecutionException
-     */
-    private void generateUpdate(IVODef ivod, VelocityContext metacontext) throws MojoExecutionException {
-        if (Boolean.TRUE.equals(ivod.getGenerateUpdate())) {
-            ((MetaModelHelper) metacontext.get("mmh")).setType(FileType.UPDATE);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_INTERFACE_OBJECT_TEMPLATE, ivod.getPkgName() + "/requests", "IUpdate" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_OBJECT_TEMPLATE, ivod.getPkgName() + "/requests", "Update" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-        }
-    }
-    
-    /**
-     * @param ivod
-     * @param metacontext
-     * @throws MojoExecutionException
-     */
-    private void generateDelete(IVODef ivod, VelocityContext metacontext) throws MojoExecutionException {
-        if (Boolean.TRUE.equals(ivod.getGenerateDelete())) {
-            ((MetaModelHelper) metacontext.get("mmh")).setType(FileType.DELETE);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_INTERFACE_ID_TEMPLATE, ivod.getPkgName() + "/requests", "IDelete" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_ID_TEMPLATE, ivod.getPkgName() + "/requests", "Delete" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-        }
-    }
-    
-    /**
-     * @param ivod
-     * @param metacontext
-     * @throws MojoExecutionException
-     */
-    private void generateFilter(IVODef ivod, VelocityContext metacontext) throws MojoExecutionException {
-        if (Boolean.TRUE.equals(ivod.getGenerateFilter())) {
-            ((MetaModelHelper) metacontext.get("mmh")).setType(FileType.FILTER);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_INTERFACE_FILTER_TEMPLATE, ivod.getPkgName() + "/requests", "IFind" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_FILTER_TEMPLATE, ivod.getPkgName() + "/requests", "Find" + ivod.getName() + "IVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-        }
-    }
-    
-    private void generateFindByIDAudited(IVODef ivod, VelocityContext metacontext) throws MojoExecutionException {
-        if (Boolean.TRUE.equals(ivod.getAuditing()) && Boolean.TRUE.equals(ivod.getGenerateFindById())) {
-            ((MetaModelHelper) metacontext.get("mmh")).setType(FileType.AUDITING);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_INTERFACE_ID_TEMPLATE, ivod.getPkgName() + "/requests", "IFind" + ivod.getName() + "ByIdAuditedIVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-            GeneratorHelper.writeFile(this.getLog(), metacontext, GenerateModel.IVO_ID_TEMPLATE, ivod.getPkgName() + "/requests", "Find" + ivod.getName() + "ByIdAuditedIVO_v" + ivod.getVersion(), this.outputDirectory, GenerateModel.TARGET_DIR);
-        }
-    }
+
+
 }
+

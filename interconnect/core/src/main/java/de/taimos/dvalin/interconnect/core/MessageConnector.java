@@ -20,13 +20,16 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.model.CryptoException;
+import de.taimos.dvalin.interconnect.model.MessageCryptoUtil;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.command.ActiveMQTextMessage;
+import org.apache.activemq.pool.PooledConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
@@ -40,18 +43,13 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TextMessage;
-
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQTextMessage;
-import org.apache.activemq.pool.PooledConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
-import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
-import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
-import de.taimos.dvalin.interconnect.model.CryptoException;
-import de.taimos.dvalin.interconnect.model.MessageCryptoUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Connector to connect to JMS providers.
@@ -66,6 +64,10 @@ public final class MessageConnector {
      * name of the system property that contains the interconnect update topic name
      */
     public static final String SYSPROP_UPDATE_TOPIC = "interconnect.jms.updatetopic";
+    /**
+     * name of the system property that contains the interconnect virtual topic prefix
+     */
+    public static final String SYSPROP_VIRTUAL_TOPIC_PREFIX = "interconnect.jms.virtualtopic.prefix";
     /**
      * the default request timeout
      */

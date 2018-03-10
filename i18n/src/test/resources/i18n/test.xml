@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18nBundle>
+    <label id="textA">
+        <language locale="de" value="TextAGerman" />
+        <language locale="en" value="TextAEnglish"/>
+    </label>
+    <label id="textB">
+        <language locale="de" value="TextBGerman {0} {2}" />
+        <language locale="en" value="TextBEnglish {0} {2}"/>
+    </label>
+    <label id="de.taimos.dvalin.i18n.TestEnum.FIELD_A">
+        <language locale="de" value="EnumFieldAGerman" />
+        <language locale="en" value="EnumFieldAEnglish"/>
+    </label>
+    <label id="de.taimos.dvalin.i18n.TestEnum.FIELD_B">
+        <language locale="de" value="EnumFieldBGerman" />
+        <language locale="en" value="EnumFieldBEnglish"/>
+    </label>
+</i18nBundle>

@@ -20,63 +20,98 @@ package de.taimos.dvalin.interconnect.model.maven;
  * #L%
  */
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.Properties;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
+import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ModelTools;
+import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.event.implement.IncludeRelativePath;
+import org.apache.velocity.runtime.RuntimeConstants;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Map;
+import java.util.Properties;
+
+/**
+ * @author psigloch
+ */
 public class GeneratorHelper {
 
-	static void writeFile(Log log, VelocityContext context, String templateName, String pkgName, String clazzName, String outputDirectory, String targetDir) throws MojoExecutionException {
-		Template template = null;
-		try {
-			template = Velocity.getTemplate(templateName, "UTF-8");
-		} catch (Exception e) {
-			log.error("Failed to retrieve Template " + templateName, e);
-			throw new MojoExecutionException("Failed to retrieve Template " + templateName, e);
-		}
+    /**
+     * @param log       the logger
+     * @param model     the generator model
+     * @param targetDir the target path for generation
+     * @throws MojoExecutionException on errors
+     */
+    public static void writeFile(Log log, GeneratorModel<?, ?> model, String targetDir) throws MojoExecutionException {
+        if(model.generateClazzWithTemplates() == null || model.generateClazzWithTemplates().size() < 1) {
+            return;
+        }
+        for(Map.Entry<String, String> templateEntry : model.generateClazzWithTemplates().entrySet()) {
+            Template template;
+            try {
+                template = Velocity.getTemplate(templateEntry.getValue(), "UTF-8");
+            } catch(Exception e) {
+                log.error("Failed to retrieve Template " + templateEntry.getValue(), e);
+                throw new MojoExecutionException("Failed to retrieve Template " + templateEntry.getValue(), e);
+            }
+            try {
+                File pckDir = new File(targetDir + model.getTargetFolder());
+                if(!pckDir.exists()) {
+                    pckDir.mkdirs();
+                }
+                try(OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java"), "UTF-8")) {
+                    log.info("Creating file " + pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java");
+                    VelocityContext context = new VelocityContext();
+                    context.put("model", model);
+                    context.put("tool", new ModelTools());
+                    context.put("clazzName", templateEntry.getKey());
+                    template.merge(context, fw);
+                }
+            } catch(IOException e) {
+                log.error("Failed to write the generated file " + templateEntry.getKey(), e);
+                throw new MojoExecutionException("Failed to write the generated file " + templateEntry.getKey(), e);
+            }
+        }
+    }
 
-		try {
-			File pckDir = new File(outputDirectory + targetDir + pkgName.replace('.', '/'));
-			if (!pckDir.exists()) {
-				pckDir.mkdirs();
-			}
-			try (OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(outputDirectory + targetDir + pkgName.replace('.', '/') + "/" + clazzName + ".java"), "UTF-8")) {
-				template.merge(context, fw);
-			}
-		} catch (IOException e) {
-			log.error("Failed to write the generated file " + clazzName, e);
-			throw new MojoExecutionException("Failed to write the generated file " + clazzName, e);
-		}
-	}
+    /**
+     * @return the default properties for velicity
+     */
+    public static Properties getVelocityDefaultProps() {
+        Properties props = new Properties();
+        props.put("resource.loader", "class");
+        props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        props.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName());
+        return props;
+    }
 
-	static Properties getDefaultProps() {
-		Properties props = new Properties();
-		props.put("resource.loader", "class");
-		props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		return props;
-	}
-
-	@SuppressWarnings("unchecked")
-	static <T> T parseXML(Class<T> clazz, Log log, File f) throws MojoExecutionException {
-		try {
-			JAXBContext jcontext = JAXBContext.newInstance(clazz);
+    /**
+     * @param clazz the generator definiton clazz
+     * @param log   the logger
+     * @param f     the file to parse
+     * @param <T>   the generator definition
+     * @return the parsed IGeneratorDefinition
+     * @throws MojoExecutionException on error
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends IGeneratorDefinition> T parseXML(Class<T> clazz, Log log, File f) throws MojoExecutionException {
+        try {
+            JAXBContext jcontext = JAXBContext.newInstance(clazz);
             Unmarshaller unmarshaller = jcontext.createUnmarshaller();
             unmarshaller.setEventHandler(validationEvent -> false);
             return (T) unmarshaller.unmarshal(f);
-		} catch (Exception e) {
-			log.error("Failed to read input file " + f.getAbsolutePath(), e);
-			throw new MojoExecutionException("Failed to read input file " + f.getAbsolutePath(), e);
-		}
-	}
+        } catch(Exception e) {
+            throw new MojoExecutionException("Failed to read input file " + f.getAbsolutePath(), e);
+        }
+    }
+
 }
