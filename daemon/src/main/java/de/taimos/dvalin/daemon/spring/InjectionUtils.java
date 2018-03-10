@@ -29,7 +29,6 @@ public final class InjectionUtils {
         if (genericType instanceof ParameterizedType) {
             //noinspection unchecked
             Type type = ((ParameterizedType) genericType).getActualTypeArguments()[0];
-            System.out.println(type);
             if (type instanceof Class) {
                 return (Class) type;
             }
