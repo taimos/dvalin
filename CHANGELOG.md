@@ -1,4 +1,9 @@
 # current master
+* Update dependencies
+    * AWS 1.11.292
+    * Guava 24.0
+    * Spring 4.3.14
+    * Fongo 2.1.1
 * Added support for internationalization, see the i18n module documentation
 * Interconnect improvements:
     * Reworked IVO Generator for better readability and easier extensions

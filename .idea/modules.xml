@@ -36,6 +36,7 @@
       <module fileurl="file://$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" filepath="$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" />
       <module fileurl="file://$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" filepath="$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/dvalin-test.iml" filepath="$PROJECT_DIR$/test/dvalin-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/i18n/dvlain-i18n.iml" filepath="$PROJECT_DIR$/i18n/dvlain-i18n.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/interconnect-maven-plugin.iml" filepath="$PROJECT_DIR$/interconnect/interconnect-maven-plugin/interconnect-maven-plugin.iml" />
     </modules>
   </component>

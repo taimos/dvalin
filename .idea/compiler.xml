@@ -41,6 +41,7 @@
         <module name="dvalin-template-velocity" />
         <module name="dvalin-template-xdocreport" />
         <module name="dvalin-test" />
+        <module name="dvlain-i18n" />
         <module name="interconnect-maven-plugin" />
       </profile>
     </annotationProcessing>
@@ -82,6 +83,7 @@
       <module name="dvalin-template-velocity" target="1.8" />
       <module name="dvalin-template-xdocreport" target="1.8" />
       <module name="dvalin-test" target="1.8" />
+      <module name="dvlain-i18n" target="1.8" />
       <module name="interconnect-maven-plugin" target="1.8" />
     </bytecodeTargetLevel>
   </component>
