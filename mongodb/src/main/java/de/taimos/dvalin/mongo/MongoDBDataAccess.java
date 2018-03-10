@@ -14,6 +14,12 @@ import org.jongo.Find;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.jongo.ResultHandler;
+import org.jongo.Update;
+import org.springframework.beans.factory.InjectionPoint;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StreamUtils;
 
 import com.mongodb.DBObject;
@@ -23,20 +29,29 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
 
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
+
+@Repository
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MongoDBDataAccess<T> {
 
     private final MongoDatabase db;
     private final Class<T> entityClass;
     private final MongoCollection collection;
 
-    public MongoDBDataAccess(Jongo jongo, MongoDatabase db, Class<T> entityClass) {
+    @Autowired
+    public MongoDBDataAccess(Jongo jongo, MongoDatabase db, InjectionPoint ip) {
         this.db = db;
-        this.entityClass = entityClass;
+        this.entityClass = (Class<T>) InjectionUtils.getGenericType(ip);
         this.collection = jongo.getCollection(this.getCollectionName());
     }
 
     public String getCollectionName() {
         return this.entityClass.getSimpleName();
+    }
+
+    public Class<T> getEntityClass() {
+        return this.entityClass;
     }
 
     /**
@@ -289,6 +304,23 @@ public class MongoDBDataAccess<T> {
 
     public final void deleteByStringId(String id) {
         this.collection.remove("{\"_id\":#}", id);
+    }
+
+    public final Update update(ObjectId id) {
+        return this.collection.update(id);
+    }
+
+    public final Update update(String query) {
+        return this.collection.update(query);
+    }
+
+    public final Update update(String query, Object... parameter) {
+        return this.collection.update(query, parameter);
+    }
+
+    @Deprecated
+    public MongoCollection getCollection() {
+        return this.collection;
     }
 
     public GridFSBucket getGridFSBucket(String bucket) {

@@ -12,9 +12,9 @@ package de.taimos.dvalin.mongo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import com.github.mongobee.Mongobee;
 
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import de.taimos.dvalin.mongo.links.DLinkDAO;
 
 /**
@@ -52,14 +53,15 @@ public class LinkTester {
     public static void init() {
         try {
             System.setProperty("mongodb.name", ABaseTest.dbName);
-            Field mongoField = AbstractMongoDAO.class.getDeclaredField("mongo");
-            mongoField.setAccessible(true);
-            mongoField.set(LinkTester.dao, ABaseTest.mongo);
-            mongoField.set(LinkTester.ldao, ABaseTest.mongo);
 
-            Field mongoField2 = DLinkDAO.class.getDeclaredField("mongo");
-            mongoField2.setAccessible(true);
-            mongoField2.set(LinkTester.dlinkDAO, ABaseTest.mongo);
+            Field mongoField = DLinkDAO.class.getDeclaredField("mongo");
+            mongoField.setAccessible(true);
+            mongoField.set(LinkTester.dlinkDAO, ABaseTest.mongo);
+
+            Field dao2Field = AbstractMongoDAO.class.getDeclaredField("dataAccess");
+            dao2Field.setAccessible(true);
+            dao2Field.set(LinkTester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTester.dao)));
+            dao2Field.set(LinkTester.ldao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTester.ldao)));
 
             Mongobee bee = new Mongobee(ABaseTest.mongo);
             bee.setChangeLogsScanPackage("de.taimos.dvalin.mongo.changelog");

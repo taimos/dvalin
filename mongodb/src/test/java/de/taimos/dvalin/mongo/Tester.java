@@ -41,6 +41,8 @@ import com.mongodb.DBObject;
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.util.JSON;
 
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
+
 public class Tester extends ABaseTest {
 
     private static final TestDAO dao = new TestDAO();
@@ -52,14 +54,18 @@ public class Tester extends ABaseTest {
             Field mongoField = AbstractMongoDAO.class.getDeclaredField("mongo");
             mongoField.setAccessible(true);
             mongoField.set(Tester.dao, ABaseTest.mongo);
-            
+
             Field jongoField = AbstractMongoDAO.class.getDeclaredField("jongo");
             jongoField.setAccessible(true);
-            jongoField.set(Tester.dao, JongoFactory.createDefault(ABaseTest.mongo.getDB(ABaseTest.dbName)));
-        
+            jongoField.set(Tester.dao, ABaseTest.jongo);
+
             Field dbField = AbstractMongoDAO.class.getDeclaredField("db");
             dbField.setAccessible(true);
-            dbField.set(Tester.dao, ABaseTest.mongo.getDatabase(ABaseTest.dbName));
+            dbField.set(Tester.dao, ABaseTest.database);
+
+            Field daoField = AbstractMongoDAO.class.getDeclaredField("dataAccess");
+            daoField.setAccessible(true);
+            daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
 
             Mongobee bee = new Mongobee(ABaseTest.mongo);
             bee.setChangeLogsScanPackage("de.taimos.dvalin.mongo.changelog");

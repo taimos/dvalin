@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.jongo.Jongo;
+import org.jongo.MongoCollection;
 import org.jongo.ResultHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -46,28 +47,29 @@ import com.mongodb.client.gridfs.GridFSBucket;
 public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T> {
 
     @Autowired
+    @Deprecated
     protected MongoClient mongo;
+
     @Autowired
     private Jongo jongo;
     @Autowired
     private MongoDatabase db;
 
+    @Deprecated
+    protected MongoCollection collection;
+
+    @Autowired
     protected MongoDBDataAccess<T> dataAccess;
 
     @PostConstruct
     public final void init() {
-        this.dataAccess = new MongoDBDataAccess<>(this.jongo, this.db, this.getEntityClass());
+        this.collection = this.dataAccess.getCollection();
         this.customInit(this.db, this.jongo);
     }
 
     protected void customInit(MongoDatabase db, Jongo jongo) {
         // implement if needed
     }
-
-    /**
-     * @return the entity class of this DAO
-     */
-    protected abstract Class<T> getEntityClass();
 
     /**
      * runs a map-reduce-job on the collection. same as {@link #mapReduce(String, DBObject, DBObject, Map, MapReduceResultHandler)
@@ -135,7 +137,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
 
     /**
      * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
-     * rename or filter fields in the result elements. Instead of returning {@link #getEntityClass()} objects it returns objects of type
+     * rename or filter fields in the result elements. Instead of returning typed objects it returns objects of type
      * <code>as</code>
      *
      * @param query      the query to search for
@@ -152,7 +154,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
 
     /**
      * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
-     * rename or filter fields in the result elements. Instead of returning {@link #getEntityClass()} objects it returns objects converted
+     * rename or filter fields in the result elements. Instead of returning typed objects it returns objects converted
      * by the given {@link ResultHandler}
      *
      * @param query      the query to search for
@@ -183,7 +185,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
 
     /**
      * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
-     * rename or filter fields in the result elements. Instead of returning {@link #getEntityClass()} objects it returns objects of type
+     * rename or filter fields in the result elements. Instead of returning typed objects it returns objects of type
      * <code>as</code>
      *
      * @param query      the query to search for
@@ -202,7 +204,7 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
 
     /**
      * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
-     * rename or filter fields in the result elements. Instead of returning {@link #getEntityClass()} objects it returns objects converted
+     * rename or filter fields in the result elements. Instead of returning typed objects it returns objects converted
      * by the given {@link ResultHandler}
      *
      * @param query      the query to search for

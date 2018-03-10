@@ -54,7 +54,7 @@ public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends 
             return this.findById(id);
         }
 
-        MongoCursor<T> as = this.jongoHistoryCollection.find("{originalId:#, version:#}", new ObjectId(id), version).as(this.getEntityClass());
+        MongoCursor<T> as = this.jongoHistoryCollection.find("{originalId:#, version:#}", new ObjectId(id), version).as(this.dataAccess.getEntityClass());
         if (as.hasNext()) {
             return as.next();
         }
@@ -63,7 +63,7 @@ public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends 
 
     @Override
     public List<T> findHistoryElements(String id) {
-        Iterable<T> as = this.jongoHistoryCollection.find("{originalId : #}", new ObjectId(id)).sort("{version: -1}").as(this.getEntityClass());
+        Iterable<T> as = this.jongoHistoryCollection.find("{originalId : #}", new ObjectId(id)).sort("{version: -1}").as(this.dataAccess.getEntityClass());
         return this.dataAccess.convertIterable(as);
     }
 

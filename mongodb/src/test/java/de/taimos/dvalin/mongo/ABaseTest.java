@@ -25,10 +25,12 @@ package de.taimos.dvalin.mongo;
 
 import java.math.BigDecimal;
 
+import org.jongo.Jongo;
 import org.junit.Assert;
 
 import com.github.fakemongo.Fongo;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 
@@ -42,7 +44,9 @@ public class ABaseTest {
 
     protected static final String dbName = "dvalin-mongo";
     public static final MongoClient mongo = new Fongo("InMemory").getMongo();
-    
+    public static final Jongo jongo = JongoFactory.createDefault(ABaseTest.mongo.getDB(ABaseTest.dbName));
+    public static final MongoDatabase database = ABaseTest.mongo.getDatabase(ABaseTest.dbName);
+
     static {
         try {
             new Log4jLoggingConfigurer().simpleLogging();

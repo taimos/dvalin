@@ -11,7 +11,9 @@
     * Introduced Event support to interconnect-core 
 * fixed a bug in jpa where liquibase could be executed after hibernate context was created
 * fix swagger default URL to contain correct port (#60)
-* refactor MongoDB data access to utility class
+* MongoDB client improvements
+    * refactor MongoDB data access to utility class
+    * Auto detect entity class in `AbstractMongoDAO`
 
 # Version 1.23
 * Update dependencies
