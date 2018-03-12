@@ -120,6 +120,9 @@ public class FilterIVOModel extends AbstractIVOModel {
             if(i.getName().equalsIgnoreCase(IIVOAuditing.class.getSimpleName())) {
                 continue;
             }
+            if(i.getName().equalsIgnoreCase("I" + super.getParentClazzName())) {
+                continue;
+            }
             builder.append(", ");
             builder.append(i.getName());
         }
@@ -139,17 +142,18 @@ public class FilterIVOModel extends AbstractIVOModel {
     /**
      * @return wheteher the ivo has a parent object or not
      */
+    @Override
     public boolean hasParentClazz() {
-        return this.definition.getParentName() != null;
+        return false;
     }
 
     @Override
     public String getParentClazzName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentClazzName();
+        return AbstractIVO.class.getSimpleName();
     }
 
     @Override
     public String getParentInterfaceName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentInterfaceName();
+        return AbstractIVO.class.getSimpleName();
     }
 }
