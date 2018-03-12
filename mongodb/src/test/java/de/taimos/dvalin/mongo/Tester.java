@@ -20,9 +20,15 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.mongobee.Mongobee;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.client.ListIndexesIterable;
+import com.mongodb.util.JSON;
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import org.bson.Document;
 import org.joda.time.DateTime;
 import org.jongo.Mapper;
@@ -32,16 +38,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.mongobee.Mongobee;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.client.ListIndexesIterable;
-import com.mongodb.util.JSON;
-
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 
 public class Tester extends ABaseTest {
 
@@ -115,10 +113,16 @@ public class Tester extends ABaseTest {
         Assert.assertEquals(id, find3.getId());
         Assert.assertNotNull(find3.getDt());
 
+        long count = Tester.dao.dataAccess.count("{}");
+        Assert.assertEquals(count, 1);
+
         Tester.dao.delete(id);
 
         TestObject find2 = Tester.dao.findById(id);
         Assert.assertNull(find2);
+
+        count = Tester.dao.dataAccess.count("{}");
+        Assert.assertEquals(count, 0);
 
         ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName).getCollection("TestObject").listIndexes();
         for (Document index : listIndexes) {
