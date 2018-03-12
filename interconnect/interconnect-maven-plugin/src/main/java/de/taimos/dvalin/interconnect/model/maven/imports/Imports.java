@@ -127,8 +127,11 @@ public abstract class Imports<T extends IGeneratorDefinition> extends TreeSet<St
         this.with(clazz.getCanonicalName());
     }
 
+    /**
+     * @param clazz the clazz to remove
+     */
     public void remove(Class<?> clazz) {
-        this.internalSet.remove(clazz);
+        this.internalSet.remove(clazz.getCanonicalName());
     }
 
     /**
