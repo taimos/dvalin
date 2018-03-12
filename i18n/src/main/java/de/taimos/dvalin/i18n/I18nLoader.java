@@ -6,12 +6,12 @@ package de.taimos.dvalin.i18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,13 +29,14 @@ public class I18nLoader implements II18nCallback, II18nAccess {
     private Locale DEFAULT_LOCALE;
 
     @Autowired
-    @Qualifier("${i18n.type:i18n-xml}")
-    private II18nResourceHandler resourceHandler;
+    private List<II18nResourceHandler> resourceHandlers;
 
     @PostConstruct
     private void initializeResources() {
         this.DEFAULT_LOCALE = Locale.forLanguageTag(this.DEFAULT_LOCALE_STRING);
-        this.resourceHandler.initializeResources(this);
+        for(II18nResourceHandler resourceHandler : this.resourceHandlers) {
+            resourceHandler.initializeResources(this);
+        }
     }
 
     @Override

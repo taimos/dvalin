@@ -13,6 +13,8 @@ import org.springframework.core.io.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -73,8 +75,9 @@ public class ResourceFrameworkTest extends AbstractMockitoTest {
         ResourceFrameworkTest.injectValue(this.xmlHandler, "resourceFiles", new Resource[]{xml});
         Resource schema = ResourceFrameworkTest.findResource("schema/i18nSchema_v1.xsd");
         ResourceFrameworkTest.injectValue(this.xmlHandler, "resourceSchema", new Resource[]{schema});
-
-        InjectionUtils.inject(this.resourceAccess, "${i18n.type:i18n-xml}",  this.xmlHandler);
+        List<II18nResourceHandler> resourceHandlers = new ArrayList<>();
+        resourceHandlers.add(this.xmlHandler);
+        InjectionUtils.inject(this.resourceAccess, resourceHandlers );
 
         Method m = this.resourceAccess.getClass().getDeclaredMethod("initializeResources");
         m.setAccessible(true);

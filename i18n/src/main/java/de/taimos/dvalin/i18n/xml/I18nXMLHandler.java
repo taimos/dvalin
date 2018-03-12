@@ -26,7 +26,7 @@ import java.net.URL;
  *
  * @author psigloch
  */
-@Component("i18n-xml")
+@Component
 public class I18nXMLHandler implements II18nResourceHandler {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
