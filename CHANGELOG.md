@@ -1,4 +1,10 @@
 # current master
+* count method for `MongoDBDataAccess`
+* modularization of i18n resource loader
+* bugfixes for ivo and event generation
+
+
+# Version 1.24
 * Update dependencies
     * AWS 1.11.292
     * Guava 24.0
