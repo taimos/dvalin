@@ -1,5 +1,6 @@
 package de.taimos.dvalin.i18n;
 
+import de.taimos.dvalin.i18n.xml.I18nXMLHandler;
 import de.taimos.dvalin.test.AbstractMockitoTest;
 import de.taimos.dvalin.test.inject.InjectionUtils;
 import org.junit.Assert;
@@ -12,6 +13,8 @@ import org.springframework.core.io.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -19,7 +22,9 @@ import java.util.Locale;
  */
 public class ResourceFrameworkTest extends AbstractMockitoTest {
 
-    private II18nLoader resourceAccess = new II18nLoader();
+    private I18nLoader resourceAccess = new I18nLoader();
+
+    private I18nXMLHandler xmlHandler = new I18nXMLHandler();
 
     private static Resource findResource(String path) {
         return new ClassPathResource(path);
@@ -65,10 +70,14 @@ public class ResourceFrameworkTest extends AbstractMockitoTest {
     @Before
     public void setUp() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         InjectionUtils.injectValue(this.resourceAccess, "DEFAULT_LOCALE_STRING", "de");
+
         Resource xml = ResourceFrameworkTest.findResource("i18n/test.xml");
-        ResourceFrameworkTest.injectValue(this.resourceAccess, "resourceFiles", new Resource[]{xml});
+        ResourceFrameworkTest.injectValue(this.xmlHandler, "resourceFiles", new Resource[]{xml});
         Resource schema = ResourceFrameworkTest.findResource("schema/i18nSchema_v1.xsd");
-        ResourceFrameworkTest.injectValue(this.resourceAccess, "resourceSchema", new Resource[]{schema});
+        ResourceFrameworkTest.injectValue(this.xmlHandler, "resourceSchema", new Resource[]{schema});
+        List<II18nResourceHandler> resourceHandlers = new ArrayList<>();
+        resourceHandlers.add(this.xmlHandler);
+        InjectionUtils.inject(this.resourceAccess, resourceHandlers );
 
         Method m = this.resourceAccess.getClass().getDeclaredMethod("initializeResources");
         m.setAccessible(true);
