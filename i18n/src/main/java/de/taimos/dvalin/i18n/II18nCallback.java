@@ -7,7 +7,7 @@ package de.taimos.dvalin.i18n;
  * @author psigloch
  *
  */
-interface II18nCallback {
+public interface II18nCallback {
 
 	/**
 	 * @param key text key
