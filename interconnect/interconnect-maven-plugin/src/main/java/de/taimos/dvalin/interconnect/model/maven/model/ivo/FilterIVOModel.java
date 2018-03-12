@@ -3,6 +3,7 @@ package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 import de.taimos.dvalin.interconnect.model.ivo.IIdentity;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
+import de.taimos.dvalin.interconnect.model.ivo.util.IIVOAuditing;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ContentDef;
@@ -114,6 +115,9 @@ public class FilterIVOModel extends AbstractIVOModel {
         }
         for(ImplementsDef i : this.implementsDef) {
             if(i.getName().equalsIgnoreCase(IIdentity.class.getSimpleName())) {
+                continue;
+            }
+            if(i.getName().equalsIgnoreCase(IIVOAuditing.class.getSimpleName())) {
                 continue;
             }
             builder.append(", ");
