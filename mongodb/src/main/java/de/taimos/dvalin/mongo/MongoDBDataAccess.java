@@ -1,14 +1,12 @@
 package de.taimos.dvalin.mongo;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand;
+import com.mongodb.MapReduceOutput;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import org.bson.types.ObjectId;
 import org.jongo.Find;
 import org.jongo.Jongo;
@@ -22,14 +20,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StreamUtils;
 
-import com.mongodb.DBObject;
-import com.mongodb.MapReduceCommand;
-import com.mongodb.MapReduceOutput;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.gridfs.GridFSBucket;
-import com.mongodb.client.gridfs.GridFSBuckets;
-
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -87,13 +85,13 @@ public class MongoDBDataAccess<T> {
 
         MapReduceCommand mrc = new MapReduceCommand(this.collection.getDBCollection(), map, reduce, null, MapReduceCommand.OutputType.INLINE, query);
         String finalizeFunction = this.getMRFunction(name, "finalize");
-        if (finalizeFunction != null) {
+        if(finalizeFunction != null) {
             mrc.setFinalize(finalizeFunction);
         }
-        if (sort != null) {
+        if(sort != null) {
             mrc.setSort(sort);
         }
-        if (scope != null) {
+        if(scope != null) {
             mrc.setScope(scope);
         }
         MapReduceOutput mr = this.collection.getDBCollection().mapReduce(mrc);
@@ -103,11 +101,11 @@ public class MongoDBDataAccess<T> {
     private String getMRFunction(String name, String type) {
         try {
             InputStream stream = this.getClass().getResourceAsStream("/mongodb/" + name + "." + type + ".js");
-            if (stream != null) {
+            if(stream != null) {
                 return StreamUtils.copyToString(stream, Charset.defaultCharset());
             }
             return null;
-        } catch (IOException e) {
+        } catch(IOException e) {
             throw new RuntimeException("Failed to read resource", e);
         }
     }
@@ -130,7 +128,7 @@ public class MongoDBDataAccess<T> {
      */
     public final <P> List<P> convertIterable(Iterable<P> as) {
         List<P> objects = new ArrayList<>();
-        for (P mp : as) {
+        for(P mp : as) {
             objects.add(mp);
         }
         return objects;
@@ -249,16 +247,16 @@ public class MongoDBDataAccess<T> {
 
     private Find createFind(String query, String sort, Integer skip, Integer limit, String projection, Object... params) {
         Find find = this.collection.find(query, params);
-        if ((sort != null) && !sort.isEmpty()) {
+        if((sort != null) && !sort.isEmpty()) {
             find.sort(sort);
         }
-        if ((projection != null) && !projection.isEmpty()) {
+        if((projection != null) && !projection.isEmpty()) {
             find.projection(projection);
         }
-        if (skip != null) {
+        if(skip != null) {
             find.skip(skip);
         }
-        if (limit != null) {
+        if(limit != null) {
             find.limit(limit);
         }
         return find;
@@ -274,12 +272,12 @@ public class MongoDBDataAccess<T> {
      */
     public final Optional<T> findFirstByQuery(String query, String sort, Object... params) {
         Find find = this.collection.find(query, params);
-        if ((sort != null) && !sort.isEmpty()) {
+        if((sort != null) && !sort.isEmpty()) {
             find.sort(sort);
         }
         Iterable<T> as = find.limit(1).as(this.entityClass);
         Iterator<T> iterator = as.iterator();
-        if (iterator.hasNext()) {
+        if(iterator.hasNext()) {
             return Optional.of(iterator.next());
         }
         return Optional.empty();
@@ -291,6 +289,15 @@ public class MongoDBDataAccess<T> {
 
     public final Optional<T> findByStringId(String id) {
         return Optional.ofNullable(this.collection.findOne("{\"_id\":#}", id).as(this.entityClass));
+    }
+
+    /**
+     * @param query the query string
+     * @param parameter the parameters to replace # symbols
+     * @return the number of elements matching the query
+     */
+    public final long count(String query, Object... parameter) {
+        return this.collection.count(query, parameter);
     }
 
     public final T save(T object) {
@@ -328,7 +335,7 @@ public class MongoDBDataAccess<T> {
     }
 
     public GridFSBucket getGridFSBucket(String bucket) {
-        if (bucket == null || bucket.isEmpty()) {
+        if(bucket == null || bucket.isEmpty()) {
             throw new IllegalArgumentException();
         }
         return GridFSBuckets.create(this.db, bucket);
