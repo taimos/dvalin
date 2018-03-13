@@ -1,4 +1,6 @@
 # current master
+
+# Version 1.24
 * Update dependencies
     * AWS 1.11.292
     * Guava 24.0
