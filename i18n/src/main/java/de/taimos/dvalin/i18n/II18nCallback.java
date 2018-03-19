@@ -10,10 +10,15 @@ package de.taimos.dvalin.i18n;
 public interface II18nCallback {
 
 	/**
-	 * @param key text key
+	 * @param label text key
 	 * @param locale locale
-	 * @param label label
+	 * @param value value
 	 */
-	void addText(String key, String locale, String label);
+	void addText(String label, String locale, String value);
+
+    /**
+     * @param element the i18n element
+     */
+    void addText(I18nElement element);
 
 }

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author aeichel/psigloch
@@ -40,10 +41,18 @@ public class I18nLoader implements II18nCallback, II18nAccess {
     }
 
     @Override
-    public void addText(String key, String locale, String label) {
+    public void addText(String label, String locale, String value) {
         Map<String, String> entry = I18nLoader.stringMap.computeIfAbsent(locale, k -> new HashMap<>());
-        entry.put(key, label);
+        entry.put(label, value);
 
+    }
+
+    @Override
+    public void addText(I18nElement element) {
+        for(Entry<String, String> language : element.getLanguage().entrySet()) {
+            Map<String, String> entry = I18nLoader.stringMap.computeIfAbsent(language.getKey(), k -> new HashMap<>());
+            entry.put(element.getLabel(), language.getValue());
+        }
     }
 
     @Override

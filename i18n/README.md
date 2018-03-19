@@ -1,7 +1,7 @@
 ## i18n
 
 The `i18n` library adds a simple internationalization and localization support.
-The language options can be stored in multiple xml files, as shown below.
+The language options can be stored in multiple xml or yaml files, as shown below.
 It provides support for standart identifier, enums and translations with parameters.
 
 ### Usage
@@ -13,7 +13,10 @@ If there is no translation available for your identifier, `II18nAccess` will ret
 
 
 ### Managing translations
-Simply add one or more xml files with the following format to `src/resources/i18n/`. They will be automatically detected.
+Simply add one or more xml or yaml files with the corresponding format to `src/resources/i18n/`. They will be automatically detected.
+You can freely mix between yaml and xml, if you want to (we suggest to stick to one, though).
+
+#### XML FORMAT
 ```
 <i18nBundle>
     <label id="textA">
@@ -52,4 +55,47 @@ To use parameters add `{identifier}` to your translation:
         <language locale="en" value="TextBEnglish {0} {2}"/>
     </label>
 </i18nBundle>
+``` 
+
+#### YAML FORMAT
+```
+
+---
+label: textA
+language:
+  de: TextAGerman
+  en: TextAEnglish
+---
+label: textB
+language:
+  de: TextBGerman
+  en: TextBEnglish
+  it: TextBItalian
+```
+
+To use the inbuild enum support, use the label id with fully qualified enum class names, 
+e.g. for an enum with `de.taimos.dvalin.i18n.TestEnum` containing the two fields `FIELD_A` and `FIELD_B` use:
+```
+
+---
+label: de.taimos.dvalin.i18n.TestEnum.FIELD_A
+language:
+  de: EnumFieldAGerman
+  en: EnumFieldAEnglish
+---
+label: de.taimos.dvalin.i18n.TestEnum.FIELD_B
+language:
+  de: EnumFieldBGerman
+  en: EnumFieldBEnglish
+```
+
+To use parameters add `{identifier}` to your translation:
+
+```
+
+---
+label: textB
+language:
+  de: TextBGerman {0} {2}
+  en: TextBEnglish {0} {2}
 ``` 
