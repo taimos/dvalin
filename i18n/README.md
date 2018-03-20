@@ -59,32 +59,21 @@ To use parameters add `{identifier}` to your translation:
 
 #### YAML FORMAT
 ```
-
----
-label: textA
-language:
+textA:
   de: TextAGerman
   en: TextAEnglish
----
-label: textB
-language:
+textB:
   de: TextBGerman
   en: TextBEnglish
-  it: TextBItalian
 ```
 
 To use the inbuild enum support, use the label id with fully qualified enum class names, 
 e.g. for an enum with `de.taimos.dvalin.i18n.TestEnum` containing the two fields `FIELD_A` and `FIELD_B` use:
 ```
-
----
-label: de.taimos.dvalin.i18n.TestEnum.FIELD_A
-language:
+de.taimos.dvalin.i18n.TestEnum.FIELD_A:
   de: EnumFieldAGerman
   en: EnumFieldAEnglish
----
-label: de.taimos.dvalin.i18n.TestEnum.FIELD_B
-language:
+de.taimos.dvalin.i18n.TestEnum.FIELD_B:
   de: EnumFieldBGerman
   en: EnumFieldBEnglish
 ```
@@ -92,10 +81,7 @@ language:
 To use parameters add `{identifier}` to your translation:
 
 ```
-
----
-label: textB
-language:
+textB:
   de: TextBGerman {0} {2}
   en: TextBEnglish {0} {2}
 ``` 

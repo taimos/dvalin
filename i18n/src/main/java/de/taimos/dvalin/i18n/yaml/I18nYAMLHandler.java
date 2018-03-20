@@ -1,9 +1,7 @@
 package de.taimos.dvalin.i18n.yaml;
 
-import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import de.taimos.dvalin.i18n.I18nElement;
 import de.taimos.dvalin.i18n.II18nCallback;
 import de.taimos.dvalin.i18n.II18nResourceHandler;
 import org.slf4j.Logger;
@@ -27,8 +25,7 @@ public class I18nYAMLHandler implements II18nResourceHandler {
     @Value("classpath*:resources/*.yaml")
     private Resource[] resourceFiles;
 
-    private YAMLFactory factory = new YAMLFactory();
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     public void initializeResources(II18nCallback callback) {
         if(this.resourceFiles != null) {
@@ -40,10 +37,8 @@ public class I18nYAMLHandler implements II18nResourceHandler {
 
     private void loadResourceFile(Resource file, II18nCallback callback) {
         try(InputStream inParser = file.getInputStream()) {
-            MappingIterator<I18nElement> elements = this.mapper.readValues(this.factory.createParser(inParser), I18nElement.class);
-            while(elements.hasNext()) {
-                callback.addText(elements.next());
-            }
+            I18nYAMLElements i18nElements = this.mapper.readValue(inParser, I18nYAMLElements.class);
+            callback.addText(i18nElements);
         } catch(final Exception e) {
             this.logger.error(e.getMessage(), e);
 
