@@ -1,6 +1,5 @@
 package de.taimos.dvalin.i18n;
 
-import de.taimos.dvalin.i18n.xml.I18nXMLHandler;
 import de.taimos.dvalin.test.AbstractMockitoTest;
 import de.taimos.dvalin.test.inject.InjectionUtils;
 import org.junit.Assert;
@@ -13,28 +12,28 @@ import org.springframework.core.io.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 /**
+ * Copyright 2018 Cinovo AG<br>
+ * <br>
+ *
  * @author psigloch
  */
-public class ResourceFrameworkTest extends AbstractMockitoTest {
+public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest {
 
-    private I18nLoader resourceAccess = new I18nLoader();
+    protected I18nLoader resourceAccess = new I18nLoader();
 
-    private I18nXMLHandler xmlHandler = new I18nXMLHandler();
-
-    private static Resource findResource(String path) {
+    protected static Resource findResource(String path) {
         return new ClassPathResource(path);
     }
 
-    private static void injectValue(Object bean, String field, Resource[] value) {
+    protected static void injectValue(Object bean, String field, Resource[] value) {
         try {
-            Field beanField = ResourceFrameworkTest.getField(bean.getClass(), field);
+            Field beanField = AbstractResourceFrameworkTest.getField(bean.getClass(), field);
             if(beanField.isAnnotationPresent(Value.class)) {
-                ResourceFrameworkTest.doInjection(bean, value, beanField);
+                AbstractResourceFrameworkTest.doInjection(bean, value, beanField);
             } else {
                 throw new RuntimeException("Did not find field " + field + " of type String to inject value");
             }
@@ -50,7 +49,7 @@ public class ResourceFrameworkTest extends AbstractMockitoTest {
             return beanClass.getDeclaredField(fieldName);
         } catch(NoSuchFieldException e) {
             if(!beanClass.getSuperclass().equals(Object.class)) {
-                return ResourceFrameworkTest.getField(beanClass.getSuperclass(), fieldName);
+                return AbstractResourceFrameworkTest.getField(beanClass.getSuperclass(), fieldName);
             }
             throw e;
         }
@@ -67,17 +66,12 @@ public class ResourceFrameworkTest extends AbstractMockitoTest {
         }
     }
 
+    protected abstract List<II18nResourceHandler> getResourceHandler();
+
     @Before
     public void setUp() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         InjectionUtils.injectValue(this.resourceAccess, "DEFAULT_LOCALE_STRING", "de");
-
-        Resource xml = ResourceFrameworkTest.findResource("i18n/test.xml");
-        ResourceFrameworkTest.injectValue(this.xmlHandler, "resourceFiles", new Resource[]{xml});
-        Resource schema = ResourceFrameworkTest.findResource("schema/i18nSchema_v1.xsd");
-        ResourceFrameworkTest.injectValue(this.xmlHandler, "resourceSchema", new Resource[]{schema});
-        List<II18nResourceHandler> resourceHandlers = new ArrayList<>();
-        resourceHandlers.add(this.xmlHandler);
-        InjectionUtils.inject(this.resourceAccess, resourceHandlers );
+        InjectionUtils.inject(this.resourceAccess, this.getResourceHandler());
 
         Method m = this.resourceAccess.getClass().getDeclaredMethod("initializeResources");
         m.setAccessible(true);

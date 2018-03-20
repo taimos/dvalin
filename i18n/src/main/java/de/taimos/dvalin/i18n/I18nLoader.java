@@ -40,10 +40,14 @@ public class I18nLoader implements II18nCallback, II18nAccess {
     }
 
     @Override
-    public void addText(String key, String locale, String label) {
+    public void addText(String label, String locale, String value) {
         Map<String, String> entry = I18nLoader.stringMap.computeIfAbsent(locale, k -> new HashMap<>());
-        entry.put(key, label);
+        entry.put(label, value);
+    }
 
+    @Override
+    public void addText(Map<String, Map<String, String>> elements) {
+        I18nLoader.stringMap.putAll(elements);
     }
 
     @Override

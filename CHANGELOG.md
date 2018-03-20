@@ -1,4 +1,5 @@
 # current master
+* introduces yaml support to i18n
 
 # Version 1.24
 * Update dependencies

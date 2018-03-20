@@ -1,0 +1,12 @@
+textA:
+  de: TextAGerman
+  en: TextAEnglish
+textB:
+  de: TextBGerman {0} {2}
+  en: TextBEnglish {0} {2}
+de.taimos.dvalin.i18n.TestEnum.FIELD_A:
+  de: EnumFieldAGerman
+  en: EnumFieldAEnglish
+de.taimos.dvalin.i18n.TestEnum.FIELD_B:
+  de: EnumFieldBGerman
+  en: EnumFieldBEnglish
