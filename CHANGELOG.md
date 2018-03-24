@@ -1,4 +1,8 @@
 # current master
+* Update dependencies
+    * Apache CXF 3.2.3
+    * Jetty 9.4.8.v20171121
+* Fix InvocationInstance in `jaxrs` module
 
 # Version 1.24
 * Update dependencies
