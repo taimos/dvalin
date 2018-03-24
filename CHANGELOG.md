@@ -1,4 +1,7 @@
 # current master
+* add support for multiple resource loaders
+* add method count to `MongoDBDataAccess`
+* Add `CognitoContext`
 * Update dependencies
     * Apache CXF 3.2.3
     * Jetty 9.4.8.v20171121

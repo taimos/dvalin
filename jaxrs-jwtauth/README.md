@@ -23,3 +23,4 @@ Specify the following properties:
 * `jwtauth.cognito.roles` - the field to use as roles; defaults to `cognito:groups`
 
 The security context then contains a `de.taimos.dvalin.jaxrs.security.jwt.cognito.CognitoUser` with all fields.
+For convenience you can inject an instance of `de.taimos.dvalin.jaxrs.security.jwt.cognito.CognitoContext` to get the current user without casting.
