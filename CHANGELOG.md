@@ -1,4 +1,5 @@
 # current master
+* introduces yaml support to i18n
 * add support for multiple resource loaders
 * add method count to `MongoDBDataAccess`
 * Add `CognitoContext`
