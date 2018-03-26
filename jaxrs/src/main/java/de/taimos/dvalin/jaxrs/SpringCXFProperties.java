@@ -47,6 +47,12 @@ public interface SpringCXFProperties {
     String JAXRS_ANNOTATION = "jaxrs.annotation";
 
     /**
+     * the duration threshold before logging slow requests <br>
+     * <strong>default:</strong> 1000 ms
+     */
+    String JAXRS_SLOWLOG = "jaxrs.slowlog";
+
+    /**
      * send the jetty version as Response Header <br>
      * <strong>default:</strong> false
      */

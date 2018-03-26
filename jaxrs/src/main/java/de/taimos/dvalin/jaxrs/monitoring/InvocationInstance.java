@@ -12,9 +12,9 @@ package de.taimos.dvalin.jaxrs.monitoring;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,11 +24,10 @@ package de.taimos.dvalin.jaxrs.monitoring;
  */
 
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 public class InvocationInstance {
 
-    private final UUID messageId;
+    private final String messageId;
 
     private long startNano;
 
@@ -42,12 +41,15 @@ public class InvocationInstance {
 
     private String calledMethodName;
 
+    private String requestURI;
+
 
     /**
      * @param messageId the message id
      */
-    public InvocationInstance(UUID messageId) {
+    public InvocationInstance(String messageId, String requestURI) {
         this.messageId = messageId;
+        this.requestURI = requestURI;
     }
 
     /**
@@ -68,8 +70,8 @@ public class InvocationInstance {
 
     @Override
     public String toString() {
-        final String msgString = "Message %s was %s ms inflight. Access was to class '%s' and method '%s'";
-        return String.format(msgString, this.getMessageId(), this.getDuration(), this.getCalledClass(), this.getCalledMethod());
+        final String msgString = "Message %s was %s ms inflight. Access was to class '%s' and method '%s' via URI '%s'";
+        return String.format(msgString, this.getMessageId(), this.getDuration(), this.getCalledClass(), this.getCalledMethod(), this.getRequestURI());
     }
 
     // #########################################
@@ -118,7 +120,7 @@ public class InvocationInstance {
     /**
      * @return the messageId
      */
-    public UUID getMessageId() {
+    public String getMessageId() {
         return this.messageId;
     }
 
@@ -136,4 +138,7 @@ public class InvocationInstance {
         return this.calledMethodName;
     }
 
+    public String getRequestURI() {
+        return this.requestURI;
+    }
 }

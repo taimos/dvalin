@@ -13,6 +13,7 @@ You can inject the `DvalinRSContext` to get easier access to some of the feature
 
 For every request an instance of `de.taimos.dvalin.jaxrs.monitoring.InvocationInstance` will be registered into the MessageContext. 
 It will contain a unique request id and will measure the runtime of the request for monitoring purpose.
+It also populates the request id field of the context.
 
 ### Providers
 

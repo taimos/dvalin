@@ -23,8 +23,6 @@ package de.taimos.dvalin.jaxrs.security;
  * #L%
  */
 
-import java.util.UUID;
-
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -36,8 +34,8 @@ import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.taimos.dvalin.jaxrs.monitoring.InvocationInstance;
 import de.taimos.dvalin.jaxrs.context.DvalinRSContext;
+import de.taimos.dvalin.jaxrs.monitoring.InvocationInstance;
 import de.taimos.restutils.RESTAssert;
 
 /**
@@ -81,7 +79,7 @@ public class SecurityContextUtil {
         return sc != null && sc.isUserInRole(role);
     }
 
-    public static UUID requestId() {
+    public static String requestId() {
         final InvocationInstance ii = SecurityContextUtil.getContext().getContent(InvocationInstance.class);
         RESTAssert.assertNotNull(ii, Status.INTERNAL_SERVER_ERROR);
         return ii.getMessageId();

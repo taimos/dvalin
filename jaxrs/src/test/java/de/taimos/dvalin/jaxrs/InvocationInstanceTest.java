@@ -9,9 +9,9 @@ package de.taimos.dvalin.jaxrs;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class InvocationInstanceTest {
     public void testStartNano() throws Exception {
         PowerMockito.mockStatic(System.class);
         PowerMockito.when(System.nanoTime()).thenReturn(42L);
-        InvocationInstance ii = new InvocationInstance(UUID.randomUUID());
+        InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.start();
         Assert.assertEquals(42L, ii.getStartNano());
     }
@@ -49,20 +49,20 @@ public class InvocationInstanceTest {
         PowerMockito.mockStatic(System.class);
         PowerMockito.when(System.nanoTime()).thenReturn(1000L);
         UUID uuid = UUID.randomUUID();
-        InvocationInstance ii = new InvocationInstance(uuid);
+        InvocationInstance ii = new InvocationInstance(uuid.toString(), "/");
         ii.start();
         PowerMockito.when(System.nanoTime()).thenReturn(2001000L);
         ii.stop();
         Assert.assertEquals(1000L, ii.getStartNano());
         Assert.assertEquals(2001000L, ii.getEndNano());
         Assert.assertEquals(2L, ii.getDuration());
-        String msg = "Message " + uuid.toString() + " was 2 ms inflight. Access was to class 'null' and method 'null'";
+        String msg = "Message " + uuid.toString() + " was 2 ms inflight. Access was to class 'null' and method 'null' via URI '/'";
         Assert.assertEquals(msg, ii.toString());
     }
 
     @Test
     public void testCalledMethod() throws Exception {
-        InvocationInstance ii = new InvocationInstance(UUID.randomUUID());
+        InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.setCalledMethod(InvocationInstanceTest.class.getMethod("testCalledMethod"));
 
         Assert.assertEquals("testCalledMethod", ii.getCalledMethodName());
@@ -71,7 +71,7 @@ public class InvocationInstanceTest {
 
     @Test
     public void testCalledMethodNull() throws Exception {
-        InvocationInstance ii = new InvocationInstance(UUID.randomUUID());
+        InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.setCalledMethod(null);
         Assert.assertEquals(null, ii.getCalledMethodName());
         Assert.assertEquals(null, ii.getCalledClass());

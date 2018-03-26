@@ -1,8 +1,13 @@
 # current master
-* count method for `MongoDBDataAccess`
-* modularization of i18n resource loader
+* introduces yaml support to i18n
+* add support for multiple resource loaders
+* add method count to `MongoDBDataAccess`
+* Add `CognitoContext`
+* Update dependencies
+    * Apache CXF 3.2.3
+    * Jetty 9.4.8.v20171121
+* Fix InvocationInstance in `jaxrs` module
 * bugfixes for ivo and event generation
-
 
 # Version 1.24
 * Update dependencies

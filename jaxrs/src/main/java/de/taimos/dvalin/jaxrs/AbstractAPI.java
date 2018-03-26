@@ -20,8 +20,6 @@ package de.taimos.dvalin.jaxrs;
  * #L%
  */
 
-import java.util.UUID;
-
 import javax.ws.rs.core.SecurityContext;
 
 import org.slf4j.Logger;
@@ -35,59 +33,59 @@ import de.taimos.dvalin.jaxrs.context.DvalinRSContext;
  */
 @Deprecated
 public class AbstractAPI {
-    
+
     @Autowired
     protected DvalinRSContext dvalinContext;
-    
+
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     @Deprecated
     protected final SecurityContext getSC() {
         return this.dvalinContext.getSC();
     }
-    
+
     @Deprecated
     protected final void assertSC() {
         this.dvalinContext.assertLoggedIn();
     }
-    
+
     @Deprecated
     protected final String getUser() {
         return this.dvalinContext.getCurrentUser().getUsername();
     }
-    
+
     @Deprecated
     protected final boolean hasRole(String role) {
         return this.dvalinContext.hasRole(role);
     }
-    
+
     @Deprecated
-    protected final UUID requestId() {
+    protected final String requestId() {
         return this.dvalinContext.getRequestId();
     }
-    
+
     protected final String getFirstHeader(String name) {
         return this.dvalinContext.getFirstHeader(name);
     }
-    
+
     protected final void redirectPath(String path) {
         this.dvalinContext.redirectPath(path);
     }
-    
+
     protected final String getServerURL() {
         return this.dvalinContext.getServerURL();
     }
-    
+
     protected final void redirect(String uriString) {
         this.dvalinContext.redirect(uriString);
     }
-    
+
     protected final String getCurrentURIEncoded() {
         return this.dvalinContext.getCurrentURIEncoded();
     }
-    
+
     protected final String getCurrentURI() {
         return this.dvalinContext.getCurrentURI();
     }
-    
+
 }

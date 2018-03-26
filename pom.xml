@@ -59,8 +59,8 @@
         <junit.version>4.12</junit.version>
         <aws.version>1.11.292</aws.version>
         <activemq.version>5.14.0</activemq.version>
-        <cxf.version>3.1.9</cxf.version>
-        <jetty.version>9.2.15.v20160210</jetty.version>
+        <cxf.version>3.2.3</cxf.version>
+        <jetty.version>9.4.8.v20171121</jetty.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
 
         <bson.version>2.7.0</bson.version>
