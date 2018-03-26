@@ -19,10 +19,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="dvalin-cloud-aws" />
     <orderEntry type="module" module-name="dvalin-daemon" />
-    <orderEntry type="library" name="Maven: de.taimos:daemon-framework-spring:2.14" level="project" />
-    <orderEntry type="library" name="Maven: de.taimos:daemon-framework-core:2.14" level="project" />
+    <orderEntry type="library" name="Maven: de.taimos:daemon-framework-spring:2.15" level="project" />
+    <orderEntry type="library" name="Maven: de.taimos:daemon-framework-core:2.15" level="project" />
     <orderEntry type="library" name="Maven: de.taimos:httputils:1.11" level="project" />
-    <orderEntry type="library" name="Maven: de.taimos:daemon-framework-log4j:2.14" level="project" />
+    <orderEntry type="library" name="Maven: de.taimos:daemon-framework-log4j:2.15" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.3.14.RELEASE" level="project" />
