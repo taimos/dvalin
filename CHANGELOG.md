@@ -7,6 +7,7 @@
     * Apache CXF 3.2.3
     * Jetty 9.4.8.v20171121
 * Fix InvocationInstance in `jaxrs` module
+* bugfixes for ivo and event generation
 
 # Version 1.24
 * Update dependencies

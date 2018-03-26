@@ -113,6 +113,9 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 
 
 	protected ${clazzName}(Abstract${clazzName}Builder<?> builder) {
+#if ( $model.hasParentClazz() )
+        super(builder);
+#end
 #foreach ( $field in $model.getFilterableFields() )
 		this.$field.name = builder.$field.name;
 #end

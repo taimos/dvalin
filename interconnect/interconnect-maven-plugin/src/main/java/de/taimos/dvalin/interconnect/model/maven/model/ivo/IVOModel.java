@@ -38,12 +38,12 @@ public class IVOModel extends AbstractIVOModel {
 
     @Override
     public String getParentClazzName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : this.getParentClazzName();
+        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentClazzName();
     }
 
     @Override
     public String getParentInterfaceName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : this.getParentInterfaceName();
+        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentInterfaceName();
     }
 
     @Override

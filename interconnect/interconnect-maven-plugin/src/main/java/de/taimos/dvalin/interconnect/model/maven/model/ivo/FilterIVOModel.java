@@ -3,6 +3,7 @@ package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 import de.taimos.dvalin.interconnect.model.ivo.IIdentity;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
+import de.taimos.dvalin.interconnect.model.ivo.util.IIVOAuditing;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ContentDef;
@@ -116,6 +117,12 @@ public class FilterIVOModel extends AbstractIVOModel {
             if(i.getName().equalsIgnoreCase(IIdentity.class.getSimpleName())) {
                 continue;
             }
+            if(i.getName().equalsIgnoreCase(IIVOAuditing.class.getSimpleName())) {
+                continue;
+            }
+            if(i.getName().equalsIgnoreCase("I" + super.getParentClazzName())) {
+                continue;
+            }
             builder.append(", ");
             builder.append(i.getName());
         }
@@ -135,17 +142,18 @@ public class FilterIVOModel extends AbstractIVOModel {
     /**
      * @return wheteher the ivo has a parent object or not
      */
+    @Override
     public boolean hasParentClazz() {
-        return this.definition.getParentName() != null;
+        return false;
     }
 
     @Override
     public String getParentClazzName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentClazzName();
+        return AbstractIVO.class.getSimpleName();
     }
 
     @Override
     public String getParentInterfaceName() {
-        return this.definition.getParentName() == null ? AbstractIVO.class.getSimpleName() : super.getParentInterfaceName();
+        return AbstractIVO.class.getSimpleName();
     }
 }

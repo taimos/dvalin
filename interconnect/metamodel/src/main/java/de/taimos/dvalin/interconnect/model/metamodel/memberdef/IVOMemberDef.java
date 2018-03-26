@@ -88,7 +88,7 @@ public class IVOMemberDef extends MemberDef {
     }
 
     public String getIVOPath(boolean asInterface) {
-        return this.getPkgName() + "." + this.getIVOClazzName(true);
+        return this.getPkgName() + "." + this.getIVOClazzName(asInterface);
     }
 
     @Override
