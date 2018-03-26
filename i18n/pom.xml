@@ -4,7 +4,7 @@
     <parent>
         <artifactId>dvalin-parent</artifactId>
         <groupId>de.taimos</groupId>
-        <version>1.25</version>
+        <version>1.26-SNAPSHOT</version>
     </parent>
     <artifactId>dvlain-i18n</artifactId>
     <name>i18n support for dvalin</name>
