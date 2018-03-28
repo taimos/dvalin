@@ -114,10 +114,6 @@ public class FilterIVOModel extends AbstractIVOModel {
 
     public String getInterfaceImplements(boolean multiFilter) {
         StringBuilder builder = new StringBuilder();
-        if(this.definition.getCompatibleBaseVersion() != null) {
-            builder.append(", ");
-            builder.append(this.getInterfaceClazzName());
-        }
         for(ImplementsDef i : this.implementsDef) {
             if(i.getName().equalsIgnoreCase(IIdentity.class.getSimpleName())) {
                 continue;

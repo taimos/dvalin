@@ -50,7 +50,7 @@ public abstract class AbstractIVOModel extends AbstractInterconnectModel<IVODef,
         StringBuilder builder = new StringBuilder();
         if(this.definition.getCompatibleBaseVersion() != null) {
             builder.append(", ");
-            builder.append(this.getInterfaceClazzName());
+            builder.append(this.getInterfaceClazzName().substring(0, this.getInterfaceClazzName().length() - 1)).append(this.definition.getCompatibleBaseVersion());
         }
         for(ImplementsDef i : this.implementsDef) {
             builder.append(", ");
