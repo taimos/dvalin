@@ -54,7 +54,7 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 #foreach ( $field in $model.getFilterableFields() )
 		/**
 		 * This field is optional.
-		 * @param  $field.name the value to set
+		 * @param  p$field.name the value to set
 		 * @return the builder $field.filterable
 		 *
 		 **/
