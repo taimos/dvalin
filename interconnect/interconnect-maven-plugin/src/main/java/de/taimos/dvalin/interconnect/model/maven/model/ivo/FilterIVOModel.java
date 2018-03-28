@@ -7,6 +7,7 @@ import de.taimos.dvalin.interconnect.model.ivo.util.IIVOAuditing;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOFilterImports;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ContentDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IVOMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MemberDef;
 import org.apache.maven.plugin.logging.Log;
@@ -86,6 +87,10 @@ public class FilterIVOModel extends AbstractIVOModel {
         super.handleMemberAdditionaly(member);
         if(member instanceof MemberDef) {
             FilterMemberDef.handleMember((MemberDef) member, this.filterableMemberDefs);
+        }
+        if(member instanceof IVOMemberDef) {
+            this.imports.with(((IVOMemberDef) member).getIVOPath(false));
+            this.imports.with(((IVOMemberDef) member).getIVOPath(true));
         }
     }
 

@@ -84,6 +84,9 @@ private static final long serialVersionUID = ${model.getSerialVersion()}L;
 	private final ${model.getClazzName()} value;
 
 	protected ${clazzName}(Abstract${clazzName}Builder<?> builder) {
+    #if ( $model.hasParentClazz() )
+        super(builder);
+    #end
 		this.value = builder.value;
 	}
 
