@@ -6,7 +6,7 @@
         <groupId>de.taimos</groupId>
         <version>1.26-SNAPSHOT</version>
     </parent>
-    <artifactId>dvlain-i18n</artifactId>
+    <artifactId>dvalin-i18n</artifactId>
     <name>i18n support for dvalin</name>
     <inceptionYear>2018</inceptionYear>
     <properties>
