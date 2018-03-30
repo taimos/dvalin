@@ -165,10 +165,10 @@ public class SpringDaemonTestRunner extends BlockJUnit4ClassRunner {
 			}
 
 			private List<Method> findAfterStartupAnnotatedMethods(Class<?> clazz) {
-				if (clazz == null) {
-					return null;
-				}
 				List<Method> res = new ArrayList<>();
+				if (clazz == null) {
+					return res;
+				}
 				Method[] methods = clazz.getMethods();
 				for (Method method : methods) {
 					if (method.isAnnotationPresent(AfterStartup.class) && (method.getParameterTypes().length == 0)) {

@@ -1,7 +1,11 @@
 package de.taimos.dvalin.i18n;
 
-import de.taimos.dvalin.test.AbstractMockitoTest;
-import de.taimos.dvalin.test.inject.InjectionUtils;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Locale;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,11 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Locale;
+import de.taimos.dvalin.test.AbstractMockitoTest;
+import de.taimos.dvalin.test.inject.InjectionUtils;
 
 /**
  * Copyright 2018 Cinovo AG<br>
@@ -32,14 +33,14 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
     protected static void injectValue(Object bean, String field, Resource[] value) {
         try {
             Field beanField = AbstractResourceFrameworkTest.getField(bean.getClass(), field);
-            if(beanField.isAnnotationPresent(Value.class)) {
+            if (beanField.isAnnotationPresent(Value.class)) {
                 AbstractResourceFrameworkTest.doInjection(bean, value, beanField);
             } else {
                 throw new RuntimeException("Did not find field " + field + " of type String to inject value");
             }
-        } catch(NoSuchFieldException e) {
+        } catch (NoSuchFieldException e) {
             throw new RuntimeException("Did not find field " + field + " to inject value");
-        } catch(SecurityException e) {
+        } catch (SecurityException e) {
             throw new RuntimeException("Error injecting value due to access violation", e);
         }
     }
@@ -47,8 +48,8 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
     private static Field getField(Class beanClass, String fieldName) throws NoSuchFieldException {
         try {
             return beanClass.getDeclaredField(fieldName);
-        } catch(NoSuchFieldException e) {
-            if(!beanClass.getSuperclass().equals(Object.class)) {
+        } catch (NoSuchFieldException e) {
+            if (!beanClass.getSuperclass().equals(Object.class)) {
                 return AbstractResourceFrameworkTest.getField(beanClass.getSuperclass(), fieldName);
             }
             throw e;
@@ -61,7 +62,7 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
             field.setAccessible(true);
             field.set(bean, dependency);
             field.setAccessible(accessible);
-        } catch(IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException("Error injecting dependency due to access violation", e);
         }
     }
@@ -81,7 +82,7 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
     @Test
     public void testNonExisting() {
         String notExisting = this.resourceAccess.getString("notExisting");
-        Assert.assertEquals(notExisting, "!notExisting!");
+        Assert.assertEquals("!notExisting!", notExisting);
     }
 
     @Test
@@ -89,19 +90,19 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
         {
             //default locale
             String text = this.resourceAccess.getString("textA");
-            Assert.assertEquals(text, "TextAGerman");
+            Assert.assertEquals("TextAGerman", text);
         }
 
         {
             //fixed locale
             String text = this.resourceAccess.getString(Locale.ENGLISH, "textA");
-            Assert.assertEquals(text, "TextAEnglish");
+            Assert.assertEquals("TextAEnglish", text);
         }
 
         {
             //nonexistant locale -> default to default language
             String text = this.resourceAccess.getString(Locale.ITALIAN, "textA");
-            Assert.assertEquals(text, "TextAGerman");
+            Assert.assertEquals("TextAGerman", text);
         }
     }
 
@@ -110,19 +111,19 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
         {
             //default locale
             String text = this.resourceAccess.getString("textB", "aTest1", "aTest2", "aTest3");
-            Assert.assertEquals(text, "TextBGerman aTest1 aTest3");
+            Assert.assertEquals("TextBGerman aTest1 aTest3", text);
         }
 
         {
             //fixed locale
             String text = this.resourceAccess.getString(Locale.ENGLISH, "textB", "aTest1", "aTest2", "aTest3");
-            Assert.assertEquals(text, "TextBEnglish aTest1 aTest3");
+            Assert.assertEquals("TextBEnglish aTest1 aTest3", text);
         }
 
         {
             //nonexistant locale -> default to default language
             String text = this.resourceAccess.getString(Locale.ITALIAN, "textB", "aTest1", "aTest2", "aTest3");
-            Assert.assertEquals(text, "TextBGerman aTest1 aTest3");
+            Assert.assertEquals("TextBGerman aTest1 aTest3", text);
         }
     }
 
@@ -131,19 +132,19 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
         {
             //default locale
             String text = this.resourceAccess.getString(TestEnum.FIELD_A);
-            Assert.assertEquals(text, "EnumFieldAGerman");
+            Assert.assertEquals("EnumFieldAGerman", text);
         }
 
         {
             //fixed locale
             String text = this.resourceAccess.getString(Locale.ENGLISH, TestEnum.FIELD_A);
-            Assert.assertEquals(text, "EnumFieldAEnglish");
+            Assert.assertEquals("EnumFieldAEnglish", text);
         }
 
         {
             //nonexistant locale -> default to default language
             String text = this.resourceAccess.getString(Locale.ITALIAN, TestEnum.FIELD_B);
-            Assert.assertEquals(text, "EnumFieldBGerman");
+            Assert.assertEquals("EnumFieldBGerman", text);
         }
     }
 }

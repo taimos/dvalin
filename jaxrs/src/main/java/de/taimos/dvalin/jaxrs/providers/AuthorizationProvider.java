@@ -23,15 +23,8 @@ package de.taimos.dvalin.jaxrs.providers;
  * #L%
  */
 
-import de.taimos.daemon.DaemonProperties;
-import de.taimos.dvalin.jaxrs.security.IUser;
-import de.taimos.httputils.WSConstants;
-import org.apache.cxf.common.security.SimplePrincipal;
-import org.apache.cxf.interceptor.security.DefaultSecurityContext;
-import org.apache.cxf.jaxrs.impl.HttpHeadersImpl;
-import org.apache.cxf.jaxrs.utils.JAXRSUtils;
-import org.apache.cxf.message.Message;
-import org.apache.cxf.security.SecurityContext;
+import java.io.IOException;
+import java.security.Principal;
 
 import javax.annotation.Priority;
 import javax.security.auth.Subject;
@@ -41,8 +34,17 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
-import java.security.Principal;
+
+import org.apache.cxf.common.security.SimplePrincipal;
+import org.apache.cxf.interceptor.security.DefaultSecurityContext;
+import org.apache.cxf.jaxrs.impl.HttpHeadersImpl;
+import org.apache.cxf.jaxrs.utils.JAXRSUtils;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.security.SecurityContext;
+
+import de.taimos.daemon.DaemonProperties;
+import de.taimos.dvalin.jaxrs.security.IUser;
+import de.taimos.httputils.WSConstants;
 
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -61,7 +63,7 @@ public abstract class AuthorizationProvider implements ContainerRequestFilter {
         HttpHeaders head = new HttpHeadersImpl(m);
         String authHeader = head.getHeaderString(WSConstants.HEADER_AUTHORIZATION);
         if ((authHeader != null) && !authHeader.isEmpty() && (authHeader.contains(" "))) {
-            int index = authHeader.indexOf(" ");
+            int index = authHeader.indexOf(' ');
             String type = authHeader.substring(0, index);
             String auth = authHeader.substring(index + 1);
             SecurityContext sc = this.handleAuthHeader(requestContext, m, type, auth);

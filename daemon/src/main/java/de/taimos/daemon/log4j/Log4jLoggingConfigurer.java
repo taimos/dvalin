@@ -34,6 +34,8 @@ import de.taimos.daemon.ILoggingConfigurer;
 
 public class Log4jLoggingConfigurer implements ILoggingConfigurer {
 
+    private static final String DEFAULT_PATTERN = "%d{HH:mm:ss,SSS} %-5p %c %x - %m%n";
+    private static final String FALSE_STRING = "false";
     private final Logger rlog = Logger.getRootLogger();
 
     private SyslogAppender syslog;
@@ -50,7 +52,7 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
         // CONSOLE is always active
         this.console = new ConsoleAppender();
         this.console.setName("CONSOLE");
-        this.console.setLayout(new PatternLayout("%d{HH:mm:ss,SSS} %-5p %c %x - %m%n"));
+        this.console.setLayout(new PatternLayout(DEFAULT_PATTERN));
         this.console.setTarget(ConsoleAppender.SYSTEM_OUT);
         this.console.activateOptions();
         this.rlog.addAppender(this.console);
@@ -59,7 +61,7 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
         if (!DaemonStarter.isDevelopmentMode()) {
             this.darofi = new DailyRollingFileAppender();
             this.darofi.setName("DAROFI");
-            this.darofi.setLayout(new PatternLayout("%d{HH:mm:ss,SSS} %-5p %c %x - %m%n"));
+            this.darofi.setLayout(new PatternLayout(DEFAULT_PATTERN));
             this.darofi.setFile("log/" + DaemonStarter.getDaemonName() + ".log");
             this.darofi.setDatePattern("'.'yyyy-MM-dd");
             this.darofi.setAppend(true);
@@ -90,10 +92,10 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
         this.console.activateOptions();
 
         if (!DaemonStarter.isDevelopmentMode()) {
-            final String fileEnabled = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_FILE, "false");
-            final String syslogEnabled = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_SYSLOG, "false");
+            final String fileEnabled = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_FILE, FALSE_STRING);
+            final String syslogEnabled = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_SYSLOG, FALSE_STRING);
 
-            if ((fileEnabled == null) || fileEnabled.equals("false")) {
+            if ((fileEnabled == null) || fileEnabled.equals(FALSE_STRING)) {
                 this.rlog.removeAppender(this.darofi);
                 this.darofi = null;
                 this.rlog.info("Deactivated the FILE Appender");
@@ -103,7 +105,7 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
                 this.darofi.activateOptions();
             }
 
-            if ((syslogEnabled == null) || syslogEnabled.equals("false")) {
+            if ((syslogEnabled == null) || syslogEnabled.equals(FALSE_STRING)) {
                 this.rlog.removeAppender(this.syslog);
                 this.syslog = null;
                 this.rlog.info("Deactivated the SYSLOG Appender");
@@ -129,7 +131,7 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
             return new JSONLayout();
         case Log4jDaemonProperties.LOGGER_LAYOUT_PATTERN:
         default:
-            final String logPattern = System.getProperty(Log4jDaemonProperties.LOGGER_PATTERN, "%d{HH:mm:ss,SSS} %-5p %c %x - %m%n");
+            final String logPattern = System.getProperty(Log4jDaemonProperties.LOGGER_PATTERN, DEFAULT_PATTERN);
             return new PatternLayout(logPattern);
         }
     }
@@ -143,7 +145,7 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
 
         this.console = new ConsoleAppender();
         this.console.setName("CONSOLE");
-        this.console.setLayout(new PatternLayout("%d{HH:mm:ss,SSS} %-5p %c %x - %m%n"));
+        this.console.setLayout(new PatternLayout(DEFAULT_PATTERN));
         this.console.setTarget(ConsoleAppender.SYSTEM_OUT);
         this.console.activateOptions();
         this.rlog.addAppender(this.console);

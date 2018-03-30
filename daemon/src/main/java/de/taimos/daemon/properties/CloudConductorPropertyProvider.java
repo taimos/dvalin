@@ -118,7 +118,7 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 					this.jwt = this.getAuthToken(prop.getProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_PROP_FILE_TOKEN));
 				}
 			} catch(IOException ex) {
-				this.logger.warn("Failed to find cloudconductor properties file: '%s'", file);
+				this.logger.warn("Failed to find cloudconductor properties file: '{}'", file);
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 			}
 			return responseAsString;
 		} else {
-			this.logger.warn("Authentication with CloudConductor Server %s failed with status %s", this.server, status);
+			this.logger.warn("Authentication with CloudConductor Server {} failed with status {}", this.server, status);
 		}
 		return null;
 	}

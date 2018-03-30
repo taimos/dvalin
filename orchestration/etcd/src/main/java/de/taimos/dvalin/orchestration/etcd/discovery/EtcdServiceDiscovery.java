@@ -68,43 +68,43 @@ import mousio.etcd4j.responses.EtcdKeysResponse;
 @Service
 @OnSystemProperty(propertyName = "orchestration.etcd.peers")
 public class EtcdServiceDiscovery implements ServiceDiscovery {
-    
+
     public static final Logger LOGGER = LoggerFactory.getLogger(EtcdServiceDiscovery.class);
-    
+
     private static final int INSTANCE_TIMEOUT = 16;
     private static final int REFRESH_INTERVAL = 5;
-    
+
     @Value("${orchestration.etcd.peers}")
     private String peers;
-    
+
     private EtcdClient client;
-    
+
     private final ScheduledExecutorService updateExecutor = Executors.newScheduledThreadPool(1);
-    
+
     private final ObjectMapper mapper = new ObjectMapper();
-    
+
     private Map<String, Object> properties;
-    
+
     private final Multimap<String, ServiceListener> serviceListeners = ArrayListMultimap.create();
     private final ConcurrentMap<String, Long> etcdIndex = new ConcurrentHashMap<>();
-    
+
     @PostConstruct
     public void init() {
         List<URI> uris = Arrays.stream(this.peers.split(",")).map(URI::create).collect(Collectors.toList());
         this.client = new EtcdClient(uris.toArray(new URI[0]));
     }
-    
+
     @PreDestroy
     public void shutdown() {
         this.serviceListeners.clear();
     }
-    
+
     @Override
     public void registerInstance() {
         try {
             ServiceInstance instance = this.createLocalServiceInstance();
             String key = this.getServiceInstanceKey(instance);
-            
+
             this.client.put(key, this.getHostInfoAsString(instance, null)).ttl(INSTANCE_TIMEOUT).send().get();
             this.updateExecutor.scheduleAtFixedRate(() -> {
                 try {
@@ -118,7 +118,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void updateInstance() {
         try {
@@ -129,7 +129,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void unregisterInstance() {
         try {
@@ -141,19 +141,19 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void setAdditionalProperties(Map<String, Object> properties) {
         this.properties = properties;
         this.updateInstance();
-        
+
     }
-    
+
     @Override
     public Optional<Map<String, Object>> getAdditionalProperties() {
         return Optional.ofNullable(this.properties);
     }
-    
+
     @Override
     public List<ServiceInstance> getInstancesForService(String serviceName) {
         List<ServiceInstance> list = new ArrayList<>();
@@ -174,7 +174,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
         }
         return list;
     }
-    
+
     @Override
     public Optional<Map<String, Object>> getAdditionalProperties(ServiceInstance instance) {
         try {
@@ -188,13 +188,13 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
         }
         return Optional.empty();
     }
-    
+
     @Override
     public void addListenerForService(String serviceName, ServiceListener listener) {
         boolean hadListeners = this.serviceListeners.containsKey(serviceName);
-        
+
         this.serviceListeners.put(serviceName, listener);
-        
+
         if (!hadListeners) {
             new Thread(() -> {
                 String serviceKey = this.getServiceKey(serviceName);
@@ -207,7 +207,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
                             .timeout(10, TimeUnit.SECONDS)
                             .recursive()
                             .send();
-    
+
                         this.parseWaitResponse(serviceName, keyPattern, send);
                     } catch (IOException e) {
                         LOGGER.warn("Error waiting for instance updates", e);
@@ -216,7 +216,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
             }, "etcd-poller-" + serviceName).start();
         }
     }
-    
+
     private void parseWaitResponse(String serviceName, Pattern keyPattern, EtcdResponsePromise<EtcdKeysResponse> send) throws IOException {
         try {
 			EtcdKeysResponse response = send.get();
@@ -224,7 +224,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
 			Matcher matcher = keyPattern.matcher(response.node.getKey());
 			if (matcher.matches()) {
 				String instanceId = matcher.group(1);
-				
+
 				switch (response.action) {
 				case set:
 				case create:
@@ -245,6 +245,9 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
 					ServiceInstance removedInstance = new ServiceInstance(removedInfo.getHost(), serviceName, instanceId, LifecyclePhase.valueOf(removedInfo.getStatus()));
 					this.getListeners(serviceName).forEach(l -> l.instanceUnregistered(removedInstance));
 					break;
+                case get:
+                    // Do nothing here
+                    break;
 				}
 			}
 		} catch (TimeoutException e) {
@@ -260,37 +263,37 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
 			}
 		}
     }
-    
+
     @Override
     public void removeListenerForService(String serviceName, ServiceListener listener) {
         this.serviceListeners.remove(serviceName, listener);
     }
-    
+
     private String getServiceInstanceKey(ServiceInstance instance) {
         return this.getServiceKey(instance.getServiceName()) + "/" + instance.getInstanceId();
     }
-    
+
     private String getServiceKey(String serviceName) {
         return "/dvalin/discovery/" + serviceName;
     }
-    
+
     private ServiceInstance createLocalServiceInstance() {
         return new ServiceInstance(DaemonStarter.getHostname(), DaemonStarter.getDaemonName(), DaemonStarter.getInstanceId(), DaemonStarter.getCurrentPhase());
     }
-    
+
     private String getHostInfoAsString(ServiceInstance instance, Map<String, Object> properties) {
         try {
             HostInfo info = new HostInfo();
             info.setHost(instance.getHost());
             info.setStatus(instance.getPhase().name());
             info.setProperties(properties);
-            
+
             return this.mapper.writeValueAsString(info);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     private HostInfo parseHostInfo(String info) {
         try {
             return this.mapper.readValue(info, HostInfo.class);
@@ -298,7 +301,7 @@ public class EtcdServiceDiscovery implements ServiceDiscovery {
             throw new RuntimeException(e);
         }
     }
-    
+
     private Collection<ServiceListener> getListeners(String serviceName) {
         return Lists.newArrayList(this.serviceListeners.get(serviceName));
     }

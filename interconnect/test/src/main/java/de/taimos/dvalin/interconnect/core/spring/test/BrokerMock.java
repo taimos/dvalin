@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core.spring.test;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,32 +84,27 @@ public class BrokerMock {
             BrokerMock.LOGGER.error("Missing destination {}", destName);
             throw new RuntimeException();
         }
-        this.exec.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    final ActiveMQDestination dest;
-                    if (topic) {
-                        dest = new ActiveMQTopic(destination);
-                    } else {
-                        dest = new ActiveMQQueue(destination);
-                    }
-
-                    ActiveMQTextMessage msg = new ActiveMQTextMessage();
-                    msg.setDestination(dest);
-                    msg.setText(InterconnectMapper.toJson(ico));
-                    msg.setObjectProperty(InterconnectConnector.HEADER_ICO_CLASS, ico.getClass().getName());
-                    if (headers != null) {
-                        for (DaemonMessageSenderHeader header : headers) {
-                            msg.setObjectProperty(header.getField().getName(), header.getValue());
-                        }
-                    }
-                    BrokerMock.this.listeners.get(destName).onMessage(msg);
-                } catch (Exception e) {
-                    BrokerMock.LOGGER.error("Failed to send message", e);
+        this.exec.execute(() -> {
+            try {
+                final ActiveMQDestination dest;
+                if (topic) {
+                    dest = new ActiveMQTopic(destination);
+                } else {
+                    dest = new ActiveMQQueue(destination);
                 }
 
+                ActiveMQTextMessage msg = new ActiveMQTextMessage();
+                msg.setDestination(dest);
+                msg.setText(InterconnectMapper.toJson(ico));
+                msg.setObjectProperty(InterconnectConnector.HEADER_ICO_CLASS, ico.getClass().getName());
+                if (headers != null) {
+                    for (DaemonMessageSenderHeader header : headers) {
+                        msg.setObjectProperty(header.getField().getName(), header.getValue());
+                    }
+                }
+                BrokerMock.this.listeners.get(destName).onMessage(msg);
+            } catch (Exception e) {
+                BrokerMock.LOGGER.error("Failed to send message", e);
             }
         });
     }

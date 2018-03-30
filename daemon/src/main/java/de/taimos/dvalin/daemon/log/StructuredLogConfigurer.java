@@ -25,6 +25,9 @@ import de.taimos.daemon.log4j.Log4jDaemonProperties;
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 
 @Deprecated
+/**
+@deprecated use Log4jLoggingConfigurer with JSON layout
+ */
 public class StructuredLogConfigurer {
 
     public static void setup() {

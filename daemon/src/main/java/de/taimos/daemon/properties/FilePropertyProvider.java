@@ -9,9 +9,9 @@ package de.taimos.daemon.properties;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,21 +24,21 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class FilePropertyProvider extends StreamPropertyProvider {
-	
+
 	private final String filename;
-	
-	
+
+
 	/**
 	 * @param filename the file name
 	 */
 	public FilePropertyProvider(String filename) {
 		this.filename = filename;
 	}
-	
+
 	@Override
 	protected InputStream getStream() throws Exception {
-		this.logger.info("Loading properties from: " + this.filename);
+		this.logger.info("Loading properties from: {}", this.filename);
 		return new FileInputStream(this.filename);
 	}
-	
+
 }

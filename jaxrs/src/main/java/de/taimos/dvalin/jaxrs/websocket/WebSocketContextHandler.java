@@ -12,9 +12,9 @@ package de.taimos.dvalin.jaxrs.websocket;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,9 +27,6 @@ import javax.annotation.PostConstruct;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
-import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
-import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.slf4j.Logger;
@@ -56,8 +53,9 @@ public class WebSocketContextHandler extends ServletContextHandler {
         String[] socketBeans = this.beanFactory.getBeanNamesForAnnotation(WebSocket.class);
         for (String sb : socketBeans) {
             WebSocket ann = this.beanFactory.findAnnotationOnBean(sb, WebSocket.class);
-            WebSocketContextHandler.LOGGER.info("Found bean {} for path {}", sb, ann.pathSpec());
-            this.addServlet(new ServletHolder(this.createServletForBeanName(sb)), ann.pathSpec());
+            String pathSpec = ann.pathSpec();
+            WebSocketContextHandler.LOGGER.info("Found bean {} for path {}", sb, pathSpec);
+            this.addServlet(new ServletHolder(this.createServletForBeanName(sb)), pathSpec);
         }
     }
 
@@ -71,13 +69,7 @@ public class WebSocketContextHandler extends ServletContextHandler {
             public void configure(WebSocketServletFactory factory) {
                 WebSocketContextHandler.LOGGER.info("Configuring WebSocket Servlet for {}", beanName);
                 factory.getPolicy().setIdleTimeout(10000);
-                factory.setCreator(new WebSocketCreator() {
-
-                    @Override
-                    public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
-                        return WebSocketContextHandler.this.beanFactory.getBean(beanName);
-                    }
-                });
+                factory.setCreator((req, resp) -> WebSocketContextHandler.this.beanFactory.getBean(beanName));
             }
         };
     }

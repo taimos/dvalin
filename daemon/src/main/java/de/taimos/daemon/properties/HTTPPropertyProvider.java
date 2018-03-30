@@ -9,9 +9,9 @@ package de.taimos.daemon.properties;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,15 +25,15 @@ import java.io.InputStream;
 import org.apache.http.HttpResponse;
 
 public abstract class HTTPPropertyProvider extends StreamPropertyProvider {
-	
+
 	@Override
 	protected InputStream getStream() throws Exception {
-		this.logger.info("Loading properties from: " + this.getDescription());
+		this.logger.info("Loading properties from: {}", this.getDescription());
 		HttpResponse res = this.getResponse();
 		return res.getEntity().getContent();
 	}
-	
+
 	protected abstract String getDescription();
-	
+
 	protected abstract HttpResponse getResponse();
 }
