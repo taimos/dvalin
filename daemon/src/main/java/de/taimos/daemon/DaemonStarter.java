@@ -320,6 +320,7 @@ public class DaemonStarter {
             }
         } catch (InterruptedException e) {
             DaemonStarter.rlog.error("Failure awaiting stop", e);
+            Thread.currentThread().interrupt();
         }
 
     }
