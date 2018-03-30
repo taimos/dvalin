@@ -1,4 +1,7 @@
 # current master
+* Integrate Taimos daemon framework into repository
+
+# Version 1.25
 * introduces yaml support to i18n
 * add support for multiple resource loaders
 * add method count to `MongoDBDataAccess`
