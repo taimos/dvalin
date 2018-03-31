@@ -1,10 +1,13 @@
 # current master
 * Integrate Taimos daemon framework into repository
+* Update dependencies
+    * Jongo 1.4.0
+    * Jackson 2.9.5
 
 # Version 1.25
 * introduces yaml support to i18n
 * add support for multiple resource loaders
-* add method count to `MongoDBDataAccess`
+* add method `count` to `MongoDBDataAccess`
 * Add `CognitoContext`
 * Update dependencies
     * Apache CXF 3.2.3

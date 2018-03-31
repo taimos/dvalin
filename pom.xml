@@ -51,7 +51,7 @@
     </contributors>
     <properties>
         <org.springframework.version>4.3.14.RELEASE</org.springframework.version>
-        <jackson.version>2.8.10</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
         <joda.time.version>2.9.9</joda.time.version>
         <slf4j.version>1.7.25</slf4j.version>
         <mockito.version>1.10.19</mockito.version>
@@ -64,7 +64,7 @@
         <http.version>1.11</http.version>
 
         <bson.version>2.7.0</bson.version>
-        <jongo.version>1.3.0</jongo.version>
+        <jongo.version>1.4.0</jongo.version>
         <mongo.version>3.4.2</mongo.version>
         <mongobee.version>0.12</mongobee.version>
         <fongo.version>2.1.1</fongo.version>
