@@ -3,6 +3,7 @@
 * Update dependencies
     * Jongo 1.4.0
     * Jackson 2.9.5
+* Adjust `DLinkQuery` to new data access 
 
 # Version 1.25
 * introduces yaml support to i18n
