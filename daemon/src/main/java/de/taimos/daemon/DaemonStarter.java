@@ -150,6 +150,7 @@ public class DaemonStarter {
         DaemonStarter.daemonName.set(_daemonName);
         DaemonStarter.addProperty(DaemonProperties.DAEMON_NAME, _daemonName);
         DaemonStarter.addProperty(DaemonProperties.SERVICE_NAME, _daemonName);
+        DaemonStarter.addProperty("com.instana.agent.jvm.name", _daemonName);
         DaemonStarter.lifecycleListener.set(_lifecycleListener);
 
         DaemonStarter.startupMode.set(System.getProperty(DaemonProperties.STARTUP_MODE, DaemonProperties.STARTUP_MODE_DEV));

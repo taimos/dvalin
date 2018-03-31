@@ -3,7 +3,8 @@
 * Update dependencies
     * Jongo 1.4.0
     * Jackson 2.9.5
-* Adjust `DLinkQuery` to new data access 
+* Adjust `DLinkQuery` to new data access
+* Set JVM name for Instana to daemon name
 
 # Version 1.25
 * introduces yaml support to i18n
