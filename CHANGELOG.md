@@ -5,6 +5,7 @@
     * Jackson 2.9.5
 * Adjust `DLinkQuery` to new data access
 * Set JVM name for Instana to daemon name
+* Fixed a Bug in interconnect DaemonScanner preventing Method discovery
 
 # Version 1.25
 * introduces yaml support to i18n
