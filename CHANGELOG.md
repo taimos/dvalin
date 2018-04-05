@@ -1,4 +1,6 @@
 # current master
+
+# Version 1.26
 * Integrate Taimos daemon framework into repository
 * Update dependencies
     * Jongo 1.4.0
