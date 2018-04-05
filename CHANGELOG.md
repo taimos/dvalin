@@ -3,6 +3,10 @@
 * Update dependencies
     * Jongo 1.4.0
     * Jackson 2.9.5
+    * Spring 4.3.15 (Security Release)
+    * Apache CXF 3.2.4 (Bugfix Release)
+    * Guava 24.1
+    * AWS 1.11.309
 * Adjust `DLinkQuery` to new data access
 * Set JVM name for Instana to daemon name
 * Fixed a Bug in interconnect DaemonScanner preventing Method discovery
