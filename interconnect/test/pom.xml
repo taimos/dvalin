@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-interconnect-parent</artifactId>
-        <version>1.26-SNAPSHOT</version>
+        <version>1.26</version>
     </parent>
     <artifactId>dvalin-interconnect-test</artifactId>
     <name>Dvalin interconnect test library</name>
