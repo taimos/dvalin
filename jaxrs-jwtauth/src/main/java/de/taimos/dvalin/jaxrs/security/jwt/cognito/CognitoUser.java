@@ -83,11 +83,7 @@ public class CognitoUser implements IUser {
         user.roles = claims.getStringArrayClaim(rolesField);
         user.customFields = claims.getClaims();
 
-        String tokenUse = claims.getStringClaim("tokenUse");
-        if (tokenUse == null) {
-            throw new IllegalArgumentException("No token use found");
-        }
-        switch (tokenUse) {
+        switch (claims.getStringClaim("token_use")) {
         case "id":
             user.username = claims.getStringClaim("cognito:username");
             user.email = claims.getStringClaim("email");
@@ -97,7 +93,7 @@ public class CognitoUser implements IUser {
             user.username = claims.getStringClaim("username");
             break;
         default:
-            throw new IllegalArgumentException("Invalid token use: " + tokenUse);
+            throw new IllegalArgumentException("Invalid token use: " + claims.getStringClaim("token_use"));
         }
         return user;
     }

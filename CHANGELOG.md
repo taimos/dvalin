@@ -1,7 +1,8 @@
 # current master
 * **Update to Taimos HTTPUtils 2.0 (INCLUDING BREAKING CHANGES)**
+* Fix `CognitoUser` (Broken in 1.26)
 
-# Version 1.26
+# Version 1.26 (Cognito support is broken in this release)
 * Integrate Taimos daemon framework into repository
 * Update dependencies
     * Jongo 1.4.0
