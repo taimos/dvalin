@@ -1,4 +1,5 @@
 # current master
+* **Update to Taimos HTTPUtils 2.0 (INCLUDING BREAKING CHANGES)**
 
 # Version 1.26
 * Integrate Taimos daemon framework into repository

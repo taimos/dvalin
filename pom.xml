@@ -61,7 +61,7 @@
         <cxf.version>3.2.4</cxf.version>
         <jetty.version>9.4.8.v20171121</jetty.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
-        <http.version>1.11</http.version>
+        <http.version>2.0</http.version>
 
         <bson.version>2.7.0</bson.version>
         <jongo.version>1.4.0</jongo.version>

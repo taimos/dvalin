@@ -26,10 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.http.HttpResponse;
-
 import de.taimos.daemon.DaemonStarter;
 import de.taimos.httputils.HTTPRequest;
+import de.taimos.httputils.HTTPResponse;
 import de.taimos.httputils.WS;
 
 public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
@@ -86,7 +85,7 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 	}
 
 	@Override
-	protected HttpResponse getResponse() {
+	protected HTTPResponse getResponse() {
 		HTTPRequest req = WS.url(this.protocol + "://" + this.server + "/api/config/{template}/{svc}");
 		req.pathParam("template", this.template).pathParam("svc", DaemonStarter.getDaemonName());
 		req.accept("application/x-javaprops");
@@ -129,20 +128,22 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 		}
 		String path = this.protocol + "://" + this.server + "/api/auth";
 		String body = "{\"token\":\"" + token + "\"}";
-		HttpResponse response = WS.url(path).body(body).header("Content-Type", "application/json;charset=UTF-8").put();
-		int status = WS.getStatus(response);
-		if(200 <= status && 300 > status) {
-			String responseAsString = WS.getResponseAsString(response);
-			if(responseAsString.startsWith("\"")) {
-				responseAsString = responseAsString.substring(1);
-			}
-			if(responseAsString.endsWith("\"")) {
-				responseAsString = responseAsString.substring(0, responseAsString.length() - 1);
-			}
-			return responseAsString;
-		} else {
-			this.logger.warn("Authentication with CloudConductor Server {} failed with status {}", this.server, status);
-		}
+        HTTPRequest httpRequest = WS.url(path).body(body).header("Content-Type", "application/json;charset=UTF-8");
+        try (HTTPResponse response = httpRequest.put()) {
+            int status = response.getStatus();
+            if (200 <= status && 300 > status) {
+                String responseAsString = response.getResponseAsString();
+                if (responseAsString.startsWith("\"")) {
+                    responseAsString = responseAsString.substring(1);
+                }
+                if (responseAsString.endsWith("\"")) {
+                    responseAsString = responseAsString.substring(0, responseAsString.length() - 1);
+                }
+                return responseAsString;
+            } else {
+                this.logger.warn("Authentication with CloudConductor Server {} failed with status {}", this.server, status);
+            }
+        }
 		return null;
 	}
 }
