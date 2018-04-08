@@ -84,6 +84,9 @@ public class CognitoUser implements IUser {
         user.customFields = claims.getClaims();
 
         String tokenUse = claims.getStringClaim("tokenUse");
+        if (tokenUse == null) {
+            throw new IllegalArgumentException("No token use found");
+        }
         switch (tokenUse) {
         case "id":
             user.username = claims.getStringClaim("cognito:username");
