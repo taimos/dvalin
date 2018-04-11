@@ -28,30 +28,34 @@ import org.apache.log4j.net.SyslogAppender;
  * @author hoegertn
  *
  */
-public interface Log4jDaemonProperties {
+public final class Log4jDaemonProperties {
 
-	/** the logger level (see {@link Level}) */
-	String LOGGER_LEVEL = "logger.level";
+    private Log4jDaemonProperties() {
+        //
+    }
+
+    /** the logger level (see {@link Level}) */
+	public static final String LOGGER_LEVEL = "logger.level";
 	/** the logger pattern */
-	String LOGGER_PATTERN = "logger.pattern";
+    public static final String LOGGER_PATTERN = "logger.pattern";
 
 	/** the logger layout */
-	String LOGGER_LAYOUT = "logger.layout";
+    public static final String LOGGER_LAYOUT = "logger.layout";
 	/** the logger layout - Pattern */
-	String LOGGER_LAYOUT_PATTERN = "pattern";
+    public static final String LOGGER_LAYOUT_PATTERN = "pattern";
 	/** the logger layout - JSON */
-	String LOGGER_LAYOUT_JSON = "json";
+    public static final String LOGGER_LAYOUT_JSON = "json";
 
 	/** true to use {@link FileAppender}; false to disable */
-	String LOGGER_FILE = "logger.file";
+    public static final String LOGGER_FILE = "logger.file";
 	/** true to use {@link SyslogAppender}; false to disable */
-	String LOGGER_SYSLOG = "logger.syslog";
+    public static final String LOGGER_SYSLOG = "logger.syslog";
 
 	/** the log level for syslog (see {@link Level}) */
-	String SYSLOG_LEVEL = "syslog.level";
+    public static final String SYSLOG_LEVEL = "syslog.level";
 	/** the syslog facility (LOCAL0, LOCAL1, ...) */
-	String SYSLOG_FACILITY = "syslog.facility";
+    public static final String SYSLOG_FACILITY = "syslog.facility";
 	/** the host for remote syslog */
-	String SYSLOG_HOST = "syslog.host";
-	
+    public static final String SYSLOG_HOST = "syslog.host";
+
 }

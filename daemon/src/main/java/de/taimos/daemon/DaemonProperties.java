@@ -24,41 +24,45 @@ package de.taimos.daemon;
  * @author hoegertn
  *
  */
-public interface DaemonProperties {
+public final class DaemonProperties {
 
-	/** daemon startup mode (dev|run) */
-	String STARTUP_MODE = "startupMode";
+    private DaemonProperties() {
+    }
+
+    /** daemon startup mode (dev|run) */
+	public static final String STARTUP_MODE = "startupMode";
 	/** daemon startup mode - Development */
-	String STARTUP_MODE_DEV = "dev";
+    public static final String STARTUP_MODE_DEV = "dev";
 	/** daemon startup mode - Run (Foreground) */
-	String STARTUP_MODE_RUN = "run";
+    public static final String STARTUP_MODE_RUN = "run";
 
 	/** the ttl for dns timeouts */
-	String DNS_TTL = "dns.ttl";
+    public static final String DNS_TTL = "dns.ttl";
 
 	/** the clazz of the {@link ILoggingConfigurer} */
-	String LOGGER_CONFIGURER = "loggerConfigurer";
+    public static final String LOGGER_CONFIGURER = "loggerConfigurer";
 
 	/** the name of the daemon */
-	String DAEMON_NAME = "daemonName";
+    public static final String DAEMON_NAME = "daemonName";
 	/** the name of the daemon */
-	String SERVICE_NAME = "serviceName";
+    public static final String SERVICE_NAME = "serviceName";
 
 	/** the property source type (aws, c2, file, http) */
-	String PROPERTY_SOURCE = "property.source";
+    public static final String PROPERTY_SOURCE = "property.source";
 	/** the property location (file name or URL) */
-	String PROPERTY_LOCATION = "property.location";
+    public static final String PROPERTY_LOCATION = "property.location";
 	/** the CloudConductor server URL if property.source=c2 */
-	String PROPERTY_SERVER = "property.server";
+    public static final String PROPERTY_SERVER = "property.server";
 	/** the CloudConductor template if property.source=c2 */
-	String PROPERTY_TEMPLATE = "property.template";
+    public static final String PROPERTY_TEMPLATE = "property.template";
 
 	/** the property source type - Amazon Web Services UserData */
-	String PROPERTY_SOURCE_AWS = "aws";
+    public static final String PROPERTY_SOURCE_AWS = "aws";
 	/** the property source type - local file */
-	String PROPERTY_SOURCE_FILE = "file";
+    public static final String PROPERTY_SOURCE_FILE = "file";
 	/** the property source type - HTTP GET resource */
-	String PROPERTY_SOURCE_HTTP = "http";
+    public static final String PROPERTY_SOURCE_HTTP = "http";
 	/** the property source type - Cinovo CloudConductor Server */
-	String PROPERTY_SOURCE_C2 = "c2";
+    public static final String PROPERTY_SOURCE_C2 = "c2";
+
 }
