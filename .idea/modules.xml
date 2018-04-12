@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/archetypes/docker/dvalin-archetype-docker.iml" filepath="$PROJECT_DIR$/archetypes/docker/dvalin-archetype-docker.iml" />
       <module fileurl="file://$PROJECT_DIR$/archetypes/dvalin-archetype-parent.iml" filepath="$PROJECT_DIR$/archetypes/dvalin-archetype-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" filepath="$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud/aws-ssm/dvalin-cloud-aws-ssm.iml" filepath="$PROJECT_DIR$/cloud/aws-ssm/dvalin-cloud-aws-ssm.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" filepath="$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster/hazelcast/dvalin-cluster-hazelcast.iml" filepath="$PROJECT_DIR$/cluster/hazelcast/dvalin-cluster-hazelcast.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster/dvalin-cluster-parent.iml" filepath="$PROJECT_DIR$/cluster/dvalin-cluster-parent.iml" />

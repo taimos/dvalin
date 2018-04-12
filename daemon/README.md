@@ -75,3 +75,21 @@ In your _main_ method just call `startDaemon` to run the daemon framework. You h
 ```
 DaemonStarter.startDaemon("my-service-name", new MyLifecycleAdapter());
 ```
+
+## DvalinLifecycleAdapter
+
+Extends the default `DaemonLifecycleAdapter` with defaults to a standard Dvalin Spring application.
+
+### Lifecycle
+
+Instead of using the lifecycle methods of the daemon framework, register beans of the type `ISpringLifecycleListener`. 
+Davlin will call them with their correct lifecycle state.
+
+### Properties
+
+Dvalin register a `BestEffortPropertyProviderChain` and checks multiple locations for properties.
+
+1) It lokks for the System property `property.source` and acts like the daemon framework default.
+2) Loads properties from the file `dvalin.properties`
+3) If the module `dvalin-cloud-aws-ssm` is used, values from SSM ParameterStore are loaded
+4) Environment variables starting with `DVALIN_` are used. `DVALIN_SERVER_URL` becomes `server.url` 

@@ -19,6 +19,7 @@
         <module name="dvalin-archetype-basic" />
         <module name="dvalin-archetype-docker" />
         <module name="dvalin-cloud-aws" />
+        <module name="dvalin-cloud-aws-ssm" />
         <module name="dvalin-cluster-hazelcast" />
         <module name="dvalin-daemon" />
         <module name="dvalin-dynamodb" />
@@ -50,6 +51,7 @@
       <module name="dvalin-archetype-docker" target="1.8" />
       <module name="dvalin-archetype-parent" target="1.8" />
       <module name="dvalin-cloud-aws" target="1.8" />
+      <module name="dvalin-cloud-aws-ssm" target="1.8" />
       <module name="dvalin-cloud-parent" target="1.8" />
       <module name="dvalin-cluster-hazelcast" target="1.8" />
       <module name="dvalin-cluster-parent" target="1.8" />

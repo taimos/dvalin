@@ -20,6 +20,7 @@ package de.taimos.dvalin.daemon;
  * #L%
  */
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -30,9 +31,13 @@ import de.taimos.daemon.DaemonLifecycleAdapter;
 import de.taimos.daemon.DaemonProperties;
 import de.taimos.daemon.DaemonStarter;
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
+import de.taimos.daemon.properties.BestEffortPropertyProviderChain;
+import de.taimos.daemon.properties.CloudConductorPropertyProvider;
 import de.taimos.daemon.properties.EnvPropertyProvider;
 import de.taimos.daemon.properties.FilePropertyProvider;
 import de.taimos.daemon.properties.IPropertyProvider;
+import de.taimos.daemon.properties.SimpleHTTPPropertyProvider;
+import de.taimos.daemon.properties.UserDataPropertyProvider;
 import de.taimos.daemon.spring.SpringDaemonAdapter;
 
 /**
@@ -53,10 +58,38 @@ public abstract class DvalinLifecycleAdapter extends SpringDaemonAdapter {
 
     @Override
     public IPropertyProvider getPropertyProvider() {
-        if (EnvPropertyProvider.isConfigured()) {
-            return new EnvPropertyProvider();
+        BestEffortPropertyProviderChain chain = new BestEffortPropertyProviderChain();
+
+        switch (System.getProperty(DaemonProperties.PROPERTY_SOURCE, "")) {
+        case DaemonProperties.PROPERTY_SOURCE_AWS:
+            chain.withProvider(new UserDataPropertyProvider());
+            break;
+        case DaemonProperties.PROPERTY_SOURCE_FILE:
+            chain.withProvider(new FilePropertyProvider(System.getProperty(DaemonProperties.PROPERTY_LOCATION)));
+            break;
+        case DaemonProperties.PROPERTY_SOURCE_C2:
+            chain.withProvider(new CloudConductorPropertyProvider(System.getProperty(DaemonProperties.PROPERTY_SERVER), System.getProperty(DaemonProperties.PROPERTY_TEMPLATE)));
+            break;
+        case DaemonProperties.PROPERTY_SOURCE_HTTP:
+            chain.withProvider(new SimpleHTTPPropertyProvider(System.getProperty(DaemonProperties.PROPERTY_LOCATION)));
+            break;
+        default:
+            // No property provider
+            break;
         }
-        return new FilePropertyProvider("dvalin.properties");
+
+        if (new File("dvalin.properties").exists()) {
+            chain.withProvider(new FilePropertyProvider("dvalin.properties"));
+        }
+
+        // add ParameterStorePropertyProvider if available on classpath
+        chain.withProvider("de.taimos.dvalin.cloud.aws.ParameterStorePropertyProvider");
+
+        if (EnvPropertyProvider.isConfigured()) {
+            chain.withProvider(new EnvPropertyProvider());
+        }
+
+        return chain;
     }
 
     @Override

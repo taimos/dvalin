@@ -15,5 +15,6 @@
     </dependencies>
     <modules>
         <module>aws</module>
+        <module>aws-ssm</module>
     </modules>
 </project>
