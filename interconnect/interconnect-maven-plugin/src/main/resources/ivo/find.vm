@@ -45,16 +45,16 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>> $model.getParentBuilder() implements IPageableBuilder {
 #foreach ( $field in $model.getFilterableFields() )
 #if ($field.filterable == 'single')
-		private $field.getTypeAsString(true) $field.name;
+		private $field.getTypeAsString(false) $field.name;
 #else
-		private Set<$field.getTypeAsString(true)> $field.name;
+		private Set<$field.getTypeAsString(false)> $field.name;
 #end
 #end
 
 #foreach ( $field in $model.getFilterableFields() )
 		/**
 		 * This field is optional.
-		 * @param  $field.name the value to set
+		 * @param  p$field.name the value to set
 		 * @return the builder $field.filterable
 		 *
 		 **/

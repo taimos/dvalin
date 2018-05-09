@@ -4,6 +4,7 @@ package ${model.getPackageName()}.requests;
 import $imp;
 #end
 import ${model.getPackageName()}.${model.getClazzName()};
+import de.taimos.dvalin.interconnect.model.ivo.IVO;
 
 /**
 * $model.getComment()

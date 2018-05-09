@@ -5,6 +5,7 @@ import $imp;
 #end
 import java.util.List;
 import ${model.getPackageName()}.${model.getClazzName()};
+import de.taimos.dvalin.interconnect.model.ivo.IVO;
 
 /**
 * $model.getComment()

@@ -69,7 +69,7 @@ public class FilterMemberDef extends ArrayList<Object> {
 
     private StringMemberDef createStringMemberDef() {
         StringMemberDef smd = new StringMemberDef();
-        smd.setComment("provide this to enable a correct sorted paging of your lists. Use {@link #withSortDirection(Direction)} to provide information about sort direction");
+        smd.setComment("provide this to enable a correct sorted paging of your lists. Use sortDirection to provide information about sort direction");
         smd.setJavaTransientFlag(Boolean.FALSE);
         smd.setJsonTransientFlag(Boolean.FALSE);
         smd.setName("sortBy");
@@ -81,7 +81,7 @@ public class FilterMemberDef extends ArrayList<Object> {
 
     private EnumMemberDef createEnumMemberDef() {
         EnumMemberDef emd = new EnumMemberDef();
-        emd.setComment("provide this to enable a correct sorted paging of your lists. Use {@link #withSortBy(String)} to provide information about the property to sort by");
+        emd.setComment("provide this to enable a correct sorted paging of your lists. Use sortBy to provide information about the property to sort by");
         emd.setJavaTransientFlag(Boolean.FALSE);
         emd.setJsonTransientFlag(Boolean.FALSE);
         emd.setName("sortDirection");

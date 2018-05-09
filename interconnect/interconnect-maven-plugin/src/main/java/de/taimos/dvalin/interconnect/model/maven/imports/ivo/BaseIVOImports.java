@@ -20,6 +20,7 @@ public abstract class BaseIVOImports extends Imports<IVODef> {
         }
         if(ivoDefenition.getAuditing()) {
             this.with(IIVOAuditing.class);
+            this.withDateTime();
         }
         if(model.hasParentClazz()) {
             this.with(model.getParentClazzPath());
