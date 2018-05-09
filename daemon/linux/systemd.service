@@ -1,0 +1,11 @@
+[Unit]
+Description=MyService
+Requires=network.service
+
+[Service]
+ExecStart=/opt/my-service/my-service.jar
+WorkingDirectory=/opt/my-service
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

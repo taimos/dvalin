@@ -63,14 +63,17 @@ public abstract class AuthorizationProvider implements ContainerRequestFilter {
         HttpHeaders head = new HttpHeadersImpl(m);
         String authHeader = head.getHeaderString(WSConstants.HEADER_AUTHORIZATION);
         if ((authHeader != null) && !authHeader.isEmpty() && (authHeader.contains(" "))) {
-            int index = authHeader.indexOf(" ");
+            int index = authHeader.indexOf(' ');
             String type = authHeader.substring(0, index);
             String auth = authHeader.substring(index + 1);
             SecurityContext sc = this.handleAuthHeader(requestContext, m, type, auth);
             if (sc != null) {
                 m.put(SecurityContext.class, sc);
-                return;
             }
+            if(sc == null && this.isAuthorizationMandatory()) {
+                this.abortUnauthorized(requestContext);
+            }
+            return;
         }
 
         SecurityContext sc = this.handleOther(requestContext, m, head);

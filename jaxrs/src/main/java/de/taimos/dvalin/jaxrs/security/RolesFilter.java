@@ -70,7 +70,9 @@ public class RolesFilter implements ContainerRequestFilter {
             return;
         }
 
-        RolesFilter.LOGGER.debug("Needs: {}", Joiner.on(",").join(needed));
+        if (RolesFilter.LOGGER.isDebugEnabled()) {
+            RolesFilter.LOGGER.debug("Needs: {}", Joiner.on(",").join(needed));
+        }
 
         final SecurityContext securityContext = m.get(SecurityContext.class);
         if (securityContext != null) {

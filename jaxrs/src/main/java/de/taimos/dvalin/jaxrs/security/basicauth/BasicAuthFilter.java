@@ -53,8 +53,8 @@ public class BasicAuthFilter extends AuthorizationProvider {
             if (!decoded.contains(":")) {
                 return null;
             }
-            String username = decoded.substring(0, decoded.indexOf(":"));
-            String pwd = decoded.substring(decoded.indexOf(":") + 1);
+            String username = decoded.substring(0, decoded.indexOf(':'));
+            String pwd = decoded.substring(decoded.indexOf(':') + 1);
 
             return this.loginUser(msg, this.basicAuthUserDAO.getUserByNameAndPassword(username, pwd));
         }

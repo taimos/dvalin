@@ -127,6 +127,7 @@ public class AsyncAssert {
             Assert.fail("Timeout reached");
         } catch (InterruptedException e) {
             Assert.fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 

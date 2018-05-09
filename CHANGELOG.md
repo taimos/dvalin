@@ -1,7 +1,24 @@
 # current master
+* **Update to Taimos HTTPUtils 2.0 (INCLUDING BREAKING CHANGES)**
+* Fix `CognitoUser` (Broken in 1.26)
+
+# Version 1.26 (Cognito support is broken in this release)
+* Integrate Taimos daemon framework into repository
+* Update dependencies
+    * Jongo 1.4.0
+    * Jackson 2.9.5
+    * Spring 4.3.15 (Security Release)
+    * Apache CXF 3.2.4 (Bugfix Release)
+    * Guava 24.1
+    * AWS 1.11.309
+* Adjust `DLinkQuery` to new data access
+* Set JVM name for Instana to daemon name
+* Fixed a Bug in interconnect DaemonScanner preventing Method discovery
+
+# Version 1.25
 * introduces yaml support to i18n
 * add support for multiple resource loaders
-* add method count to `MongoDBDataAccess`
+* add method `count` to `MongoDBDataAccess`
 * Add `CognitoContext`
 * Update dependencies
     * Apache CXF 3.2.3

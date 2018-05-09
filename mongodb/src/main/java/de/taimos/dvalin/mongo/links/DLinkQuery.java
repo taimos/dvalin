@@ -25,9 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jongo.MongoCollection;
-import org.jongo.ResultHandler;
 
 import com.mongodb.DBObject;
+
+import de.taimos.dvalin.mongo.MongoDBDataAccess;
 
 /**
  * QueryHelper to convert query result to a list of DLinks. It only queries the fields necessary to construct links.
@@ -51,20 +52,13 @@ public class DLinkQuery<T extends AReferenceableEntity<T>> {
         this.labelField = labelField;
     }
 
-    public List<DocumentLink<T>> find(MongoCollection collection, String query, Object... parameter) {
-        ResultHandler<DocumentLink<T>> handler = new ResultHandler<DocumentLink<T>>() {
+    public List<DocumentLink<T>> find(MongoDBDataAccess<T> dataAccess, String query, Object... parameter) {
+        return dataAccess.findSortedByQuery(query, null, null, null, String.format("{%s:1}", this.labelField), this::convert, parameter);
+    }
 
-            @Override
-            public DocumentLink<T> map(DBObject result) {
-                if (!result.containsField("_id") || !result.containsField(DLinkQuery.this.labelField)) {
-                    throw new RuntimeException("Fields missing to construct DocumentLink");
-                }
-                String id = result.get("_id").toString();
-                String label = result.get(DLinkQuery.this.labelField).toString();
-                return new DocumentLink<T>(DLinkQuery.this.targetClass, id, label);
-            }
-        };
-        Iterator<DocumentLink<T>> it = collection.find(query, parameter).projection(String.format("{%s:1}", this.labelField)).map(handler).iterator();
+    @Deprecated
+    public List<DocumentLink<T>> find(MongoCollection collection, String query, Object... parameter) {
+        Iterator<DocumentLink<T>> it = collection.find(query, parameter).projection(String.format("{%s:1}", this.labelField)).map(this::convert).iterator();
 
         List<DocumentLink<T>> objects = new ArrayList<>();
         while (it.hasNext()) {
@@ -72,6 +66,15 @@ public class DLinkQuery<T extends AReferenceableEntity<T>> {
             objects.add(link);
         }
         return objects;
+    }
+
+    private DocumentLink<T> convert(DBObject result) {
+        if (!result.containsField("_id") || !result.containsField(DLinkQuery.this.labelField)) {
+            throw new RuntimeException("Fields missing to construct DocumentLink");
+        }
+        String id = result.get("_id").toString();
+        String label = result.get(DLinkQuery.this.labelField).toString();
+        return new DocumentLink<>(DLinkQuery.this.targetClass, id, label);
     }
 
 }

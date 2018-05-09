@@ -42,6 +42,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.taimos.daemon.DaemonProperties;
@@ -77,6 +79,8 @@ public class ApiListing {
     private SwaggerConfig config;
 
     private final AtomicReference<Swagger> swaggerCache = new AtomicReference<>();
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiListing.class);
 
     protected synchronized Swagger scan() {
         Set<Class<?>> classes = this.scanner.classes();
@@ -169,7 +173,7 @@ public class ApiListing {
                 return Response.ok().entity(b.toString()).type("application/yaml").build();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to create YAML", e);
         }
         return Response.status(404).build();
     }

@@ -109,14 +109,18 @@ public class MonitoringFeature extends AbstractFeature {
     void endMessage(Message m) {
         InvocationInstance i = this.stopInstance(m);
         if (i.getDuration() > this.durationThreshold) {
-            MonitoringFeature.LOGGER.warn("SLOW RESPONSE: " + i.toString());
+            if (MonitoringFeature.LOGGER.isWarnEnabled()) {
+                MonitoringFeature.LOGGER.warn("SLOW RESPONSE: {}", i.toString());
+            }
         }
     }
 
     private InvocationInstance stopInstance(Message m) {
         InvocationInstance i = m.getExchange().get(InvocationInstance.class);
         i.stop();
-        MonitoringFeature.LOGGER.debug(i.toString());
+        if (MonitoringFeature.LOGGER.isDebugEnabled()) {
+            MonitoringFeature.LOGGER.debug(i.toString());
+        }
         // Clear MDC
         MDC.remove(MonitoringFeature.MDC_REQUEST);
         MDC.remove(MonitoringFeature.MDC_URI);

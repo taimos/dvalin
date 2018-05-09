@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.http.HttpResponse;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -40,10 +39,11 @@ import org.springframework.beans.factory.annotation.Value;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import de.taimos.daemon.spring.SpringDaemonTestRunner;
-import de.taimos.httputils.HTTPRequest;
-import de.taimos.httputils.WS;
 import de.taimos.dvalin.jaxrs.MapperFactory;
 import de.taimos.dvalin.jaxrs.websocket.ClientSocketAdapter;
+import de.taimos.httputils.HTTPRequest;
+import de.taimos.httputils.HTTPResponse;
+import de.taimos.httputils.WS;
 
 @RunWith(SpringDaemonTestRunner.class)
 public abstract class APITest {
@@ -87,8 +87,8 @@ public abstract class APITest {
      *
      * @param res the response to check
      */
-    protected final void assertOK(HttpResponse res) {
-        Assert.assertTrue(String.format("Expected OK - was %s", WS.getStatus(res)), WS.isStatusOK(res));
+    protected final void assertOK(HTTPResponse res) {
+        Assert.assertTrue(String.format("Expected OK - was %s", res.getStatus()), res.isStatusOK());
     }
 
     /**
@@ -97,8 +97,8 @@ public abstract class APITest {
      * @param res    the response to check
      * @param status the status to check against
      */
-    protected final void assertStatus(HttpResponse res, Status status) {
-        Assert.assertTrue(String.format("Expected %s - was %s", status.getStatusCode(), WS.getStatus(res)), WS.getStatus(res) == status.getStatusCode());
+    protected final void assertStatus(HTTPResponse res, Status status) {
+        Assert.assertTrue(String.format("Expected %s - was %s", status.getStatusCode(), res.getStatus()), res.getStatus() == status.getStatusCode());
     }
 
     /**
@@ -129,9 +129,9 @@ public abstract class APITest {
      * @return the converted object
      * @throws RuntimeException if deserialization fails
      */
-    protected <T> T read(HttpResponse res, Class<T> clazz) {
+    protected <T> T read(HTTPResponse res, Class<T> clazz) {
         try {
-            return MapperFactory.createDefault().readValue(res.getEntity().getContent(), clazz);
+            return MapperFactory.createDefault().readValue(res.getResponse().getEntity().getContent(), clazz);
         } catch (IllegalStateException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -145,7 +145,7 @@ public abstract class APITest {
      * @throws RuntimeException if deserialization fails
      */
     @SuppressWarnings("unchecked")
-    protected Map<String, Object> readMap(HttpResponse res) {
+    protected Map<String, Object> readMap(HTTPResponse res) {
         return this.read(res, Map.class);
     }
 

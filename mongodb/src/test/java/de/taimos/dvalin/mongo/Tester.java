@@ -20,15 +20,9 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.mongobee.Mongobee;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.client.ListIndexesIterable;
-import com.mongodb.util.JSON;
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+
 import org.bson.Document;
 import org.joda.time.DateTime;
 import org.jongo.Mapper;
@@ -38,13 +32,20 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.mongobee.Mongobee;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.client.ListIndexesIterable;
+import com.mongodb.util.JSON;
+
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
 
 public class Tester extends ABaseTest {
 
     private static final TestDAO dao = new TestDAO();
-
 
     @BeforeClass
     public static void init() {
@@ -114,7 +115,7 @@ public class Tester extends ABaseTest {
         Assert.assertNotNull(find3.getDt());
 
         long count = Tester.dao.dataAccess.count("{}");
-        Assert.assertEquals(count, 1);
+        Assert.assertEquals(1, count);
 
         Tester.dao.delete(id);
 
@@ -122,7 +123,7 @@ public class Tester extends ABaseTest {
         Assert.assertNull(find2);
 
         count = Tester.dao.dataAccess.count("{}");
-        Assert.assertEquals(count, 0);
+        Assert.assertEquals(0, count);
 
         ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName).getCollection("TestObject").listIndexes();
         for (Document index : listIndexes) {
