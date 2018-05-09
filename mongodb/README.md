@@ -21,6 +21,11 @@ For connections to real MongoDB databases, these extra properties can be set:
 * `mongodb.sockettimeout` - the socket timeout of the connection (default: 10 seconds)
 * `mongodb.connecttimeout` - the connection timeout of the connection attempt (default: 10 seconds)
 
+### Access to database
+
+To get access to the database inject the `MongoDBDataAccess<T>` for your entity class into your bean.
+You can then call several methods to query and write data.
+
 ### Abstract entity and DAO interface
 
 The library provides a general purpose DAO interface (`ICrudDAO`) and an abstract implementation

@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,4 +63,14 @@ public final class ChangelogUtil {
         int dir = (asc) ? 1 : -1;
         collection.createIndex(new BasicDBObject(field, dir), new BasicDBObject("background", background));
     }
+
+    /**
+     * Add a text index on the given collection
+     *
+     * @param collection the collection to use for the index
+     */
+    public static void addTextIndex(DBCollection collection) {
+		collection.createIndex(new BasicDBObject("$**", "text"));
+    }
+
 }

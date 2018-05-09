@@ -222,6 +222,17 @@ public abstract class AbstractMongoDAO<T extends AEntity> implements ICrudDAO<T>
     }
 
     /**
+     * finds all elements containing the given searchString in any text field and sorts them accordingly.
+     *
+     * @param searchString      the searchString to search for
+     * @param sort       the sort query to apply
+     * @return the list of elements found
+     */
+    protected final List<T> searchSorted(String searchString, String sort) {
+        return this.dataAccess.searchSorted(searchString, sort);
+    }
+
+    /**
      * queries with the given string, sorts the result and returns the first element. <code>null</code> is returned if no element is found.
      *
      * @param query  the query string

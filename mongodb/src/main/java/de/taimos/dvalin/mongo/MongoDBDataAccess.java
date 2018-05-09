@@ -1,12 +1,14 @@
 package de.taimos.dvalin.mongo;
 
-import com.mongodb.DBObject;
-import com.mongodb.MapReduceCommand;
-import com.mongodb.MapReduceOutput;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.gridfs.GridFSBucket;
-import com.mongodb.client.gridfs.GridFSBuckets;
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.bson.types.ObjectId;
 import org.jongo.Find;
 import org.jongo.Jongo;
@@ -20,18 +22,23 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StreamUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.mongodb.DBObject;
+import com.mongodb.MapReduceCommand;
+import com.mongodb.MapReduceOutput;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
+
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
 
 @Repository
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MongoDBDataAccess<T> {
+
+    /**
+     * Query to perform a full text search
+     */
+    public static final String FULLTEXT_QUERY = "{\"$text\" : {\"$search\" : #}}";
 
     private final MongoDatabase db;
     private final Class<T> entityClass;
@@ -260,6 +267,17 @@ public class MongoDBDataAccess<T> {
             find.limit(limit);
         }
         return find;
+    }
+
+    /**
+     * finds all elements containing the given searchString in any text field and sorts them accordingly.
+     *
+     * @param searchString      the searchString to search for
+     * @param sort       the sort query to apply
+     * @return the list of elements found
+     */
+    public final List<T> searchSorted(String searchString, String sort) {
+        return this.findSortedByQuery(FULLTEXT_QUERY, sort, searchString);
     }
 
     /**

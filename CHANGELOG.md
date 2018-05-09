@@ -3,6 +3,7 @@
 * Fix `CognitoUser` (Broken in 1.26)
 * Fix Event generation (some features where broken since 1.25)
 * Refactor PropertyProvider in Dvalin 
+* add full text search to `mongodb` module
 
 # Version 1.26 (Cognito support is broken in this release)
 * Integrate Taimos daemon framework into repository
