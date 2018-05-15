@@ -109,9 +109,7 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #end
 
 	protected $model.getClazzName()(Abstract${model.getClazzName()}Builder<?> builder) {
-#if ( $model.hasParentClazz() )
 		super(builder);
-#end
 #foreach ( $field in $model.getAllFields() )
 		this.$field.name = builder.$field.name;
 #end

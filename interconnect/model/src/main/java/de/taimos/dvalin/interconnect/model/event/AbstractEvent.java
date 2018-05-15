@@ -32,9 +32,14 @@ public abstract class AbstractEvent implements IEvent {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID eventId = UUID.randomUUID();
-    private DateTime creationDate = DateTime.now();
+    private UUID eventId;
+    private DateTime creationDate;
 
+
+    protected AbstractEvent(AbstractEventBuilder<?> builder) {
+        this.eventId = builder.getEventId();
+        this.creationDate = builder.getCreationDate();
+    }
 
     @Override
     public UUID getEventId() {
