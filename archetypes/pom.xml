@@ -4,7 +4,7 @@
     <parent>
         <artifactId>dvalin-parent</artifactId>
         <groupId>de.taimos</groupId>
-        <version>1.28</version>
+        <version>1.29-SNAPSHOT</version>
     </parent>
     <artifactId>dvalin-archetype-parent</artifactId>
     <name>Maven archetypes</name>
