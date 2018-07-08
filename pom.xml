@@ -50,15 +50,15 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>4.3.15.RELEASE</org.springframework.version>
-        <jackson.version>2.9.5</jackson.version>
-        <joda.time.version>2.9.9</joda.time.version>
+        <org.springframework.version>4.3.18.RELEASE</org.springframework.version>
+        <jackson.version>2.9.6</jackson.version>
+        <joda.time.version>2.10</joda.time.version>
         <slf4j.version>1.7.25</slf4j.version>
         <mockito.version>1.10.19</mockito.version>
         <junit.version>4.12</junit.version>
-        <aws.version>1.11.309</aws.version>
+        <aws.version>1.11.362</aws.version>
         <activemq.version>5.14.0</activemq.version>
-        <cxf.version>3.2.4</cxf.version>
+        <cxf.version>3.2.5</cxf.version>
         <jetty.version>9.4.8.v20171121</jetty.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <http.version>2.0</http.version>

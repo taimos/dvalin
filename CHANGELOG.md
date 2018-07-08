@@ -1,4 +1,13 @@
 # current master
+* Update dependencies
+    * Spring 4.3.18
+    * Jackson 2.9.6
+    * Jodatime 2.10
+    * AWS 1.11.362
+    * Apache CXF 3.2.5
+    * Restutils 1.9
+
+# Version 1.27
 * **Update to Taimos HTTPUtils 2.0 (INCLUDING BREAKING CHANGES)**
 * Fix `CognitoUser` (Broken in 1.26)
 * Fix Event generation (some features where broken since 1.25)
