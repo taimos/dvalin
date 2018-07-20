@@ -182,7 +182,7 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #if ( $model.isIdentity() && !$model.hasParentClazz() )
 			this.withId(ivo.id);
 #end
-#if ( $model.isAudited )
+#if ( $model.isAudited() )
 			this.withVersion(ivo.version);
 			this.withLastChange(ivo.lastChange);
 			this.withLastChangeUser(ivo.lastChangeUser);
