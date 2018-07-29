@@ -7,6 +7,7 @@
     * Apache CXF 3.2.5
     * Restutils 1.9
 * fixes event id deserialization bug in Interconnect
+* fixes ivo problem with propagating version
 
 # Version 1.27
 * **Update to Taimos HTTPUtils 2.0 (INCLUDING BREAKING CHANGES)**
