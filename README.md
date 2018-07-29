@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/taimos/dvalin.svg)](https://travis-ci.org/taimos/dvalin)
-[![codecov.io](https://codecov.io/github/taimos/dvalin/coverage.svg?branch=master)](https://codecov.io/github/taimos/dvalin?branch=master)
-[![sonarcloud.io](https://sonarcloud.io/api/badges/gate?key=de.taimos%3Advalin-parent)](https://sonarcloud.io/dashboard?id=de.taimos%3Advalin-parent)
+[![sonarcloud.io](https://sonarcloud.io/api/project_badges/measure?project=de.taimos%3Advalin-parent&metric=alert_status)](https://sonarcloud.io/dashboard?id=de.taimos%3Advalin-parent)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.taimos/dvalin-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.taimos/dvalin-parent)
 
 
