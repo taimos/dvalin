@@ -1,4 +1,12 @@
 # current master
+* fixes ivo problem with propagating version
+* Update dependencies
+    * Spring 4.3.19
+    * Jackson 2.9.7
+    * AWS 1.11.414
+    * Apache CXF 3.2.6
+
+# Version 1.28
 * Update dependencies
     * Spring 4.3.18
     * Jackson 2.9.6
@@ -7,7 +15,6 @@
     * Apache CXF 3.2.5
     * Restutils 1.9
 * fixes event id deserialization bug in Interconnect
-* fixes ivo problem with propagating version
 
 # Version 1.27
 * **Update to Taimos HTTPUtils 2.0 (INCLUDING BREAKING CHANGES)**
