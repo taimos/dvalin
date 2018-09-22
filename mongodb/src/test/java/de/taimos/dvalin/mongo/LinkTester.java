@@ -46,17 +46,13 @@ public class LinkTester {
     private static final LinkDAO dao = new LinkDAO();
     private static final LinkedDAO ldao = new LinkedDAO();
 
-    private static final DLinkDAO dlinkDAO = new DLinkDAO();
+    private static final DLinkDAO dlinkDAO = new DLinkDAO(ABaseTest.jongo);
 
 
     @BeforeClass
     public static void init() {
         try {
             System.setProperty("mongodb.name", ABaseTest.dbName);
-
-            Field mongoField = DLinkDAO.class.getDeclaredField("mongo");
-            mongoField.setAccessible(true);
-            mongoField.set(LinkTester.dlinkDAO, ABaseTest.mongo);
 
             Field dao2Field = AbstractMongoDAO.class.getDeclaredField("dataAccess");
             dao2Field.setAccessible(true);
@@ -70,7 +66,6 @@ public class LinkTester {
             bee.execute();
             LinkTester.dao.init();
             LinkTester.ldao.init();
-            LinkTester.dlinkDAO.init();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -31,7 +31,7 @@ import de.taimos.dvalin.mongo.links.AReferenceableEntity;
  *
  * @author thoeger
  */
-public class LinkedObject extends AReferenceableEntity<LinkedObject> {
+public class LinkedObject extends AEntity implements AReferenceableEntity<LinkedObject> {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class LinkedObject extends AReferenceableEntity<LinkedObject> {
     }
 
     @Override
-    protected String getLabel() {
+    public String getLabel() {
         return this.name;
     }
 

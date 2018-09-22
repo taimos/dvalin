@@ -1,10 +1,10 @@
 package de.taimos.dvalin.mongo.links;
 
-/*
+/*-
  * #%L
- * Spring DAO Mongo
+ * MongoDB support for dvalin
  * %%
- * Copyright (C) 2013 - 2015 Taimos GmbH
+ * Copyright (C) 2015 - 2018 Taimos GmbH
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,26 +22,23 @@ package de.taimos.dvalin.mongo.links;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.taimos.dvalin.mongo.AEntity;
-
 /**
- * extension of {@link AEntity} which is referenceable via DocumentLink
+ * referenceable via DocumentLink
  *
  * @param <T> generic link to myself
  * @author Thorsten Hoeger
  */
-public abstract class AReferenceableEntity<T extends AReferenceableEntity<T>> extends AEntity {
-
-    private static final long serialVersionUID = 1L;
-
+public interface AReferenceableEntity<T extends AReferenceableEntity<T>> {
 
     @JsonIgnore
     @SuppressWarnings("unchecked")
-    public DocumentLink<T> asLink() {
-        return new DocumentLink<T>((T) this);
+    default DocumentLink<T> asLink() {
+        return new DocumentLink<>((T) this);
     }
 
     @JsonIgnore
-    protected abstract String getLabel();
+    String getLabel();
+
+    String getId();
 
 }

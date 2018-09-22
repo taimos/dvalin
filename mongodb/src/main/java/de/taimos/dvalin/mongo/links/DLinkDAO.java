@@ -4,18 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.bson.types.ObjectId;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.mongodb.DB;
-import com.mongodb.MongoClient;
-
-import de.taimos.dvalin.mongo.JongoFactory;
 
 /*
  * #%L
@@ -41,20 +34,11 @@ import de.taimos.dvalin.mongo.JongoFactory;
 @Repository
 public class DLinkDAO implements IDLinkDAO {
 
+    private final Jongo jongo;
+
     @Autowired
-    private MongoClient mongo;
-
-    private Jongo jongo;
-
-
-    @PostConstruct
-    public final void init() {
-        String dbName = System.getProperty("mongodb.name");
-        if (dbName == null) {
-            throw new RuntimeException("Missing database name; Set system property 'mongodb.name'");
-        }
-        DB db = this.mongo.getDB(dbName);
-        this.jongo = JongoFactory.createDefault(db);
+    public DLinkDAO(Jongo jongo) {
+        this.jongo = jongo;
     }
 
     @Override

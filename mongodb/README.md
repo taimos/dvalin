@@ -52,6 +52,6 @@ with the objects contained in this new-line delimited files. Just put one JSON o
 
 Another feature of dvalin's MongoDB support are DocumentLinks. These allow for references between your 
 documents. To include a reference in one of your entities just add a field of the generic type 
-`DocumentLink` and let your referenced entity extend `AReferenceableEntity` instead of `AEntity`. 
+`DocumentLink` and let your referenced entity implement `AReferenceableEntity`. 
 Dvalin will then include a reference to the given document in your JSON which you can resolve 
 by injecting the `IDlinkDAO` wherever you want.
