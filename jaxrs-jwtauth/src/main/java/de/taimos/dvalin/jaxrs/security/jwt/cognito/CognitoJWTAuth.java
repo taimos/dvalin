@@ -2,14 +2,14 @@ package de.taimos.dvalin.jaxrs.security.jwt.cognito;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -19,11 +19,6 @@ import com.nimbusds.jwt.SignedJWT;
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.security.jwt.IJWTAuth;
-import de.taimos.httputils.HTTPResponse;
-import de.taimos.httputils.WS;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 
 @JaxRsComponent
 @OnSystemProperty(propertyName = "jwtauth.cognito.poolid")
@@ -40,26 +35,12 @@ public class CognitoJWTAuth implements IJWTAuth {
 
     private String issuer;
 
-    private final Map<String, RSAKey> webKeys = new HashMap<>();
+    private LoadingCache<String, RSAKey> jwtKeyCache;
 
     @PostConstruct
     public void init() {
-        try {
-            this.issuer = "https://cognito-idp." + this.cognitoPoolRegion + ".amazonaws.com/" + this.cognitoPoolId;
-            JSONObject jwksBody;
-            try (HTTPResponse httpResponse = WS.url(this.issuer + "/.well-known/jwks.json").accept("application/json").get()) {
-                jwksBody = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(httpResponse.getResponseAsBytes());
-            }
-
-            JSONArray keys = (JSONArray) jwksBody.get("keys");
-
-            for (Object key : keys) {
-                RSAKey jwk = RSAKey.parse((JSONObject) key);
-                this.webKeys.put(jwk.getKeyID(), jwk);
-            }
-        } catch (net.minidev.json.parser.ParseException | ParseException e) {
-            throw new BeanInitializationException("Cannot load secrets from WS Cognito User Pool", e);
-        }
+        this.issuer = "https://cognito-idp." + this.cognitoPoolRegion + ".amazonaws.com/" + this.cognitoPoolId;
+        this.jwtKeyCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).build(new CognitoKeyLoader(this.issuer));
     }
 
     @Override
@@ -76,12 +57,13 @@ public class CognitoJWTAuth implements IJWTAuth {
         }
 
         String kid = jwt.getHeader().getKeyID();
-        if (!this.webKeys.containsKey(kid)) {
+        RSAKey key = this.jwtKeyCache.getUnchecked(kid);
+        if (key == null) {
             throw new IllegalArgumentException("No key for kid: " + kid);
         }
 
         try {
-            if (jwt.verify(new RSASSAVerifier(this.webKeys.get(kid)))) {
+            if (jwt.verify(new RSASSAVerifier(key))) {
                 JWTClaimsSet claims = jwt.getJWTClaimsSet();
                 if (!claims.getExpirationTime().before(new Date())) {
                     return CognitoUser.parseClaims(claims, this.cognitoRoles);

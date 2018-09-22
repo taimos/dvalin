@@ -6,6 +6,7 @@
     * AWS 1.11.414
     * Apache CXF 3.2.6
 * BREAKING: Change `AReferenceableEntity` to interface. Extend `AEntity` additionally.
+* lazy-loading and refresh for Cognito JWT keys
 
 # Version 1.28
 * Update dependencies
