@@ -23,6 +23,8 @@ package de.taimos.dvalin.jaxrs.swagger;
  * #L%
  */
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,6 +34,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,11 +43,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.taimos.daemon.DaemonProperties;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
+import de.taimos.dvalin.jaxrs.ServiceAnnotationClassesProvider;
 import de.taimos.dvalin.jaxrs.SpringCXFProperties;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.jaxrs2.Reader;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.integration.api.OpenAPIConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
@@ -60,34 +63,56 @@ import io.swagger.v3.oas.models.servers.Server;
 public class ApiListing {
 
     @Autowired
-    private SwaggerScanner scanner;
+    private ServiceAnnotationClassesProvider annotationProvider;
 
     @Autowired(required = false)
-    private OpenAPIConfiguration config;
+    private OpenApiModification config;
 
     private final AtomicReference<OpenAPI> swaggerCache = new AtomicReference<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiListing.class);
 
     protected synchronized OpenAPI scan() {
-        Set<Class<?>> classes = this.scanner.classes();
+        Set<Class<?>> classes = this.classes();
         if (classes != null) {
             Reader reader = new Reader();
+            OpenAPI openAPI = reader.read(classes);
+            this.configureServerURL(openAPI);
+            openAPI.info(this.createInfo());
             if (this.config != null) {
-                reader.setConfiguration(this.config);
+                this.config.reconfigure(openAPI);
             }
-            OpenAPI swagger = reader.read(classes);
-            this.configureServerURL(swagger);
-            swagger.info(this.createInfo());
-            this.swaggerCache.compareAndSet(null, swagger);
+            this.swaggerCache.compareAndSet(null, openAPI);
         }
         return this.swaggerCache.get();
     }
 
-    private void configureServerURL(OpenAPI swagger) {
+    public Set<Class<?>> classes() {
+        Set<Class<?>> classes = new HashSet<>();
+        for (Class<?> clz : this.annotationProvider.getClasses()) {
+            if (!this.hasAnnotation(clz, Provider.class) && clz.isAnnotationPresent(Path.class)) {
+                classes.add(clz);
+            }
+        }
+        return classes;
+    }
+
+    private boolean hasAnnotation(Class<?> clz, Class<? extends Annotation> ann) {
+        if (clz.isAnnotationPresent(ann)) {
+            return true;
+        }
+        for (Class<?> iface : clz.getInterfaces()) {
+            if (this.hasAnnotation(iface, ann)) {
+                return true;
+            }
+        }
+        return (clz.getSuperclass() != null) && this.hasAnnotation(clz.getSuperclass(), ann);
+    }
+
+    private void configureServerURL(OpenAPI openAPI) {
         String serverUrl = System.getProperty(SpringCXFProperties.SERVER_URL, "http://localhost:" + System.getProperty(SpringCXFProperties.JAXRS_BINDPORT, System.getProperty("svc.port", "8080")));
         serverUrl += "/" + System.getProperty(SpringCXFProperties.JAXRS_PATH, "");
-        swagger.addServersItem(new Server().url(serverUrl));
+        openAPI.addServersItem(new Server().url(serverUrl));
     }
 
     private Info createInfo() {
@@ -99,11 +124,11 @@ public class ApiListing {
     }
 
     private OpenAPI process() {
-        OpenAPI swagger = this.swaggerCache.get();
-        if (swagger == null) {
-            swagger = this.scan();
+        OpenAPI openAPI = this.swaggerCache.get();
+        if (openAPI == null) {
+            openAPI = this.scan();
         }
-        return swagger;
+        return openAPI;
     }
 
     @GET
@@ -122,9 +147,9 @@ public class ApiListing {
     @Path("/{a:swagger|openapi}")
     @Operation(hidden = true)
     public Response getListingJson() {
-        OpenAPI swagger = this.process();
-        if (swagger != null) {
-            return Response.ok().entity(swagger).type(MediaType.APPLICATION_JSON_TYPE).build();
+        OpenAPI openAPI = this.process();
+        if (openAPI != null) {
+            return Response.ok().entity(openAPI).type(MediaType.APPLICATION_JSON_TYPE).build();
         }
         return Response.status(404).build();
     }
@@ -134,10 +159,10 @@ public class ApiListing {
     @Path("/{a:swagger|openapi}")
     @Operation(hidden = true)
     public Response getListingYaml() {
-        OpenAPI swagger = this.process();
+        OpenAPI openAPI = this.process();
         try {
-            if (swagger != null) {
-                return Response.ok(Response.Status.OK).entity(Yaml.mapper().writeValueAsString(swagger)).type("application/yaml").build();
+            if (openAPI != null) {
+                return Response.ok(Response.Status.OK).entity(Yaml.mapper().writeValueAsString(openAPI)).type("application/yaml").build();
             }
         } catch (Exception e) {
             LOGGER.error("Failed to create YAML", e);
