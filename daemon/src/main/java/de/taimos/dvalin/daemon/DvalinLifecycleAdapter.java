@@ -82,7 +82,8 @@ public abstract class DvalinLifecycleAdapter extends SpringDaemonAdapter {
             chain.withProvider(new FilePropertyProvider("dvalin.properties"));
         }
 
-        // add ParameterStorePropertyProvider if available on classpath
+        // add other providers if available on classpath
+        chain.withProvider("de.taimos.dvalin.cloud.aws.properties.AWSPropertyProvider");
         chain.withProvider("de.taimos.dvalin.cloud.aws.ParameterStorePropertyProvider");
 
         if (EnvPropertyProvider.isConfigured()) {

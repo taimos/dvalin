@@ -23,9 +23,6 @@ package de.taimos.dvalin.jaxrs.swagger;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -33,13 +30,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -49,18 +41,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import de.taimos.daemon.DaemonProperties;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.SpringCXFProperties;
-import de.taimos.dvalin.jaxrs.URLUtils;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.config.FilterFactory;
-import io.swagger.config.SwaggerConfig;
-import io.swagger.core.filter.SpecFilter;
-import io.swagger.core.filter.SwaggerSpecFilter;
-import io.swagger.jaxrs.Reader;
-import io.swagger.jaxrs.config.DefaultReaderConfig;
-import io.swagger.models.Info;
-import io.swagger.models.Scheme;
-import io.swagger.models.Swagger;
-import io.swagger.util.Yaml;
+import io.swagger.v3.core.util.Yaml;
+import io.swagger.v3.jaxrs2.Reader;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.integration.api.OpenAPIConfiguration;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 
 /**
  * Copyright 2015 Taimos GmbH<br>
@@ -76,36 +63,31 @@ public class ApiListing {
     private SwaggerScanner scanner;
 
     @Autowired(required = false)
-    private SwaggerConfig config;
+    private OpenAPIConfiguration config;
 
-    private final AtomicReference<Swagger> swaggerCache = new AtomicReference<>();
+    private final AtomicReference<OpenAPI> swaggerCache = new AtomicReference<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiListing.class);
 
-    protected synchronized Swagger scan() {
+    protected synchronized OpenAPI scan() {
         Set<Class<?>> classes = this.scanner.classes();
         if (classes != null) {
-            final DefaultReaderConfig rc = new DefaultReaderConfig();
-            rc.setScanAllResources(true);
-
-            Reader reader = new Reader(null, rc);
-            Swagger swagger = reader.read(classes);
+            Reader reader = new Reader();
+            if (this.config != null) {
+                reader.setConfiguration(this.config);
+            }
+            OpenAPI swagger = reader.read(classes);
             this.configureServerURL(swagger);
             swagger.info(this.createInfo());
-            if (this.config != null) {
-                swagger = this.config.configure(swagger);
-            }
             this.swaggerCache.compareAndSet(null, swagger);
         }
         return this.swaggerCache.get();
     }
 
-    private void configureServerURL(Swagger swagger) {
+    private void configureServerURL(OpenAPI swagger) {
         String serverUrl = System.getProperty(SpringCXFProperties.SERVER_URL, "http://localhost:" + System.getProperty(SpringCXFProperties.JAXRS_BINDPORT, System.getProperty("svc.port", "8080")));
-        URLUtils.SplitURL split = URLUtils.splitURL(serverUrl);
-        swagger.scheme(Scheme.forValue(split.getScheme()));
-        swagger.host(split.getHost() + ":" + split.getPort());
-        swagger.basePath(System.getProperty(SpringCXFProperties.JAXRS_PATH));
+        serverUrl += "/" + System.getProperty(SpringCXFProperties.JAXRS_PATH, "");
+        swagger.addServersItem(new Server().url(serverUrl));
     }
 
     private Info createInfo() {
@@ -116,61 +98,46 @@ public class ApiListing {
         return info;
     }
 
-    private Swagger process(HttpHeaders headers, UriInfo uriInfo) {
-        Swagger swagger = this.swaggerCache.get();
+    private OpenAPI process() {
+        OpenAPI swagger = this.swaggerCache.get();
         if (swagger == null) {
             swagger = this.scan();
-        }
-        if (swagger != null) {
-            SwaggerSpecFilter filterImpl = FilterFactory.getFilter();
-            if (filterImpl != null) {
-                SpecFilter f = new SpecFilter();
-                swagger = f.filter(swagger, filterImpl, this.getQueryParams(uriInfo.getQueryParameters()), this.getCookies(headers), this.getHeaders(headers));
-            }
         }
         return swagger;
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, "application/yaml"})
-    @ApiOperation(value = "The swagger definition in either JSON or YAML", hidden = true)
-    @Path("/swagger.{type:json|yaml}")
-    public Response getListing(@Context HttpHeaders headers, @Context UriInfo uriInfo, @PathParam("type") String type) {
+    @Operation(hidden = true)
+    @Path("/{a:swagger|openapi}.{type:json|yaml}")
+    public Response getListing(@PathParam("type") String type) {
         if (StringUtils.isNotBlank(type) && type.trim().equalsIgnoreCase("yaml")) {
-            return this.getListingYaml(headers, uriInfo);
+            return this.getListingYaml();
         }
-        return this.getListingJson(headers, uriInfo);
+        return this.getListingJson();
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/swagger")
-    @ApiOperation(value = "The swagger definition in JSON", hidden = true)
-    public Response getListingJson(@Context HttpHeaders headers, @Context UriInfo uriInfo) {
-        Swagger swagger = this.process(headers, uriInfo);
-
+    @Path("/{a:swagger|openapi}")
+    @Operation(hidden = true)
+    public Response getListingJson() {
+        OpenAPI swagger = this.process();
         if (swagger != null) {
-            return Response.ok().entity(swagger).build();
+            return Response.ok().entity(swagger).type(MediaType.APPLICATION_JSON_TYPE).build();
         }
         return Response.status(404).build();
     }
 
     @GET
     @Produces("application/yaml")
-    @Path("/swagger")
-    @ApiOperation(value = "The swagger definition in YAML", hidden = true)
-    public Response getListingYaml(@Context HttpHeaders headers, @Context UriInfo uriInfo) {
-        Swagger swagger = this.process(headers, uriInfo);
+    @Path("/{a:swagger|openapi}")
+    @Operation(hidden = true)
+    public Response getListingYaml() {
+        OpenAPI swagger = this.process();
         try {
             if (swagger != null) {
-                String yaml = Yaml.mapper().writeValueAsString(swagger);
-                StringBuilder b = new StringBuilder();
-                String[] parts = yaml.split("\n");
-                for (String part : parts) {
-                    b.append(part);
-                    b.append("\n");
-                }
-                return Response.ok().entity(b.toString()).type("application/yaml").build();
+                return Response.ok(Response.Status.OK).entity(Yaml.mapper().writeValueAsString(swagger)).type("application/yaml").build();
             }
         } catch (Exception e) {
             LOGGER.error("Failed to create YAML", e);
@@ -178,36 +145,4 @@ public class ApiListing {
         return Response.status(404).build();
     }
 
-    protected Map<String, List<String>> getQueryParams(MultivaluedMap<String, String> params) {
-        Map<String, List<String>> output = new HashMap<>();
-        if (params != null) {
-            for (String key : params.keySet()) {
-                List<String> values = params.get(key);
-                output.put(key, values);
-            }
-        }
-        return output;
-    }
-
-    protected Map<String, String> getCookies(HttpHeaders headers) {
-        Map<String, String> output = new HashMap<>();
-        if (headers != null) {
-            for (String key : headers.getCookies().keySet()) {
-                Cookie cookie = headers.getCookies().get(key);
-                output.put(key, cookie.getValue());
-            }
-        }
-        return output;
-    }
-
-    protected Map<String, List<String>> getHeaders(HttpHeaders headers) {
-        Map<String, List<String>> output = new HashMap<>();
-        if (headers != null) {
-            for (String key : headers.getRequestHeaders().keySet()) {
-                List<String> values = headers.getRequestHeaders().get(key);
-                output.put(key, values);
-            }
-        }
-        return output;
-    }
 }

@@ -11,7 +11,7 @@ public class BestEffortPropertyProviderChain extends PropertyProviderChain {
     private static final Logger LOGGER = LoggerFactory.getLogger(BestEffortPropertyProviderChain.class);
 
     @Override
-    public PropertyProviderChain withProvider(Class<IPropertyProvider> providerClass) {
+    public PropertyProviderChain withProvider(Class<? extends IPropertyProvider> providerClass) {
         try {
             return super.withProvider(providerClass);
         } catch (IllegalAccessException | InstantiationException e) {

@@ -7,6 +7,8 @@
     * Apache CXF 3.2.6
 * BREAKING: Change `AReferenceableEntity` to interface. Extend `AEntity` additionally.
 * lazy-loading and refresh for Cognito JWT keys
+* add property provider for EC2 metadata service
+* BREAKING: Migrate Swagger to OpenAPI
 
 # Version 1.28
 * Update dependencies

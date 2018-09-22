@@ -17,7 +17,7 @@ public class PropertyProviderChain implements IPropertyProvider {
         return this;
     }
 
-    public PropertyProviderChain withProvider(Class<IPropertyProvider> providerClass) throws IllegalAccessException, InstantiationException {
+    public PropertyProviderChain withProvider(Class<? extends IPropertyProvider> providerClass) throws IllegalAccessException, InstantiationException {
         return this.withProvider(providerClass.newInstance());
     }
 

@@ -24,19 +24,20 @@ package de.taimos.dvalin.jaxrs.swagger;
  */
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
-import de.taimos.dvalin.jaxrs.ServiceAnnotationClassesProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.swagger.config.Scanner;
-import io.swagger.config.ScannerFactory;
+import de.taimos.dvalin.jaxrs.ServiceAnnotationClassesProvider;
+import io.swagger.v3.oas.integration.api.OpenAPIConfiguration;
+import io.swagger.v3.oas.integration.api.OpenApiScanner;
 
 /**
  * Copyright 2015 Taimos GmbH<br>
@@ -45,15 +46,14 @@ import io.swagger.config.ScannerFactory;
  * @author thoeger
  */
 @Component
-public class SwaggerScanner implements Scanner {
+public class SwaggerScanner implements OpenApiScanner {
 
     @Autowired
     private ServiceAnnotationClassesProvider annotationProvider;
 
+    @Override
+    public void setConfiguration(OpenAPIConfiguration openAPIConfiguration) {
 
-    @PostConstruct
-    public void init() {
-        ScannerFactory.setScanner(this);
     }
 
     @Override
@@ -67,6 +67,11 @@ public class SwaggerScanner implements Scanner {
         return classes;
     }
 
+    @Override
+    public Map<String, Object> resources() {
+        return new HashMap<>();
+    }
+
     private boolean hasAnnotation(Class<?> clz, Class<? extends Annotation> ann) {
         if (clz.isAnnotationPresent(ann)) {
             return true;
@@ -77,16 +82,6 @@ public class SwaggerScanner implements Scanner {
             }
         }
         return (clz.getSuperclass() != null) && this.hasAnnotation(clz.getSuperclass(), ann);
-    }
-
-    @Override
-    public boolean getPrettyPrint() {
-        return false;
-    }
-
-    @Override
-    public void setPrettyPrint(boolean shouldPrettyPrint) {
-        //
     }
 
 }
