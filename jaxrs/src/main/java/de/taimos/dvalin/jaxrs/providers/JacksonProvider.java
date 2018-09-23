@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -48,12 +49,13 @@ import de.taimos.dvalin.jaxrs.MapperFactory;
 @Produces(MediaType.WILDCARD)
 public class JacksonProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
 
-    private final ObjectMapper mapper = MapperFactory.createDefault();
+    private final ObjectMapper jsonMapper = MapperFactory.createDefault();
+    private final ObjectMapper yamlMapper = MapperFactory.createDefaultYaml();
 
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return mediaType.getSubtype().equals("json") || mediaType.getSubtype().endsWith("+json");
+        return this.isJson(mediaType) || this.isYaml(mediaType);
     }
 
     @Override
@@ -63,20 +65,43 @@ public class JacksonProvider implements MessageBodyReader<Object>, MessageBodyWr
 
     @Override
     public void writeTo(Object t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        entityStream.write(this.mapper.writeValueAsBytes(t));
+        if (this.isYaml(mediaType)) {
+            entityStream.write(this.yamlMapper.writeValueAsBytes(t));
+        } else if (this.isJson(mediaType)) {
+            entityStream.write(this.jsonMapper.writeValueAsBytes(t));
+        } else {
+            throw new InternalServerErrorException("Mapping error");
+        }
     }
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return mediaType.getSubtype().equals("json") || mediaType.getSubtype().endsWith("+json");
+        return this.isJson(mediaType) || this.isYaml(mediaType);
     }
 
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
-        if (genericType == null) {
-            return this.mapper.readValue(entityStream, type);
+        final ObjectMapper mapper;
+        if (this.isYaml(mediaType)) {
+            mapper = this.yamlMapper;
+        } else if (this.isJson(mediaType)) {
+            mapper = this.jsonMapper;
+        } else {
+            throw new InternalServerErrorException("Mapping error");
         }
-        return this.mapper.readValue(entityStream, TypeFactory.defaultInstance().constructType(genericType));
+
+        if (genericType == null) {
+            return mapper.readValue(entityStream, type);
+        }
+        return mapper.readValue(entityStream, TypeFactory.defaultInstance().constructType(genericType));
+    }
+
+    private boolean isYaml(MediaType mediaType) {
+        return mediaType.getSubtype().equals("yaml") || mediaType.getSubtype().endsWith("+yaml");
+    }
+
+    private boolean isJson(MediaType mediaType) {
+        return mediaType.getSubtype().equals("json") || mediaType.getSubtype().endsWith("+json");
     }
 
 }

@@ -9,6 +9,7 @@
 * lazy-loading and refresh for Cognito JWT keys
 * add property provider for EC2 metadata service
 * BREAKING: Migrate Swagger to OpenAPI
+* add YAML mapper to JAX-RS
 
 # Version 1.28
 * Update dependencies

@@ -37,15 +37,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.taimos.daemon.DaemonProperties;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.ServiceAnnotationClassesProvider;
 import de.taimos.dvalin.jaxrs.SpringCXFProperties;
-import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.jaxrs2.Reader;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -62,15 +59,21 @@ import io.swagger.v3.oas.models.servers.Server;
 @JaxRsComponent
 public class ApiListing {
 
-    @Autowired
-    private ServiceAnnotationClassesProvider annotationProvider;
-
-    @Autowired(required = false)
-    private OpenApiModification config;
+    private final ServiceAnnotationClassesProvider annotationProvider;
 
     private final AtomicReference<OpenAPI> swaggerCache = new AtomicReference<>();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiListing.class);
+    private OpenApiModification config;
+
+    @Autowired
+    public ApiListing(ServiceAnnotationClassesProvider annotationProvider) {
+        this.annotationProvider = annotationProvider;
+    }
+
+    @Autowired(required = false)
+    public void setConfig(OpenApiModification config) {
+        this.config = config;
+    }
 
     protected synchronized OpenAPI scan() {
         Set<Class<?>> classes = this.classes();
@@ -160,12 +163,8 @@ public class ApiListing {
     @Operation(hidden = true)
     public Response getListingYaml() {
         OpenAPI openAPI = this.process();
-        try {
-            if (openAPI != null) {
-                return Response.ok(Response.Status.OK).entity(Yaml.mapper().writeValueAsString(openAPI)).type("application/yaml").build();
-            }
-        } catch (Exception e) {
-            LOGGER.error("Failed to create YAML", e);
+        if (openAPI != null) {
+            return Response.ok().entity(openAPI).type("application/yaml").build();
         }
         return Response.status(404).build();
     }
