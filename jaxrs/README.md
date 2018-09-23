@@ -27,8 +27,9 @@ or use defined system properties to resolve the URL of the service.
 
 ### Swagger
 
-The JAX-RS web service it automtically documented using the Swagger specification and published as `swagger.{json|yaml}` on the
-root of your API URL. Also a graphical Swagger ui is served under `/swagger-ui`.
+The JAX-RS web service it automatically documented using the Swagger specification and published as `swagger.{json|yaml}` and `openapi.{json|yaml}` on the
+root of your API URL. Also a graphical Swagger ui is served under `/swagger-ui`. 
+By providing a bean of type `OpenApiModification` you can alter the API definition manually.
 
 ### WebSocket support
 
