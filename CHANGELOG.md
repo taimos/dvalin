@@ -1,4 +1,12 @@
 # current master
+* Update dependencies
+    * Spring 4.3.24
+    * Jackson 2.9.8
+    * AWS 1.11.553
+    * Apache CXF 3.3.2
+    * Jetty 9.4.18.v20190429
+
+# Version 1.29
 * fixes ivo problem with propagating version
 * Update dependencies
     * Spring 4.3.19
