@@ -1,4 +1,6 @@
 # current master
+
+# Version 1.30
 * Update dependencies
     * Spring 4.3.24
     * Jackson 2.9.8
