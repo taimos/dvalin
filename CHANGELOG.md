@@ -5,6 +5,7 @@
     * AWS 1.11.553
     * Apache CXF 3.3.2
     * Jetty 9.4.18.v20190429
+* add JWT provider for Auth0
 
 # Version 1.29
 * fixes ivo problem with propagating version

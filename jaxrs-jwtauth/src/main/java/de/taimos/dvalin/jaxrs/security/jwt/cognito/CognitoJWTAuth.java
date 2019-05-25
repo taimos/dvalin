@@ -18,6 +18,7 @@ import com.nimbusds.jwt.SignedJWT;
 
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
+import de.taimos.dvalin.jaxrs.security.jwt.JWKSKeyLoader;
 import de.taimos.dvalin.jaxrs.security.jwt.IJWTAuth;
 
 @JaxRsComponent
@@ -40,7 +41,7 @@ public class CognitoJWTAuth implements IJWTAuth {
     @PostConstruct
     public void init() {
         this.issuer = "https://cognito-idp." + this.cognitoPoolRegion + ".amazonaws.com/" + this.cognitoPoolId;
-        this.jwtKeyCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).build(new CognitoKeyLoader(this.issuer));
+        this.jwtKeyCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).build(new JWKSKeyLoader(this.issuer));
     }
 
     @Override

@@ -1,9 +1,6 @@
-package de.taimos.dvalin.jaxrs.security.jwt.cognito;
+package de.taimos.dvalin.jaxrs.security.jwt;
 
 import javax.annotation.Nonnull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.cache.CacheLoader;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -14,13 +11,11 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 
-public class CognitoKeyLoader extends CacheLoader<String, RSAKey> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CognitoKeyLoader.class);
+public class JWKSKeyLoader extends CacheLoader<String, RSAKey> {
 
     private final String issuer;
 
-    CognitoKeyLoader(String issuer) {
+    public JWKSKeyLoader(String issuer) {
         this.issuer = issuer;
     }
 

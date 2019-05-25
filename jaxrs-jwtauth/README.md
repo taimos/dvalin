@@ -24,3 +24,14 @@ Specify the following properties:
 
 The security context then contains a `de.taimos.dvalin.jaxrs.security.jwt.cognito.CognitoUser` with all fields.
 For convenience you can inject an instance of `de.taimos.dvalin.jaxrs.security.jwt.cognito.CognitoContext` to get the current user without casting.
+
+### Auth0
+
+You can also use Auth0 as JWT source. 
+
+Specify the following properties:
+
+* `jwtauth.auth0.issuer` - the issuer for your Auth0 account
+* `jwtauth.auth0.audience` - the audience for your API
+
+The security context then contains a `de.taimos.dvalin.jaxrs.security.jwt.auth0.Auth0User` with all fields.
