@@ -51,7 +51,7 @@
     </contributors>
     <properties>
         <org.springframework.version>4.3.25.RELEASE</org.springframework.version>
-        <jackson.version>2.9.10</jackson.version>
+        <jackson.version>2.10.2</jackson.version>
         <joda.time.version>2.10.2</joda.time.version>
         <slf4j.version>1.7.25</slf4j.version>
         <mockito.version>1.10.19</mockito.version>
