@@ -1,4 +1,10 @@
 # current master
+* Update dependencies
+    * Spring 4.3.25
+    * AWS 1.11.699
+    * Jackson 2.9.10
+    * Apache CXF 3.3.4
+    * Jetty 9.4.21.v20190926
 
 # Version 1.30
 * Update dependencies
