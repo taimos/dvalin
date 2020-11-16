@@ -59,7 +59,7 @@
         <aws.version>1.11.699</aws.version>
         <activemq.version>5.14.0</activemq.version>
         <cxf.version>3.3.4</cxf.version>
-        <jetty.version>9.4.21.v20190926</jetty.version>
+        <jetty.version>9.4.34.v20201102</jetty.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <http.version>2.0</http.version>
 
