@@ -1,10 +1,22 @@
 # current master
 * Update dependencies
-    * Spring 4.3.25
-    * AWS 1.11.699
-    * Jackson 2.9.10
-    * Apache CXF 3.3.4
-    * Jetty 9.4.21.v20190926
+    * Spring 4.3.30
+    * AWS 1.12.143
+    * Jackson 2.12.5
+    * Apache CXF 3.4.5
+    * Jetty 9.4.44.v20210927
+    * Joda-Time 2.10.13
+    * slf4j 1.7.33
+    * Powermock 2.0.9
+    * Mockito 3.3.3
+    * Junit 4.13.2
+    * ActiveMQ 5.16.2
+    * Hibernate 5.5.9
+    * HTTPUtils 2.1
+    * Concordion 3.1.3
+    * Nimbus JOSE+JWT 9.15,2
+    * JSON Small and Fast Parser 1.3.3
+* BREAKING: commented out JasperReports to get the code compiling
 
 # Version 1.30
 * Update dependencies
