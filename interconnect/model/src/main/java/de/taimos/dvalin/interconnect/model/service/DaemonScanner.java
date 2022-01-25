@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Scans a Daemon Request Handler for {@link DaemonRequestMethod} and {@link DaemonReceiverMethod} methods.
@@ -51,6 +53,7 @@ public final class DaemonScanner {
 
     private static final Logger LOGGER2 = LoggerFactory.getLogger(DaemonScanner.class);
 
+    private static final Set<String> ALLOWED_EXCEPTION_CLASSES = Stream.of(DaemonError.class.getCanonicalName(), "de.taimos.dvalin.interconnect.core.exceptions.TimeoutException").collect(Collectors.toSet()); //timeout exception is sadly not available here, but might be thrown...
 
     /**
      * @param clazz Class to scan
@@ -58,10 +61,10 @@ public final class DaemonScanner {
      */
     public static Set<DaemonMethod> scan(final Class<? extends IDaemonHandler> clazz) {
         final Set<DaemonMethod> res = new HashSet<>();
-        for(final Method method : clazz.getMethods()) {
+        for (final Method method : clazz.getMethods()) {
             final DaemonMethod dm = DaemonScanner.scan(method);
-            if(dm != null) {
-                if(res.contains(dm)) {
+            if (dm != null) {
+                if (res.contains(dm)) {
                     throw new IllegalStateException("duplicate @DaemonRequestMethod");
                 }
                 res.add(dm);
@@ -76,8 +79,8 @@ public final class DaemonScanner {
      */
     public static DaemonMethod scan(final Method method) {
         final DaemonMethod cached = DaemonScanner.CACHE.get(method);
-        if(cached != null) {
-            if(cached == DaemonScanner.NOT_A_DAEMON_METHOD_FLAG) {
+        if (cached != null) {
+            if (cached == DaemonScanner.NOT_A_DAEMON_METHOD_FLAG) {
                 return null;
             }
             return cached;
@@ -85,7 +88,7 @@ public final class DaemonScanner {
         final DaemonMethod dm;
         {
             final DaemonRequestMethod drm = DaemonScanner.getAnnotation(DaemonRequestMethod.class, method);
-            if(drm != null) {
+            if (drm != null) {
                 dm = DaemonScanner.scanRequest(method, drm);
                 DaemonScanner.CACHE.put(method, dm);
                 return dm;
@@ -93,7 +96,7 @@ public final class DaemonScanner {
         }
         {
             final DaemonReceiverMethod drm = DaemonScanner.getAnnotation(DaemonReceiverMethod.class, method);
-            if(drm != null) {
+            if (drm != null) {
                 dm = DaemonScanner.scanReceiver(method, drm);
                 DaemonScanner.CACHE.put(method, dm);
                 return dm;
@@ -104,21 +107,21 @@ public final class DaemonScanner {
 
     private static <E extends Annotation> E isAnnotationPresent(final Class<E> annotation, final Class<?> clazz, final String methodName, final Class<?>... parameterTypes) throws NoSuchMethodException {
         Method method = clazz.getMethod(methodName, parameterTypes);
-        if(method.isAnnotationPresent(annotation)) {
+        if (method.isAnnotationPresent(annotation)) {
             return method.getAnnotation(annotation);
         }
-        for(final Class<?> interfaceClazz : clazz.getInterfaces()) {
+        for (final Class<?> interfaceClazz : clazz.getInterfaces()) {
             try {
                 final E e = DaemonScanner.isAnnotationPresent(annotation, interfaceClazz, methodName, parameterTypes);
-                if(e != null) {
+                if (e != null) {
                     return e;
                 }
-            } catch(final NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 //nothing to here, check the other interfaces
             }
         }
         final Class<?> superClazz = clazz.getSuperclass();
-        if((superClazz != null) && !Object.class.equals(superClazz)) {
+        if ((superClazz != null) && !Object.class.equals(superClazz)) {
             return DaemonScanner.isAnnotationPresent(annotation, superClazz, methodName, parameterTypes);
         }
         return null;
@@ -147,7 +150,7 @@ public final class DaemonScanner {
     public static <A extends Annotation> A getAnnotation(final Class<A> annotation, final Method method) {
         try {
             return DaemonScanner.isAnnotationPresent(annotation, method.getDeclaringClass(), method.getName(), method.getParameterTypes());
-        } catch(final NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             return null;
         }
     }
@@ -156,73 +159,82 @@ public final class DaemonScanner {
      * @param method Method
      */
     private static DaemonMethod scanRequest(final Method method, final DaemonRequestMethod drm) {
-        if(method.getParameterTypes().length != 1) {
+        if (method.getParameterTypes().length != 1) {
             throw new IllegalStateException("@DaemonRequestMethod must have one parameter");
         }
         final Type type;
-        if(InterconnectObject.class.isAssignableFrom(method.getReturnType())) {
+        if (InterconnectObject.class.isAssignableFrom(method.getReturnType())) {
             // okay. we have an InterconnectObject return
-            if(!IVO.class.isAssignableFrom(method.getReturnType())) {
+            if (!IVO.class.isAssignableFrom(method.getReturnType())) {
                 DaemonScanner.LOGGER2.warn("The method " + method + " uses InterconnectObject (which is deprecated) instead of IVO return.");
             }
-            if(method.getReturnType().isInterface()) {
+            if (method.getReturnType().isInterface()) {
                 DaemonScanner.LOGGER2.warn("The method " + method + " returns an interface");
             }
             type = Type.interconnectObject;
-        } else if(method.getReturnType().equals(Void.TYPE)) {
+        } else if (method.getReturnType().equals(Void.TYPE)) {
             // okay. we have a void return
             type = Type.voidivo;
-        } else if(InterconnectObject[].class.isAssignableFrom(method.getReturnType())) {
-            if(!IVO[].class.isAssignableFrom(method.getReturnType())) {
+        } else if (InterconnectObject[].class.isAssignableFrom(method.getReturnType())) {
+            if (!IVO[].class.isAssignableFrom(method.getReturnType())) {
                 DaemonScanner.LOGGER2.warn("The method " + method + " uses InterconnectObject[] (which is deprecated) instead of IVO[] return.");
             }
             // okay. we have an InterconnectObject[] return
             type = Type.interconnectObjects;
-        } else if(List.class.isAssignableFrom(method.getReturnType())) {
+        } else if (List.class.isAssignableFrom(method.getReturnType())) {
             // we have an List<?> return
             final ParameterizedType t = (ParameterizedType) method.getGenericReturnType();
-            if(t.getActualTypeArguments().length != 1) {
+            if (t.getActualTypeArguments().length != 1) {
                 throw new IllegalStateException("@DaemonRequestMethod return type must be List<InterconnectObject>");
             }
             java.lang.reflect.Type innerType = t.getActualTypeArguments()[0];
             Class<?> typeClazz = null;
-            if(innerType instanceof ParameterizedType) {
+            if (innerType instanceof ParameterizedType) {
                 typeClazz = (Class<?>) ((ParameterizedType) innerType).getRawType();
             } else {
                 typeClazz = (Class<?>) innerType;
             }
-            if(!InterconnectObject.class.isAssignableFrom(typeClazz)) {
+            if (!InterconnectObject.class.isAssignableFrom(typeClazz)) {
                 // okay. we have an List<? extends InterconnectObject> return
                 throw new IllegalStateException("@DaemonRequestMethod return type must be List<InterconnectObject>");
             }
-            if(!IVO.class.isAssignableFrom(typeClazz)) {
+            if (!IVO.class.isAssignableFrom(typeClazz)) {
                 DaemonScanner.LOGGER2.warn("The method " + method + " uses List<? extends InterconnectObject> (which is deprecated) instead of List<? extends IVO> return.");
             }
-            if(typeClazz.isInterface()) {
+            if (typeClazz.isInterface()) {
                 DaemonScanner.LOGGER2.warn("The method " + method + " returns an interface");
             }
             type = Type.interconnectObjects;
         } else {
             throw new IllegalStateException("@DaemonRequestMethod return type must be: IVO, void, List<IVO> or IVO[]");
         }
-        if((method.getExceptionTypes().length != 1) || (method.getExceptionTypes()[0] != DaemonError.class)) {
-            if(method.getDeclaringClass().isInterface()) { // you can implement a method without throwing the DaemonError and that's ok in
-                // the implementation as long as the interface contains the throws DaemonError
-                // statement
-                throw new IllegalStateException("@DaemonRequestMethod must throw exactly one exception of type DaemonError");
+        if (method.getDeclaringClass().isInterface() && ((method.getExceptionTypes().length != 1) || (method.getExceptionTypes()[0] != DaemonError.class))) {
+            // you can implement a method without throwing the DaemonError and that's ok in
+            // the implementation as long as the interface contains at least the throws DaemonError
+            // statement
+            if (method.getExceptionTypes().length != 2) {
+                throw new IllegalStateException("@DaemonRequestMethod must throw at least an exception of type DaemonError, and may throw an additional TimeoutException");
+            }
+            if (method.getExceptionTypes()[0] != DaemonError.class && method.getExceptionTypes()[1] != DaemonError.class) {
+                throw new IllegalStateException("@DaemonRequestMethod must throw at least an exception of type DaemonError");
+            }
+            //timeout exception is sadly not available here, but might be thrown by execution via ADaemonProxyFactory and therefore might be interesting to throw on the interface
+            if (!method.getExceptionTypes()[0].getCanonicalName().equals("de.taimos.dvalin.interconnect.core.exceptions.TimeoutException") //
+                && !method.getExceptionTypes()[1].getCanonicalName().equals("de.taimos.dvalin.interconnect.core.exceptions.TimeoutException")) {
+                throw new IllegalStateException("@DaemonRequestMethod is not allowed to throw the combination of exceptions currently defined");
             }
         }
-        if(!Modifier.isPublic(method.getModifiers())) {
+        if (!Modifier.isPublic(method.getModifiers())) {
             throw new IllegalStateException("@DaemonRequestMethod must be public");
         }
         Class<?> paramClass = method.getParameterTypes()[0];
-        if(!InterconnectObject.class.isAssignableFrom(paramClass)) {
+        if (!InterconnectObject.class.isAssignableFrom(paramClass)) {
             throw new IllegalStateException("Paramater of @DaemonRequestMethod must implement InterconnectObject");
         }
-        if(!IVO.class.isAssignableFrom(paramClass)) {
+        if (!IVO.class.isAssignableFrom(paramClass)) {
             DaemonScanner.LOGGER2.warn("The method " + method + " uses InterconnectObject (which is deprecated) instead of IVO as input.");
         }
-        if(paramClass.isInterface()) {
+        if (paramClass.isInterface()) {
             throw new IllegalStateException("Paramater of @DaemonRequestMethod must not be an interface");
         }
         @SuppressWarnings("unchecked") final Class<? extends InterconnectObject> icoClazz = (Class<? extends InterconnectObject>) method.getParameterTypes()[0];
@@ -234,26 +246,26 @@ public final class DaemonScanner {
      * @param method Method
      */
     private static DaemonMethod scanReceiver(final Method method, final DaemonReceiverMethod drm) {
-        if(method.getParameterTypes().length != 1) {
+        if (method.getParameterTypes().length != 1) {
             throw new IllegalStateException("@DaemonReceiverMethod must have one parameter");
         }
-        if(!method.getReturnType().equals(Void.TYPE)) {
+        if (!method.getReturnType().equals(Void.TYPE)) {
             throw new IllegalStateException("@DaemonReceiverMethod must return void");
         }
-        if(method.getExceptionTypes().length > 0) {
+        if (method.getExceptionTypes().length > 0) {
             throw new IllegalStateException("@DaemonReceiverMethod must not throw an exception");
         }
-        if(!Modifier.isPublic(method.getModifiers())) {
+        if (!Modifier.isPublic(method.getModifiers())) {
             throw new IllegalStateException("@DaemonReceiverMethod must be public");
         }
         Class<?> paramClass = method.getParameterTypes()[0];
-        if(!InterconnectObject.class.isAssignableFrom(paramClass)) {
+        if (!InterconnectObject.class.isAssignableFrom(paramClass)) {
             throw new IllegalStateException("Paramater of @DaemonReceiverMethod must implement InterconnectObject");
         }
-        if(!IVO.class.isAssignableFrom(paramClass)) {
+        if (!IVO.class.isAssignableFrom(paramClass)) {
             DaemonScanner.LOGGER2.warn("The method " + method + " uses InterconnectObject (which is deprecated) instead of IVO as input.");
         }
-        if(paramClass.isInterface()) {
+        if (paramClass.isInterface()) {
             throw new IllegalStateException("Paramater of @DaemonReceiverMethod must not be an interface");
         }
         @SuppressWarnings("unchecked") final Class<? extends InterconnectObject> icoClazz = (Class<? extends InterconnectObject>) method.getParameterTypes()[0];
@@ -285,42 +297,45 @@ public final class DaemonScanner {
                 Preconditions.checkNotNull(obj, "return must not be null");
                 return (InterconnectObject) obj;
             }
-        }, /**
+        },
+        /**
          * Multiple InterconnectObjects.
          */
         interconnectObjects {
-                @Override
-                @SuppressWarnings({"unchecked", "rawtypes"})
-                public InterconnectObject invoke(final IDaemonHandler handler, final Method method, final InterconnectObject ico) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    final Object obj = method.invoke(handler, ico);
-                    Preconditions.checkNotNull(obj, "return must not be null");
-                    if(obj instanceof List) {
-                        return new InterconnectList((List) obj);
-                    } else if(obj.getClass().isArray()) {
-                        final List<?> list = Lists.newArrayList(DaemonScanner.object2Array(obj.getClass().getEnclosingClass(), obj));
-                        return new InterconnectList(list);
-                    }
-                    throw new IllegalAccessException("Invalid return value: " + obj);
+            @Override
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            public InterconnectObject invoke(final IDaemonHandler handler, final Method method, final InterconnectObject ico) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                final Object obj = method.invoke(handler, ico);
+                Preconditions.checkNotNull(obj, "return must not be null");
+                if (obj instanceof List) {
+                    return new InterconnectList((List) obj);
+                } else if (obj.getClass().isArray()) {
+                    final List<?> list = Lists.newArrayList(DaemonScanner.object2Array(obj.getClass().getEnclosingClass(), obj));
+                    return new InterconnectList(list);
                 }
-            }, /**
+                throw new IllegalAccessException("Invalid return value: " + obj);
+            }
+        },
+        /**
          * VoidIVO.
          */
         voidivo {
-                @Override
-                public InterconnectObject invoke(final IDaemonHandler handler, final Method method, final InterconnectObject ico) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    method.invoke(handler, ico);
-                    return new VoidIVOBuilder().build();
-                }
-            }, /**
+            @Override
+            public InterconnectObject invoke(final IDaemonHandler handler, final Method method, final InterconnectObject ico) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                method.invoke(handler, ico);
+                return new VoidIVOBuilder().build();
+            }
+        },
+        /**
          * void.
          */
         voit {
-                @Override
-                public InterconnectObject invoke(final IDaemonHandler handler, final Method method, final InterconnectObject ico) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    method.invoke(handler, ico);
-                    return null;
-                }
+            @Override
+            public InterconnectObject invoke(final IDaemonHandler handler, final Method method, final InterconnectObject ico) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                method.invoke(handler, ico);
+                return null;
             }
+        }
     }
 
 
@@ -443,21 +458,21 @@ public final class DaemonScanner {
 
         @Override
         public boolean equals(Object obj) {
-            if(this == obj) {
+            if (this == obj) {
                 return true;
             }
-            if(obj == null) {
+            if (obj == null) {
                 return false;
             }
-            if(this.getClass() != obj.getClass()) {
+            if (this.getClass() != obj.getClass()) {
                 return false;
             }
             DaemonMethod other = (DaemonMethod) obj;
-            if(this.request == null) {
-                if(other.request != null) {
+            if (this.request == null) {
+                if (other.request != null) {
                     return false;
                 }
-            } else if(!this.request.equals(other.request)) {
+            } else if (!this.request.equals(other.request)) {
                 return false;
             }
             return true;

@@ -20,17 +20,6 @@ package de.taimos.dvalin.interconnect.model.common.daemon;
  * #L%
  */
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.taimos.dvalin.interconnect.model.InterconnectList;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.ivo.IVO;
@@ -42,6 +31,17 @@ import de.taimos.dvalin.interconnect.model.service.DaemonRequestMethod;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
 import de.taimos.dvalin.interconnect.model.service.IDaemon;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.omg.CORBA.SystemException;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @SuppressWarnings({"javadoc", "unused"})
 public class DaemonScannerTest {
@@ -59,11 +59,21 @@ public class DaemonScannerTest {
         void testVoid(final VoidIVO ivo);
 	}
 
+    public interface ITestWrongMultiExceptionTypes extends IDaemon, IDaemonHandler {
+
+        @DaemonRequestMethod(idempotent = false)
+        void testVoid(final VoidIVO ivo) throws DaemonError, SystemException;
+    }
 
 	@Test(expected = IllegalStateException.class)
-	public void testMisingExceptionInInterface() {
+	public void testMissingExceptionInInterface() {
 		DaemonScanner.scan(ITestMissingException.class);
 	}
+
+    @Test(expected = IllegalStateException.class)
+    public void testWrongExceptionInInterface() {
+        DaemonScanner.scan(ITestWrongMultiExceptionTypes.class);
+    }
 
 	@Test
 	public void testMisingExceptionInImplementingClass() {
