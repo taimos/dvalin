@@ -1,45 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="EntryPointsManager">
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="de.taimos.dvalin.jaxrs.JaxRsComponent" />
-    </list>
-  </component>
-  <component name="JsBowerSettings">
-    <exe-path>/usr/local/bin/bower</exe-path>
-    <config-path />
-  </component>
-  <component name="MavenProjectsManager">
-    <option name="originalFiles">
-      <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/interconnect/pom.xml" />
-        <option value="$PROJECT_DIR$/interconnect/test/pom.xml" />
-        <option value="$PROJECT_DIR$/interconnect/demo/pom.xml" />
-        <option value="$PROJECT_DIR$/archetypes/basic/pom.xml" />
-        <option value="$PROJECT_DIR$/monitoring/pom.xml" />
-      </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/examples/pom.xml" />
-      </set>
-    </option>
-  </component>
-  <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoFilterTemplate.vm" />
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoIdTemplate.vm" />
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoInterfaceFilterTemplate.vm" />
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoInterfaceIdTemplate.vm" />
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoInterfaceObjectTemplate.vm" />
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivointerfacetemplate.vm" />
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivoObjectTemplate.vm" />
-    <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin/src/main/resources/ivotemplate.vm" />
-  </component>
-  <component name="ProjectResources">
-    <resource url="http://maven.apache.org/xsd/assembly-1.1.2.xsd" location="" />
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/out" />
-  </component>
+    <component name="EntryPointsManager">
+        <list size="1">
+            <item index="0" class="java.lang.String" itemvalue="de.taimos.dvalin.jaxrs.JaxRsComponent"/>
+        </list>
+    </component>
+    <component name="JsBowerSettings">
+        <exe-path>/usr/local/bin/bower</exe-path>
+        <config-path/>
+    </component>
+    <component name="MavenProjectsManager">
+        <option name="originalFiles">
+            <list>
+                <option value="$PROJECT_DIR$/pom.xml"/>
+                <option value="$PROJECT_DIR$/interconnect/pom.xml"/>
+                <option value="$PROJECT_DIR$/interconnect/test/pom.xml"/>
+                <option value="$PROJECT_DIR$/interconnect/demo/pom.xml"/>
+                <option value="$PROJECT_DIR$/archetypes/basic/pom.xml"/>
+                <option value="$PROJECT_DIR$/monitoring/pom.xml"/>
+            </list>
+        </option>
+        <option name="ignoredFiles">
+            <set>
+                <option value="$PROJECT_DIR$/examples/pom.xml"/>
+            </set>
+        </option>
+    </component>
+    <component name="ProjectResources">
+        <resource url="http://maven.apache.org/xsd/assembly-1.1.2.xsd" location=""/>
+    </component>
+    <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+        <output url="file://$PROJECT_DIR$/out"/>
+    </component>
 </project>
