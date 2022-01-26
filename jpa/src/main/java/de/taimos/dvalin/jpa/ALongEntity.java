@@ -9,9 +9,9 @@ package de.taimos.dvalin.jpa;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,13 +74,9 @@ public abstract class ALongEntity implements IEntity<Long> {
         }
         ALongEntity other = (ALongEntity) obj;
         if (this.id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!this.id.equals(other.id)) {
-            return false;
+            return other.id == null;
         }
-        return true;
+        return this.id.equals(other.id);
     }
 
 }
