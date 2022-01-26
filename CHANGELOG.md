@@ -16,6 +16,7 @@
     * Concordion 3.1.3
     * Nimbus JOSE+JWT 9.15,2
     * JSON Small and Fast Parser 1.3.3
+    * Liquibase 4.7.1
 * BREAKING: commented out JasperReports to get the code compiling
 
 # Version 1.30
