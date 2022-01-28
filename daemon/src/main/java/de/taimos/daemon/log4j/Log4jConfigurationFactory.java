@@ -13,6 +13,7 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.api.LayoutComponentBuilder;
 import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuilder;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.core.net.Protocol;
 
 /**
  * Copyright 2022 Cinovo AG<br>
@@ -34,17 +35,6 @@ public class Log4jConfigurationFactory {
     public Configuration configure(ConfigurationBuilder<?> builder) {
         LayoutComponentBuilder layout = createDefaultLayout(builder, Log4jDaemonProperties.DEFAULT_PATTERN);
         return this.configure(builder, layout, true, null, null, null, null, null);
-    }
-
-    /**
-     * @param builder       config builder
-     * @param fileName      log file name
-     * @param filePattern   log file pattern
-     * @return built configuration
-     */
-    public Configuration configure(ConfigurationBuilder<?> builder, String fileName, String filePattern) {
-        LayoutComponentBuilder layout = createDefaultLayout(builder, Log4jDaemonProperties.DEFAULT_PATTERN);
-        return this.configure(builder, layout, true, fileName, filePattern, null, null, null);
     }
 
     /**
@@ -129,7 +119,11 @@ public class Log4jConfigurationFactory {
      * @return builder for {@link SyslogAppender}
      */
     protected AppenderComponentBuilder createSyslogAppender(ConfigurationBuilder<?> builder, String host, String facility) {
-        return builder.newAppender(SYSLOG_NAME, "Syslog").addAttribute("host", host).addAttribute("facility", facility);
+        return builder.newAppender(SYSLOG_NAME, "Syslog") //
+            .addAttribute("protocol", Protocol.UDP) //
+            .addAttribute("port", 514) //
+            .addAttribute("host", host) //
+            .addAttribute("facility", facility);
     }
 
     /**

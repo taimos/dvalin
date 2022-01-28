@@ -47,11 +47,19 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
 
         String fileName = null;
         String filePattern = null;
+        String host = null;
+        String facility = null;
+        Level syslogLevel = null;
         if (!DaemonStarter.isDevelopmentMode()) {
             fileName = getLogFileName(DaemonStarter.getDaemonName());
             filePattern = getLogFilePattern(fileName);
+
+            host = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_HOST, "localhost");
+            facility = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_FACILITY, "LOCAL0");
+            syslogLevel = getLevel(Log4jDaemonProperties.SYSLOG_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
         }
-        Configuration config = this.configFactory.configure(builder, fileName, filePattern);
+        LayoutComponentBuilder layout = this.createConfiguredLayout(builder);
+        Configuration config = this.configFactory.configure(builder, layout, true, fileName, filePattern, host, facility, syslogLevel);
         Configurator.reconfigure(config);
 
         Configurator.setRootLevel(this.getLevel(Log4jDaemonProperties.LOGGER_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL));
