@@ -20,26 +20,23 @@ package de.taimos.dvalin.interconnect.core.spring;
  * #L%
  */
 
+import de.taimos.daemon.spring.annotations.ProdComponent;
+import de.taimos.dvalin.interconnect.core.daemon.ADaemonMessageHandler;
+import de.taimos.dvalin.interconnect.core.daemon.IdemponentRetryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ErrorHandler;
+
 import javax.annotation.PostConstruct;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ErrorHandler;
-
-import de.taimos.daemon.spring.annotations.ProdComponent;
-import de.taimos.dvalin.interconnect.core.daemon.ADaemonMessageHandler;
-import de.taimos.dvalin.interconnect.core.daemon.DaemonResponse;
-import de.taimos.dvalin.interconnect.core.daemon.IdemponentRetryException;
-import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
-import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
-
 
 /**
  * Listen to JMS messages for this daemon.
+ *
+ * @author thoeger/psigloch
  */
 @ProdComponent("messageListener")
 public final class DaemonMessageListener implements MessageListener, ErrorHandler {
@@ -47,58 +44,23 @@ public final class DaemonMessageListener implements MessageListener, ErrorHandle
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private IDaemonMessageSender messageSender;
+    private IDaemonMessageHandlerFactory messageHandlerFactory;
 
-    @Autowired
-    private BeanFactory beanFactory;
+    private ADaemonMessageHandler handler;
 
-    private DaemonMessageHandler handler;
-
-
-    private static final class DaemonMessageHandler extends ADaemonMessageHandler {
-
-        private final Logger logger;
-
-        private final IDaemonMessageSender messageSender;
-
-        private final BeanFactory beanFactory;
-
-
-        public DaemonMessageHandler(final Logger aLogger, final Class<? extends ADaemonHandler> aHandlerClazz, final IDaemonMessageSender aMessageSender, BeanFactory beanFactory) {
-            super(aHandlerClazz, false);
-            this.logger = aLogger;
-            this.messageSender = aMessageSender;
-            this.beanFactory = beanFactory;
-        }
-
-        @Override
-        protected void reply(final DaemonResponse response, final boolean secure) throws Exception {
-            this.messageSender.reply(response, secure);
-        }
-
-        @Override
-        protected IDaemonHandler createRequestHandler() {
-            return (ADaemonHandler) this.beanFactory.getBean("requestHandler");
-        }
-
-        @Override
-        protected Logger getLogger() {
-            return this.logger;
-        }
-    }
-
-
-    /** */
+    /**
+     *
+     */
     public DaemonMessageListener() {
         super();
-
     }
 
-    /** */
+    /**
+     *
+     */
     @PostConstruct
     public void start() {
-        final ADaemonHandler rh = (ADaemonHandler) this.beanFactory.getBean("requestHandler");
-        this.handler = new DaemonMessageHandler(this.logger, rh.getClass(), this.messageSender, this.beanFactory);
+        this.handler = this.messageHandlerFactory.create(this.logger);
     }
 
     @Override
