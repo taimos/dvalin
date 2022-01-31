@@ -68,7 +68,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
+        <dependency>
 			<groupId>com.github.mongobee</groupId>
 			<artifactId>mongobee</artifactId>
 			<version>${mongobee.version}</version>
@@ -95,10 +95,10 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>com.github.fakemongo</groupId>
-			<artifactId>fongo</artifactId>
-			<version>${fongo.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>de.bwaldvogel</groupId>
+            <artifactId>mongo-java-server</artifactId>
+            <version>${mongo-java-server.version}</version>
+        </dependency>
 	</dependencies>
 </project>

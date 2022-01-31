@@ -2,7 +2,7 @@
 * Update dependencies
     * Spring 4.3.30
     * AWS 1.12.143
-    * Jackson 2.12.5
+    * Jackson 2.12.6
     * Apache CXF 3.4.5
     * Jetty 9.4.44.v20210927
     * Joda-Time 2.10.13
@@ -17,7 +17,11 @@
     * Nimbus JOSE+JWT 9.15,2
     * JSON Small and Fast Parser 1.3.3
     * Liquibase 4.7.1
+    * Mongo Java Driver 3.12.10
+    * Jongo 1.5.0
+    * Bson 2.12.0
 * BREAKING: commented out JasperReports to get the code compiling
+* BREAKING: replaced Fongo with MongoDB Java Server 1.39.0 (https://github.com/bwaldvogel/mongo-java-server)
 
 # Version 1.30
 * Update dependencies

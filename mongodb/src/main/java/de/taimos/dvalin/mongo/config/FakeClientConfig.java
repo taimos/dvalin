@@ -9,9 +9,9 @@ package de.taimos.dvalin.mongo.config;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +20,10 @@ package de.taimos.dvalin.mongo.config;
  * #L%
  */
 
-import com.github.fakemongo.Fongo;
 import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
+import de.bwaldvogel.mongo.MongoServer;
+import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,14 +35,14 @@ public class FakeClientConfig {
 
 
     @Bean
-    public Fongo fongo() {
-        return new Fongo("InMemoryStore");
+    public MongoServer mongoServer() {
+        return new MongoServer(new MemoryBackend());
     }
 
 
     @Bean
-    public MongoClient mongoClient(Fongo fongo) {
-        return fongo.getMongo();
+    public MongoClient mongoClient(MongoServer mongoServer) {
+        return new MongoClient(new ServerAddress(mongoServer.bind()));
     }
 
 }
