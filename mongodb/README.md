@@ -7,7 +7,7 @@ full support to interact with MongoDB databases including an in-memory database 
 
 The following settings are possible:
 
-* `mongodb.type` - {fake|real} connect to real MongoDB database or in-memory version using `Fongo`
+* `mongodb.type` - {fake|real} connect to real MongoDB database or in-memory version using `Mongo Java Server`
 * `mongodb.name` - the name of the database to use for data storage
 * `mongobee.enabled` - {true|false} use mongobee for database migration
 * `mongobee.basepackage` - the base package of the Mongobee changesets
