@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
- * Copyright 2022 Cinovo AG<br>
+ *  Copyright 2022 Taimos GmbH<br>
  * <br>
  *
  * @author psigloch

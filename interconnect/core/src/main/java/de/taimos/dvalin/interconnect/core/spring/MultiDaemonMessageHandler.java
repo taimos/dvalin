@@ -10,7 +10,7 @@ import org.springframework.beans.factory.BeanFactory;
 import java.util.Collection;
 
 /**
- * Copyright 2022 Cinovo AG<br>
+ *  Copyright 2022 Taimos GmbH<br>
  * <br>
  *
  * @author psigloch

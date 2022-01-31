@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Copyright 2022 Cinovo AG<br>
+ *  Copyright 2022 Taimos GmbH<br>
  * <br>
  *
  * @author psigloch

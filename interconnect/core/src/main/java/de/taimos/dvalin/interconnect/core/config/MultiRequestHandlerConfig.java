@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Copyright 2022 Cinovo AG<br>
+ * Copyright 2022 Taimos GmbH<br>
  * <br>
  *
  * @author psigloch
