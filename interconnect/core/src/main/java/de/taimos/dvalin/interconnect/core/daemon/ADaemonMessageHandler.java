@@ -20,19 +20,9 @@ package de.taimos.dvalin.interconnect.core.daemon;
  * #L%
  */
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.jms.Message;
-import javax.jms.TextMessage;
-
-import org.slf4j.Logger;
-
 import de.taimos.dvalin.interconnect.core.InterconnectConnector;
 import de.taimos.dvalin.interconnect.core.MessageConnector;
+import de.taimos.dvalin.interconnect.core.daemon.DaemonMethodRegistry.RegistryEntry;
 import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
@@ -45,47 +35,41 @@ import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
+import org.slf4j.Logger;
 
+import javax.jms.Message;
+import javax.jms.TextMessage;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.UUID;
+
+/**
+ * Copyright 2015 Taimos GmbH<br>
+ * <br>
+ *
+ * @author Thorsten Hoeger
+ */
 public abstract class ADaemonMessageHandler {
 
-    final Map<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod> registry;
+    protected final DaemonMethodRegistry registry;
 
     private final boolean throwExceptionOnTimeout;
-
 
     /**
      * @param aHandlerClazz            Handler class
      * @param aThrowExceptionOnTimeout if true throw Exception if timeout is reached
      */
-    public ADaemonMessageHandler(final Class<? extends IDaemonHandler> aHandlerClazz, final boolean aThrowExceptionOnTimeout) {
-        final Map<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod> reg = new HashMap<>();
-        for (final DaemonScanner.DaemonMethod re : DaemonScanner.scan(aHandlerClazz)) {
-            reg.put(re.getRequest(), re);
-        }
-        this.registry = Collections.unmodifiableMap(reg);
+    protected ADaemonMessageHandler(final Class<? extends IDaemonHandler> aHandlerClazz, final boolean aThrowExceptionOnTimeout) {
+        this.registry = new DaemonMethodRegistry(aHandlerClazz);
         this.throwExceptionOnTimeout = aThrowExceptionOnTimeout;
     }
 
     /**
-     * @param aHandlerClazz                    Handler class
-     * @param aCatchExceptionsInRequestHandler if true Exceptions during execution are catched and returned as a DaemonError
-     * @param aThrowExceptionOnTimeout         if true throw Exception if timeout is reached
-     * @deprecated use ADaemonMessageHandler(aHandlerClazz, aThrowExceptionOnTimeout) instead
+     * @param aHandlerClazzes          Handler classes
+     * @param aThrowExceptionOnTimeout if true throw Exception if timeout is reached
      */
-    @Deprecated
-    public ADaemonMessageHandler(final Class<? extends IDaemonHandler> aHandlerClazz, @SuppressWarnings("unused") final boolean aCatchExceptionsInRequestHandler, final boolean aThrowExceptionOnTimeout) {
-        this(aHandlerClazz, aThrowExceptionOnTimeout);
-    }
-
-    /**
-     * @param aRegistry                        Registry
-     * @param aCatchExceptionsInRequestHandler if true Exceptions during execution are catched and returned as a DaemonError
-     * @param aThrowExceptionOnTimeout         if true throw Exception if timeout is reached
-     * @deprecated use ADaemonMessageHandler(aHandlerClazz, aThrowExceptionOnTimeout) instead
-     */
-    @Deprecated
-    public ADaemonMessageHandler(final Map<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod> aRegistry, @SuppressWarnings("unused") final boolean aCatchExceptionsInRequestHandler, final boolean aThrowExceptionOnTimeout) {
-        this.registry = Collections.unmodifiableMap(new HashMap<Class<? extends InterconnectObject>, DaemonScanner.DaemonMethod>(aRegistry));
+    protected ADaemonMessageHandler(final Collection<Class<? extends IDaemonHandler>> aHandlerClazzes, final boolean aThrowExceptionOnTimeout) {
+        this.registry = new DaemonMethodRegistry(aHandlerClazzes);
         this.throwExceptionOnTimeout = aThrowExceptionOnTimeout;
     }
 
@@ -102,8 +86,9 @@ public abstract class ADaemonMessageHandler {
      * Create a new request handler.
      *
      * @return ADaemonHandler
+     * @param registryEntry
      */
-    protected abstract IDaemonHandler createRequestHandler();
+    protected abstract IDaemonHandler createRequestHandler(RegistryEntry registryEntry);
 
     protected abstract Logger getLogger();
 
@@ -130,10 +115,11 @@ public abstract class ADaemonMessageHandler {
                 this.reply(new DaemonResponse(request, new PongIVO.PongIVOBuilder().build()), secure);
                 return;
             }
-            final DaemonScanner.DaemonMethod method = this.registry.get(icoClass);
-            if (method == null) {
+            final RegistryEntry registryEntry = this.registry.get(icoClass);
+            if (registryEntry == null) {
                 throw new Exception("No registered method found for " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
             }
+            final DaemonScanner.DaemonMethod method = registryEntry.getMethod();
             if (method.isSecure() != secure) {
                 throw new Exception("Insecure call (is " + secure + " should be " + method.isSecure() + ") for " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
             }
@@ -166,7 +152,7 @@ public abstract class ADaemonMessageHandler {
                 ivoClass = (Class<? extends IVO>) ivoIn.getClass();
                 InterconnectContext.setRequestClass(ivoClass);
             }
-            final IDaemonHandler handler = this.createRequestHandler();
+            final IDaemonHandler handler = this.createRequestHandler(registryEntry);
             final StringBuilder sbInvokeLog = new StringBuilder();
             sbInvokeLog.append("Invoke ").append(method.getMethod().getName()).append("(").append(icoClass.getSimpleName()).append(")");
             if (ivoIn instanceof IPageable) {

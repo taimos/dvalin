@@ -23,9 +23,14 @@ package de.taimos.dvalin.interconnect.core.config;
 import de.taimos.dvalin.interconnect.core.daemon.DaemonRequestResponse;
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonRequestResponse;
 import de.taimos.dvalin.interconnect.core.spring.DaemonMessageListener;
+import de.taimos.dvalin.interconnect.core.spring.IDaemonMessageHandlerFactory;
+import de.taimos.dvalin.interconnect.core.spring.IDaemonMessageSender;
+import de.taimos.dvalin.interconnect.core.spring.SingleDaemonMessageHandler;
+import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.jms.pool.PooledConnectionFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -94,6 +99,13 @@ public class JMSConfig {
         return new DaemonRequestResponse();
     }
 
+    @Bean
+    public IDaemonMessageHandlerFactory createDaemonMessageHandlerFactory(BeanFactory beanFactory, IDaemonMessageSender messageSender) {
+        return logger -> {
+            final ADaemonHandler rh = (ADaemonHandler) beanFactory.getBean("requestHandler");
+            return new SingleDaemonMessageHandler(logger, rh.getClass(), messageSender, beanFactory);
+        };
+    }
 
     @Bean
     public DefaultMessageListenerContainer jmsListenerContainer(PooledConnectionFactory jmsFactory, DaemonMessageListener messageListener) {
