@@ -25,14 +25,14 @@ package de.taimos.dvalin.mongo;
 
 import java.math.BigDecimal;
 
+import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoDatabase;
+import de.bwaldvogel.mongo.MongoServer;
+import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
+import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 import org.jongo.Jongo;
 import org.junit.Assert;
-
-import com.github.fakemongo.Fongo;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
-
-import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 
 /**
  * Copyright 2015 Taimos GmbH<br>
@@ -43,7 +43,7 @@ import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 public class ABaseTest {
 
     protected static final String dbName = "dvalin-mongo";
-    public static final MongoClient mongo = new Fongo("InMemory").getMongo();
+    public static final MongoClient mongo = new MongoClient(new ServerAddress(new MongoServer(new MemoryBackend()).bind()));;
     public static final Jongo jongo = JongoFactory.createDefault(ABaseTest.mongo.getDB(ABaseTest.dbName));
     public static final MongoDatabase database = ABaseTest.mongo.getDatabase(ABaseTest.dbName);
 

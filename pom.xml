@@ -36,22 +36,22 @@
         <contributor>
             <email>info@cinovo.de</email>
             <organization>Cinovo AG</organization>
-            <organizationUrl>http://www.cinovo.de</organizationUrl>
+            <organizationUrl>https://www.cinovo.de</organizationUrl>
         </contributor>
         <contributor>
             <email>info@tullius-walden.com</email>
             <organization>Tullius Walden Bank AG</organization>
-            <organizationUrl>http://www.tullius-walden.com</organizationUrl>
+            <organizationUrl>https://www.tullius-walden.com</organizationUrl>
         </contributor>
         <contributor>
             <name>Philipp Sigloch</name>
             <organization>Cinovo AG</organization>
-            <organizationUrl>http://www.cinovo.de</organizationUrl>
+            <organizationUrl>https://www.cinovo.de</organizationUrl>
         </contributor>
     </contributors>
     <properties>
         <org.springframework.version>4.3.30.RELEASE</org.springframework.version>
-        <jackson.version>2.12.5</jackson.version>
+        <jackson.version>2.12.6</jackson.version>
         <joda.time.version>2.10.13</joda.time.version>
         <slf4j.version>1.7.33</slf4j.version>
         <powermock.version>2.0.9</powermock.version>
@@ -63,11 +63,11 @@
         <hibernate.version>5.5.9.Final</hibernate.version>
         <http.version>2.1</http.version>
 
-        <bson.version>2.7.0</bson.version>
-        <jongo.version>1.4.0</jongo.version>
-        <mongo.version>3.4.2</mongo.version>
+        <bson.version>2.12.0</bson.version>
+        <jongo.version>1.5.0</jongo.version>
+        <mongo.version>3.12.10</mongo.version>
         <mongobee.version>0.12</mongobee.version>
-        <fongo.version>2.1.1</fongo.version>
+        <mongo-java-server.version>1.39.0</mongo-java-server.version>
         <xdocreport.version>1.0.6</xdocreport.version>
     </properties>
     <scm>

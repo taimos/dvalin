@@ -4,10 +4,14 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/basic" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/archetypes/basic/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/basic/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/basic/src/main/resources/META-INF/maven/archetype-metadata.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/docker" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/archetypes/docker/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/archetypes/docker/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/archetypes/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/archetypes/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cloud" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cloud/aws" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cloud/aws-ssm" charset="UTF-8" />
@@ -15,10 +19,14 @@
     <file url="file://$PROJECT_DIR$/cloud/aws-ssm/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cloud/aws/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cloud/aws/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cloud/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cloud/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cluster" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cluster/hazelcast" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cluster/hazelcast/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cluster/hazelcast/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cluster/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cluster/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/daemon" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/daemon/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/daemon/src/main/resources" charset="UTF-8" />
@@ -41,6 +49,8 @@
     <file url="file://$PROJECT_DIR$/interconnect/model" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/model/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/model/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/test" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/test/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/test/src/main/resources" charset="UTF-8" />
@@ -66,6 +76,8 @@
     <file url="file://$PROJECT_DIR$/monitoring/logging" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/monitoring/logging/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/monitoring/logging/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/monitoring/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/monitoring/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/aws" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/aws/src/main/java" charset="UTF-8" />
@@ -73,6 +85,8 @@
     <file url="file://$PROJECT_DIR$/notification/core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification/core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notification/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notification/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orchestration" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orchestration/core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orchestration/core/src/main/java" charset="UTF-8" />
@@ -80,10 +94,16 @@
     <file url="file://$PROJECT_DIR$/orchestration/etcd" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orchestration/etcd/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orchestration/etcd/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/orchestration/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/orchestration/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/template" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/template/jasperreports" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/template/jasperreports/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/template/jasperreports/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/template/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/template/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/template/velocity" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/template/velocity/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/template/velocity/src/main/resources" charset="UTF-8" />

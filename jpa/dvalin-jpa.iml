@@ -56,7 +56,6 @@
     <orderEntry type="library" name="Maven: org.jboss:jandex:2.2.3.Final" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml:classmate:1.5.1" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
-    <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jaxb:jaxb-runtime:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jaxb:txw2:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.istack:istack-commons-runtime:3.0.7" level="project" />
@@ -70,8 +69,9 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.3.30.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:4.3.30.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.3.30.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:3.4.2" level="project" />
-    <orderEntry type="library" name="Maven: com.mattbertolini:liquibase-slf4j:2.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:4.7.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.mattbertolini:liquibase-slf4j:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:30.1.1-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
