@@ -62,7 +62,7 @@
         <jetty.version>9.4.44.v20210927</jetty.version>
         <hibernate.version>5.5.9.Final</hibernate.version>
         <http.version>2.1</http.version>
-
+        <velocity.version>2.3</velocity.version>
         <bson.version>2.12.0</bson.version>
         <jongo.version>1.5.0</jongo.version>
         <mongo.version>3.12.10</mongo.version>
@@ -373,29 +373,30 @@
 
             <dependency>
                 <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>3.8.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
-                <version>3.0.3</version>
+                <version>3.8.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
-                <version>3.2</version>
+                <version>3.6.4</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.maven</groupId>
-                <artifactId>maven-project</artifactId>
-                <version>2.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.sonatype.plexus</groupId>
-                <artifactId>plexus-build-api</artifactId>
-                <version>0.0.7</version>
-            </dependency>
+
 
             <dependency>
                 <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity</artifactId>
-                <version>1.7</version>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>${velocity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>spring-velocity-support</artifactId>
+                <version>${velocity.version}</version>
             </dependency>
 
             <dependency>
