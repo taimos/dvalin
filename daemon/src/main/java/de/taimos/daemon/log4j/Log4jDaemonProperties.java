@@ -76,10 +76,10 @@ public final class Log4jDaemonProperties {
     public static Map<String, Level> getCustomLevelMap() {
         String config = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.ADDITIONAL_LOGGING);
         Level defaultLevel = Level.toLevel(DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_LEVEL), Level.INFO);
-        return parseCustomLevelMap(config, defaultLevel);
+        return getCustomLevelMap(config, defaultLevel);
     }
 
-    private static Map<String, Level> parseCustomLevelMap(String configString, Level defaultLevel) {
+    public static Map<String, Level> getCustomLevelMap(String configString, Level defaultLevel) {
         if (configString == null || configString.isEmpty()) {
             return Collections.emptyMap();
         }

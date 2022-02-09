@@ -39,39 +39,32 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
 
     private static final String FALSE_STRING = "false";
 
-    private final Log4jConfigurationFactory configFactory = new Log4jConfigurationFactory();
-
     @Override
     public void initializeLogging() {
         ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
 
-        String fileName = null;
+        String filePath = null;
         String filePattern = null;
         String host = null;
         String facility = null;
         Level syslogLevel = null;
+        LayoutComponentBuilder syslogLayout = null;
         if (!DaemonStarter.isDevelopmentMode()) {
-            fileName = getLogFileName(DaemonStarter.getDaemonName());
-            filePattern = getLogFilePattern(fileName);
+            String daemonName = DaemonStarter.getDaemonName();
+            filePath = DvalinLog4jConfigurationFactory.getLogFilePath(daemonName);
+            filePattern = DvalinLog4jConfigurationFactory.getLogFilePattern(filePath);
 
             host = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_HOST, "localhost");
             facility = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_FACILITY, "LOCAL0");
             syslogLevel = getLevel(Log4jDaemonProperties.SYSLOG_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
+            syslogLayout = DvalinLog4jConfigurationFactory.createSyslogLayout(builder, daemonName);
         }
+
         LayoutComponentBuilder layout = this.createConfiguredLayout(builder);
-        Configuration config = this.configFactory.configure(builder, layout, true, fileName, filePattern, host, facility, syslogLevel);
+        Configuration config = DvalinLog4jConfigurationFactory.configure(builder, layout, true, filePath, filePattern, host, facility, syslogLayout, syslogLevel);
         Configurator.reconfigure(config);
 
         Configurator.setRootLevel(this.getLevel(Log4jDaemonProperties.LOGGER_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL));
-    }
-
-    protected String getLogFileName(String daemonName) {
-        String name = (daemonName != null && !daemonName.isEmpty()) ? daemonName : "daemon";
-        return "log/" + name + ".log";
-    }
-
-    protected String getLogFilePattern(String fileName) {
-        return fileName + ".%d{yyyy-MM-dd}";
     }
 
     @Override
@@ -79,17 +72,19 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
         final Logger rlog = LogManager.getRootLogger();
         rlog.info("Reconfigure Logging");
 
+        String daemonName = DaemonStarter.getDaemonName();
         boolean console = !DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_STDOUT, "true").equals(FALSE_STRING);
 
-        String fileName = null;
+        String filePath = null;
         String filePattern = null;
         String host = null;
         String facility = null;
         Level syslogLevel = null;
+
         if (!DaemonStarter.isDevelopmentMode()) {
             if (!DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_FILE, FALSE_STRING).equals(FALSE_STRING)) {
-                fileName = getLogFileName(DaemonStarter.getDaemonName());
-                filePattern = getLogFilePattern(fileName);
+                filePath = DvalinLog4jConfigurationFactory.getLogFilePath(daemonName);
+                filePattern = DvalinLog4jConfigurationFactory.getLogFilePattern(filePath);
             }
 
             if (!DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_SYSLOG, FALSE_STRING).equals(FALSE_STRING)) {
@@ -101,7 +96,8 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
 
         ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
         LayoutComponentBuilder layout = this.createConfiguredLayout(builder);
-        Configuration config = this.configFactory.configure(builder, layout, console, fileName, filePattern, host, facility, syslogLevel);
+        LayoutComponentBuilder syslogLayout = DvalinLog4jConfigurationFactory.createSyslogLayout(builder, daemonName);
+        Configuration config = DvalinLog4jConfigurationFactory.configure(builder, layout, console, filePath, filePattern, host, facility, syslogLayout, syslogLevel);
         Configurator.reconfigure(config);
 
         Level level = this.getLevel(Log4jDaemonProperties.LOGGER_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
@@ -138,7 +134,7 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
     @Override
     public void simpleLogging() {
         ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
-        Configurator.reconfigure(this.configFactory.configure(builder));
+        Configurator.reconfigure(DvalinLog4jConfigurationFactory.configure(builder));
 
         Level level = getLevel(Log4jDaemonProperties.LOGGER_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
         Configurator.setRootLevel(level);
