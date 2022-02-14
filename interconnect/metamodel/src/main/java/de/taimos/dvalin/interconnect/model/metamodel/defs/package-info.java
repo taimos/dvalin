@@ -1,4 +1,8 @@
-@XmlSchema(xmlns = {}, namespace = "http://www.taimos.de/xsd/IVODef/1.0.0", elementFormDefault = XmlNsForm.QUALIFIED, attributeFormDefault = XmlNsForm.UNSET)
+/**
+ *
+ */
+@XmlSchema(namespace = "http://www.taimos.de/xsd/IVODef/1.0.0", //
+    elementFormDefault = XmlNsForm.QUALIFIED) //
 package de.taimos.dvalin.interconnect.model.metamodel.defs;
 
 /*

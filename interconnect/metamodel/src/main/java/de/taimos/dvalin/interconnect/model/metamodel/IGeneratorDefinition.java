@@ -8,14 +8,14 @@ import java.util.List;
 public interface IGeneratorDefinition {
 
     /**
+     * @return the definition name
+     */
+    String getName();
+
+    /**
      * @return the children
      */
     List<Object> getChildren();
-
-    /**
-     * @param children the children to set
-     */
-    void setChildren(List<Object> children);
 
     /**
      * @return the package name to generate to;

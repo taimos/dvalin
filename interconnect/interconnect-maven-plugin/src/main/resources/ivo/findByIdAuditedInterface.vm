@@ -1,0 +1,72 @@
+package ${model.getPackageName()}.requests;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.taimos.dvalin.interconnect.model.ivo.Direction;
+import de.taimos.dvalin.interconnect.model.ivo.IPageable;
+import de.taimos.dvalin.interconnect.model.ivo.IVO;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ **/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+public interface ${clazzName} extends IVO, IPageable {
+
+	/**
+	 * property constant for id
+	 * property comment: the id
+	 **/
+	public static final String PROP_ID = "id";
+
+#foreach ( $field in $model.getPageableMembers() )
+    /**
+     * property constant for $field.name
+     * property comment: $field.comment
+     **/
+    public static final String PROP_$field.name.toUpperCase() = "$field.name";
+
+#end
+    /**
+	 * the id
+	 * This field is required.
+	 *
+	 * @return the value for id
+	 *
+	 **/
+	@Nonnull
+	public String getId();
+
+#foreach ( $field in $model.getPageableMembers() )
+    /**
+      * $field.comment
+      * This field is optional, thus may be null.
+      *
+      * @return the value for $field.name
+      *
+      **/
+    @Nullable
+#if ($field.filterable == 'single')
+    public $field.getTypeAsString( true ) get$tool.upperCaseFirst( $field.name )();
+#else
+    public Set<$field.getTypeAsString( true )> get$tool.upperCaseFirst( $field.name )();
+#end
+
+#end
+
+	/**
+	 * @return a clone
+	 **/
+	public ${clazzName} clone();
+
+}

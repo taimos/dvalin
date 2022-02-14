@@ -23,6 +23,7 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.12.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-joda:2.12.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-guava:2.12.6" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.6" level="project" />
     <orderEntry type="module" module-name="dvalin-interconnect-metamodel" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-model:3.0.3" level="project" />

@@ -8,165 +8,172 @@ import $imp;
  * $model.getComment()
  *
  * @author $model.getAuthor()
- */
+ **/
 @SuppressWarnings("all")
 #if ($model.isDeprecated())
 @Deprecated
 @ToBeRemoved(date="$model.getRemoveDate()")
 #end
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(builder = ${model.getClazzName()}.${model.getClazzName()}Builder.class)
 public class $model.getClazzName() extends $model.getParentClazzName() implements $model.getInterfaceClazzName() {
 
-	private static final long serialVersionUID = ${model.getSerialVersion()}L;
+    private static final long serialVersionUID = ${model.getSerialVersion()}L;
 
-	/**
-	* Builder for the read-only ivo
-	*
-	*/
-#if ($model.isDeprecated())
-	@Deprecated
-	@ToBeRemoved(date="$model.getRemoveDate()")
-#end
-	@JsonPOJOBuilder()
-	public static class ${model.getClazzName()}Builder extends Abstract${model.getClazzName()}Builder<${model.getClazzName()}Builder> implements IEventBuilder {
-		// nothing to do here, really
-	}
+    /**
+     * Builder for the read-only ivo
+     *
+     **/
+    #if ($model.isDeprecated())
+    @Deprecated
+    @ToBeRemoved(date="$model.getRemoveDate()")
+    #end
+    @JsonPOJOBuilder()
+    public static class ${model.getClazzName()}Builder extends Abstract${model.getClazzName()}Builder <${model.getClazzName()}Builder> implements IEventBuilder {
+     // nothing to do here, really
+    }
 
-	/**
-	* Abstract Builder for the read-only ivo
-	*
-	* @param <E> type of builder
-	*/
-	public abstract static class Abstract${model.getClazzName()}Builder<E extends Abstract${model.getClazzName()}Builder<?>> $model.getParentBuilder() {
+    /**
+     * Abstract Builder for the read-only ivo
+     *
+     * @param
+    <E> type of builder
+     **/
+    public abstract static class Abstract${model.getClazzName()}Builder<E extends Abstract${model.getClazzName()}Builder<?>> $model.getParentBuilder() {
+
+    #foreach ( $field in $model.getAllFields() )
+        private $field.getTypeAsString(false) $field.getName();
+    #end
+    #foreach (  $field in $model.getAllFields() )
+        /**
+        #if ( $field.required )
+         * This field is required.
+        #else
+         * This field is optional, thus may be null.
+        #end
+         * $field.comment
+         *
+         * @param p$field.name the value to set
+         * @return the builder
+         *
+         **/
+        #if ( $field.required )
+        @Nonnull
+        #else
+        @Nullable
+        #end
+        @SuppressWarnings("unchecked")
+        public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+           this.$field.name = p$field.name;
+           return (E) this;
+        }
+
+        /**
+         * @return the field value
+         **/
+        public $field.getTypeAsString(false) get$tool.upperCaseFirst( $field.name )() {
+            return this.$field.name;
+        }
+
+    #end
+
+        protected void internalFillFromIVO($model.getClazzName() ivo) {
+        #if ( $model.hasParentClazz() )
+            super.internalFillFromIVO(ivo);
+        #end
+        #foreach ( $field in $model.getAllFields() )
+            this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
+        #end
+        }
+
+        /**
+         * @return the entry
+         **/
+        #if ( $model.hasParentClazz() )
+        @Override
+        #end
+        public $model.getClazzName() build() {
+        #foreach ( $field in $model.getAllFields() )
+            #if ( $field.required )
+            if (this.$field.name == null) {
+                throw new IllegalStateException("The attribute $field.name must not be null!");
+            }
+            #end
+        #end
+            $model.getClazzName() result = new $model.getClazzName()(this);
+            return result;
+        }
+
+    }
 
 #foreach ( $field in $model.getAllFields() )
-		private $field.getTypeAsString(false) $field.getName();
-#end
-#foreach (  $field in $model.getAllFields() )
-		/**
-#if ( $field.required )
-		 * This field is required.
-#else
-		 * This field is optional, thus may be null.
-#end
-		 * $field.comment
-		 *
-		 * @param p$field.name the value to set
-		 * @return the builder
-		 *
-		 **/
-#if ( $field.required )
-		@Nonnull
-#else
-	 	@Nullable
-#end
-		@SuppressWarnings("unchecked")
-		public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
-			this.$field.name = p$field.name;
-			return (E) this;
-		}
-
-		/**
-		 * @return the field value
-		 **/
-		public $field.getTypeAsString(false) get$tool.upperCaseFirst( $field.name )() {
-			return this.$field.name;
-		}
-
+    private final #if ( $field.javaTransientFlag ) transient #end $field.getTypeAsString( false ) $field.name;
 #end
 
-		protected void internalFillFromIVO($model.getClazzName() ivo) {
-#if ( $model.hasParentClazz() )
-			super.internalFillFromIVO(ivo);
-#end
-#foreach ( $field in $model.getAllFields() )
-			this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
-#end
-		}
-
-		/**
-		 * @return the entry
-		 **/
-#if ( $model.hasParentClazz() )
-		@Override
-#end
-		public $model.getClazzName() build() {
-#foreach ( $field in $model.getAllFields() )
-#if ( $field.required )
-			if (this.$field.name == null) {
-				throw new IllegalStateException("The attribute $field.name must not be null!");
-			}
-#end
-#end
-			$model.getClazzName() result = new $model.getClazzName()(this);
-			return result;
-		}
-
-	}
-
-#foreach ( $field in $model.getAllFields() )
-	private final #if ( $field.javaTransientFlag ) transient #end $field.getTypeAsString( false ) $field.name;
-#end
-
-	protected $model.getClazzName()(Abstract${model.getClazzName()}Builder<?> builder) {
-		super(builder);
-#foreach ( $field in $model.getAllFields() )
-		this.$field.name = builder.$field.name;
-#end
-	}
+    protected $model.getClazzName()(Abstract${model.getClazzName()}Builder<?> builder) {
+        super(builder);
+    #foreach ( $field in $model.getAllFields() )
+        this.$field.name = builder.$field.name;
+    #end
+    }
 
 #foreach ( $field in $model.getNoCollectionFields() )
-#if ( $field.jsonTransientFlag )
-	@JsonIgnore
-#end
-	@Override
-	public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
-		return this.$field.name;
-	}
+    #if ( $field.jsonTransientFlag )
+    @JsonIgnore
+    #end
+    @Override
+    public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
+        return this.$field.name;
+    }
 
 #end
 #foreach ( $field in $model.getCollectionFields() )
-#if ( $field.jsonTransientFlag )
-	@JsonIgnore
-#end
-	@Override
-	public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
-#if( $field.collectionType == "List" )
-		return this.$field.name == null ? null : Collections.unmodifiableList(this.$field.name);
-#else
-		return this.$field.name == null ? null : Collections.unmodifiableSet(this.$field.name);
-#end
-	}
+    #if ( $field.jsonTransientFlag )
+    @JsonIgnore
+    #end
+    @Override
+    public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
+    #if( $field.collectionType == "List" )
+        return this.$field.name == null ? null : Collections.unmodifiableList(this.$field.name);
+    #else
+        return this.$field.name == null ? null : Collections.unmodifiableSet(this.$field.name);
+    #end
+    }
 
 #end
 #foreach ( $field in $model.getMapFields() )
-#if ( $field.jsonTransientFlag )
-	@JsonIgnore
-#end
-	@Override
-	public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
-#if( $field.mapType == "Map" )
-		return this.$field.name == null ? null : Collections.unmodifiableMap(this.$field.name);
-#else
-		return this.$field.name == null ? null : Multimaps.unmodifiableMultimap(this.$field.name);
-#end
-	}
+    #if ( $field.jsonTransientFlag )
+    @JsonIgnore
+    #end
+    @Override
+    public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
+    #if( $field.mapType == "Map" )
+        return this.$field.name == null ? null : Collections.unmodifiableMap(this.$field.name);
+    #else
+        return this.$field.name == null ? null : Multimaps.unmodifiableMultimap(this.$field.name);
+    #end
+    }
 
 #end
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends IEventBuilder> T createBuilder() {
-		${model.getClazzName()}Builder builder = new ${model.getClazzName()}Builder();
-		builder.internalFillFromIVO(this);
-		return (T) builder;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public
+    <T extends IEventBuilder> T createBuilder() {
+        ${model.getClazzName()}Builder builder = new ${model.getClazzName()}Builder();
+        builder.internalFillFromIVO(this);
+        return (T) builder;
+    }
 
 
-	@Override
-	public $model.getClazzName() clone() {
-		return ($model.getClazzName()) super.clone();
-	}
+    @Override
+    public $model.getClazzName() clone() {
+        return ($model.getClazzName()) super.clone();
+    }
 
-#if ( $model.hasEventEndAddition())#parse($model.getEventEndAddition())#end
+
+#foreach ( $addition in $model.getEventEndAddition() )
+    #parse($addition)
+#end
+
 }

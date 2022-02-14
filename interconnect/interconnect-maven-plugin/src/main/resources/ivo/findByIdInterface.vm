@@ -1,0 +1,80 @@
+package ${model.getPackageName()}.requests;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.taimos.dvalin.interconnect.model.ivo.IVO;
+import de.taimos.dvalin.interconnect.model.ivo.util.IdWithVersion;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ **/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+public interface ${clazzName} extends IVO {
+
+	/**
+	 * property constant for ids
+	 * property comment: the id
+	 **/
+	public static final String PROP_IDS = "ids";
+
+	/**
+	 * the list of ids
+	 * This field is required.
+	 *
+	 * @return the value for ids
+	 *
+	 **/
+	@Nonnull
+    @JsonIgnore
+	public List<String> getIds();
+
+    /**
+     * the list of ids
+     * This field is required.
+     *
+     * @return the value for id, or null if non set
+     *
+     **/
+    @JsonIgnore
+    public String getFirstId();
+
+    /**
+     * the list of ids
+     * This field is required.
+     *
+     * @return the value for ids
+     *
+     **/
+    @Nonnull
+    @JsonProperty("ids")
+    public List<IdWithVersion> getIdsWithVersion();
+
+    /**
+     * the list of ids
+     * This field is required.
+     *
+     * @return the value for id, or null if non set
+     *
+     **/
+    @JsonIgnore
+    public IdWithVersion getFirstIdWithVersion();
+
+	/**
+	 * @return a clone
+	 **/
+	public ${clazzName} clone();
+
+}

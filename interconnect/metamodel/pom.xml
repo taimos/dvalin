@@ -13,10 +13,10 @@
     </dependencies>
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.5.0</version>
                 <executions>
                     <execution>
                         <id>schemagen</id>
@@ -25,6 +25,10 @@
                             <goal>schemagen</goal>
                         </goals>
                         <configuration>
+                            <sources>
+                                <source>src/main/java/de/taimos/dvalin/interconnect/model/metamodel/defs</source>
+                                <source>src/main/java/de/taimos/dvalin/interconnect/model/metamodel/memberdef</source>
+                            </sources>
                             <transformSchemas>
                                 <transformSchema>
                                     <uri>http://www.taimos.de/xsd/IVODef/1.0.0</uri>

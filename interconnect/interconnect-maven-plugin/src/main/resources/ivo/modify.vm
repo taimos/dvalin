@@ -3,28 +3,27 @@ package ${model.getPackageName()}.requests;
 #foreach ( $imp in $model.getImports() )
 import $imp;
 #end
-import ${model.getPackageName()}.${model.getClazzName()};
-import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 
 /**
-* $model.getComment()
-*
-* @author $model.getAuthor()
-*/
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ **/
 @SuppressWarnings("all")
 #if ($model.isDeprecated())
 @Deprecated
 @ToBeRemoved(date="$model.getRemoveDate()")
 #end
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(builder = ${clazzName}.${clazzName}Builder.class)
 public class ${clazzName} extends $model.getParentClazzName() implements I${clazzName} {
 
 private static final long serialVersionUID = ${model.getSerialVersion()}L;
 
 	/**
-	* Builder for the read-only ivo
-	*
-	*/
+	 * Builder for the read-only ivo
+	 *
+	 **/
 #if ($model.isDeprecated())
 	@Deprecated
 	@ToBeRemoved(date="$model.getRemoveDate()")
@@ -37,10 +36,10 @@ private static final long serialVersionUID = ${model.getSerialVersion()}L;
 	}
 
 	/**
-	* Abstract Builder for the read-only ivo
-	*
-	* @param <E> type of builder
-	*/
+	 * Abstract Builder for the read-only ivo
+	 *
+	 * @param <E> type of builder
+	 **/
 	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>> $model.getParentBuilder() {
 		private ${model.getClazzName()} value;
 		/**
@@ -59,8 +58,8 @@ private static final long serialVersionUID = ${model.getSerialVersion()}L;
 		}
 
         /**
-         * @return the field value
-         **/
+          * @return the field value
+          **/
         public ${model.getClazzName()} getValue() {
             return this.value;
         }

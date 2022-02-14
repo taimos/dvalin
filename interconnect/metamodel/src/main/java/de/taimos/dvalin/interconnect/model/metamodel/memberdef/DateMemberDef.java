@@ -22,15 +22,52 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 import org.joda.time.DateTime;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import java.time.ZonedDateTime;
 
 /**
  * Date clazz member
  */
 @XmlType
 public class DateMemberDef extends MemberDef {
+
+    private Boolean jodaMode = true;
+
+    /**
+     * default constructor
+     */
+    public DateMemberDef() {
+        //default constructor
+    }
+
+    /**
+     * @param javaMode the java mode
+     */
+    public DateMemberDef(boolean javaMode) {
+        this.jodaMode = javaMode;
+    }
+
     @Override
     public String getTypeAsString(boolean isInterface) {
-        return DateTime.class.getSimpleName();
+        if (Boolean.TRUE.equals(this.jodaMode)) {
+            return DateTime.class.getSimpleName();
+        }
+        return ZonedDateTime.class.getSimpleName();
+    }
+
+    /**
+     * @return the jodaMode
+     */
+    @XmlAttribute(required = false)
+    public Boolean getJodaMode() {
+        return this.jodaMode;
+    }
+
+    /**
+     * @param jodaMode the jodaMode to set
+     */
+    public void setJodaMode(Boolean jodaMode) {
+        this.jodaMode = jodaMode;
     }
 }

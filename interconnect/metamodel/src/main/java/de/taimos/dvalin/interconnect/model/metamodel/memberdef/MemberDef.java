@@ -20,16 +20,17 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
  * #L%
  */
 
-import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
  * Abstract class defining a class member
+ *
+ * @author psigloch
  */
 @XmlType
-public abstract class MemberDef implements IFilterableMember {
+public abstract class MemberDef implements IFilterableMember, INamedMemberDef {
 
     private String comment;
     private String name;
@@ -37,8 +38,13 @@ public abstract class MemberDef implements IFilterableMember {
     private Boolean jsonTransientFlag = false;
     private Boolean orderTransient;
     private Boolean required = false;
+    private Boolean filterOnly = false;
     private FilterableType filterable = FilterableType.none;
 
+    /**
+     * @param isInterface should type be returned as interface
+     * @return the type as a string
+     */
     public abstract String getTypeAsString(boolean isInterface);
 
     /**
@@ -132,6 +138,21 @@ public abstract class MemberDef implements IFilterableMember {
     }
 
     /**
+     * @return the filterOnly
+     */
+    @XmlAttribute(required = false)
+    public Boolean getFilterOnly() {
+        return this.filterOnly;
+    }
+
+    /**
+     * @param filterOnly the filterOnly to set
+     */
+    public void setFilterOnly(Boolean filterOnly) {
+        this.filterOnly = filterOnly;
+    }
+
+    /**
      * @return the filterable
      */
     @XmlAttribute(required = false)
@@ -142,7 +163,6 @@ public abstract class MemberDef implements IFilterableMember {
     /**
      * @param filterable the filterable to set
      */
-    @Nonnull
     public void setFilterable(FilterableType filterable) {
         this.filterable = filterable;
     }

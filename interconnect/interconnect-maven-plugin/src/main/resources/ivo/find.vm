@@ -3,29 +3,27 @@ package ${model.getPackageName()}.requests;
 #foreach ( $imp in $model.getImports() )
 import $imp;
 #end
-import java.util.Set;
-import ${model.getPackageName()}.${model.getClazzName()};
-import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 
 /**
  * $model.getComment()
  *
  * @author $model.getAuthor()
- */
+ **/
 @SuppressWarnings("all")
 #if ($model.isDeprecated())
 @Deprecated
 @ToBeRemoved(date="$model.getRemoveDate()")
 #end
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(builder = ${clazzName}.${clazzName}Builder.class)
 public class ${clazzName} extends ${model.getParentClazzName()} implements I${clazzName} {
 
     private static final long serialVersionUID = ${model.getSerialVersion()}L;
 
 	/**
-	* Builder for the read-only ivo
-	*
-	*/
+	 * Builder for the read-only ivo
+	 *
+	 **/
 #if ($model.isDeprecated())
 	@Deprecated
 	@ToBeRemoved(date="$model.getRemoveDate()")
@@ -38,10 +36,10 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 	}
 
 	/**
-	* Abstract Builder for the read-only ivo
-	*
-	* @param <E> type of builder
-	*/
+	 * Abstract Builder for the read-only ivo
+	 *
+	 * @param <E> type of builder
+	 **/
 	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>> $model.getParentBuilder() implements IPageableBuilder {
 #foreach ( $field in $model.getFilterableFields() )
 #if ($field.filterable == 'single')
@@ -90,7 +88,7 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 
 		protected void internalFillFromIVO($clazzName ivo) {
 #foreach ( $field in $model.getFilterableFields() )
-		this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
+            this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
 #end
 		}
 
@@ -105,9 +103,9 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 
 #foreach ( $field in $model.getFilterableFields() )
 #if ($field.filterable == 'single')
-	private final #if ( $field.javaTransientFlag ) transient #end $field.getTypeAsString(false) $field.name;
+	private final#if ( $field.javaTransientFlag ) transient#end $field.getTypeAsString(false) $field.name;
 #else
-	private final #if ( $field.javaTransientFlag ) transient #end Set<$field.getTypeAsString(true)> $field.name;
+	private final#if ( $field.javaTransientFlag ) transient#end Set<$field.getTypeAsString(true)> $field.name;
 #end
 #end
 

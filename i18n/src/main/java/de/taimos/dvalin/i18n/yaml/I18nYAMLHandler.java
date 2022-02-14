@@ -20,27 +20,27 @@ import java.io.InputStream;
  */
 @Component
 public class I18nYAMLHandler implements II18nResourceHandler {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(I18nYAMLHandler.class);
 
     @Value("classpath*:resources/*.yaml")
     private Resource[] resourceFiles;
 
-    private ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     public void initializeResources(II18nCallback callback) {
-        if(this.resourceFiles != null) {
-            for(Resource file : this.resourceFiles) {
+        if (this.resourceFiles != null) {
+            for (Resource file : this.resourceFiles) {
                 this.loadResourceFile(file, callback);
             }
         }
     }
 
     private void loadResourceFile(Resource file, II18nCallback callback) {
-        try(InputStream inParser = file.getInputStream()) {
+        try (InputStream inParser = file.getInputStream()) {
             I18nYAMLElements i18nElements = this.mapper.readValue(inParser, I18nYAMLElements.class);
             callback.addText(i18nElements);
-        } catch(final Exception e) {
-            this.logger.error(e.getMessage(), e);
+        } catch (final Exception e) {
+            I18nYAMLHandler.LOGGER.error(e.getMessage(), e);
 
         }
     }

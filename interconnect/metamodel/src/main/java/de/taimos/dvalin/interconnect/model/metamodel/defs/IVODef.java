@@ -21,15 +21,17 @@ package de.taimos.dvalin.interconnect.model.metamodel.defs;
  */
 
 import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
-import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.BigDecimalMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.BooleanMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.CollectionMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.DateMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.EnumMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IVOMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IntegerMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.InterconnectObjectMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LocalDateMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LocalTimeMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LongMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MapMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.StringMemberDef;
@@ -63,13 +65,15 @@ public class IVODef implements IGeneratorDefinition {
     private String parentFilterPkgName;
     private Boolean auditing = false;
     private Boolean interfaceOnly = false;
+    private Boolean pageable = false;
     private Boolean generateFindById = false;
+    private Boolean generateFindByIdAudited = false;
     private Boolean generateDelete = false;
     private Boolean generateUpdate = false;
     private Boolean generateCreate = false;
     private Boolean generateSave = false;
     private Boolean generateFilter = false;
-
+    private Boolean extendParentFilter = false;
 
     /**
      * @return the comment
@@ -104,20 +108,22 @@ public class IVODef implements IGeneratorDefinition {
     /**
      * @return the children
      */
-    @XmlElements({
-        @XmlElement(name = "interconnectObject", type = InterconnectObjectMemberDef.class),
-        @XmlElement(name = "uuid", type = UUIDMemberDef.class),
-        @XmlElement(name = "integer", type = IntegerMemberDef.class),
-        @XmlElement(name = "map", type = MapMemberDef.class),
-        @XmlElement(name = "implements", type = ImplementsDef.class),
-        @XmlElement(name = "decimal", type = BigDecimalMemberDef.class),
-        @XmlElement(name = "boolean", type = BooleanMemberDef.class),
-        @XmlElement(name = "collection", type = CollectionMemberDef.class),
-        @XmlElement(name = "date", type = DateMemberDef.class),
-        @XmlElement(name = "enum", type = EnumMemberDef.class),
-        @XmlElement(name = "long", type = LongMemberDef.class),
-        @XmlElement(name = "ivo", type = IVOMemberDef.class),
-        @XmlElement(name = "string", type = StringMemberDef.class)})
+    @XmlElements({ //
+        @XmlElement(name = "interconnectObject", type = InterconnectObjectMemberDef.class), //
+        @XmlElement(name = "uuid", type = UUIDMemberDef.class), //
+        @XmlElement(name = "integer", type = IntegerMemberDef.class), //
+        @XmlElement(name = "map", type = MapMemberDef.class), //
+        @XmlElement(name = "implements", type = ImplementsDef.class), //
+        @XmlElement(name = "decimal", type = BigDecimalMemberDef.class), //
+        @XmlElement(name = "boolean", type = BooleanMemberDef.class), //
+        @XmlElement(name = "collection", type = CollectionMemberDef.class), //
+        @XmlElement(name = "date", type = DateMemberDef.class), //
+        @XmlElement(name = "enum", type = EnumMemberDef.class), //
+        @XmlElement(name = "long", type = LongMemberDef.class), //
+        @XmlElement(name = "ivo", type = IVOMemberDef.class), //
+        @XmlElement(name = "string", type = StringMemberDef.class), //
+        @XmlElement(name = "localDate", type = LocalDateMemberDef.class), //
+        @XmlElement(name = "localTime", type = LocalTimeMemberDef.class)})
     public List<Object> getChildren() {
         return this.children;
     }
@@ -315,6 +321,21 @@ public class IVODef implements IGeneratorDefinition {
     }
 
     /**
+     * @return the pageable
+     */
+    @XmlAttribute
+    public Boolean getPageable() {
+        return this.pageable;
+    }
+
+    /**
+     * @param pageable the pageable to set
+     */
+    public void setPageable(Boolean pageable) {
+        this.pageable = pageable;
+    }
+
+    /**
      * @return the removalDate, format as yyyy/mm/dd
      */
     @XmlAttribute(required = false)
@@ -342,6 +363,20 @@ public class IVODef implements IGeneratorDefinition {
      */
     public void setGenerateFindById(Boolean generateFindById) {
         this.generateFindById = generateFindById;
+    }
+
+    /**
+     * @return the generateFindByIdAudited
+     */
+    public Boolean getGenerateFindByIdAudited() {
+        return this.generateFindByIdAudited;
+    }
+
+    /**
+     * @param generateFindByIdAudited the generateFindByIdAudited to set
+     */
+    public void setGenerateFindByIdAudited(Boolean generateFindByIdAudited) {
+        this.generateFindByIdAudited = generateFindByIdAudited;
     }
 
     /**
@@ -417,5 +452,20 @@ public class IVODef implements IGeneratorDefinition {
      */
     public void setGenerateSave(Boolean generateSave) {
         this.generateSave = generateSave;
+    }
+
+    /**
+     * @return the extendParentFilter
+     */
+    @XmlAttribute(required = false)
+    public Boolean getExtendParentFilter() {
+        return this.extendParentFilter;
+    }
+
+    /**
+     * @param extendParentFilter the extendParentFilter to set
+     */
+    public void setExtendParentFilter(Boolean extendParentFilter) {
+        this.extendParentFilter = extendParentFilter;
     }
 }

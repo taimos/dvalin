@@ -1,0 +1,159 @@
+package ${model.getPackageName()}.requests;
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+
+
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ **/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(builder = ${clazzName}.${clazzName}Builder.class)
+public class ${clazzName} extends $model.getParentClazzName() implements I${clazzName} {
+
+    private static final long serialVersionUID = ${model.getSerialVersion()}L;
+
+	/**
+	 * Builder for the read-only ivo
+	 *
+	 **/
+#if ($model.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+	@JsonPOJOBuilder()
+	public static class ${clazzName}Builder extends Abstract${clazzName}Builder<${clazzName}Builder> implements IVOBuilder {
+
+		// nothing to do here, really
+
+	}
+
+	/**
+	 * Abstract Builder for the read-only ivo
+	 *
+	 * @param <E> type of builder
+	 **/
+	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>>$model.getParentBuilder() implements IPageableBuilder {
+
+        private String id;
+#foreach ( $field in $model.getPageableMembers() )
+        private $field.getTypeAsString(false) $field.name;
+#end
+
+        /**
+		 * This field is required.
+		 * the id
+		 *
+		 * @param id the value to set
+		 * @return the builder
+		 *
+		 **/
+		@Nonnull
+		@SuppressWarnings("unchecked")
+		public E withId(String id) {
+			this.id = id;
+			return (E) this;
+		}
+#foreach ( $field in $model.getPageableMembers() )
+
+        /**
+         * This field is optional.
+         * @param  p$field.name the value to set
+         * @return the builder $field.filterable
+         *
+         **/
+        @Nullable
+        public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+            this.$field.name = p$field.name;
+            return (E) this;
+        }
+
+        /**
+         * @return the field value
+         **/
+        public $field.getTypeAsString(false) get$tool.upperCaseFirst( $field.name )() {
+            return this.$field.name;
+        }
+#end
+
+        protected void internalFillFromIVO($clazzName ivo) {
+            this.withId(ivo.id);
+#foreach ( $field in $model.getPageableMembers() )
+            this.with$tool.upperCaseFirst( $field.name )(ivo.$field.name);
+#end
+        }
+
+		/**
+		 * @return the entry
+		 **/
+		public ${clazzName} build() {
+			if (this.id == null) {
+				throw new IllegalStateException("The attribute id must not be null!");
+			}
+			${clazzName} result = new ${clazzName}(this);
+			return result;
+		}
+	}
+
+	private final String id;
+#foreach ( $field in $model.getPageableMembers() )
+    private final $field.getTypeAsString(false) $field.name;
+#end
+
+	protected ${clazzName}(Abstract${clazzName}Builder<?> builder) {
+		this.id = builder.id;
+#foreach ( $field in $model.getPageableMembers() )
+        this.$field.name = builder.$field.name;
+#end
+	}
+
+    @Override
+	public String getId() {
+		return this.id;
+	}
+
+    /**
+     * @deprecated currently only kept for backwards compatibility. Use getId() instead!
+     */
+    @Deprecated
+    @JsonIgnore
+    public Collection<String> getIds() {
+        return Collections.singleton(this.id);
+    }
+
+#foreach ( $field in $model.getPageableMembers() )
+    @Override
+    public $field.getTypeAsString(false) get$tool.upperCaseFirst( $field.name )() {
+        return this.$field.name;
+    }
+#end
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public IPageableBuilder createPageableBuilder() {
+        return (IPageableBuilder) createBuilder();
+    }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${clazzName}Builder builder = new ${clazzName}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+	@Override
+	public ${clazzName} clone() {
+		return (${clazzName}) super.clone();
+	}
+
+}

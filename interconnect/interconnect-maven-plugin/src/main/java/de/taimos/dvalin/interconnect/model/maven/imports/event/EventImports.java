@@ -3,6 +3,7 @@ package de.taimos.dvalin.interconnect.model.maven.imports.event;
 import de.taimos.dvalin.interconnect.model.event.AbstractEvent;
 import de.taimos.dvalin.interconnect.model.event.AbstractEventBuilder;
 import de.taimos.dvalin.interconnect.model.event.IEventBuilder;
+import de.taimos.dvalin.interconnect.model.maven.imports.Imports;
 import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
 
@@ -15,19 +16,20 @@ public class EventImports extends BaseEventImports {
 
     @Override
     public void initDefaults() {
+        super.initDefaults();
         this.withJsonDeserialize();
         this.withJsonPOJOBuilder();
         this.withNullable();
         this.withNonnull();
-        this.with(IEventBuilder.class);
+        this.add(IEventBuilder.class);
     }
 
     @Override
-    public void initFromDefintion(EventDef ivoDefinition, AbstractInterconnectModel model) {
-        super.initFromDefintion(ivoDefinition, model);
+    public <K extends AbstractInterconnectModel<EventDef, ? extends Imports<EventDef>>> void initFromDefinition(EventDef ivoDefinition, K model) {
+        super.initFromDefinition(ivoDefinition, model);
         if(!model.hasParentClazz()) {
-            this.with(AbstractEvent.class);
-            this.with(AbstractEventBuilder.class);
+            this.add(AbstractEvent.class);
+            this.add(AbstractEventBuilder.class);
         }
     }
 }

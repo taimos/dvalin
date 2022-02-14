@@ -15,16 +15,21 @@ import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IMultiMember;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IVOMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.InterconnectObjectMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LocalDateMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LocalTimeMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MapMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.UUIDMemberDef;
-import org.apache.commons.collections.ListUtils;
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -32,7 +37,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author psigloch
@@ -44,6 +51,14 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
     protected final List<MemberDef> noCollectionMemberDefs = new ArrayList<>();
     protected final List<ImplementsDef> implementsDef = new ArrayList<>();
     protected final List<MapMemberDef> mapMemberDefs = new ArrayList<>();
+    protected final List<IAdditionalMemberHandler> additionalMemberHandlers = new ArrayList<>();
+
+
+    protected AbstractInterconnectModel(IAdditionalMemberHandler... additionalMemberHandlers) {
+        if (additionalMemberHandlers != null) {
+            this.additionalMemberHandlers.addAll(Arrays.asList(additionalMemberHandlers));
+        }
+    }
 
     protected boolean interfaceMode() {
         //override if needed
@@ -53,28 +68,38 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
     @Override
     protected void beforeChildHandling() {
         super.beforeChildHandling();
-        this.imports.initFromDefintion(this.definition, this);
+        this.imports.initFromDefinition(this.definition, this);
+        for (IAdditionalMemberHandler additionalMemberHandler : this.additionalMemberHandlers.stream().filter(IAdditionalMemberHandler::hasGlobalAdditions).collect(Collectors.toList())) {
+            additionalMemberHandler.prepare(this.definition);
+            this.imports.addAll(additionalMemberHandler.getGlobalImports(this.definition));
+            this.implementsDef.addAll(additionalMemberHandler.getGlobalImplements(this.definition));
+            this.addChildren(additionalMemberHandler.getGlobalChildren(this.definition));
+        }
     }
 
     protected void handleChild(Object child) {
-        if(child instanceof MemberDef) {
-            if(child instanceof IMultiMember) {
+        if (child instanceof MemberDef) {
+            if (child instanceof IMultiMember) {
                 this.handleMultiMember((MemberDef) child);
             } else {
                 this.handleSingleMember((MemberDef) child);
             }
-            if(Boolean.TRUE.equals(((MemberDef) child).getJsonTransientFlag())) {
+            if (Boolean.TRUE.equals(((MemberDef) child).getJsonTransientFlag())) {
                 this.imports.withJsonIgnore();
             }
             this.allMemberDefs.add((MemberDef) child);
         }
-        if(child instanceof ImplementsDef) {
+        if (child instanceof ImplementsDef) {
             this.handleImplementsDef((ImplementsDef) child);
         }
-        this.handleMemberAdditionaly(child);
+        for (IAdditionalMemberHandler additionalMemberHandler : this.additionalMemberHandlers.stream().filter(IAdditionalMemberHandler::isMemberDef).collect(Collectors.toSet())) {
+            this.imports.addAll(additionalMemberHandler.getMemberImports(child));
+        }
+
+        this.handleMemberAdditionally(child);
     }
 
-    protected void handleMemberAdditionaly(Object member) {
+    protected void handleMemberAdditionally(Object member) {
         //nothing to, implement if needed
     }
 
@@ -84,72 +109,47 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
     }
 
     protected void handleMultiMember(MemberDef member) {
-        if(member instanceof CollectionMemberDef) {
-            this.collectionMemberDefs.add((CollectionMemberDef) member);
-            this.imports.add(Collections.class.getCanonicalName());
-            switch(((CollectionMemberDef) member).getCollectionType()) {
-                case Set:
-                    this.imports.add(Set.class.getCanonicalName());
-                    if(!this.interfaceMode()) {
-                        this.imports.add(HashSet.class.getCanonicalName());
-                    }
-                    break;
-                case List:
-                    this.imports.add(List.class.getCanonicalName());
-                    if(!this.interfaceMode()) {
-                        this.imports.add(ArrayList.class.getCanonicalName());
-                    }
-                    break;
-            }
-            this.handleContentMembers(((CollectionMemberDef) member).getContentDef());
+        if (member instanceof CollectionMemberDef) {
+            this.handleCollectionMembers((CollectionMemberDef) member);
             return;
         }
-        if(member instanceof MapMemberDef) {
-            this.mapMemberDefs.add((MapMemberDef) member);
-            switch(((MapMemberDef) member).getMapType()) {
-                case Map:
-                    this.imports.add(Map.class.getCanonicalName());
-                    if(!this.interfaceMode()) {
-                        this.imports.add(HashMap.class.getCanonicalName());
-                        this.imports.add(Collections.class.getCanonicalName());
-                    }
-                    break;
-                case Multimap:
-                    if(!this.interfaceMode()) {
-                        this.imports.add(Multimaps.class.getCanonicalName());
-                    }
-                    this.imports.add(Map.class.getCanonicalName());
-                    this.imports.add(Multimap.class.getCanonicalName());
-                    this.imports.add(HashMultimap.class.getCanonicalName());
-
-                    break;
-            }
-            this.handleContentMembers(((MapMemberDef) member).getKeyContent());
-            this.handleContentMembers(((MapMemberDef) member).getValueContent());
+        if (member instanceof MapMemberDef) {
+            this.handleMapMembers((MapMemberDef) member);
         }
     }
 
+
     protected void handleSingleMember(MemberDef member) {
-        if(member instanceof InterconnectObjectMemberDef) {
+        if (member instanceof InterconnectObjectMemberDef) {
             this.imports.add(((InterconnectObjectMemberDef) member).getPkgName() + "." + ((InterconnectObjectMemberDef) member).getClazz());
         }
-        if(member instanceof IVOMemberDef) {
-            if(((IVOMemberDef) member).getIvoName() == null) {
+        if (member instanceof IVOMemberDef) {
+            if (((IVOMemberDef) member).getIvoName() == null) {
                 this.imports.add(IVO.class.getCanonicalName());
-            } else if((((IVOMemberDef) member).getPkgName() != null) && !((IVOMemberDef) member).getPkgName().equals(this.definition.getPackageName())) {
+            } else if ((((IVOMemberDef) member).getPkgName() != null) && !((IVOMemberDef) member).getPkgName().equals(this.definition.getPackageName())) {
                 this.imports.add(((IVOMemberDef) member).getIVOPath(this.interfaceMode()));
             }
         }
-        if(member instanceof EnumMemberDef) {
+        if (member instanceof EnumMemberDef) {
             this.imports.add(((EnumMemberDef) member).getPkgName() + "." + ((EnumMemberDef) member).getClazz());
         }
-        if(member instanceof BigDecimalMemberDef) {
+        if (member instanceof BigDecimalMemberDef) {
             this.imports.withBigDecimal();
         }
-        if(member instanceof DateMemberDef) {
-            this.imports.withDateTime();
+        if (member instanceof DateMemberDef) {
+            if (Boolean.TRUE.equals(((DateMemberDef) member).getJodaMode())) {
+                this.imports.withDateTime();
+            } else {
+                this.imports.add(ZonedDateTime.class);
+            }
         }
-        if(member instanceof UUIDMemberDef) {
+        if (member instanceof LocalDateMemberDef) {
+            this.imports.add(LocalDate.class);
+        }
+        if (member instanceof LocalTimeMemberDef) {
+            this.imports.add(LocalTime.class);
+        }
+        if (member instanceof UUIDMemberDef) {
             this.imports.withUUID();
         }
 
@@ -157,24 +157,37 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
     }
 
 
-    protected void handleContentMembers(ContentDef content) {
-        switch(content.getType()) {
+    protected void handleCollectionOrMapContentMembers(ContentDef content) {
+        switch (content.getType()) {
             case Date:
-                this.imports.with(DateTime.class);
+                this.imports.add(DateTime.class);
+                break;
+            case ZonedDateTime:
+                this.imports.add(ZonedDateTime.class);
+                break;
+            case LocalDate:
+                this.imports.add(LocalDate.class);
+                break;
+            case LocalTime:
+                this.imports.add(LocalTime.class);
                 break;
             case Decimal:
-                this.imports.with(BigDecimal.class);
+                this.imports.add(BigDecimal.class);
                 break;
             case InterconnectObject:
             case Enum:
-                this.imports.with(content.getPkgName() + "." + content.getClazz());
+                this.imports.add(content.getPkgName() + "." + content.getClazz());
                 break;
             case IVO:
-                if(content.getIvoName() == null) {
-                    this.imports.with(IVO.class);
+                if (content.getIvoName() == null) {
+                    this.imports.add(IVO.class);
                 } else {
-                    this.imports.with(content.getPath(this.interfaceMode()));
+                    this.imports.add(content.getPath(this.interfaceMode()));
                 }
+                break;
+            default:
+                Optional<IAdditionalMemberHandler> additionMemberHandler = this.additionalMemberHandlers.stream().filter(iamh -> iamh.isContentType(content.getType())).findFirst();
+                additionMemberHandler.ifPresent(iAdditionalMemberHandler -> this.imports.addAll(iAdditionalMemberHandler.getMemberContentImports(content)));
                 break;
         }
     }
@@ -183,16 +196,16 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
     /**
      * @return whether the file should me removed or not
      */
-    public boolean genereateFile() {
+    public boolean generateFile() {
         String dateString = this.definition.getRemovalDate();
-        if(dateString == null || dateString.isEmpty()) {
+        if (dateString == null || dateString.isEmpty()) {
             return true;
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         Date removalDate;
         try {
             removalDate = format.parse(dateString);
-        } catch(ParseException e) {
+        } catch (ParseException e) {
             throw new IllegalArgumentException("Failed to parse the removal date - should be yyyy/MM/dd, is " + dateString);
         }
         return removalDate.compareTo(Calendar.getInstance().getTime()) > 0;
@@ -201,7 +214,7 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
     /**
      * @return the imports
      */
-    public Imports getImports() {
+    public K getImports() {
         return this.imports;
     }
 
@@ -212,11 +225,11 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
      */
     public String getInterfaceImplements() {
         StringBuilder builder = new StringBuilder();
-        for(ImplementsDef i : this.implementsDef) {
+        for (ImplementsDef i : this.implementsDef) {
             builder.append(", ");
             builder.append(i.getName());
         }
-        if(builder.toString().trim().length() < 1) {
+        if (builder.toString().trim().length() < 1) {
             return "";
         }
         return "extends " + builder.substring(2);
@@ -239,9 +252,10 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
     /**
      * @return all fields used within the ivo definition which are neither of type Collection or Map
      */
-    public List getNoCollectionFields() {
-        return ListUtils.removeAll(ListUtils.removeAll(this.allMemberDefs, this.collectionMemberDefs), this.mapMemberDefs);
+    public List<MemberDef> getNoCollectionFields() {
+        return this.allMemberDefs.stream().filter(md -> !(md instanceof CollectionMemberDef) && !(md instanceof MapMemberDef)).collect(Collectors.toList());
     }
+
 
     /**
      * @return all fields used within the ivo definition which are of type Map
@@ -356,11 +370,62 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
         return this.definition.getVersion();
     }
 
-    protected ImplementsDef getImplementsDef(Class<?> clazz) {
-        ImplementsDef def = new ImplementsDef();
-        def.setName(clazz.getSimpleName());
-        def.setPkgName(clazz.getPackage().getName());
-        return def;
+    private void handleMapMembers(MapMemberDef member) {
+        this.mapMemberDefs.add(member);
+        switch (member.getMapType()) {
+            case Map:
+                this.imports.add(Map.class.getCanonicalName());
+                if (!this.interfaceMode()) {
+                    this.imports.add(HashMap.class.getCanonicalName());
+                    this.imports.add(Collections.class.getCanonicalName());
+                }
+                break;
+            case Multimap:
+                if (!this.interfaceMode()) {
+                    this.imports.add(Multimaps.class.getCanonicalName());
+                }
+                this.imports.add(Map.class.getCanonicalName());
+                this.imports.add(Multimap.class.getCanonicalName());
+                this.imports.add(HashMultimap.class.getCanonicalName());
+
+                break;
+            default:
+                break;
+        }
+        this.handleCollectionOrMapContentMembers(member.getKeyContent());
+        this.handleCollectionOrMapContentMembers(member.getValueContent());
     }
 
+    private void handleCollectionMembers(CollectionMemberDef member) {
+        this.collectionMemberDefs.add(member);
+        this.imports.add(Collections.class.getCanonicalName());
+        switch (member.getCollectionType()) {
+            case Set:
+                this.imports.add(Set.class.getCanonicalName());
+                if (!this.interfaceMode()) {
+                    this.imports.add(HashSet.class.getCanonicalName());
+                }
+                break;
+            case List:
+                this.imports.add(List.class.getCanonicalName());
+                if (!this.interfaceMode()) {
+                    this.imports.add(ArrayList.class.getCanonicalName());
+                }
+                break;
+            default:
+                break;
+        }
+        this.handleCollectionOrMapContentMembers(member.getContentDef());
+    }
+
+    /**
+     * @param identifier the additional member handler identifier
+     * @return the additional member handler or null
+     */
+    public IAdditionalMemberHandler getAdditionalHandler(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
+        return this.additionalMemberHandlers.stream().filter(amh -> identifier.equalsIgnoreCase(amh.getIdentifier())).findFirst().orElse(null);
+    }
 }

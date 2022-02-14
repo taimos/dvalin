@@ -7,7 +7,7 @@ package de.taimos.dvalin.interconnect.model.maven;
  * Copyright (C) 2016 Taimos GmbH
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance add the License.
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -51,36 +51,42 @@ public class GeneratorHelper {
      * @param targetDir the target path for generation
      * @throws MojoExecutionException on errors
      */
-    public static void writeFile(Log log, GeneratorModel<?, ?> model, String targetDir) throws MojoExecutionException {
-        if(model.generateClazzWithTemplates() == null || model.generateClazzWithTemplates().size() < 1) {
+    public static void writeFile(GeneratorModel<?, ?> model, String targetDir) throws MojoExecutionException {
+        if (model.getGenerationContexts() == null || model.getGenerationContexts().isEmpty()) {
             return;
         }
-        for(Map.Entry<String, String> templateEntry : model.generateClazzWithTemplates().entrySet()) {
-            Template template;
-            try {
-                template = Velocity.getTemplate(templateEntry.getValue(), "UTF-8");
-            } catch(Exception e) {
-                log.error("Failed to retrieve Template " + templateEntry.getValue(), e);
-                throw new MojoExecutionException("Failed to retrieve Template " + templateEntry.getValue(), e);
-            }
-            try {
-                File pckDir = new File(targetDir + model.getTargetFolder());
-                if(!pckDir.exists()) {
-                    pckDir.mkdirs();
-                }
-                try(OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java"), "UTF-8")) {
-                    log.info("Creating file " + pckDir.getAbsolutePath() + File.separator + templateEntry.getKey() + ".java");
-                    VelocityContext context = new VelocityContext();
-                    context.put("model", model);
-                    context.put("tool", new ModelTools());
-                    context.put("clazzName", templateEntry.getKey());
-                    template.merge(context, fw);
-                }
-            } catch(IOException e) {
-                log.error("Failed to write the generated file " + templateEntry.getKey(), e);
-                throw new MojoExecutionException("Failed to write the generated file " + templateEntry.getKey(), e);
-            }
+        for (GenerationContext generationContext : model.getGenerationContexts()) {
+            generationContext.setTemplate(GeneratorHelper.prepareTemplate(model.getLogger(), generationContext));
+            generationContext.setTargetDir(targetDir + model.getTargetFolder());
+            GeneratorHelper.createFileWithTemplate(model, generationContext);
         }
+    }
+
+    private static void createFileWithTemplate(GeneratorModel<?, ?> model, GenerationContext generationContext) throws MojoExecutionException {
+        try {
+            try (OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(generationContext.getTargetPath()), StandardCharsets.UTF_8)) {
+                model.getLogger().info("Creating file " + generationContext.getTargetPath());
+                VelocityContext context = new VelocityContext();
+                context.put("model", model);
+                context.put("tool", new ModelTools());
+                context.put("clazzName", generationContext.getTargetFileName());
+                generationContext.getTemplate().merge(context, fw);
+            }
+        } catch (IOException e) {
+            model.getLogger().error("Failed to write the generated file " + generationContext.getTargetFileName(), e);
+            throw new MojoExecutionException("Failed to write the generated file " + generationContext.getTargetFileName(), e);
+        }
+    }
+
+    private static Template prepareTemplate(Log log, GenerationContext generationContext) throws MojoExecutionException {
+        Template template;
+        try {
+            template = Velocity.getTemplate(generationContext.getTemplatePath(), generationContext.getTemplateEncoding());
+        } catch (Exception e) {
+            log.error("Failed to retrieve Template " + generationContext.getTemplatePath(), e);
+            throw new MojoExecutionException("Failed to retrieve Template " + generationContext.getTemplatePath(), e);
+        }
+        return template;
     }
 
     /**
@@ -96,20 +102,19 @@ public class GeneratorHelper {
 
     /**
      * @param clazz the generator definiton clazz
-     * @param log   the logger
      * @param f     the file to parse
      * @param <T>   the generator definition
      * @return the parsed IGeneratorDefinition
      * @throws MojoExecutionException on error
      */
     @SuppressWarnings("unchecked")
-    public static <T extends IGeneratorDefinition> T parseXML(Class<T> clazz, Log log, File f) throws MojoExecutionException {
+    public static <T extends IGeneratorDefinition> T parseXML(Class<T> clazz, File f) throws MojoExecutionException {
         try {
             JAXBContext jcontext = JAXBContext.newInstance(clazz);
             Unmarshaller unmarshaller = jcontext.createUnmarshaller();
             unmarshaller.setEventHandler(validationEvent -> false);
             return (T) unmarshaller.unmarshal(f);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new MojoExecutionException("Failed to read input file " + f.getAbsolutePath(), e);
         }
     }

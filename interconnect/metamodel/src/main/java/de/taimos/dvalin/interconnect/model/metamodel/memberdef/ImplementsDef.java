@@ -27,11 +27,35 @@ import javax.xml.bind.annotation.XmlType;
  * Defines an interface to be implemented by a clazzdef
  */
 @XmlType
-public class ImplementsDef {
+public class ImplementsDef implements INamedMemberDef {
 
     private String name;
     private String pkgName;
+    private Boolean skipOnFilter = false;
 
+    /**
+     * default constructor
+     */
+    public ImplementsDef() {
+        //default constructor
+    }
+
+    /**
+     * @param clazz the clazz to use
+     */
+    public ImplementsDef(Class<?> clazz) {
+        this.setName(clazz.getSimpleName());
+        this.setPkgName(clazz.getPackage().getName());
+    }
+
+    /**
+     * @param name    the name
+     * @param pkgName the package name
+     */
+    public ImplementsDef(String name, String pkgName) {
+        this.name = name;
+        this.pkgName = pkgName;
+    }
 
     /**
      * @return the name
@@ -61,5 +85,20 @@ public class ImplementsDef {
      */
     public void setPkgName(String pkgName) {
         this.pkgName = pkgName;
+    }
+
+    /**
+     * @return the skipOnFilter
+     */
+    @XmlAttribute(required = false)
+    public Boolean getSkipOnFilter() {
+        return this.skipOnFilter;
+    }
+
+    /**
+     * @param skipOnFilter the skipOnFilter to set
+     */
+    public void setSkipOnFilter(Boolean skipOnFilter) {
+        this.skipOnFilter = skipOnFilter;
     }
 }

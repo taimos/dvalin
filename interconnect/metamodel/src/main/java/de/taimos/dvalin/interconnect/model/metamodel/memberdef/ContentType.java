@@ -73,7 +73,19 @@ public enum ContentType {
     /**
      * interconnect objects (requires clazz and the package attribute)
      */
-    InterconnectObject(null);
+    InterconnectObject(null),
+    /**
+     * LocalDate
+     */
+    LocalDate(java.time.LocalDate.class),
+    /**
+     * LocalTime
+     */
+    LocalTime(java.time.LocalTime.class),
+    /**
+     * ZonedDateTime
+     */
+    ZonedDateTime(java.time.ZonedDateTime.class);
 
     private final Class<?> type;
 

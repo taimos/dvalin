@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
@@ -112,6 +113,7 @@ public final class InterconnectMapper {
         jm.addDeserializer(DateTime.class, new DateTimeDeserializerWithTZ());
         mapper.registerModule(jm);
         mapper.registerModule(new GuavaModule());
+        mapper.registerModule(new JavaTimeModule());
         mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);

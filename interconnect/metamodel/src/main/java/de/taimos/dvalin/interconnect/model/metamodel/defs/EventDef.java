@@ -8,6 +8,8 @@ import de.taimos.dvalin.interconnect.model.metamodel.memberdef.DateMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.EnumMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ImplementsDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.IntegerMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LocalDateMemberDef;
+import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LocalTimeMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.LongMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MapMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.StringMemberDef;
@@ -84,7 +86,19 @@ public class EventDef implements IGeneratorDefinition {
     /**
      * @return the children
      */
-    @XmlElements({@XmlElement(name = "integer", type = IntegerMemberDef.class), @XmlElement(name = "implements", type = ImplementsDef.class), @XmlElement(name = "decimal", type = BigDecimalMemberDef.class), @XmlElement(name = "boolean", type = BooleanMemberDef.class), @XmlElement(name = "date", type = DateMemberDef.class), @XmlElement(name = "enum", type = EnumMemberDef.class), @XmlElement(name = "long", type = LongMemberDef.class), @XmlElement(name = "string", type = StringMemberDef.class), @XmlElement(name = "map", type = MapMemberDef.class), @XmlElement(name = "collection", type = CollectionMemberDef.class)})
+    @XmlElements({//
+        @XmlElement(name = "integer", type = IntegerMemberDef.class), //
+        @XmlElement(name = "implements", type = ImplementsDef.class), //
+        @XmlElement(name = "decimal", type = BigDecimalMemberDef.class), //
+        @XmlElement(name = "boolean", type = BooleanMemberDef.class), //
+        @XmlElement(name = "date", type = DateMemberDef.class), //
+        @XmlElement(name = "enum", type = EnumMemberDef.class), //
+        @XmlElement(name = "long", type = LongMemberDef.class), //
+        @XmlElement(name = "string", type = StringMemberDef.class), //
+        @XmlElement(name = "map", type = MapMemberDef.class), //
+        @XmlElement(name = "collection", type = CollectionMemberDef.class), //
+        @XmlElement(name = "localDate", type = LocalDateMemberDef.class), //
+        @XmlElement(name = "localTime", type = LocalTimeMemberDef.class)})
     public List<Object> getChildren() {
         return this.children;
     }

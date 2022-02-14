@@ -12,13 +12,18 @@ public abstract class BaseEventImports extends Imports<EventDef> {
     private static final long serialVersionUID = -2807251568965489734L;
 
     @Override
-    public void initFromDefintion(EventDef ivoDefenition, AbstractInterconnectModel model) {
-        this.setIvoPackageName(ivoDefenition.getPkgName());
-        if(model.isDeprecated()) {
+    public void initDefaults() {
+        this.withJsonIgnoreProperties();
+    }
+
+    @Override
+    public <K extends AbstractInterconnectModel<EventDef, ? extends Imports<EventDef>>> void initFromDefinition(EventDef ivoDefinition, K model) {
+        this.setIvoPackageName(ivoDefinition.getPkgName());
+        if (model.isDeprecated()) {
             this.withToBeRemoved();
         }
-        if(model.hasParentClazz()) {
-            this.with(model.getParentClazzPath());
+        if (model.hasParentClazz()) {
+            this.add(model.getParentClazzPath());
         }
     }
 

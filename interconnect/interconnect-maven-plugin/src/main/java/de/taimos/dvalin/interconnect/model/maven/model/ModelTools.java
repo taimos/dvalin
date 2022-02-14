@@ -6,7 +6,7 @@ package de.taimos.dvalin.interconnect.model.maven.model;
 public class ModelTools {
 
     /**
-     * @param buffer string to return with the first char in upper case
+     * @param buffer string to return add the first char in upper case
      * @return the upper-case-first string
      */
     public String upperCaseFirst(String buffer) {
