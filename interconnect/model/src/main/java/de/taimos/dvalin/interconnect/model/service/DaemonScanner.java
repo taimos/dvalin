@@ -238,7 +238,10 @@ public final class DaemonScanner {
             throw new IllegalStateException("Paramater of @DaemonRequestMethod must not be an interface");
         }
         @SuppressWarnings("unchecked") final Class<? extends InterconnectObject> icoClazz = (Class<? extends InterconnectObject>) method.getParameterTypes()[0];
-        final long timeoutInMs = drm.timeoutUnit().toMillis(drm.timeout());
+
+        long timeout = Long.parseLong(System.getProperty("interconnect.forcetimeout." + method.getDeclaringClass().getSimpleName() + "." + method.getName(), String.valueOf(drm.timeout())));
+        final long timeoutInMs = drm.timeoutUnit().toMillis(timeout);
+
         return new DaemonMethod(icoClazz, method, type, timeoutInMs, drm.secure(), drm.idempotent());
     }
 
