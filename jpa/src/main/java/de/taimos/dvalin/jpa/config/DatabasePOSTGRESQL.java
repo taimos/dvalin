@@ -9,9 +9,9 @@ package de.taimos.dvalin.jpa.config;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,20 +20,20 @@ package de.taimos.dvalin.jpa.config;
  * #L%
  */
 
+import javax.sql.DataSource;
+
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.sql.DataSource;
-
 
 @Configuration
 @OnSystemProperty(propertyName = "ds.type", propertyValue = "POSTGRESQL")
 public class DatabasePOSTGRESQL {
 
-    @Value("jdbc:postgresql://${ds.pgsql.host}:${ds.pgsql.port}/${ds.pgsql.db}")
+    @Value("jdbc:postgresql://${ds.pgsql.host}:${ds.pgsql.port}/${ds.pgsql.db}${ds.pgsql.additionalparams:}")
     private String url;
 
     @Value("${ds.pgsql.user}")
