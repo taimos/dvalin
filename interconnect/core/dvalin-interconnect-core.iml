@@ -3,8 +3,8 @@
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false" />
-        <fileset id="fileset2" name="Spring Application Context (2)" removed="false">
+        <fileset id="fileset" name="Spring Application Context" removed="false" profiles="prod" />
+        <fileset id="fileset2" name="Spring Application Context (2)" removed="false" profiles="prod">
           <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/interconnect/core/config/JMSConfig.java</file>
         </fileset>
       </configuration>
