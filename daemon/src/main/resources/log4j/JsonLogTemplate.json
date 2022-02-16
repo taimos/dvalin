@@ -1,0 +1,56 @@
+{
+  "daemon": {
+    "$resolver": "daemon",
+    "field": "name"
+  },
+  "instance": {
+    "$resolver": "daemon",
+    "field": "instance"
+  },
+  "host": {
+    "$resolver": "daemon",
+    "field": "host"
+  },
+  "phase": {
+    "$resolver": "daemon",
+    "field": "phase"
+  },
+  "timestamp": {
+    "$resolver": "timestamp",
+    "pattern": {
+      "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+      "timeZone": "UTC"
+    }
+  },
+  "level": {
+    "$resolver": "level",
+    "field": "name"
+  },
+  "source": {
+    "$resolver": "logger",
+    "field": "name"
+  },
+  "message": {
+    "$resolver": "message",
+    "stringified": true
+  },
+  "thread": {
+    "$resolver": "thread",
+    "field": "name"
+  },
+  "throwable": {
+    "$resolver": "exception",
+    "field": "className"
+  },
+  "stacktrace": {
+    "$resolver": "exception",
+    "field": "stackTrace",
+    "stackTrace": {
+      "stringified": true
+    }
+  },
+  "mdc": {
+    "$resolver": "mdc",
+    "stringified": true
+  }
+}

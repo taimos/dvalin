@@ -20,135 +20,124 @@ package de.taimos.daemon.log4j;
  * #L%
  */
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.DailyRollingFileAppender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.net.SyslogAppender;
-
 import de.taimos.daemon.DaemonProperties;
 import de.taimos.daemon.DaemonStarter;
 import de.taimos.daemon.ILoggingConfigurer;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
+import org.apache.logging.log4j.core.config.builder.api.LayoutComponentBuilder;
+import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
+
+import java.util.Map;
 
 public class Log4jLoggingConfigurer implements ILoggingConfigurer {
 
-    private static final String DEFAULT_PATTERN = "%d{HH:mm:ss,SSS} %-5p %c %x - %m%n";
     private static final String FALSE_STRING = "false";
-    private final Logger rlog = Logger.getRootLogger();
-
-    private SyslogAppender syslog;
-    private DailyRollingFileAppender darofi;
-    private ConsoleAppender console;
 
     @Override
-    public void initializeLogging() throws Exception {
-        // Clear all existing appenders
-        this.rlog.removeAllAppenders();
+    public void initializeLogging() {
+        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
 
-        this.rlog.setLevel(Level.INFO);
-
-        // CONSOLE is always active
-        this.console = new ConsoleAppender();
-        this.console.setName("CONSOLE");
-        this.console.setLayout(new PatternLayout(DEFAULT_PATTERN));
-        this.console.setTarget(ConsoleAppender.SYSTEM_OUT);
-        this.console.activateOptions();
-        this.rlog.addAppender(this.console);
-
-        // only use SYSLOG and DAROFI in production mode
+        String filePath = null;
+        String filePattern = null;
+        String host = null;
+        String facility = null;
+        Level syslogLevel = null;
+        LayoutComponentBuilder syslogLayout = null;
         if (!DaemonStarter.isDevelopmentMode()) {
-            this.darofi = new DailyRollingFileAppender();
-            this.darofi.setName("DAROFI");
-            this.darofi.setLayout(new PatternLayout(DEFAULT_PATTERN));
-            this.darofi.setFile("log/" + DaemonStarter.getDaemonName() + ".log");
-            this.darofi.setDatePattern("'.'yyyy-MM-dd");
-            this.darofi.setAppend(true);
-            this.darofi.setThreshold(Level.INFO);
-            this.darofi.activateOptions();
-            this.rlog.addAppender(this.darofi);
+            String daemonName = DaemonStarter.getDaemonName();
+            filePath = DvalinLog4jConfigurationFactory.getLogFilePath(daemonName);
+            filePattern = DvalinLog4jConfigurationFactory.getLogFilePattern(filePath);
 
-            this.syslog = new SyslogAppender();
-            this.syslog.setName("SYSLOG");
-            this.syslog.setLayout(new PatternLayout(DaemonStarter.getDaemonName() + ": %-5p %c %x - %m%n"));
-            this.syslog.setSyslogHost("localhost");
-            this.syslog.setFacility("LOCAL0");
-            this.syslog.setFacilityPrinting(false);
-            this.syslog.setThreshold(Level.INFO);
-            this.syslog.activateOptions();
-            this.rlog.addAppender(this.syslog);
+            host = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_HOST, "localhost");
+            facility = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_FACILITY, "LOCAL0");
+            syslogLevel = getLevel(Log4jDaemonProperties.SYSLOG_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
+            syslogLayout = DvalinLog4jConfigurationFactory.createSyslogLayout(builder, daemonName);
         }
+
+        LayoutComponentBuilder layout = this.createConfiguredLayout(builder);
+        Configuration config = DvalinLog4jConfigurationFactory.configure(builder, layout, true, filePath, filePattern, host, facility, syslogLayout, syslogLevel);
+        Configurator.reconfigure(config);
+
+        Configurator.setRootLevel(this.getLevel(Log4jDaemonProperties.LOGGER_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL));
     }
 
     @Override
-    public void reconfigureLogging() throws Exception {
-        final Level logLevel = Level.toLevel(DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_LEVEL), Level.INFO);
-        this.rlog.setLevel(logLevel);
-        this.rlog.info(String.format("Changed the the log level to %s", logLevel));
+    public void reconfigureLogging() {
+        final Logger rlog = LogManager.getRootLogger();
+        rlog.info("Reconfigure Logging");
 
-        this.console.setLayout(this.getLayout());
-        this.console.setThreshold(logLevel);
-        this.console.activateOptions();
+        String daemonName = DaemonStarter.getDaemonName();
+        boolean console = !DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_STDOUT, "true").equals(FALSE_STRING);
+
+        String filePath = null;
+        String filePattern = null;
+        String host = null;
+        String facility = null;
+        Level syslogLevel = null;
 
         if (!DaemonStarter.isDevelopmentMode()) {
-            final String fileEnabled = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_FILE, FALSE_STRING);
-            final String syslogEnabled = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_SYSLOG, FALSE_STRING);
-
-            if ((fileEnabled == null) || fileEnabled.equals(FALSE_STRING)) {
-                this.rlog.removeAppender(this.darofi);
-                this.darofi = null;
-                this.rlog.info("Deactivated the FILE Appender");
-            } else {
-                this.darofi.setThreshold(logLevel);
-                this.darofi.setLayout(this.getLayout());
-                this.darofi.activateOptions();
+            if (!DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_FILE, FALSE_STRING).equals(FALSE_STRING)) {
+                filePath = DvalinLog4jConfigurationFactory.getLogFilePath(daemonName);
+                filePattern = DvalinLog4jConfigurationFactory.getLogFilePattern(filePath);
             }
 
-            if ((syslogEnabled == null) || syslogEnabled.equals(FALSE_STRING)) {
-                this.rlog.removeAppender(this.syslog);
-                this.syslog = null;
-                this.rlog.info("Deactivated the SYSLOG Appender");
-            } else {
-                final String host = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_HOST, "localhost");
-                final String facility = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_FACILITY, "LOCAL0");
-                final Level syslogLevel = Level.toLevel(DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_LEVEL), Level.INFO);
-
-                this.syslog.setSyslogHost(host);
-                this.syslog.setFacility(facility);
-                this.syslog.setThreshold(syslogLevel);
-                this.syslog.activateOptions();
-                this.rlog.info(String.format("Changed the SYSLOG Appender to host %s and facility %s", host, facility));
+            if (!DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.LOGGER_SYSLOG, FALSE_STRING).equals(FALSE_STRING)) {
+                host = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_HOST, "localhost");
+                facility = DaemonStarter.getDaemonProperties().getProperty(Log4jDaemonProperties.SYSLOG_FACILITY, "LOCAL0");
+                syslogLevel = getLevel(Log4jDaemonProperties.SYSLOG_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
             }
         }
+
+        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+        LayoutComponentBuilder layout = this.createConfiguredLayout(builder);
+        LayoutComponentBuilder syslogLayout = DvalinLog4jConfigurationFactory.createSyslogLayout(builder, daemonName);
+        Configuration config = DvalinLog4jConfigurationFactory.configure(builder, layout, console, filePath, filePattern, host, facility, syslogLayout, syslogLevel);
+        Configurator.reconfigure(config);
+
+        Level level = this.getLevel(Log4jDaemonProperties.LOGGER_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
+        Configurator.setRootLevel(level);
+        rlog.info("Set root log level to {}", level);
+
+        Map<String, Level> customLevelMap = Log4jDaemonProperties.getCustomLevelMap();
+        if (customLevelMap.isEmpty()) {
+            return;
+        }
+        rlog.info("Set custom log levels");
+        Configurator.setLevel(customLevelMap);
     }
 
-    private Layout getLayout() {
-        final String logLayout = System.getProperty(Log4jDaemonProperties.LOGGER_LAYOUT, Log4jDaemonProperties.LOGGER_LAYOUT_PATTERN);
+    protected Level getLevel(String property, Level defaultLevel) {
+        String propertyValue = DaemonStarter.getDaemonProperties().getProperty(property);
+        return Level.toLevel(propertyValue, defaultLevel);
+    }
 
-        switch (logLayout) {
-        case Log4jDaemonProperties.LOGGER_LAYOUT_JSON:
-            return new JSONLayout();
-        case Log4jDaemonProperties.LOGGER_LAYOUT_PATTERN:
-        default:
-            final String logPattern = System.getProperty(Log4jDaemonProperties.LOGGER_PATTERN, DEFAULT_PATTERN);
-            return new PatternLayout(logPattern);
+    /**
+     * @param builder config builder
+     * @return layout builder
+     */
+    protected LayoutComponentBuilder createConfiguredLayout(ConfigurationBuilder<?> builder) {
+        switch (System.getProperty(Log4jDaemonProperties.LOGGER_LAYOUT, Log4jDaemonProperties.LOGGER_LAYOUT_PATTERN)) {
+            case Log4jDaemonProperties.LOGGER_LAYOUT_JSON:
+                return builder.newLayout("JsonTemplateLayout").addAttribute("eventTemplateUri", "classpath:log4j/JsonLogTemplate.json");
+            case Log4jDaemonProperties.LOGGER_LAYOUT_PATTERN:
+            default:
+                return builder.newLayout("PatternLayout").addAttribute("pattern", Log4jDaemonProperties.DEFAULT_PATTERN);
         }
     }
 
     @Override
-    public void simpleLogging() throws Exception {
-        // Clear all existing appenders
-        this.rlog.removeAllAppenders();
-        final Level logLevel = Level.toLevel(System.getProperty(Log4jDaemonProperties.LOGGER_LEVEL), Level.INFO);
-        this.rlog.setLevel(logLevel);
+    public void simpleLogging() {
+        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+        Configurator.reconfigure(DvalinLog4jConfigurationFactory.configure(builder));
 
-        this.console = new ConsoleAppender();
-        this.console.setName("CONSOLE");
-        this.console.setLayout(new PatternLayout(DEFAULT_PATTERN));
-        this.console.setTarget(ConsoleAppender.SYSTEM_OUT);
-        this.console.activateOptions();
-        this.rlog.addAppender(this.console);
+        Level level = getLevel(Log4jDaemonProperties.LOGGER_LEVEL, Log4jDaemonProperties.DEFAULT_LEVEL);
+        Configurator.setRootLevel(level);
     }
 
     public static void setup() {

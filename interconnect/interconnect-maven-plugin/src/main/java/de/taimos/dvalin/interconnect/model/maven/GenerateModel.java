@@ -39,31 +39,25 @@ import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.velocity.app.Velocity;
-import org.sonatype.plexus.build.incremental.BuildContext;
 
 import java.io.File;
 import java.util.Objects;
 
 /**
  * Interconnect IVO generator
+ *
+ * @author psigloch
  */
 @Mojo(name = "generateModel", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GenerateModel extends AbstractMojo {
-    @Component
-    private BuildContext buildContext;
 
     @Parameter(required = true, property = "project.build.directory")
     private String outputDirectory;
-
-    @Parameter()
-    @Deprecated
-    private File[] defdirs;
 
     @Parameter()
     private File[] ivoPaths;
@@ -84,12 +78,6 @@ public class GenerateModel extends AbstractMojo {
 
         //handle event generation
         this.execute(this.eventPaths, ModelType.EVENT);
-
-        //fallback support for old configuration
-        if (this.defdirs != null && this.defdirs.length > 0) {
-            this.getLog().warn("Please be aware that you are still using a deprecated configuration. This configuration option might be removed in the future. Please use \"ivoPaths\" and \"enventPaths\" instead of \"defdirs\"!");
-            this.execute(this.defdirs, ModelType.IVO);
-        }
     }
 
     protected void preExecute() {
