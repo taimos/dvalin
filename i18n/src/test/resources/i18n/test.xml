@@ -16,4 +16,8 @@
         <language locale="de" value="EnumFieldBGerman" />
         <language locale="en" value="EnumFieldBEnglish"/>
     </label>
+    <label id="xmlOnly">
+        <language locale="de" value="nur in XML" />
+        <language locale="en" value="only in xml" />
+    </label>
 </i18nBundle>
