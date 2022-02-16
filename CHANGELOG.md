@@ -22,6 +22,8 @@
     * Bson 2.12.0
 * BREAKING: commented out JasperReports to get the code compiling
 * BREAKING: replaced Fongo with MongoDB Java Server 1.39.0 (https://github.com/bwaldvogel/mongo-java-server)
+* Switched to Log4J2.x
+* Optional additional parameter for PostgreSQL connection string
 
 # Version 1.30
 * Update dependencies
