@@ -20,16 +20,16 @@ package de.taimos.dvalin.daemon;
  * #L%
  */
 
-import java.util.UUID;
-
+import de.taimos.daemon.DaemonLifecycleAdapter;
+import de.taimos.daemon.DaemonProperties;
+import de.taimos.daemon.DaemonStarter;
+import de.taimos.daemon.log4j.Log4jDaemonProperties;
+import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import de.taimos.daemon.DaemonLifecycleAdapter;
-import de.taimos.daemon.DaemonProperties;
-import de.taimos.daemon.DaemonStarter;
-import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
+import java.util.UUID;
 
 public class Log4jTest extends DaemonLifecycleAdapter {
 
@@ -40,10 +40,13 @@ public class Log4jTest extends DaemonLifecycleAdapter {
 		System.setProperty(DaemonProperties.STARTUP_MODE, DaemonProperties.STARTUP_MODE_RUN);
 //		System.setProperty(Log4jDaemonProperties.LOGGER_LAYOUT, Log4jDaemonProperties.LOGGER_LAYOUT_JSON);
 		Log4jLoggingConfigurer.setup();
-		DaemonStarter.startDaemon("foobar", new Log4jTest());
+        DaemonStarter.getDaemonProperties().put(Log4jDaemonProperties.LOGGER_FILE, "true");
+//      DaemonStarter.getDaemonProperties().put(Log4jDaemonProperties.ADDITIONAL_LOGGING, "de.taimos.dvalin.daemon.Log4jTest=DEBUG;");
+
+        DaemonStarter.startDaemon("foobar", new Log4jTest());
 
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -54,13 +57,17 @@ public class Log4jTest extends DaemonLifecycleAdapter {
 	public void started() {
 		super.started();
 
+        LOGGER.debug("Debug");
 		Log4jTest.LOGGER.info("Message");
 		Log4jTest.LOGGER.info("Message with \"quote\" in text");
 		Log4jTest.LOGGER.warn("Warning", new RuntimeException("Failed", new IllegalArgumentException("Causing exception")));
+        LOGGER.error("error");
 
 		MDC.put("requestID", UUID.randomUUID().toString());
-		Log4jTest.LOGGER.info("Request");
+		Log4jTest.LOGGER.info("Request with MDC");
 		MDC.remove("requestID");
+
+        LOGGER.info("After Request");
 	}
 
 }
