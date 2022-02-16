@@ -21,18 +21,20 @@ package de.taimos.dvalin.interconnect.model;
  */
 
 import java.math.BigInteger;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Scanner;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 
 public final class MessageCryptoUtil {
 
@@ -64,7 +66,7 @@ public final class MessageCryptoUtil {
 
 		try {
 			final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.ENCRYPT_MODE);
-			final byte[] encrypted = cipher.doFinal(data.getBytes(Charset.forName("UTF-8")));
+			final byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
 			return Base64.encodeBase64String(encrypted);
 		} catch (final Exception e) {
 			throw new CryptoException("Encryption of data failed!", e);
@@ -84,14 +86,14 @@ public final class MessageCryptoUtil {
 
 		try {
 			final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.DECRYPT_MODE);
-			return new String(cipher.doFinal(Base64.decodeBase64(data)), Charset.forName("UTF-8"));
+			return new String(cipher.doFinal(Base64.decodeBase64(data)), StandardCharsets.UTF_8);
 		} catch (final Exception e) {
 			throw new CryptoException("Decryption of data failed!", e);
 		}
 	}
 
-	private static Cipher getCipher(int mode) throws Exception {
-		final SecretKeySpec skeySpec = new SecretKeySpec(Hex.decodeHex(MessageCryptoUtil.AES_KEY.toCharArray()), "AES");
+	private static Cipher getCipher(int mode) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+		final SecretKeySpec skeySpec = new SecretKeySpec(Base64.decodeBase64(MessageCryptoUtil.AES_KEY), "AES");
 		final Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(mode, skeySpec);
 		return cipher;
@@ -107,7 +109,7 @@ public final class MessageCryptoUtil {
 		try {
 			final String toEnc = msg + MessageCryptoUtil.SIGNATURE;
 			final MessageDigest mdEnc = MessageDigest.getInstance("MD5");
-			mdEnc.update(toEnc.getBytes(Charset.forName("UTF-8")), 0, toEnc.length());
+			mdEnc.update(toEnc.getBytes(StandardCharsets.UTF_8), 0, toEnc.length());
 			return new BigInteger(1, mdEnc.digest()).toString(16);
 		} catch (final Exception e) {
 			throw new CryptoException("Creating signature failed", e);
@@ -172,9 +174,9 @@ public final class MessageCryptoUtil {
 	private static void generateKey() {
 		try {
 			final KeyGenerator kgen = KeyGenerator.getInstance("AES");
-			kgen.init(128);
+			kgen.init(256, new SecureRandom());
 			final SecretKey skey = kgen.generateKey();
-			System.out.println("Key: " + Hex.encodeHexString(skey.getEncoded()));
+			System.out.println("Key: " + Base64.encodeBase64String(skey.getEncoded()));
 		} catch (final NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
