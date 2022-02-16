@@ -237,7 +237,9 @@ public final class DaemonScanner {
         }
         @SuppressWarnings("unchecked") final Class<? extends InterconnectObject> icoClazz = (Class<? extends InterconnectObject>) method.getParameterTypes()[0];
 
-        final long timeoutInMs = drm.timeoutUnit().toMillis(drm.timeout());
+        long timeout = Long.parseLong(System.getProperty("interconnect.forcetimeout." + method.getDeclaringClass().getSimpleName() + "." + method.getName(), String.valueOf(drm.timeout())));
+        final long timeoutInMs = drm.timeoutUnit().toMillis(timeout);
+
         boolean useSecure = drm.secure();
         if (System.getProperty("interconnect.alwayssecure", "false").trim().equalsIgnoreCase("true")) {
             useSecure = true;
