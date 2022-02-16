@@ -31,34 +31,24 @@ import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.velocity.app.Velocity;
-import org.sonatype.plexus.build.incremental.BuildContext;
 
 import java.io.File;
 
 /**
  * Interconnect IVO generator
+ *
+ * @author psigloch
  */
 @Mojo(name = "generateModel", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GenerateModel extends AbstractMojo {
 
-
-    private static final String TARGET_DIR_EVENT = "/generated-sources/model/event/";
-
-    @Component
-    private BuildContext buildContext;
-
     @Parameter(required = true, property = "project.build.directory")
     private String outputDirectory;
-
-    @Parameter()
-    @Deprecated
-    private File[] defdirs;
 
     @Parameter()
     private File[] ivoPaths;
@@ -72,29 +62,21 @@ public class GenerateModel extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         Velocity.init(GeneratorHelper.getVelocityDefaultProps());
-
         //handle ivo generation
         this.execute(this.ivoPaths, ModelType.IVO);
-
         //handle event generation
         this.execute(this.eventPaths, ModelType.EVENT);
-
-        //fallback support for old configuration
-        if(this.defdirs != null && this.defdirs.length > 0) {
-            this.getLog().warn("Please be aware that you are still using a deprecated configuration. This configuration option might be removed in the future. Please use \"ivoPaths\" and \"enventPaths\" instead of \"defdirs\"!");
-            this.execute(this.defdirs, ModelType.IVO);
-        }
     }
 
     private void execute(File[] dir, ModelType type) throws MojoExecutionException {
         try {
             //support for old configuration
-            if(dir != null && dir.length > 0) {
-                for(File f : dir) {
+            if (dir != null && dir.length > 0) {
+                for (File f : dir) {
                     this.processDirectory(f, type);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new MojoExecutionException("Failed...", e);
         }
     }
@@ -102,24 +84,23 @@ public class GenerateModel extends AbstractMojo {
     private void processDirectory(File f, ModelType type) throws MojoExecutionException {
         this.getLog().info("Processing Directory: " + f.getAbsolutePath());
         File[] dirs = f.listFiles(File::isDirectory);
-        if(dirs != null) {
-            for(File file : dirs) {
+        if (dirs != null) {
+            for (File file : dirs) {
                 this.processDirectory(file, type);
             }
         }
         File[] defFiles = f.listFiles((dir, name) -> name.endsWith(".xml"));
-        if(defFiles != null) {
-            for(File defFile : defFiles) {
-                switch(type) {
+        if (defFiles != null) {
+            for (File defFile : defFiles) {
+                switch (type) {
                     case IVO:
                         this.getLog().info("Generating files for IVO in " + defFile.getAbsolutePath());
                         try {
                             this.processFileAsIVO(defFile);
                             File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
                             this.project.addCompileSourceRoot(path.getAbsolutePath());
-                            this.buildContext.refresh(path);
-                        } catch(MojoExecutionException e) {
-                            if(e.getCause().getMessage().contains("event")) {
+                        } catch (MojoExecutionException e) {
+                            if (e.getCause().getMessage().contains("event")) {
                                 this.getLog().warn("An event file was found in the ivo directory. Please fix this.");
                                 this.processFileAsEvent(defFile);
                             } else {
@@ -134,9 +115,8 @@ public class GenerateModel extends AbstractMojo {
                             this.processFileAsEvent(defFile);
                             File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
                             this.project.addCompileSourceRoot(path.getAbsolutePath());
-                            this.buildContext.refresh(path);
-                        } catch(MojoExecutionException e) {
-                            if(e.getCause().getMessage().contains("ivo")) {
+                        } catch (MojoExecutionException e) {
+                            if (e.getCause().getMessage().contains("ivo")) {
                                 this.getLog().warn("An ivo file was found in the ivo directory. Please fix this.");
                                 this.processFileAsIVO(defFile);
                             } else {
