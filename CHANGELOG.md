@@ -22,6 +22,8 @@
     * Bson 2.12.0
 * BREAKING: commented out JasperReports to get the code compiling
 * BREAKING: replaced Fongo with MongoDB Java Server 1.39.0 (https://github.com/bwaldvogel/mongo-java-server)
+* Switched to Log4J2.x
+* Optional additional parameter for PostgreSQL connection string
 * Interconnect secury message crypto:
     * AES Keys are no longer Hex-encoded but Base64-encoded. This avoids limitation to only 16 characters.
     * BREAKING: Changed AES key encoding means potentially a new key is needed (some old keys work, some not)

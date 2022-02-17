@@ -72,19 +72,15 @@
         <xdocreport.version>1.0.6</xdocreport.version>
     </properties>
     <scm>
-        <connection>scm:git:git@github.com:taimos/dvalin.git</connection>
-        <developerConnection>scm:git:git@github.com:taimos/dvalin.git</developerConnection>
-        <url>scm:git:git@github.com:taimos/dvalin.git</url>
+        <connection>scm:git:https://github.com/taimos/dvalin.git</connection>
+        <developerConnection>scm:git:https://github.com/taimos/dvalin.git</developerConnection>
+        <url>scm:git:https://github.com/taimos/dvalin.git</url>
         <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/taimos/dvalin/issues</url>
     </issueManagement>
-    <ciManagement>
-        <system>travis-ci</system>
-        <url>https://travis-ci.org/taimos/dvalin</url>
-    </ciManagement>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -348,11 +344,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>${hibernate.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
