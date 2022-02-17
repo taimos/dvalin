@@ -38,9 +38,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 
 public final class MessageCryptoUtil {
 
@@ -56,10 +54,6 @@ public final class MessageCryptoUtil {
 
     // DO NEVER EVER CHANGE THIS; MESSAGES ARE NOT RECOVERABLE AFTER CHANGE
     private static final String AES_KEY = System.getProperty(InterconnectConstants.PROPERTY_CRYPTO_AESKEY);
-    private static final String AES_DECODER = System.getProperty(InterconnectConstants.PROPERTY_CRYPTO_AESDECODER, "base64");
-    private static final String GCM_MODE = System.getProperty(InterconnectConstants.PROPERTY_CRYPTO_GCM_MODE, "true");
-
-
     private static final String SIGNATURE = System.getProperty(InterconnectConstants.PROPERTY_CRYPTO_SIGNATURE);
 
 
@@ -72,20 +66,12 @@ public final class MessageCryptoUtil {
         if (data == null) {
             return null;
         }
-
-        if (Boolean.TRUE.equals(Boolean.valueOf(MessageCryptoUtil.GCM_MODE))) {
-            return MessageCryptoUtil.cryptGCM(data);
-        }
-        return MessageCryptoUtil.cryptECB(data);
-    }
-
-    private static String cryptGCM(String data) throws CryptoException {
         try {
             SecureRandom secureRandom = new SecureRandom();
             byte[] iv = new byte[12]; //NEVER REUSE THIS IV WITH SAME KEY
             secureRandom.nextBytes(iv);
             GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
-            final Cipher cipher = MessageCryptoUtil.getCipherGCM(Cipher.ENCRYPT_MODE, parameterSpec);
+            final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.ENCRYPT_MODE, parameterSpec);
 
             final byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
             ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + encrypted.length);
@@ -98,17 +84,6 @@ public final class MessageCryptoUtil {
         }
     }
 
-    private static String cryptECB(String data) throws CryptoException {
-        try {
-            final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.ENCRYPT_MODE);
-            final byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
-            return Base64.encodeBase64String(encrypted);
-        } catch (final Exception e) {
-            throw new CryptoException("Encryption of data failed!", e);
-        }
-    }
-
-
     /**
      * @param data the BASE 64 data
      * @return the decrypted data
@@ -118,58 +93,21 @@ public final class MessageCryptoUtil {
         if (data == null) {
             return null;
         }
-
-        if (Boolean.TRUE.equals(Boolean.valueOf(GCM_MODE))) {
-            return MessageCryptoUtil.decryptGCM(data);
-        }
-        return MessageCryptoUtil.decryptECB(data);
-
-
-    }
-
-
-    private static String decryptGCM(final String data) throws CryptoException {
         try {
             byte[] cipherMessage = Base64.decodeBase64(data);
             AlgorithmParameterSpec gcmIv = new GCMParameterSpec(128, cipherMessage, 0, 12);
-            final Cipher cipher = MessageCryptoUtil.getCipherGCM(Cipher.DECRYPT_MODE, gcmIv);
+            final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.DECRYPT_MODE, gcmIv);
             return new String(cipher.doFinal(cipherMessage, 12, cipherMessage.length - 12), StandardCharsets.UTF_8);
         } catch (final Exception e) {
             throw new CryptoException("Decryption of data failed!", e);
         }
     }
 
-    private static String decryptECB(String data) throws CryptoException {
-        try {
-            final Cipher cipher = MessageCryptoUtil.getCipher(Cipher.DECRYPT_MODE);
-            return new String(cipher.doFinal(Base64.decodeBase64(data)), StandardCharsets.UTF_8);
-        } catch (final Exception e) {
-            throw new CryptoException("Decryption of data failed!", e);
-        }
-    }
-
-    private static Cipher getCipher(int mode) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, DecoderException {
-        final SecretKeySpec skeySpec = new SecretKeySpec(MessageCryptoUtil.getDecodedkey(), "AES");
-        final Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(mode, skeySpec);
-        return cipher;
-    }
-
-    private static Cipher getCipherGCM(int mode, AlgorithmParameterSpec gcmIv) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, DecoderException, InvalidAlgorithmParameterException {
-        final SecretKeySpec skeySpec = new SecretKeySpec(MessageCryptoUtil.getDecodedkey(), "AES");
+    private static Cipher getCipher(int mode, AlgorithmParameterSpec gcmIv) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+        final SecretKeySpec skeySpec = new SecretKeySpec(Base64.decodeBase64(MessageCryptoUtil.AES_KEY), "AES");
         final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         cipher.init(mode, skeySpec, gcmIv);
         return cipher;
-    }
-
-    private static byte[] getDecodedkey() throws DecoderException {
-        byte[] decodedkey;
-        if ("base64".equals(MessageCryptoUtil.AES_DECODER)) {
-            decodedkey = Base64.decodeBase64(MessageCryptoUtil.AES_KEY);
-        } else {
-            decodedkey = Hex.decodeHex(MessageCryptoUtil.AES_KEY.toCharArray());
-        }
-        return decodedkey;
     }
 
     /**
@@ -222,9 +160,7 @@ public final class MessageCryptoUtil {
             }
             switch (scan.nextLine()) {
                 case "k":
-                    System.out.print("Select key encoding (h=hex(default); b=base64): ");
-                    final String encoding = scan.nextLine();
-                    MessageCryptoUtil.generateKey(encoding);
+                    MessageCryptoUtil.generateKey();
                     break;
                 case "c":
                     System.out.print("Input data: ");
@@ -244,18 +180,13 @@ public final class MessageCryptoUtil {
         }
     }
 
-    private static void generateKey(String encoding) {
+    private static void generateKey() {
         try {
 
             final KeyGenerator kgen = KeyGenerator.getInstance("AES");
-            kgen.init(128, new SecureRandom());
+            kgen.init(128);
             final SecretKey skey = kgen.generateKey();
-            String key;
-            if ("b".equals(encoding)) {
-                key = Base64.encodeBase64String(skey.getEncoded());
-            } else {
-                key = Hex.encodeHexString(skey.getEncoded());
-            }
+            String key = Base64.encodeBase64String(skey.getEncoded());
             System.out.println("Key: " + key);
         } catch (final NoSuchAlgorithmException e) {
             e.printStackTrace();
