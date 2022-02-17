@@ -40,6 +40,12 @@ public interface InterconnectConstants {
     /** Constant for the system property that holds the AES key for message encryption */
     String PROPERTY_CRYPTO_AESKEY = "interconnect.crypto.aes";
 
+    /** Constant for the system property that could activate GCM mode (otherwiese uses insecure ECB)  */
+    String PROPERTY_CRYPTO_GCM_MODE = "interconnect.crypto.use";
+
+    /** Constant for the system property that holds the AES key encoder for message encryption */
+    String PROPERTY_CRYPTO_AESDECODER = "interconnect.crypto.aes.decoder";
+
     /** Constant for the system property that holds the Signature key for message encryption */
     String PROPERTY_CRYPTO_SIGNATURE = "interconnect.crypto.signature";
 
