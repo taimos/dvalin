@@ -10,3 +10,6 @@ de.taimos.dvalin.i18n.TestEnum.FIELD_A:
 de.taimos.dvalin.i18n.TestEnum.FIELD_B:
   de: EnumFieldBGerman
   en: EnumFieldBEnglish
+yamlOnly:
+  de: nur in YAML
+  en: only in YAML
