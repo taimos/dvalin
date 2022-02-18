@@ -12,7 +12,7 @@
     * Junit 4.13.2
     * ActiveMQ 5.16.2
     * Hibernate 5.5.9
-    * HTTPUtils 2.1
+    * HTTPUtils 2.2
     * Concordion 3.1.3
     * Nimbus JOSE+JWT 9.15,2
     * JSON Small and Fast Parser 1.3.3
