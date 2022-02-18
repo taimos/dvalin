@@ -1,0 +1,220 @@
+package ${model.getPackageName()}.requests;
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+
+
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ **/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(builder = ${clazzName}.${clazzName}Builder.class)
+public class ${clazzName} extends $model.getParentClazzName() implements I${clazzName} {
+
+    private static final long serialVersionUID = ${model.getSerialVersion()}L;
+
+	/**
+	 * Builder for the read-only ivo
+	 *
+	 **/
+#if ($model.isDeprecated())
+	@Deprecated
+	@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+	@JsonPOJOBuilder()
+	public static class ${clazzName}Builder extends Abstract${clazzName}Builder<${clazzName}Builder> implements IVOBuilder {
+
+		// nothing to do here, really
+
+	}
+
+	/**
+	 * Abstract Builder for the read-only ivo
+	 *
+	 * @param <E> type of builder
+	 **/
+	public abstract static class Abstract${clazzName}Builder<E extends Abstract${clazzName}Builder<?>> $model.getParentBuilder() {
+
+        private List<IdWithVersion> ids = new ArrayList<>();
+
+        /**
+		 * This field is required.
+		 * the id
+		 *
+		 * @param id the value to set
+		 * @return the builder
+		 *
+		 **/
+		@Nonnull
+		@SuppressWarnings("unchecked")
+        @JsonIgnore
+		public E withId(String id) {
+			this.ids = Collections.singletonList(new IdWithVersion(id));
+			return (E) this;
+		}
+
+        /**
+          * This field is required.
+          * the id
+          *
+          * @param idWithVersion the value to set
+          * @return the builder
+          *
+          **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        @JsonIgnore
+        public E withId(IdWithVersion idWithVersion) {
+            this.ids = Collections.singletonList(idWithVersion);
+            return (E) this;
+        }
+
+        /**
+         * This field is required.
+         * the list of ids
+         *
+         * @param ids the value to set
+         * @return the builder
+         *
+         **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        @JsonIgnore
+        public E withIds(Collection<String> ids) {
+            this.ids = ids.stream().map(id->new IdWithVersion(id)).collect(Collectors.toList());
+            return (E) this;
+        }
+
+        /**
+         * This field is required.
+         * the list of ids
+         *
+         * @param ids the value to set
+         * @return the builder
+         *
+         **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        @JsonProperty("ids")
+        public E withIdsWithVersion(Collection<IdWithVersion> ids) {
+            this.ids = new ArrayList<>(ids);
+            return (E) this;
+        }
+
+        /**
+         * This field is required.
+         * the id
+         *
+         * @param id the value to add
+         * @return the builder
+         *
+         **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        @JsonIgnore
+        public E addId(String id) {
+            this.ids.add(new IdWithVersion(id));
+            return (E) this;
+        }
+
+        /**
+         * This field is required.
+         * the id
+         *
+         * @param id the value to add
+         * @return the builder
+         *
+         **/
+        @Nonnull
+        @SuppressWarnings("unchecked")
+        @JsonIgnore
+        public E addId(IdWithVersion id) {
+            this.ids.add(id);
+            return (E) this;
+        }
+
+		/**
+		 * @return the ids
+		 **/
+        @JsonIgnore
+		public List<String> getIds() {
+			return this.ids.stream().map(iv->iv.getId()).collect(Collectors.toList());
+		}
+
+        /**
+         * @return the ids
+         **/
+        @JsonIgnore
+        public List<IdWithVersion> getIdsWithVersion() {
+            return new ArrayList<>(this.ids);
+        }
+
+		protected void internalFillFromIVO(${clazzName} ivo) {
+			this.withIdsWithVersion(ivo.ids);
+		}
+
+		/**
+		 * @return the entry
+		 **/
+		public ${clazzName} build() {
+			if (this.ids == null) {
+				throw new IllegalStateException("The attribute ids must not be null!");
+			}
+			${clazzName} result = new ${clazzName}(this);
+			return result;
+		}
+	}
+
+	private final List<IdWithVersion> ids;
+
+	protected ${clazzName}(Abstract${clazzName}Builder<?> builder) {
+		this.ids = builder.ids;
+	}
+
+    @Override
+    @JsonIgnore
+	public List<String> getIds() {
+		return this.ids.stream().map(iv->iv.getId()).collect(Collectors.toList());
+	}
+
+    @Override
+    @JsonIgnore
+    public String getFirstId() {
+        return this.ids.stream().findFirst().map(iv->iv.getId()).orElse(null);
+    }
+
+    @Override
+    @JsonProperty("ids")
+    public List<IdWithVersion> getIdsWithVersion() {
+        return new ArrayList<>(this.ids);
+    }
+
+    @Override
+    @JsonIgnore
+    public IdWithVersion getFirstIdWithVersion() {
+        return this.ids.stream().findFirst().orElse(null);
+    }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IVOBuilder> T createBuilder() {
+		${clazzName}Builder builder = new ${clazzName}Builder();
+		builder.internalFillFromIVO(this);
+		return (T) builder;
+	}
+
+	@Override
+	public ${clazzName} clone() {
+		return (${clazzName}) super.clone();
+	}
+
+}

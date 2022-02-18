@@ -13,17 +13,22 @@ public abstract class BaseIVOImports extends Imports<IVODef> {
     private static final long serialVersionUID = -2807251568965489734L;
 
     @Override
-    public void initFromDefintion(IVODef ivoDefenition, AbstractInterconnectModel model) {
-        this.setIvoPackageName(ivoDefenition.getPkgName());
-        if(model.isDeprecated()) {
+    public void initDefaults() {
+        this.withJsonIgnoreProperties();
+    }
+
+    @Override
+    public <K extends AbstractInterconnectModel<IVODef, ? extends Imports<IVODef>>> void initFromDefinition(IVODef ivoDefinition, K model) {
+        this.setIvoPackageName(ivoDefinition.getPkgName());
+        if (model.isDeprecated()) {
             this.withToBeRemoved();
         }
-        if(ivoDefenition.getAuditing()) {
-            this.with(IIVOAuditing.class);
+        if (Boolean.TRUE.equals(ivoDefinition.getAuditing())) {
+            this.add(IIVOAuditing.class);
             this.withDateTime();
         }
-        if(model.hasParentClazz()) {
-            this.with(model.getParentClazzPath());
+        if (model.hasParentClazz()) {
+            this.add(model.getParentClazzPath());
         }
     }
 }

@@ -2,12 +2,17 @@ package de.taimos.dvalin.interconnect.model.maven.model.event;
 
 import de.taimos.dvalin.interconnect.model.maven.imports.event.BaseEventImports;
 import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel;
+import de.taimos.dvalin.interconnect.model.maven.model.IAdditionalMemberHandler;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
 
 /**
  * @author psigloch
  */
 public abstract class AbstractEventModel extends AbstractInterconnectModel<EventDef, BaseEventImports> {
+
+    protected AbstractEventModel(IAdditionalMemberHandler... additionalMemberHandlers) {
+        super(additionalMemberHandlers);
+    }
 
     @Override
     public String getClazzPath() {

@@ -1,6 +1,7 @@
 package de.taimos.dvalin.interconnect.model.maven.imports;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -13,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -25,7 +27,7 @@ public abstract class Imports<T extends IGeneratorDefinition> extends TreeSet<St
     private static final long serialVersionUID = -4267239585429637931L;
 
     private String ivoPackageName;
-    private Set<String> internalSet = new HashSet<>();
+    private final Set<String> internalSet = new HashSet<>();
 
     /**
      * initial default imports
@@ -35,103 +37,126 @@ public abstract class Imports<T extends IGeneratorDefinition> extends TreeSet<St
     /**
      * @param definition init imports from the given definition
      * @param model      the model
+     * @param <K>        the model
      */
-    public abstract <K extends AbstractInterconnectModel> void initFromDefintion(T definition, K model);
+    public abstract <K extends AbstractInterconnectModel<T, ? extends Imports<T>>> void initFromDefinition(T definition, K model);
 
 
     /**
      * adds jsonDeserialize
      */
     public void withJsonDeserialize() {
-        this.with(JsonDeserialize.class);
+        this.add(JsonDeserialize.class);
     }
 
     /**
      * add nullable
      */
     public void withNullable() {
-        this.with(Nullable.class);
+        this.add(Nullable.class);
     }
 
     /**
      * add nonnull
      */
     public void withNonnull() {
-        this.with(Nonnull.class);
+        this.add(Nonnull.class);
     }
 
     /**
      * adds tobereomoced
      */
     public void withToBeRemoved() {
-        this.with(ToBeRemoved.class);
+        this.add(ToBeRemoved.class);
     }
 
     /**
      * adds json ignore
      */
     public void withJsonIgnore() {
-        this.with(JsonIgnore.class);
+        this.add(JsonIgnore.class);
     }
 
     /**
      * adds json pojo builder
      */
     public void withJsonPOJOBuilder() {
-        this.with(JsonPOJOBuilder.class);
+        this.add(JsonPOJOBuilder.class);
     }
 
     /**
      * adds jsontypeinfo
      */
     public void withJsonTypeInfo() {
-        this.with(JsonTypeInfo.class);
+        this.add(JsonTypeInfo.class);
+    }
+
+    /**
+     * adds jsontypeinfo
+     */
+    public void withJsonIgnoreProperties() {
+        this.add(JsonIgnoreProperties.class);
     }
 
     /**
      * adds bgidecimal
      */
     public void withBigDecimal() {
-        this.with(BigDecimal.class.getCanonicalName());
+        this.add(BigDecimal.class.getCanonicalName());
     }
 
     /**
      * adds joda time
      */
     public void withDateTime() {
-        this.with(DateTime.class.getCanonicalName());
+        this.add(DateTime.class.getCanonicalName());
     }
 
     /**
      * adds uuid
      */
     public void withUUID() {
-        this.with(UUID.class.getCanonicalName());
+        this.add(UUID.class.getCanonicalName());
     }
 
 
     /**
      * @param value the import to add as string
+     * @return true if this set did not already contain the specified element
      */
-    public void with(String value) {
-        if(!this.internalSet.contains(value)) {
-            this.add(value);
-            this.internalSet.add(value);
+    @Override
+    public boolean add(String value) {
+        if (!this.internalSet.contains(value)) {
+            super.add(value);
+            return this.internalSet.add(value);
         }
+        return false;
     }
 
     /**
      * @param clazz the import to add as class
      */
-    public void with(Class<?> clazz) {
-        this.with(clazz.getCanonicalName());
+    public void add(Class<?> clazz) {
+        this.add(clazz.getCanonicalName());
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        if (this.internalSet.remove(o)) {
+            return super.remove(o);
+        }
+        return false;
     }
 
     /**
      * @param clazz the clazz to remove
+     * @return true if this set did contain the specified element
      */
-    public void remove(Class<?> clazz) {
-        this.internalSet.remove(clazz.getCanonicalName());
+    public boolean remove(Class<?> clazz) {
+        if (this.internalSet.remove(clazz.getCanonicalName())) {
+            return super.remove(clazz.getCanonicalName());
+        }
+        return false;
     }
 
     /**
@@ -146,5 +171,25 @@ public abstract class Imports<T extends IGeneratorDefinition> extends TreeSet<St
      */
     public void setIvoPackageName(String ivoPackageName) {
         this.ivoPackageName = ivoPackageName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Imports)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        Imports<?> imports = (Imports<?>) o;
+        return Objects.equals(this.getIvoPackageName(), imports.getIvoPackageName()) && Objects.equals(this.internalSet, imports.internalSet);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.getIvoPackageName(), this.internalSet);
     }
 }

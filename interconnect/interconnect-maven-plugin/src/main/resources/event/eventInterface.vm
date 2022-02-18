@@ -8,12 +8,13 @@ import $imp;
  * $model.getComment()
  *
  * @author $model.getAuthor()
- */
+ **/
 @SuppressWarnings("all")
 #if ($model.isDeprecated())
 @Deprecated
 @ToBeRemoved(date="$model.getRemoveDate()")
 #end
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @EventDomain("$model.getDomain()")
 public interface $model.getInterfaceClazzName() $model.getInterfaceImplements(){
@@ -22,10 +23,9 @@ public interface $model.getInterfaceClazzName() $model.getInterfaceImplements(){
 	/**
 	 * property constant for $field.name
 	 * property comment: $field.comment
-	 */
+	 **/
 	public static final String PROP_$field.name.toUpperCase() = "$field.name";
 #end
-
 
 #foreach ( $field in $model.getAllFields() )
 	/**
@@ -50,7 +50,7 @@ public interface $model.getInterfaceClazzName() $model.getInterfaceImplements(){
 
 	/**
 	 * @return a clone
-	 */
+	 **/
 	public $model.getInterfaceClazzName() clone();
 
 }

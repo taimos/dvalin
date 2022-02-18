@@ -7,7 +7,7 @@ package de.taimos.dvalin.interconnect.model.maven;
  * Copyright (C) 2016 Taimos GmbH
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance add the License.
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -23,10 +23,18 @@ package de.taimos.dvalin.interconnect.model.maven;
 import de.taimos.dvalin.interconnect.model.maven.model.GeneratorModel;
 import de.taimos.dvalin.interconnect.model.maven.model.event.EventModel;
 import de.taimos.dvalin.interconnect.model.maven.model.event.InterfaceEventModel;
-import de.taimos.dvalin.interconnect.model.maven.model.ivo.EditIVOModel;
-import de.taimos.dvalin.interconnect.model.maven.model.ivo.FilterIVOModel;
 import de.taimos.dvalin.interconnect.model.maven.model.ivo.IVOModel;
 import de.taimos.dvalin.interconnect.model.maven.model.ivo.InterfaceIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.filter.FindByIdAuditedIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.filter.FindByIdIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.filter.FindIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.filter.FindInterfaceModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.modify.CreateIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.modify.DeleteIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.modify.SaveIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.model.ivo.modify.UpdateIVOModel;
+import de.taimos.dvalin.interconnect.model.maven.validation.DefinitionValidator;
+import de.taimos.dvalin.interconnect.model.maven.validation.SimpleInvalidFieldNameValidator;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.EventDef;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import org.apache.maven.plugin.AbstractMojo;
@@ -38,6 +46,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.velocity.app.Velocity;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Interconnect IVO generator
@@ -61,11 +70,45 @@ public class GenerateModel extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+        Objects.hashCode(null);
         Velocity.init(GeneratorHelper.getVelocityDefaultProps());
+        this.preExecute();
         //handle ivo generation
         this.execute(this.ivoPaths, ModelType.IVO);
+
         //handle event generation
         this.execute(this.eventPaths, ModelType.EVENT);
+    }
+
+    protected void preExecute() {
+        //overwrite if anything done pre execution is needed
+        DefinitionValidator.addFieldValidator(new SimpleInvalidFieldNameValidator("handler")); //fields add the name handler lead to issues add the ivo factory
+    }
+
+    protected void processFileAsIVO(File f) throws MojoExecutionException {
+        IVODef ivoDef = GeneratorHelper.parseXML(IVODef.class, f);
+        DefinitionValidator.validate(ivoDef);
+        GeneratorHelper.writeFile(new InterfaceIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new IVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new FindIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new FindInterfaceModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new FindByIdIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new FindByIdAuditedIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new SaveIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new CreateIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new UpdateIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new DeleteIVOModel(ivoDef, this.getLog()), this.getOutputDirectory());
+    }
+
+    protected String getOutputDirectory() {
+        return this.outputDirectory;
+    }
+
+    protected void processFileAsEvent(File f) throws MojoExecutionException {
+        EventDef eventDef = GeneratorHelper.parseXML(EventDef.class, f);
+        DefinitionValidator.validate(eventDef);
+        GeneratorHelper.writeFile(new InterfaceEventModel(eventDef, this.getLog()), this.getOutputDirectory());
+        GeneratorHelper.writeFile(new EventModel(eventDef, this.getLog()), this.getOutputDirectory());
     }
 
     private void execute(File[] dir, ModelType type) throws MojoExecutionException {
@@ -94,58 +137,50 @@ public class GenerateModel extends AbstractMojo {
             for (File defFile : defFiles) {
                 switch (type) {
                     case IVO:
-                        this.getLog().info("Generating files for IVO in " + defFile.getAbsolutePath());
-                        try {
-                            this.processFileAsIVO(defFile);
-                            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
-                            this.project.addCompileSourceRoot(path.getAbsolutePath());
-                        } catch (MojoExecutionException e) {
-                            if (e.getCause().getMessage().contains("event")) {
-                                this.getLog().warn("An event file was found in the ivo directory. Please fix this.");
-                                this.processFileAsEvent(defFile);
-                            } else {
-                                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
-                                throw e;
-                            }
-                        }
+                        this.handleIVOGeneration(f, defFile);
                         break;
                     case EVENT:
-                        this.getLog().info("Generating files for Event in " + defFile.getAbsolutePath());
-                        try {
-                            this.processFileAsEvent(defFile);
-                            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
-                            this.project.addCompileSourceRoot(path.getAbsolutePath());
-                        } catch (MojoExecutionException e) {
-                            if (e.getCause().getMessage().contains("ivo")) {
-                                this.getLog().warn("An ivo file was found in the ivo directory. Please fix this.");
-                                this.processFileAsIVO(defFile);
-                            } else {
-                                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
-                                throw e;
-                            }
-                        }
+                        this.handleEventGeneration(f, defFile);
+                        break;
+                    default:
                         break;
                 }
             }
         }
     }
 
-    protected void processFileAsIVO(File f) throws MojoExecutionException {
-        IVODef ivod = GeneratorHelper.parseXML(IVODef.class, this.getLog(), f);
-        GeneratorHelper.writeFile(this.getLog(), new InterfaceIVOModel(ivod, this.getLog()), this.getOutputDirectory());
-        GeneratorHelper.writeFile(this.getLog(), new IVOModel(ivod, this.getLog()), this.getOutputDirectory());
-        GeneratorHelper.writeFile(this.getLog(), new FilterIVOModel(ivod, this.getLog()), this.getOutputDirectory());
-        GeneratorHelper.writeFile(this.getLog(), new EditIVOModel(ivod, this.getLog()), this.getOutputDirectory());
+    private void handleEventGeneration(File f, File defFile) throws MojoExecutionException {
+        this.getLog().info("Generating files for Event in " + defFile.getAbsolutePath());
+        try {
+            this.processFileAsEvent(defFile);
+            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
+            this.project.addCompileSourceRoot(path.getAbsolutePath());
+        } catch (MojoExecutionException e) {
+            if (e.getCause().getMessage().contains("ivo")) {
+                this.getLog().warn("An ivo file was found in the ivo directory. Please fix this.");
+                this.processFileAsIVO(defFile);
+            } else {
+                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
+                throw e;
+            }
+        }
     }
 
-    protected String getOutputDirectory() {
-        return this.outputDirectory;
-    }
-
-    protected void processFileAsEvent(File f) throws MojoExecutionException {
-        EventDef eventd = GeneratorHelper.parseXML(EventDef.class, this.getLog(), f);
-        GeneratorHelper.writeFile(this.getLog(), new InterfaceEventModel(eventd, this.getLog()), this.getOutputDirectory());
-        GeneratorHelper.writeFile(this.getLog(), new EventModel(eventd, this.getLog()), this.getOutputDirectory());
+    private void handleIVOGeneration(File f, File defFile) throws MojoExecutionException {
+        this.getLog().info("Generating files for IVO in " + defFile.getAbsolutePath());
+        try {
+            this.processFileAsIVO(defFile);
+            File path = new File(this.getOutputDirectory() + GeneratorModel.DEFAULT_TARGET_DIR);
+            this.project.addCompileSourceRoot(path.getAbsolutePath());
+        } catch (MojoExecutionException e) {
+            if (e.getCause().getMessage().contains("event")) {
+                this.getLog().warn("An event file was found in the ivo directory. Please fix this.");
+                this.processFileAsEvent(defFile);
+            } else {
+                this.getLog().error("Failed to read input file " + f.getAbsolutePath(), e);
+                throw e;
+            }
+        }
     }
 
 

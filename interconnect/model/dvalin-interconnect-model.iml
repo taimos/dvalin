@@ -22,6 +22,7 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.12.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-joda:2.12.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-guava:2.12.6" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:30.1.1-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />

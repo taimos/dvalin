@@ -1,0 +1,42 @@
+package ${model.getPackageName()}.requests;
+
+#foreach ( $imp in $model.getImports() )
+import $imp;
+#end
+
+/**
+ * $model.getComment()
+ *
+ * @author $model.getAuthor()
+ **/
+@SuppressWarnings("all")
+#if ($model.isDeprecated())
+@Deprecated
+@ToBeRemoved(date="$model.getRemoveDate()")
+#end
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+public interface ${clazzName} extends IVO {
+
+    /**
+     * property constant for value
+     * property comment: the brand value
+     */
+    public static final String PROP_VALUE = "value";
+
+    /**
+     * the brand value
+     * This field is required.
+     *
+     * @return the value for value
+     *
+     */
+    @Nonnull
+    public ${model.getClazzName()} getValue();
+
+    /**
+     * @return a clone
+     */
+    public ${clazzName} clone();
+
+}
