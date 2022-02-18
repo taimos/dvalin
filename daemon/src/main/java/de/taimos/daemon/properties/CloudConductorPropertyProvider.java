@@ -36,12 +36,15 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 	public static final String CLOUDCONDUCTOR_URL = "CLOUDCONDUCTOR_URL";
 	public static final String TEMPLATE_NAME = "TEMPLATE_NAME";
 	public static final String CLOUDCONDUCTOR_TOKEN = "CLOUDCONDUCTOR_TOKEN";
+    public static final String CLOUDCONDUCTOR_SECURE_CONNECTIONS = "CLOUDCONDUCTOR_SECURE_CONNECTIONS";
+    public static final String CLOUDCONDUCTOR_TRUST_STORE = "javax.net.ssl.trustStore";
 
 	public static final String CLOUDCONDUCTOR_PROP_FILE = "CLOUDCONDUCTOR_PROP_FILE";
 	public static final String CLOUDCONDUCTOR_PROP_FILE_TOKEN = "AUTH_TOKEN";
 	public static final String CLOUDCONDUCTOR_PROP_FILE_DEFAULT_PATH = "/opt/cloudconductor-agent/cloudconductor-agent.properties";
+    private static final String HTTPS = "https";
 
-	private String server;
+    private String server;
 	private String template;
 	private String jwt;
 
@@ -62,17 +65,35 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 	public CloudConductorPropertyProvider(String server, String template, String token) {
 		this.server = server;
 		this.template = template;
-		this.jwt = this.getAuthToken(token);
+        this.checkSecureConnections();
+        if(token != null) {
+            this.jwt = this.getAuthToken(token);
+        }
 		this.readPropertyFile(System.getenv(CloudConductorPropertyProvider.CLOUDCONDUCTOR_PROP_FILE));
 	}
+
+    private void checkSecureConnections() {
+        String secureConnection = CloudConductorPropertyProvider.getProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_SECURE_CONNECTIONS);
+        if (Boolean.parseBoolean(secureConnection)){
+            this.setProtocol(CloudConductorPropertyProvider.HTTPS);
+        }
+    }
+
+    private static String getProperty(String name) {
+        String property = System.getProperty(name);
+        if(property == null) {
+            property = System.getenv(name);
+        }
+        return property;
+    }
 
 	/**
 	 * @param protocol http or https, http is default;
 	 * @return this provider
 	 */
 	public CloudConductorPropertyProvider setProtocol(String protocol) {
-		if(protocol.equalsIgnoreCase("https")) {
-			this.protocol = "https";
+		if(protocol.equalsIgnoreCase(CloudConductorPropertyProvider.HTTPS)) {
+			this.protocol = CloudConductorPropertyProvider.HTTPS;
 		} else {
 			this.protocol = "http";
 		}
@@ -113,6 +134,16 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 				if(this.template == null && prop.containsKey(CloudConductorPropertyProvider.TEMPLATE_NAME)) {
 					this.template = prop.getProperty(CloudConductorPropertyProvider.TEMPLATE_NAME);
 				}
+                if(prop.containsKey(CloudConductorPropertyProvider.CLOUDCONDUCTOR_SECURE_CONNECTIONS)){
+                    String secureConnection = prop.getProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_SECURE_CONNECTIONS);
+                    if (Boolean.parseBoolean(secureConnection)){
+                        this.setProtocol(CloudConductorPropertyProvider.HTTPS);
+                        String trustStore = prop.getProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_TRUST_STORE);
+                        if(trustStore != null){
+                            System.setProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_TRUST_STORE, trustStore);
+                        }
+                    }
+                }
 				if(this.jwt == null && prop.containsKey(CloudConductorPropertyProvider.CLOUDCONDUCTOR_PROP_FILE_TOKEN)) {
 					this.jwt = this.getAuthToken(prop.getProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_PROP_FILE_TOKEN));
 				}
