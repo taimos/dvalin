@@ -12,7 +12,7 @@
     * Junit 4.13.2
     * ActiveMQ 5.16.2
     * Hibernate 5.5.9
-    * HTTPUtils 2.1
+    * HTTPUtils 2.2
     * Concordion 3.1.3
     * Nimbus JOSE+JWT 9.15,2
     * JSON Small and Fast Parser 1.3.3
@@ -22,6 +22,13 @@
     * Bson 2.12.0
 * BREAKING: commented out JasperReports to get the code compiling
 * BREAKING: replaced Fongo with MongoDB Java Server 1.39.0 (https://github.com/bwaldvogel/mongo-java-server)
+* Switched to Log4J2.x
+* Optional additional parameter for PostgreSQL connection string
+* CloudConductorPropertyProvider: Allow setting https with configuration parameter
+* Interconnect secury message crypto:
+    * AES Keys are no longer Hex-encoded but Base64-encoded. This avoids limitation to only 16 characters.
+    * BREAKING: Changed AES key encoding means potentially a new key is needed (some old keys work, some not)
+    * Changed AES Block Mode from unsecure ECB to secure GCM
 
 # Version 1.30
 * Update dependencies
