@@ -1,12 +1,12 @@
 # current master
 * Update dependencies
     * Spring 4.3.30
-    * AWS 1.12.143
+    * AWS 1.12.163
     * Jackson 2.12.6
     * Apache CXF 3.4.5
-    * Jetty 9.4.44.v20210927
+    * Jetty 9.4.45.v20220203
     * Joda-Time 2.10.13
-    * slf4j 1.7.33
+    * slf4j 1.7.36
     * Powermock 2.0.9
     * Mockito 3.3.3
     * Junit 4.13.2
@@ -14,12 +14,13 @@
     * Hibernate 5.5.9
     * HTTPUtils 2.2
     * Concordion 3.1.3
-    * Nimbus JOSE+JWT 9.15,2
+    * Nimbus JOSE+JWT 9.20
     * JSON Small and Fast Parser 1.3.3
     * Liquibase 4.7.1
     * Mongo Java Driver 3.12.10
     * Jongo 1.5.0
     * Bson 2.12.0
+    * Swagger 2.1.13
 * BREAKING: commented out JasperReports to get the code compiling
 * BREAKING: replaced Fongo with MongoDB Java Server 1.39.0 (https://github.com/bwaldvogel/mongo-java-server)
 * Switched to Log4J2.x

@@ -53,14 +53,14 @@
         <org.springframework.version>4.3.30.RELEASE</org.springframework.version>
         <jackson.version>2.12.6</jackson.version>
         <joda.time.version>2.10.13</joda.time.version>
-        <slf4j.version>1.7.33</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <log4j.version>2.17.1</log4j.version>
         <powermock.version>2.0.9</powermock.version>
         <junit.version>4.13.2</junit.version>
-        <aws.version>1.12.143</aws.version>
+        <aws.version>1.12.163</aws.version>
         <activemq.version>5.16.2</activemq.version>
         <cxf.version>3.4.5</cxf.version>
-        <jetty.version>9.4.44.v20210927</jetty.version>
+        <jetty.version>9.4.45.v20220203</jetty.version>
         <hibernate.version>5.5.9.Final</hibernate.version>
         <http.version>2.2</http.version>
         <velocity.version>2.3</velocity.version>
