@@ -9,9 +9,9 @@ package de.taimos.dvalin.cloud.aws;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.amazonaws.services.kms.AWSKMSClient;
 import com.amazonaws.services.kms.model.EncryptRequest;
@@ -42,39 +42,39 @@ import de.taimos.dvalin.cloud.aws.crypt.CryptoService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CryptoServiceTest {
-    
+
     private static final String KMS_KEY_ID = "KMSKeyId";
-    
+
     @Mock
     private AWSKMSClient awskmsClient;
-    
+
     private CryptoService service;
-    
+
     @Before
     public void setUp() throws Exception {
         this.service = new CryptoService();
-        
+
         Field ec2Field = CryptoService.class.getDeclaredField("kmsClient");
         ec2Field.setAccessible(true);
         ec2Field.set(this.service, this.awskmsClient);
-        
+
         Field keyField = CryptoService.class.getDeclaredField("kmsKeyId");
         keyField.setAccessible(true);
         keyField.set(this.service, KMS_KEY_ID);
     }
-    
+
     @Test
     public void shouldEncryptStringWithContext() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.wrap("foobar".getBytes("UTF-8"));
         String stringToEncrypt = "toEncrypt";
-        
+
         EncryptResult result = new EncryptResult().withKeyId(KMS_KEY_ID).withCiphertextBlob(byteBuffer);
         Mockito.when(this.awskmsClient.encrypt(Mockito.any())).thenReturn(result);
-        
+
         Map<String, String> map = new HashMap<>();
         map.put("key", "value");
         ByteBuffer buffer = this.service.encrypt(stringToEncrypt, map);
-        
+
         ArgumentCaptor<EncryptRequest> captor = ArgumentCaptor.forClass(EncryptRequest.class);
         Mockito.verify(this.awskmsClient).encrypt(captor.capture());
         EncryptRequest request = captor.getValue();
