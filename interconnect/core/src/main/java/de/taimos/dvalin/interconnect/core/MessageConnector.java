@@ -20,16 +20,13 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
-import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
-import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
-import de.taimos.dvalin.interconnect.model.CryptoException;
-import de.taimos.dvalin.interconnect.model.MessageCryptoUtil;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQTextMessage;
-import org.apache.activemq.pool.PooledConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
@@ -43,23 +40,23 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TextMessage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.model.CryptoException;
+import de.taimos.dvalin.interconnect.model.MessageCryptoUtil;
+import org.apache.activemq.command.ActiveMQTextMessage;
+import org.apache.activemq.pool.PooledConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Connector to connect to JMS providers.
  */
 public final class MessageConnector {
 
-    /**
-     * name of the system property that contains the interconnect broker URL
-     */
-    public static final String SYSPROP_IBROKERURL = "interconnect.jms.broker";
+
     /**
      * name of the system property that contains the interconnect update topic name
      */
@@ -107,7 +104,7 @@ public final class MessageConnector {
      * @throws InfrastructureException of connection error
      */
     public static void start() throws InfrastructureException {
-        MessageConnector.start(System.getProperty(MessageConnector.SYSPROP_IBROKERURL));
+        MessageConnector.start(System.getProperty(DvalinConnectionFactory.SYSPROP_IBROKERURL));
     }
 
     private static ExceptionListener createMqErrorListener() {
@@ -126,24 +123,23 @@ public final class MessageConnector {
      */
     public static void start(final String brokerUrl) throws InfrastructureException {
         if (MessageConnector.started.compareAndSet(false, true)) {
-            try {
-                final ActiveMQConnectionFactory mqFactory = new ActiveMQConnectionFactory(brokerUrl);
-                mqFactory.setExceptionListener(MessageConnector.createMqErrorListener());
+            DvalinConnectionFactory dvalinConnectionFactory = new DvalinConnectionFactory(brokerUrl);
+            dvalinConnectionFactory.setExceptionListener(MessageConnector.createMqErrorListener());
+            MessageConnector.pooledConnectionFactory = new ActiveMQPooledConnectionFactory().initDefault(dvalinConnectionFactory);
+        }
+    }
 
-                // Set up message queue connection.
-                MessageConnector.pooledConnectionFactory = new PooledConnectionFactory(mqFactory);
-                MessageConnector.pooledConnectionFactory.setCreateConnectionOnStartup(true);
-                MessageConnector.pooledConnectionFactory.setIdleTimeout(0);
-                MessageConnector.pooledConnectionFactory.setMaxConnections(3);
-                MessageConnector.pooledConnectionFactory.setMaximumActiveSessionPerConnection(100);
-                MessageConnector.pooledConnectionFactory.setTimeBetweenExpirationCheckMillis(30000);
-                MessageConnector.pooledConnectionFactory.setBlockIfSessionPoolIsFull(false);
-
-                // Start the pooled connection factory.
-                MessageConnector.pooledConnectionFactory.start();
-            } catch (final Exception e) {
-                throw new InfrastructureException(MessageConnector.CONNECTION_START_FAIL, e);
-            }
+    /**
+     * @param brokerUrl the URL of the Interconnect message broker
+     * @param userName  the username
+     * @param password  the password
+     * @throws InfrastructureException of connection error
+     */
+    public static void start(final String brokerUrl, final String userName, final String password) throws InfrastructureException {
+        if (MessageConnector.started.compareAndSet(false, true)) {
+            DvalinConnectionFactory dvalinConnectionFactory = new DvalinConnectionFactory(brokerUrl, userName, password);
+            dvalinConnectionFactory.setExceptionListener(MessageConnector.createMqErrorListener());
+            MessageConnector.pooledConnectionFactory = new ActiveMQPooledConnectionFactory().initDefault(dvalinConnectionFactory);
         }
     }
 
