@@ -20,6 +20,8 @@ package de.taimos.dvalin.interconnect.core.config;
  * #L%
  */
 
+import javax.jms.ConnectionFactory;
+
 import de.taimos.dvalin.interconnect.core.daemon.DaemonRequestResponse;
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonRequestResponse;
 import de.taimos.dvalin.interconnect.core.spring.DaemonMessageListener;
@@ -37,11 +39,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.jms.ConnectionFactory;
 
 
 @Configuration
@@ -58,11 +59,25 @@ public class JMSConfig {
     @Value("${serviceName}")
     private String serviceName;
 
+    @Value("${interconnect.jms.userName:#{null}}")
+    private String userName;
+
+    @Value("${interconnect.jms.password:}")
+    private String password;
+
     @Bean
     public ConnectionFactory jmsConnectionFactory() {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
         factory.setBrokerURL(this.brokerUrl);
-        return factory;
+        if (this.userName == null || this.userName.isEmpty()) {
+            return factory;
+        }
+        UserCredentialsConnectionFactoryAdapter credentialConnectionFactory = new UserCredentialsConnectionFactoryAdapter();
+        credentialConnectionFactory.setTargetConnectionFactory(factory);
+        credentialConnectionFactory.setUsername(this.userName);
+        credentialConnectionFactory.setPassword(this.password);
+        return credentialConnectionFactory;
+
     }
 
 
