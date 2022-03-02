@@ -20,6 +20,10 @@ package de.taimos.dvalin.interconnect.core.config;
  * #L%
  */
 
+import javax.jms.ConnectionFactory;
+
+import de.taimos.dvalin.interconnect.core.ActiveMQPooledConnectionFactory;
+import de.taimos.dvalin.interconnect.core.DvalinConnectionFactory;
 import de.taimos.dvalin.interconnect.core.daemon.DaemonRequestResponse;
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonRequestResponse;
 import de.taimos.dvalin.interconnect.core.spring.DaemonMessageListener;
@@ -27,7 +31,6 @@ import de.taimos.dvalin.interconnect.core.spring.IDaemonMessageHandlerFactory;
 import de.taimos.dvalin.interconnect.core.spring.IDaemonMessageSender;
 import de.taimos.dvalin.interconnect.core.spring.SingleDaemonMessageHandler;
 import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -40,8 +43,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.jms.ConnectionFactory;
 
 
 @Configuration
@@ -58,24 +59,22 @@ public class JMSConfig {
     @Value("${serviceName}")
     private String serviceName;
 
+    @Value("${interconnect.jms.userName:#{null}}")
+    private String userName;
+
+    @Value("${interconnect.jms.password:}")
+    private String password;
+
     @Bean
     public ConnectionFactory jmsConnectionFactory() {
-        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-        factory.setBrokerURL(this.brokerUrl);
-        return factory;
+        return new DvalinConnectionFactory(this.brokerUrl, this.userName, this.password);
+
     }
 
 
     @Bean(destroyMethod = "stop")
     public PooledConnectionFactory jmsFactory(ConnectionFactory jmsConnectionFactory) {
-        PooledConnectionFactory pool = new PooledConnectionFactory();
-        pool.setConnectionFactory(jmsConnectionFactory);
-        pool.setCreateConnectionOnStartup(true);
-        pool.setIdleTimeout(0);
-        pool.setMaxConnections(3);
-        pool.setMaximumActiveSessionPerConnection(100);
-        pool.setBlockIfSessionPoolIsFull(false);
-        return pool;
+        return new ActiveMQPooledConnectionFactory().initDefault(jmsConnectionFactory);
     }
 
 
