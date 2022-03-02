@@ -25,6 +25,7 @@
 * BREAKING: replaced Fongo with MongoDB Java Server 1.39.0 (https://github.com/bwaldvogel/mongo-java-server)
 * Switched to Log4J2.x
 * Optional additional parameter for PostgreSQL connection string
+* Optional addition to use authentication with interconnect/ActiveMQ
 * CloudConductorPropertyProvider: Allow setting https with configuration parameter
 * Interconnect secury message crypto:
     * AES Keys are no longer Hex-encoded but Base64-encoded. This avoids limitation to only 16 characters.

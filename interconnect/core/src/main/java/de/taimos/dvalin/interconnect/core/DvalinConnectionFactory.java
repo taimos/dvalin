@@ -6,6 +6,8 @@ import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ClientInternalExceptionListener;
+import org.apache.activemq.transport.TransportListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter;
@@ -93,6 +95,48 @@ public class DvalinConnectionFactory implements ConnectionFactory {
         } else if (this.innerAdapter instanceof UserCredentialsConnectionFactoryAdapter) {
             if (this.innerFactory instanceof ActiveMQConnectionFactory) {
                 ((ActiveMQConnectionFactory) this.innerFactory).setExceptionListener(listener);
+            }
+        }
+
+    }
+
+    /**
+     * @param trustAllPackages trust all packages, default false
+     */
+    public void setTrustAllPackages(boolean trustAllPackages) {
+        if (this.innerAdapter instanceof ActiveMQConnectionFactory) {
+            ((ActiveMQConnectionFactory) this.innerAdapter).setTrustAllPackages(trustAllPackages);
+        } else if (this.innerAdapter instanceof UserCredentialsConnectionFactoryAdapter) {
+            if (this.innerFactory instanceof ActiveMQConnectionFactory) {
+                ((ActiveMQConnectionFactory) this.innerFactory).setTrustAllPackages(trustAllPackages);
+            }
+        }
+
+    }
+
+    /**
+     * @param listener client internal exception listener
+     */
+    public void setClientInternalExceptionListener(ClientInternalExceptionListener listener) {
+        if (this.innerAdapter instanceof ActiveMQConnectionFactory) {
+            ((ActiveMQConnectionFactory) this.innerAdapter).setClientInternalExceptionListener(listener);
+        } else if (this.innerAdapter instanceof UserCredentialsConnectionFactoryAdapter) {
+            if (this.innerFactory instanceof ActiveMQConnectionFactory) {
+                ((ActiveMQConnectionFactory) this.innerFactory).setClientInternalExceptionListener(listener);
+            }
+        }
+
+    }
+
+    /**
+     * @param listener transport exception listener
+     */
+    public void setTransportListener(TransportListener listener) {
+        if (this.innerAdapter instanceof ActiveMQConnectionFactory) {
+            ((ActiveMQConnectionFactory) this.innerAdapter).setTransportListener(listener);
+        } else if (this.innerAdapter instanceof UserCredentialsConnectionFactoryAdapter) {
+            if (this.innerFactory instanceof ActiveMQConnectionFactory) {
+                ((ActiveMQConnectionFactory) this.innerFactory).setTransportListener(listener);
             }
         }
 
