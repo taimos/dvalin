@@ -10,7 +10,7 @@
     * Powermock 2.0.9
     * Mockito 3.3.3
     * Junit 4.13.2
-    * ActiveMQ 5.16.2
+    * ActiveMQ 5.16.4
     * Hibernate 5.5.9
     * HTTPUtils 2.2
     * Concordion 3.1.3

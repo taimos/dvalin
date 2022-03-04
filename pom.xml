@@ -58,7 +58,7 @@
         <powermock.version>2.0.9</powermock.version>
         <junit.version>4.13.2</junit.version>
         <aws.version>1.12.163</aws.version>
-        <activemq.version>5.16.2</activemq.version>
+        <activemq.version>5.16.4</activemq.version>
         <cxf.version>3.4.5</cxf.version>
         <jetty.version>9.4.45.v20220203</jetty.version>
         <hibernate.version>5.5.9.Final</hibernate.version>
