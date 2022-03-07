@@ -1,4 +1,6 @@
 # current master
+
+## 1.32
 * Update dependencies
     * Spring 4.3.30
     * AWS 1.12.163
