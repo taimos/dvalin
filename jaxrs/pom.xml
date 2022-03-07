@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-parent</artifactId>
-        <version>1.32-SNAPSHOT</version>
+        <version>1.32</version>
     </parent>
     <artifactId>dvalin-jaxrs</artifactId>
     <name>JAX-RS support for dvalin using Apache CXF</name>
