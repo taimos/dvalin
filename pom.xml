@@ -50,7 +50,7 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>4.3.30.RELEASE</org.springframework.version>
+        <org.springframework.version>5.3.18</org.springframework.version>
         <jackson.version>2.12.6</jackson.version>
         <joda.time.version>2.10.13</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
