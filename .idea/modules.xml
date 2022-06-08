@@ -32,7 +32,6 @@
       <module fileurl="file://$PROJECT_DIR$/orchestration/etcd/dvalin-orchestration-etcd.iml" filepath="$PROJECT_DIR$/orchestration/etcd/dvalin-orchestration-etcd.iml" />
       <module fileurl="file://$PROJECT_DIR$/orchestration/dvalin-orchestration-parent.iml" filepath="$PROJECT_DIR$/orchestration/dvalin-orchestration-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/dvalin-parent.iml" filepath="$PROJECT_DIR$/dvalin-parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/template/jasperreports/dvalin-template-jasperreports.iml" filepath="$PROJECT_DIR$/template/jasperreports/dvalin-template-jasperreports.iml" />
       <module fileurl="file://$PROJECT_DIR$/template/dvalin-template-parent.iml" filepath="$PROJECT_DIR$/template/dvalin-template-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" filepath="$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" />
       <module fileurl="file://$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" filepath="$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" />
