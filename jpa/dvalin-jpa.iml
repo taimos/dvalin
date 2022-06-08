@@ -73,8 +73,8 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.20" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:5.3.20" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:4.7.1" level="project" />
-    <orderEntry type="library" name="Maven: com.mattbertolini:liquibase-slf4j:4.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:4.11.0" level="project" />
+    <orderEntry type="library" name="Maven: com.mattbertolini:liquibase-slf4j:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:31.1-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
