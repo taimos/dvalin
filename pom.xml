@@ -70,7 +70,7 @@
         <mongo.version>3.12.11</mongo.version>
         <mongobee.version>0.12</mongobee.version>
         <mongo-java-server.version>1.40.0</mongo-java-server.version>
-        <xdocreport.version>1.0.6</xdocreport.version>
+        <xdocreport.version>2.0.3</xdocreport.version>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/taimos/dvalin.git</connection>

@@ -18,6 +18,7 @@
     * Swagger 2.2.0
 	* etcd4j 2.18.0
 	* Hazelcast 5.1.1
+	* XDocReport 2.0.3
 * Moved Mongo Java Server to optional dependency (in most cases Fake Mongo is not needed or can be added)
 
 ## 1.32
