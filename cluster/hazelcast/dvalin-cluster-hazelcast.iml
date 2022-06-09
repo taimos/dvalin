@@ -39,9 +39,8 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.20" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.20" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast-client:3.7" level="project" />
-    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast:3.7" level="project" />
-    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast-spring:3.7" level="project" />
+    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast:5.1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.hazelcast:hazelcast-spring:5.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:31.1-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />

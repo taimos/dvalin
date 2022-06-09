@@ -16,6 +16,8 @@
     * Nimbus JOSE+JWT 9.23
     * JSON Small and Fast Parser 2.4.8
     * Swagger 2.2.0
+	* etcd4j 2.18.0
+	* Hazelcast 5.1.1
 * Moved Mongo Java Server to Test Scope
 
 ## 1.32

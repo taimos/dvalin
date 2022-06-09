@@ -8,7 +8,7 @@
     <artifactId>dvalin-cluster-hazelcast</artifactId>
     <name>Dvalin Hazelcast support</name>
     <properties>
-        <hazelcast.version>3.7</hazelcast.version>
+        <hazelcast.version>5.1.1</hazelcast.version>
     </properties>
     <dependencies>
         <dependency>
@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-client</artifactId>
+            <artifactId>hazelcast</artifactId>
             <version>${hazelcast.version}</version>
         </dependency>
         <dependency>
