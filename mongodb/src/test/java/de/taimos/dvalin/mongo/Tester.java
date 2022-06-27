@@ -23,6 +23,14 @@ package de.taimos.dvalin.mongo;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.mongobee.Mongobee;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.client.ListIndexesIterable;
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import org.bson.Document;
 import org.joda.time.DateTime;
 import org.jongo.Mapper;
@@ -31,17 +39,6 @@ import org.jongo.marshall.jackson.JacksonMapper.Builder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.mongobee.Mongobee;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.client.ListIndexesIterable;
-import com.mongodb.util.JSON;
-
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
 
 public class Tester extends ABaseTest {
 
@@ -140,10 +137,10 @@ public class Tester extends ABaseTest {
 
         DBObject dbObject = this.createMapper().getMarshaller().marshall(o).toDBObject();
         System.out.println(dbObject);
-        String json = JSON.serialize(dbObject);
+        String json = dbObject.toString();
         System.out.println(json);
 
-        Object parse = JSON.parse(json);
+        Object parse = BasicDBObject.parse(json);
         System.out.println(parse);
         Assert.assertEquals(BasicDBObject.class, parse.getClass());
         Assert.assertEquals(Double.class, ((DBObject) parse).get("value").getClass());

@@ -64,9 +64,9 @@
         <hibernate.version>5.5.9.Final</hibernate.version>
         <http.version>2.2</http.version>
         <velocity.version>2.3</velocity.version>
-        <bson.version>2.12.0</bson.version>
+        <bson.version>2.13.1</bson.version>
         <jongo.version>1.5.0</jongo.version>
-        <mongo.version>3.12.10</mongo.version>
+        <mongo.version>4.6.1</mongo.version>
         <mongobee.version>0.12</mongobee.version>
         <mongo-java-server.version>1.39.0</mongo-java-server.version>
         <xdocreport.version>1.0.6</xdocreport.version>
@@ -351,7 +351,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mongodb</groupId>
-                <artifactId>mongo-java-driver</artifactId>
+                <artifactId>mongodb-driver-legacy</artifactId>
                 <version>${mongo.version}</version>
             </dependency>
 

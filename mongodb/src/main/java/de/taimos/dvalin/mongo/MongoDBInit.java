@@ -25,20 +25,18 @@ import java.util.Scanner;
 
 import javax.annotation.PostConstruct;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
-
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.util.JSON;
-
-import de.taimos.daemon.spring.conditional.OnSystemProperty;
 
 
 /**
@@ -86,14 +84,8 @@ public class MongoDBInit {
                     int lines = 0;
                     while (scan.hasNextLine()) {
                         String json = scan.nextLine();
-                        Object parse = JSON.parse(json);
-                        if (parse instanceof DBObject) {
-                            DBObject dbObject = (DBObject) parse;
-                            dbCollection.insertOne(dbObject);
-                        } else {
-                            MongoDBInit.LOGGER.error("Invalid object found: {}", parse);
-                            throw new RuntimeException("Invalid object");
-                        }
+                        DBObject parse = BasicDBObject.parse(json);
+                        dbCollection.insertOne(parse);
                         lines++;
                     }
                     MongoDBInit.LOGGER.info("Imported {} objects into collection {}", lines, collection);
