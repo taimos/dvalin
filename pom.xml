@@ -50,17 +50,18 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>4.3.30.RELEASE</org.springframework.version>
-        <jackson.version>2.12.6</jackson.version>
-        <joda.time.version>2.10.13</joda.time.version>
+        <org.springframework.version>5.3.20</org.springframework.version>
+        <jackson.version>2.12.7</jackson.version>
+        <joda.time.version>2.10.14</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <log4j.version>2.17.1</log4j.version>
+        <log4j.version>2.17.2</log4j.version>
         <powermock.version>2.0.9</powermock.version>
         <junit.version>4.13.2</junit.version>
-        <aws.version>1.12.163</aws.version>
-        <activemq.version>5.16.4</activemq.version>
-        <cxf.version>3.4.5</cxf.version>
-        <jetty.version>9.4.45.v20220203</jetty.version>
+        <aws.version>1.12.231</aws.version>
+        <activemq.version>5.16.5</activemq.version>
+        <cxf.version>3.5.2</cxf.version>
+        <jetty.version>9.4.46.v20220331</jetty.version>
+        <guava.version>31.1-jre</guava.version>
         <hibernate.version>5.5.9.Final</hibernate.version>
         <http.version>2.2</http.version>
         <velocity.version>2.3</velocity.version>
@@ -68,8 +69,8 @@
         <jongo.version>1.5.0</jongo.version>
         <mongo.version>4.6.1</mongo.version>
         <mongobee.version>0.12</mongobee.version>
-        <mongo-java-server.version>1.39.0</mongo-java-server.version>
-        <xdocreport.version>1.0.6</xdocreport.version>
+        <mongo-java-server.version>1.40.0</mongo-java-server.version>
+        <xdocreport.version>2.0.3</xdocreport.version>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/taimos/dvalin.git</connection>
@@ -86,7 +87,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>30.1.1-jre</version>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -106,7 +107,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.11</version>
+                <version>1.15</version>
             </dependency>
             <dependency>
                 <groupId>de.taimos</groupId>
