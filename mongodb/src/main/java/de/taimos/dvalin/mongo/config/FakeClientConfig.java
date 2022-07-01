@@ -20,8 +20,10 @@ package de.taimos.dvalin.mongo.config;
  * #L%
  */
 
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClients;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
@@ -43,6 +45,13 @@ public class FakeClientConfig {
     @Bean
     public MongoClient mongoClient(MongoServer mongoServer) {
         return new MongoClient(new ServerAddress(mongoServer.bind()));
+    }
+
+    @Bean
+    public com.mongodb.client.MongoClient mongoClient2(MongoServer mongoServer) {
+        ServerAddress serverAddress = new ServerAddress(mongoServer.bind());
+        ConnectionString uri = new ConnectionString(String.format("mongodb://%s:%d", serverAddress.getHost(), serverAddress.getPort()));
+        return MongoClients.create(uri);
     }
 
 }

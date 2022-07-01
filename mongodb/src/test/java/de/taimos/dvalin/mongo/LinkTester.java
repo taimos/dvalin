@@ -26,14 +26,13 @@ package de.taimos.dvalin.mongo;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import de.taimos.dvalin.mongo.links.DLinkDAO;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.github.mongobee.Mongobee;
-
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
-import de.taimos.dvalin.mongo.links.DLinkDAO;
 
 /**
  * Copyright 2015 Taimos GmbH<br>
@@ -59,11 +58,10 @@ public class LinkTester {
             dao2Field.set(LinkTester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTester.dao)));
             dao2Field.set(LinkTester.ldao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTester.ldao)));
 
-            Mongobee bee = new Mongobee(ABaseTest.mongo);
-            bee.setChangeLogsScanPackage("de.taimos.dvalin.mongo.changelog");
-            bee.setDbName(ABaseTest.dbName);
-            bee.setEnabled(true);
-            bee.execute();
+
+            MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
+            driver.disableTransaction();
+            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
             LinkTester.dao.init();
             LinkTester.ldao.init();
         } catch (Exception e) {

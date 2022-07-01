@@ -26,11 +26,12 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.mongobee.Mongobee;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.ListIndexesIterable;
 import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
 import org.bson.Document;
 import org.joda.time.DateTime;
 import org.jongo.Mapper;
@@ -49,7 +50,7 @@ public class Tester extends ABaseTest {
         try {
             Field mongoField = AbstractMongoDAO.class.getDeclaredField("mongo");
             mongoField.setAccessible(true);
-            mongoField.set(Tester.dao, ABaseTest.mongo);
+            mongoField.set(Tester.dao, ABaseTest.oldMongo);
 
             Field jongoField = AbstractMongoDAO.class.getDeclaredField("jongo");
             jongoField.setAccessible(true);
@@ -63,11 +64,9 @@ public class Tester extends ABaseTest {
             daoField.setAccessible(true);
             daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
 
-            Mongobee bee = new Mongobee(ABaseTest.mongo);
-            bee.setChangeLogsScanPackage("de.taimos.dvalin.mongo.changelog");
-            bee.setDbName(ABaseTest.dbName);
-            bee.setEnabled(true);
-            bee.execute();
+            MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
+            driver.disableTransaction();
+            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
             Tester.dao.init();
         } catch (Exception e) {
             e.printStackTrace();
