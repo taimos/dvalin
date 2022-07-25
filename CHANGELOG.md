@@ -7,19 +7,21 @@
     * Jetty 9.4.46.v20220331
     * Joda-Time 2.10.14
     * ActiveMQ 5.16.5
-	* Log4J 2.17.2
-	* Guava 31.1
-	* Commons Codec 1.15
-	* Mongo Java Server 1.40.0
+    * Log4J 2.17.2
+    * Guava 31.1
+    * Commons Codec 1.15
+    * Mongo Java Server 1.40.0
     * Liquibase 4.11.0
-    * Mongo Java Driver 3.12.11
+    * Mongo Java Driver 4.7.0
+    * Bson 2.13.1
     * Nimbus JOSE+JWT 9.23
     * JSON Small and Fast Parser 2.4.8
     * Swagger 2.2.0
-	* etcd4j 2.18.0
-	* Hazelcast 5.1.1
-	* XDocReport 2.0.3
+    * etcd4j 2.18.0
+    * Hazelcast 5.1.1
+    * XDocReport 2.0.3
 * Moved Mongo Java Server to optional dependency (in most cases Fake Mongo is not needed or can be added)
+* BREAKING: replaced mongobee with Mongock (5.0.36), mostly backwards compatibility but configuration(see Class `MongoDBConfig`) and annotations (@Changelog and @ChangeSet) have to be replaced by Mongock equivalent https://docs.mongock.io/v5/features/legacy-migration/index.html  
 
 ## 1.32
 * Update dependencies
