@@ -26,6 +26,7 @@ package de.taimos.dvalin.mongo;
 import java.math.BigDecimal;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.DB;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -51,6 +52,7 @@ public class ABaseTest {
     public static final MongoClient mongo = MongoClients.create(new ConnectionString(String.format("mongodb://%s:%d", ABaseTest.serverAddress.getHost(), ABaseTest.serverAddress.getPort())));
     public static final com.mongodb.MongoClient oldMongo = new com.mongodb.MongoClient(new ServerAddress(new MongoServer(new MemoryBackend().version(ServerVersion.MONGO_3_6)).bind()));;
 
+    public static final DB oldDB = ABaseTest.oldMongo.getDB(ABaseTest.dbName);
     public static final Jongo jongo = JongoFactory.createDefault(ABaseTest.oldMongo.getDB(ABaseTest.dbName));
     public static final MongoDatabase database = ABaseTest.mongo.getDatabase(ABaseTest.dbName);
 

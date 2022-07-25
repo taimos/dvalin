@@ -51,28 +51,27 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.20" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.20" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-legacy:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:bson:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:4.6.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.mongodb:bson-record-codec:4.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-sync:4.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-legacy:4.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:bson:4.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:4.7.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.mongodb:bson-record-codec:4.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-sync:4.7.0" level="project" />
     <orderEntry type="library" name="Maven: org.jongo:jongo:1.5.0" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongock-standalone:5.0.33" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongock-standalone-base:5.0.33" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongock-runner-core:5.0.33" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongock-standalone:5.0.36" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongock-standalone-base:5.0.36" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongock-runner-core:5.0.36" level="project" />
     <orderEntry type="library" name="Maven: org.reflections:reflections:0.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-artifact:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:3.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongodb-sync-v4-driver:5.0.33" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongock-driver-core:5.0.33" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongock-driver-api:5.0.33" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongodb-sync-v4-driver:5.0.36" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongock-driver-core:5.0.36" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongock-driver-api:5.0.36" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.28.0-GA" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongock-utils:5.0.33" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongock-api:5.0.33" level="project" />
-    <orderEntry type="library" name="Maven: io.mongock:mongodb-v3-driver:5.0.33" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongock-utils:5.0.36" level="project" />
+    <orderEntry type="library" name="Maven: io.mongock:mongock-api:5.0.36" level="project" />
     <orderEntry type="library" name="Maven: de.bwaldvogel:mongo-java-server:1.40.0" level="project" />
     <orderEntry type="library" name="Maven: de.bwaldvogel:mongo-java-server-core:1.40.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-transport:4.1.77.Final" level="project" />

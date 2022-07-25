@@ -20,16 +20,20 @@ package de.taimos.dvalin.mongo.changelog;
  * #L%
  */
 
-import com.mongodb.DB;
+import de.taimos.dvalin.mongo.ABaseTest;
 import de.taimos.dvalin.mongo.ChangelogUtil;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
+import io.mongock.api.annotations.RollbackExecution;
 
-@ChangeUnit(order = "001", id = "index1", author = "thoeger")
+@ChangeUnit(order = "001", id = "index1", author = "thoeger", transactional = false)
 public class TestChangelog {
 
     @Execution
-    public void index1(DB db) {
-        ChangelogUtil.addIndex(db.getCollection("TestObject"), "name", true, true);
+    public void index1() {
+        ChangelogUtil.addIndex(ABaseTest.oldDB.getCollection("TestObject"), "name", true, true);
     }
+
+    @RollbackExecution
+    public void index1Rollback(){}
 }
