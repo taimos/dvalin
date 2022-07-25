@@ -66,7 +66,7 @@ public class MongoDBConfig {
         LegacyMigration legacyMigration = new LegacyMigration();
         legacyMigration.setOrigin(this.mongockLegacyTable);
         RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver).setTransactionEnabled(false).addMigrationScanPackage(this.basePackage);
-        runnerStandaloneBuilder.setLegacyMigration(legacyMigration).buildRunner().execute();
+        runnerStandaloneBuilder.setLegacyMigration(legacyMigration).addDependency(jongo).buildRunner().execute();
 
         return runnerStandaloneBuilder;
     }
