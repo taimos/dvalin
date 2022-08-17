@@ -43,15 +43,15 @@
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.15" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.36" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.17.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.17.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.17.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-layout-template-json:2.17.2" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-core:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.20" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.18.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.18.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.18.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-layout-template-json:2.18.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-core:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.22" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:5.5.9.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.4.2.Final" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:javax.persistence-api:2.2" level="project" />
@@ -69,11 +69,16 @@
     <orderEntry type="library" name="Maven: com.sun.istack:istack-commons-runtime:3.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.jvnet.staxex:stax-ex:1.8" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.fastinfoset:FastInfoset:1.2.15" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-orm:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:4.11.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-orm:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:4.14.0" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.27" level="project" />
+    <orderEntry type="library" name="Maven: com.opencsv:opencsv:5.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.12.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.9" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.4" level="project" />
     <orderEntry type="library" name="Maven: com.mattbertolini:liquibase-slf4j:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:31.1-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
