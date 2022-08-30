@@ -25,10 +25,14 @@ package de.taimos.dvalin.mongo;
 
 import java.math.BigDecimal;
 
-import com.mongodb.MongoClient;
+import com.mongodb.ConnectionString;
+import com.mongodb.DB;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import de.bwaldvogel.mongo.MongoServer;
+import de.bwaldvogel.mongo.ServerVersion;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 import org.jongo.Jongo;
@@ -43,8 +47,13 @@ import org.junit.Assert;
 public class ABaseTest {
 
     protected static final String dbName = "dvalin-mongo";
-    public static final MongoClient mongo = new MongoClient(new ServerAddress(new MongoServer(new MemoryBackend()).bind()));;
-    public static final Jongo jongo = JongoFactory.createDefault(ABaseTest.mongo.getDB(ABaseTest.dbName));
+    private static final ServerAddress serverAddress = new ServerAddress(new MongoServer(new MemoryBackend().version(ServerVersion.MONGO_3_6)).bind());
+
+    public static final MongoClient mongo = MongoClients.create(new ConnectionString(String.format("mongodb://%s:%d", ABaseTest.serverAddress.getHost(), ABaseTest.serverAddress.getPort())));
+    public static final com.mongodb.MongoClient oldMongo = new com.mongodb.MongoClient(new ServerAddress(new MongoServer(new MemoryBackend().version(ServerVersion.MONGO_3_6)).bind()));;
+
+    public static final DB oldDB = ABaseTest.oldMongo.getDB(ABaseTest.dbName);
+    public static final Jongo jongo = JongoFactory.createDefault(ABaseTest.oldMongo.getDB(ABaseTest.dbName));
     public static final MongoDatabase database = ABaseTest.mongo.getDatabase(ABaseTest.dbName);
 
     static {

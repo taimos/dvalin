@@ -23,6 +23,15 @@ package de.taimos.dvalin.mongo;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.client.ListIndexesIterable;
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
+import io.mongock.runner.standalone.MongockStandalone;
 import org.bson.Document;
 import org.joda.time.DateTime;
 import org.jongo.Mapper;
@@ -31,17 +40,6 @@ import org.jongo.marshall.jackson.JacksonMapper.Builder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.mongobee.Mongobee;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.client.ListIndexesIterable;
-import com.mongodb.util.JSON;
-
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
 
 public class Tester extends ABaseTest {
 
@@ -52,7 +50,7 @@ public class Tester extends ABaseTest {
         try {
             Field mongoField = AbstractMongoDAO.class.getDeclaredField("mongo");
             mongoField.setAccessible(true);
-            mongoField.set(Tester.dao, ABaseTest.mongo);
+            mongoField.set(Tester.dao, ABaseTest.oldMongo);
 
             Field jongoField = AbstractMongoDAO.class.getDeclaredField("jongo");
             jongoField.setAccessible(true);
@@ -66,11 +64,9 @@ public class Tester extends ABaseTest {
             daoField.setAccessible(true);
             daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
 
-            Mongobee bee = new Mongobee(ABaseTest.mongo);
-            bee.setChangeLogsScanPackage("de.taimos.dvalin.mongo.changelog");
-            bee.setDbName(ABaseTest.dbName);
-            bee.setEnabled(true);
-            bee.execute();
+            MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
+            driver.disableTransaction();
+            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
             Tester.dao.init();
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,10 +136,10 @@ public class Tester extends ABaseTest {
 
         DBObject dbObject = this.createMapper().getMarshaller().marshall(o).toDBObject();
         System.out.println(dbObject);
-        String json = JSON.serialize(dbObject);
+        String json = dbObject.toString();
         System.out.println(json);
 
-        Object parse = JSON.parse(json);
+        Object parse = BasicDBObject.parse(json);
         System.out.println(parse);
         Assert.assertEquals(BasicDBObject.class, parse.getClass());
         Assert.assertEquals(Double.class, ((DBObject) parse).get("value").getClass());
