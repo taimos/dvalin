@@ -1,13 +1,13 @@
 # current master
 * Update dependencies
-    * Spring 5.3.20
-    * AWS 1.12.231
+    * Spring 5.3.22
+    * AWS 1.12.290
     * Jackson 2.12.7
-    * Apache CXF 3.5.2
-    * Jetty 9.4.46.v20220331
-    * Joda-Time 2.10.14
+    * Apache CXF 3.5.3
+    * Jetty 9.4.48.v20220622
+    * Joda-Time 2.11.1
     * ActiveMQ 5.16.5
-	* Log4J 2.17.2
+	* Log4J 2.18.0
 	* Guava 31.1
 	* Commons Codec 1.15
 	* Mongo Java Server 1.40.0
@@ -15,11 +15,12 @@
     * Mongo Java Driver 3.12.11
     * Nimbus JOSE+JWT 9.23
     * JSON Small and Fast Parser 2.4.8
-    * Swagger 2.2.0
+    * Swagger 2.2.2
 	* etcd4j 2.18.0
-	* Hazelcast 5.1.1
-	* XDocReport 2.0.3
-* Moved Mongo Java Server to optional dependency (in most cases Fake Mongo is not needed or can be added)
+	* Hazelcast 5.1.3
+	* XDocReport 2.0.4
+    * Bouncycastle Provider 1.71.1
+* Moved Mongo Java Server to optional dependency (in most cases Fake Mongo is not needed or can be added) 
 
 ## 1.32
 * Update dependencies
