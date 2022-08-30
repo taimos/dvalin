@@ -52,12 +52,12 @@
     <properties>
         <org.springframework.version>5.3.22</org.springframework.version>
         <jackson.version>2.12.7</jackson.version>
-        <joda.time.version>2.10.14</joda.time.version>
+        <joda.time.version>2.11.1</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
         <log4j.version>2.18.0</log4j.version>
         <powermock.version>2.0.9</powermock.version>
         <junit.version>4.13.2</junit.version>
-        <aws.version>1.12.272</aws.version>
+        <aws.version>1.12.290</aws.version>
         <activemq.version>5.16.5</activemq.version>
         <cxf.version>3.5.3</cxf.version>
         <jetty.version>9.4.48.v20220622</jetty.version>
@@ -70,7 +70,7 @@
         <mongo.version>3.12.11</mongo.version>
         <mongobee.version>0.12</mongobee.version>
         <mongo-java-server.version>1.40.0</mongo-java-server.version>
-        <xdocreport.version>2.0.3</xdocreport.version>
+        <xdocreport.version>2.0.4</xdocreport.version>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/taimos/dvalin.git</connection>

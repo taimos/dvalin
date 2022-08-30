@@ -11,8 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.nimbusds.jose.JOSEException;
@@ -20,7 +18,6 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import de.taimos.dvalin.jaxrs.JaxRsComponent;
 import de.taimos.dvalin.jaxrs.security.jwt.IJWTAuth;
@@ -29,6 +26,7 @@ import de.taimos.httputils.HTTPResponse;
 import de.taimos.httputils.WS;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
 
 @JaxRsComponent
 @OnSystemProperty(propertyName = "jwtauth.auth0.issuer")
