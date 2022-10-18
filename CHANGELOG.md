@@ -24,7 +24,8 @@
     * Jacoco Maven Plugin 0.8.8
 
 * Moved Mongo Java Server to optional dependency (in most cases Fake Mongo is not needed or can be added)
-* BREAKING: replaced mongobee with Mongock (5.0.36), mostly backwards compatibility but configuration(see Class `MongoDBConfig`) and annotations (@Changelog and @ChangeSet) have to be replaced by Mongock equivalent https://docs.mongock.io/v5/features/legacy-migration/index.html  
+* BREAKING: replaced mongobee with Mongock (5.0.36), mostly backwards compatibility but configuration(see Class `MongoDBConfig`) and annotations (@Changelog and @ChangeSet) have to be replaced by Mongock equivalent https://docs.mongock.io/v5/features/legacy-migration/index.html
+* Fixing Bug in IVO Generator. Auditing and inheritence resulted in doubled fields(lastChange, lastChangeUser) and strange/unexpected behaviour. Fixed now. 
 
 ## 1.32
 * Update dependencies
