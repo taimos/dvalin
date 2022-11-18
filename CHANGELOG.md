@@ -1,8 +1,8 @@
 # current master
 * Update dependencies
     * Spring 5.3.23
-    * AWS 1.12.321
-    * Jackson 2.13.4
+    * AWS 1.12.344
+    * Jackson 2.14.0
     * Apache CXF 3.5.4
     * Jetty 9.4.49.v20220914
     * Joda-Time 2.11.2
@@ -10,8 +10,8 @@
     * Log4J 2.19.0
     * Guava 31.1
     * Commons Codec 1.15
-    * Mongo Java Server 1.41.0
-    * Liquibase 4.17.0
+    * Mongo Java Server 1.42.0
+    * Liquibase 4.17.2
     * Mongo Java Driver 4.7.0
     * Bson 2.13.1
     * Nimbus JOSE+JWT 9.23

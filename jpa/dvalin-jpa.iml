@@ -73,11 +73,11 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.23" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:5.3.23" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.3.23" level="project" />
-    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:4.17.0" level="project" />
-    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.32" level="project" />
-    <orderEntry type="library" name="Maven: com.opencsv:opencsv:5.6" level="project" />
+    <orderEntry type="library" name="Maven: org.liquibase:liquibase-core:4.17.2" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.33" level="project" />
+    <orderEntry type="library" name="Maven: com.opencsv:opencsv:5.7.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.12.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.9" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.10.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.4" level="project" />
     <orderEntry type="library" name="Maven: com.mattbertolini:liquibase-slf4j:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:31.1-jre" level="project" />

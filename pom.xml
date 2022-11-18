@@ -51,13 +51,13 @@
     </contributors>
     <properties>
         <org.springframework.version>5.3.23</org.springframework.version>
-        <jackson.version>2.13.4</jackson.version>
+        <jackson.version>2.14.0</jackson.version>
         <joda.time.version>2.11.2</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
         <log4j.version>2.19.0</log4j.version>
         <powermock.version>2.0.9</powermock.version>
         <junit.version>4.13.2</junit.version>
-        <aws.version>1.12.321</aws.version>
+        <aws.version>1.12.344</aws.version>
         <activemq.version>5.16.5</activemq.version>
         <cxf.version>3.5.4</cxf.version>
         <jetty.version>9.4.49.v20220914</jetty.version>
@@ -67,9 +67,9 @@
         <velocity.version>2.3</velocity.version>
         <bson.version>2.13.1</bson.version>
         <jongo.version>1.5.0</jongo.version>
-        <mongo.version>4.7.0</mongo.version>
+        <mongo.version>4.8.0</mongo.version>
         <mongock.version>5.1.6</mongock.version>
-        <mongo-java-server.version>1.41.0</mongo-java-server.version>
+        <mongo-java-server.version>1.42.0</mongo-java-server.version>
         <xdocreport.version>2.0.4</xdocreport.version>
     </properties>
     <scm>
