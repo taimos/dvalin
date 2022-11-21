@@ -15,35 +15,35 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
 public class AWSClientFactory<T extends AmazonWebServiceClient> {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AWSClientFactory.class);
-    
+
     private String regionName;
     private String endpoint;
-    
+
     public AWSClientFactory withRegion(@Nullable String regionName) {
         this.regionName = regionName;
         return this;
     }
-    
+
     public AWSClientFactory withEndpoint(@Nullable String endpoint) {
         this.endpoint = endpoint;
         return this;
     }
-    
+
     public T create(Class<T> clientClass) {
         String region = this.getRegion();
-        LOGGER.debug("Using AWS region {}", region);
-    
+        AWSClientFactory.LOGGER.debug("Using AWS region {}", region);
+
         final AwsClientBuilder clientBuilder;
         try {
             clientBuilder = (AwsClientBuilder) clientClass.getMethod("builder").invoke(null);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException("Failed to construct client builder", e);
         }
-    
-        if (!StringUtils.isEmpty(this.endpoint)) {
-            LOGGER.debug("Using customer AWS endpoint {}", this.endpoint);
+
+        if (StringUtils.hasText(this.endpoint)) {
+            AWSClientFactory.LOGGER.debug("Using customer AWS endpoint {}", this.endpoint);
             clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(this.endpoint, region));
         } else {
             clientBuilder.setRegion(region);
@@ -53,9 +53,9 @@ public class AWSClientFactory<T extends AmazonWebServiceClient> {
         clientBuilder.setClientConfiguration(clientConfiguration);
         return (T) clientBuilder.build();
     }
-    
+
     private String getRegion() {
-        if (!StringUtils.isEmpty(this.regionName)) {
+        if (StringUtils.hasText(this.regionName)) {
             return this.regionName;
         }
         if (System.getProperty("aws.region") != null) {
@@ -73,5 +73,5 @@ public class AWSClientFactory<T extends AmazonWebServiceClient> {
         }
         return Regions.DEFAULT_REGION.getName();
     }
-    
+
 }

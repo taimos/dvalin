@@ -1,5 +1,17 @@
 package de.taimos.dvalin.i18n.xml;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import de.taimos.dvalin.i18n.II18nCallback;
 import de.taimos.dvalin.i18n.II18nResourceHandler;
 import org.slf4j.Logger;
@@ -9,17 +21,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 /**
  * Copyright 2018 Cinovo AG<br>
@@ -40,11 +41,18 @@ public class I18nXMLHandler implements II18nResourceHandler {
 
     public void initializeResources(II18nCallback callback) {
         if (this.resourceFiles != null) {
-            URL schemaURL = null;
+            URL schemaURL = this.getSchemaURL();
+            this.loadResourceFiles(callback, schemaURL);
+        }
+    }
 
-            Integer currentCount = null;
-            for (Resource resource : this.resourceSchema) {
-                String[] vs = resource.getFilename().split("\\.")[0].split("v");
+    private URL getSchemaURL() {
+        URL schemaURL = null;
+        Integer currentCount = null;
+        for (Resource resource : this.resourceSchema) {
+            String filename = resource.getFilename();
+            if(filename != null) {
+                String[] vs = filename.split("\\.")[0].split("v");
                 int count = Integer.parseInt(vs[vs.length - 1]);
                 if (currentCount == null || count > currentCount) {
                     currentCount = count;
@@ -54,12 +62,14 @@ public class I18nXMLHandler implements II18nResourceHandler {
                         I18nXMLHandler.LOGGER.error("Failed to load resource schema.", e);
                     }
                 }
-
             }
+        }
+        return schemaURL;
+    }
 
-            for (Resource file : this.resourceFiles) {
-                this.loadResourceFile(file, schemaURL, callback);
-            }
+    private void loadResourceFiles(II18nCallback callback, URL schemaURL) {
+        for (Resource file : this.resourceFiles) {
+            this.loadResourceFile(file, schemaURL, callback);
         }
     }
 

@@ -77,18 +77,22 @@ public class MongoDBInit {
             MongoDBInit.LOGGER.info("Scanning for collection data");
             for (Resource res : resources) {
                 String filename = res.getFilename();
-                String collection = filename.substring(0, filename.length() - 7);
-                MongoDBInit.LOGGER.info("Found collection file: {}", collection);
-                MongoCollection<DBObject> dbCollection = db.getCollection(collection, DBObject.class);
-                try (Scanner scan = new Scanner(res.getInputStream(), "UTF-8")) {
-                    int lines = 0;
-                    while (scan.hasNextLine()) {
-                        String json = scan.nextLine();
-                        DBObject parse = BasicDBObject.parse(json);
-                        dbCollection.insertOne(parse);
-                        lines++;
+                if(filename != null) {
+                    String collection = filename.substring(0, filename.length() - 7);
+                    MongoDBInit.LOGGER.info("Found collection file: {}", collection);
+                    MongoCollection<DBObject> dbCollection = db.getCollection(collection, DBObject.class);
+                    try (Scanner scan = new Scanner(res.getInputStream(), "UTF-8")) {
+                        int lines = 0;
+                        while (scan.hasNextLine()) {
+                            String json = scan.nextLine();
+                            DBObject parse = BasicDBObject.parse(json);
+                            dbCollection.insertOne(parse);
+                            lines++;
+                        }
+                        MongoDBInit.LOGGER.info("Imported {} objects into collection {}", lines, collection);
                     }
-                    MongoDBInit.LOGGER.info("Imported {} objects into collection {}", lines, collection);
+                } else {
+                    MongoDBInit.LOGGER.error("Failure loading resource {}", res);
                 }
             }
         } catch (IOException e) {
