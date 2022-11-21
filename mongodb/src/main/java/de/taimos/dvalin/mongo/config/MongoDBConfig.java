@@ -44,6 +44,9 @@ public class MongoDBConfig {
     @Value("${mongock.enabled:false}")
     private boolean mongockEnabled;
 
+    @Value("${mongock.legacyMigration.enabled:true}")
+    private boolean mongockLegacyMigrationEnabled;
+
     @Value("${mongock.legacyMigration.table:dbchangelog}")
     private String mongockLegacyTable;
 
@@ -54,7 +57,7 @@ public class MongoDBConfig {
     private String basePackage;
 
     @Bean
-    public RunnerStandaloneBuilder mongockRunner(com.mongodb.client.MongoClient mongoClient, Jongo jongo) {
+    public RunnerStandaloneBuilder mongockRunner(com.mongodb.client.MongoClient mongoClient, Jongo jongo, DB legacyDB) {
 
         MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(mongoClient, this.dbName);
         driver.setWriteConcern(WriteConcern.MAJORITY.withJournal(true).withWTimeout(1000, TimeUnit.MILLISECONDS));
@@ -62,12 +65,17 @@ public class MongoDBConfig {
         driver.setReadPreference(ReadPreference.primary());
         driver.disableTransaction();
 
-
-        LegacyMigration legacyMigration = new LegacyMigration();
-        legacyMigration.setOrigin(this.mongockLegacyTable);
-        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver).setTransactionEnabled(false).addMigrationScanPackage(this.basePackage);
-        runnerStandaloneBuilder.setLegacyMigration(legacyMigration).addDependency(jongo).buildRunner().execute();
-
+        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver).setTransactionEnabled(false);
+        if (this.basePackage == null || this.basePackage.isEmpty()){
+            throw new RuntimeException("LegacyMigration basePackage must be set!");
+        }
+        runnerStandaloneBuilder.addMigrationScanPackage(this.basePackage);
+        if(mongockLegacyMigrationEnabled) {
+            LegacyMigration legacyMigration = new LegacyMigration();
+            legacyMigration.setOrigin(this.mongockLegacyTable);
+            runnerStandaloneBuilder.setLegacyMigration(legacyMigration);
+        }
+        runnerStandaloneBuilder.addDependency(jongo).addDependency(legacyDB).buildRunner().execute();
         return runnerStandaloneBuilder;
     }
 

@@ -49,9 +49,7 @@ public class FakeClientConfig {
 
     @Bean
     public com.mongodb.client.MongoClient mongoClient2(MongoServer mongoServer) {
-        ServerAddress serverAddress = new ServerAddress(mongoServer.bind());
-        ConnectionString uri = new ConnectionString(String.format("mongodb://%s:%d", serverAddress.getHost(), serverAddress.getPort()));
-        return MongoClients.create(uri);
+        return MongoClients.create(mongoServer.bindAndGetConnectionString());
     }
 
 }

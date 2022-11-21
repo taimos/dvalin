@@ -53,9 +53,11 @@ public class WebSocketContextHandler extends ServletContextHandler {
         String[] socketBeans = this.beanFactory.getBeanNamesForAnnotation(WebSocket.class);
         for (String sb : socketBeans) {
             WebSocket ann = this.beanFactory.findAnnotationOnBean(sb, WebSocket.class);
-            String pathSpec = ann.pathSpec();
-            WebSocketContextHandler.LOGGER.info("Found bean {} for path {}", sb, pathSpec);
-            this.addServlet(new ServletHolder(this.createServletForBeanName(sb)), pathSpec);
+            if (ann != null) {
+                String pathSpec = ann.pathSpec();
+                WebSocketContextHandler.LOGGER.info("Found bean {} for path {}", sb, pathSpec);
+                this.addServlet(new ServletHolder(this.createServletForBeanName(sb)), pathSpec);
+            }
         }
     }
 

@@ -7,6 +7,7 @@ import java.lang.reflect.TypeVariable;
 
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.config.DependencyDescriptor;
+import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 
 public final class InjectionUtils {
@@ -16,11 +17,13 @@ public final class InjectionUtils {
     }
 
     public static Class<?> getGenericType(InjectionPoint ip) {
-        if (ip.getField() != null) {
-            return resolve(ip.getField().getGenericType(), ip);
+        Field field = ip.getField();
+        if (field != null) {
+            return InjectionUtils.resolve(field.getGenericType(), ip);
         }
-        if (ip.getMethodParameter() != null) {
-            return resolve(ip.getMethodParameter().getGenericParameterType(), ip);
+        MethodParameter methodParameter = ip.getMethodParameter();
+        if (methodParameter != null) {
+            return InjectionUtils.resolve(methodParameter.getGenericParameterType(), ip);
         }
         throw new IllegalArgumentException("Cannot derive generic type from InjectionPoint");
     }
