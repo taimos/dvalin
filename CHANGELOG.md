@@ -25,6 +25,7 @@
 
 * Moved Mongo Java Server to optional dependency (in most cases Fake Mongo is not needed or can be added)
 * BREAKING: replaced mongobee with Mongock (5.1.6), mostly backwards compatibility but configuration(see Class `MongoDBConfig`) and annotations (@Changelog and @ChangeSet) have to be replaced by Mongock equivalent https://docs.mongock.io/v5/features/legacy-migration/index.html  
+* Fixed problem in ActiveMQ with use of pooled connections on event listeners that causes avoidable regular reconnects
 
 ## 1.32
 * Update dependencies
