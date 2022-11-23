@@ -26,7 +26,6 @@ import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.SyslogAppender;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -81,7 +80,7 @@ public final class Log4jDaemonProperties {
 
     public static Map<String, Level> getCustomLevelMap(String configString, Level defaultLevel) {
         if (configString == null || configString.isEmpty()) {
-            return Collections.emptyMap();
+            return new HashMap<>();
         }
 
         Pattern configSeparator = Pattern.compile(";");
