@@ -7,6 +7,7 @@
     * Jetty 9.4.49.v20220914
     * Joda-Time 2.11.2
     * ActiveMQ 5.16.5
+    * Hibernate 5.6.14
     * Log4J 2.19.0
     * Guava 31.1
     * Commons Codec 1.15
