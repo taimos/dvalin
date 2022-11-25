@@ -1,5 +1,13 @@
 package de.taimos.dvalin.interconnect.model.maven.model.ivo;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import de.taimos.dvalin.interconnect.model.ivo.AbstractIVO;
 import de.taimos.dvalin.interconnect.model.maven.GenerationContext;
 import de.taimos.dvalin.interconnect.model.maven.imports.ivo.IVOImports;
@@ -10,14 +18,6 @@ import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.CollectionMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MemberDef;
 import org.apache.maven.plugin.logging.Log;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author psigloch
@@ -52,7 +52,7 @@ public class IVOModel extends AbstractIVOModel {
     @Override
     protected void beforeChildHandling() {
         super.beforeChildHandling();
-        if (Boolean.TRUE.equals(this.definition.getAuditing())) {
+        if (Boolean.TRUE.equals(this.definition.getAuditing()) && this.definition.getParentName() == null) {
             this.addChildren(new AuditedMemberDef());
         }
         if (Boolean.TRUE.equals(this.definition.getPageable())) {
