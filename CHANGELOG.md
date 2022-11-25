@@ -29,6 +29,7 @@
 * Fixing Bug in IVO Generator. Auditing and inheritence resulted in doubled fields(lastChange, lastChangeUser) and strange/unexpected behaviour. Fixed now. 
 * Fixed problem in ActiveMQ with use of pooled connections on event listeners that causes avoidable regular reconnects
 * Extend IdWithVersion with method toString() for better error logging 
+* Log4jDaemonProperties.getCustomLevelMap no longer gives back immutableMap with empty configString. This was unexpected when you want to add values afterwards.
 
 ## 1.32
 * Update dependencies
