@@ -20,18 +20,19 @@ package de.taimos.dvalin.interconnect.model;
  * #L%
  */
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.joda.time.DateTime;
-
-import java.io.IOException;
 
 /**
  * Utility class mapping JSON data to {@link InterconnectObject} and vice versa.
@@ -41,7 +42,7 @@ public final class InterconnectMapper {
     /**
      * JSON mapper.
      */
-    private static final ObjectMapper mapper = createMapper();
+    private static final ObjectMapper mapper = InterconnectMapper.createMapper();
 
 
     /**
@@ -118,6 +119,33 @@ public final class InterconnectMapper {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         return mapper;
+    }
+
+    /**
+     * Allows registering modules at ObjectMapper
+     *
+     * @param module module to register
+     */
+    public static void registerModule(Module module) {
+        InterconnectMapper.mapper.registerModule(module);
+    }
+
+    /**
+     * Allows enabling feature at ObjectMapper
+     *
+     * @param feature feature to enable
+     */
+    public static void enableFeature(DeserializationFeature feature) {
+        InterconnectMapper.mapper.enable(feature);
+    }
+
+    /**
+     * Allows disabling feature at ObjectMapper
+     *
+     * @param feature feature to disable
+     */
+    public static void disableFeature(SerializationFeature feature) {
+        InterconnectMapper.mapper.disable(feature);
     }
 
 }

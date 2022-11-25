@@ -66,4 +66,9 @@ public class IdWithVersion implements Serializable {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "id:" + this.id + "-v:" + this.version;
+    }
 }
