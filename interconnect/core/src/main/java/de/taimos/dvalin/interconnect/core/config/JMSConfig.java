@@ -34,6 +34,7 @@ import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -65,7 +66,7 @@ public class JMSConfig {
     @Value("${interconnect.jms.password:}")
     private String password;
 
-    @Bean
+    @Bean(name = "DvalinConnectionFactory")
     public ConnectionFactory jmsConnectionFactory() {
         return new DvalinConnectionFactory(this.brokerUrl, this.userName, this.password);
 
@@ -107,7 +108,7 @@ public class JMSConfig {
     }
 
     @Bean
-    public DefaultMessageListenerContainer jmsListenerContainer(PooledConnectionFactory jmsFactory, DaemonMessageListener messageListener) {
+    public DefaultMessageListenerContainer jmsListenerContainer(@Qualifier("DvalinConnectionFactory") ConnectionFactory jmsFactory, DaemonMessageListener messageListener) {
         DefaultMessageListenerContainer dmlc = new DefaultMessageListenerContainer();
         dmlc.setConnectionFactory(jmsFactory);
         dmlc.setErrorHandler(messageListener);
