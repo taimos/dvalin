@@ -32,6 +32,7 @@ import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -41,6 +42,7 @@ import org.springframework.util.ErrorHandler;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.jms.ConnectionFactory;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -66,7 +68,8 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
     private String consumerPrefix;
 
     @Autowired
-    private PooledConnectionFactory jmsFactory;
+    @Qualifier("DvalinConnectionFactory")
+    private ConnectionFactory jmsFactory;
     @Autowired
     private ApplicationContext applicationContext;
 
