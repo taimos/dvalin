@@ -167,7 +167,8 @@ public class DvalinLog4jConfigurationFactory extends ConfigurationFactory {
      * @return builder for default {@link PatternLayout}
      */
     public static LayoutComponentBuilder createDefaultLayout(ConfigurationBuilder<?> builder) {
-        return builder.newLayout("PatternLayout").addAttribute("pattern", Log4jDaemonProperties.DEFAULT_PATTERN);
+        String pattern = System.getProperty(Log4jDaemonProperties.LOGGER_PATTERN, Log4jDaemonProperties.DEFAULT_PATTERN);
+        return builder.newLayout("PatternLayout").addAttribute("pattern", pattern);
     }
 
     /**
