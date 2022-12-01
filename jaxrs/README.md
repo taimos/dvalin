@@ -1,9 +1,8 @@
-
 ## jaxrs
 
 The `jaxrs` library adds tooling to implement JAX-RS web services. It combines the powers of the Spring framework, 
 the Apache CXF framework, the Jackson JSON mapper and the Eclipse Jetty web server. To include it add the maven dependency to your POM file.
-It will then automatically configure a Jetty web server running on a given port and start a CXF JAX-RS handler into the running Jetty server. 
+When the `http` spring profile is active, a Jetty web server will be started on a given port and start a CXF JAX-RS handler into the running Jetty server. 
 By default all beans annotated with `@JaxRsComponent` will be registered as provider or endpoint respectively. 
 Additionally several extra features are implemented.
 
@@ -27,9 +26,7 @@ or use defined system properties to resolve the URL of the service.
 
 ### Swagger
 
-The JAX-RS web service it automatically documented using the Swagger specification and published as `swagger.{json|yaml}` and `openapi.{json|yaml}` on the
-root of your API URL. Also a graphical Swagger ui is served under `/swagger-ui`. 
-By providing a bean of type `OpenApiModification` you can alter the API definition manually.
+moved to `jaxrs-swagger` module
 
 ### WebSocket support
 

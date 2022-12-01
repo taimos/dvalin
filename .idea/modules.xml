@@ -19,6 +19,7 @@
       <module fileurl="file://$PROJECT_DIR$/interconnect/test/dvalin-interconnect-test.iml" filepath="$PROJECT_DIR$/interconnect/test/dvalin-interconnect-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" filepath="$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" filepath="$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jaxrs-swagger/dvalin-jaxrs-swagger.iml" filepath="$PROJECT_DIR$/jaxrs-swagger/dvalin-jaxrs-swagger.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa/dvalin-jpa.iml" filepath="$PROJECT_DIR$/jpa/dvalin-jpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" filepath="$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" />
       <module fileurl="file://$PROJECT_DIR$/monitoring/aws/dvalin-monitoring-aws.iml" filepath="$PROJECT_DIR$/monitoring/aws/dvalin-monitoring-aws.iml" />
