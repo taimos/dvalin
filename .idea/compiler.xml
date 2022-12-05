@@ -39,6 +39,7 @@
         <module name="dvalin-template-velocity" />
         <module name="dvalin-archetype-docker" />
         <module name="dvalin-test" />
+        <module name="dvalin-jaxrs-swagger" />
         <module name="dvalin-jaxrs" />
         <module name="dvlain-i18n" />
         <module name="dvalin-notification-core" />
@@ -66,6 +67,7 @@
       <module name="dvalin-interconnect-test" target="1.8" />
       <module name="dvalin-jaxrs" target="1.8" />
       <module name="dvalin-jaxrs-jwtauth" target="1.8" />
+      <module name="dvalin-jaxrs-swagger" target="1.8" />
       <module name="dvalin-jpa" target="1.8" />
       <module name="dvalin-mongodb" target="1.8" />
       <module name="dvalin-monitoring-aws" target="1.8" />

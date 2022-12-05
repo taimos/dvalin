@@ -60,6 +60,8 @@
     <file url="file://$PROJECT_DIR$/jaxrs-jwtauth" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs-jwtauth/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs-jwtauth/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jaxrs-swagger/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jaxrs-swagger/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa" charset="UTF-8" />

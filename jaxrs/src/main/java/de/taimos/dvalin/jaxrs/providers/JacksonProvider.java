@@ -20,11 +20,9 @@ package de.taimos.dvalin.jaxrs.providers;
  * #L%
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import de.taimos.dvalin.jaxrs.MapperFactory;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Consumes;
@@ -37,11 +35,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-
-import de.taimos.dvalin.jaxrs.MapperFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 @Provider
 @Priority(Priorities.ENTITY_CODER)
@@ -49,9 +47,26 @@ import de.taimos.dvalin.jaxrs.MapperFactory;
 @Produces(MediaType.WILDCARD)
 public class JacksonProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
 
-    private final ObjectMapper jsonMapper = MapperFactory.createDefault();
-    private final ObjectMapper yamlMapper = MapperFactory.createDefaultYaml();
+    protected final ObjectMapper jsonMapper;
+    protected final ObjectMapper yamlMapper;
 
+    /**
+     * Create default JacksonProvider
+     */
+    public JacksonProvider() {
+        this(MapperFactory.createDefault(), MapperFactory.createDefaultYaml());
+    }
+
+    /**
+     * Create JacksonProvider with custom ObjectMappers
+     *
+     * @param jsonMapper custom mapper for JSON
+     * @param yamlMapper custom mapper for YAML
+     */
+    public JacksonProvider(ObjectMapper jsonMapper, ObjectMapper yamlMapper) {
+        this.jsonMapper = jsonMapper;
+        this.yamlMapper = yamlMapper;
+    }
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -96,11 +111,11 @@ public class JacksonProvider implements MessageBodyReader<Object>, MessageBodyWr
         return mapper.readValue(entityStream, TypeFactory.defaultInstance().constructType(genericType));
     }
 
-    private boolean isYaml(MediaType mediaType) {
+    protected boolean isYaml(MediaType mediaType) {
         return mediaType.getSubtype().equals("yaml") || mediaType.getSubtype().endsWith("+yaml");
     }
 
-    private boolean isJson(MediaType mediaType) {
+    protected boolean isJson(MediaType mediaType) {
         return mediaType.getSubtype().equals("json") || mediaType.getSubtype().endsWith("+json");
     }
 

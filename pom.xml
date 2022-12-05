@@ -561,6 +561,7 @@
         <module>notification</module>
         <module>jaxrs</module>
         <module>jaxrs-jwtauth</module>
+        <module>jaxrs-swagger</module>
         <module>mongodb</module>
         <module>monitoring</module>
         <module>jpa</module>
