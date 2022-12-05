@@ -127,7 +127,8 @@ public class Log4jLoggingConfigurer implements ILoggingConfigurer {
                 return builder.newLayout("JsonTemplateLayout").addAttribute("eventTemplateUri", "classpath:log4j/JsonLogTemplate.json");
             case Log4jDaemonProperties.LOGGER_LAYOUT_PATTERN:
             default:
-                return builder.newLayout("PatternLayout").addAttribute("pattern", Log4jDaemonProperties.DEFAULT_PATTERN);
+                String pattern = System.getProperty(Log4jDaemonProperties.LOGGER_PATTERN, Log4jDaemonProperties.DEFAULT_PATTERN);
+                return builder.newLayout("PatternLayout").addAttribute("pattern", pattern);
         }
     }
 

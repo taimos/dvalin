@@ -47,7 +47,8 @@ public final class Log4jDaemonProperties {
 
     /** the logger level (see {@link Level}) */
 	public static final String LOGGER_LEVEL = "logger.level";
-
+    /** the logger pattern */
+    public static final String LOGGER_PATTERN = "logger.pattern";
     /** the logger layout */
     public static final String LOGGER_LAYOUT = "logger.layout";
 	/** the logger layout - Pattern */
