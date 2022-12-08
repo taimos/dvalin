@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-cloud-parent</artifactId>
-        <version>1.33-SNAPSHOT</version>
+        <version>1.33</version>
     </parent>
     <artifactId>dvalin-cloud-aws</artifactId>
     <name>Dvalin AWS support</name>
