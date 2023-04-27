@@ -56,14 +56,14 @@ public class InvocationInstance {
      * start timer
      */
     public void start() {
-        this.startNano = System.nanoTime();
+        this.startNano = INanoTimer.system().nanoTime();
     }
 
     /**
      * stop timer
      */
     public void stop() {
-        this.endNano = System.nanoTime();
+        this.endNano = INanoTimer.system().nanoTime();
         this.duration = this.endNano - this.startNano;
         this.duration = this.duration / 1000000; // convert to ms
     }

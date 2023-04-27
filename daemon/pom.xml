@@ -68,10 +68,9 @@
             <artifactId>spring-tx</artifactId>
             <version>${org.springframework.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
             <version>${junit.version}</version>
             <scope>provided</scope>
         </dependency>

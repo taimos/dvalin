@@ -20,11 +20,12 @@ package de.taimos.dvalin.test.jaxrs;
  * #L%
  */
 
+import org.junit.jupiter.api.Assertions;
+
 import java.math.BigDecimal;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Assert;
 
 /**
  * Assert tooling for asynchronous callbacks
@@ -84,7 +85,8 @@ public class AsyncAssert {
     }
 
     public void assertEquals(String message, Object expected, Object actual) {
-        this.assertTrue(message, ((expected == null) && (actual == null)) || ((expected != null) && expected.equals(actual)));
+        this.assertTrue(message,
+            ((expected == null) && (actual == null)) || ((expected != null) && expected.equals(actual)));
     }
 
     public void assertSame(BigDecimal expected, BigDecimal actual) {
@@ -92,7 +94,8 @@ public class AsyncAssert {
     }
 
     public void assertSame(String message, BigDecimal expected, BigDecimal actual) {
-        this.assertTrue(message, ((expected == null) && (actual == null)) || ((expected != null) && (expected.compareTo(actual) == 0)));
+        this.assertTrue(message,
+            ((expected == null) && (actual == null)) || ((expected != null) && (expected.compareTo(actual) == 0)));
     }
 
     public void fail() {
@@ -124,9 +127,9 @@ public class AsyncAssert {
                 }
                 return;
             }
-            Assert.fail("Timeout reached");
+            Assertions.fail("Timeout reached");
         } catch (InterruptedException e) {
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
             Thread.currentThread().interrupt();
         }
     }

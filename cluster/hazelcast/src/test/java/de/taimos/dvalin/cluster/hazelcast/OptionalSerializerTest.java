@@ -20,23 +20,22 @@ package de.taimos.dvalin.cluster.hazelcast;
  * #L%
  */
 
-import java.util.Optional;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import com.hazelcast.config.SerializerConfig;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OptionalSerializerTest {
+import java.util.Optional;
+
+@ExtendWith(MockitoExtension.class)
+class OptionalSerializerTest {
 
     @Test
-    public void writeString() throws Exception {
+    void writeString() throws Exception {
         String string = "String";
 
         ObjectDataOutput output = Mockito.mock(ObjectDataOutput.class);
@@ -47,7 +46,7 @@ public class OptionalSerializerTest {
 
 
     @Test
-    public void writeEmpty() throws Exception {
+    void writeEmpty() throws Exception {
         ObjectDataOutput output = Mockito.mock(ObjectDataOutput.class);
 
         new OptionalSerializer().write(output, Optional.empty());
@@ -56,38 +55,38 @@ public class OptionalSerializerTest {
 
 
     @Test
-    public void readString() throws Exception {
+    void readString() throws Exception {
         String test = "Test";
 
         ObjectDataInput input = Mockito.mock(ObjectDataInput.class);
         Mockito.when(input.readObject()).thenReturn(test);
-        Optional read = new OptionalSerializer().read(input);
-        Assert.assertTrue(read.isPresent());
-        Assert.assertEquals(test, read.get());
+        Optional<?> read = new OptionalSerializer().read(input);
+        Assertions.assertTrue(read.isPresent());
+        Assertions.assertEquals(test, read.get());
     }
 
 
     @Test
-    public void readEmpty() throws Exception {
+    void readEmpty() throws Exception {
         ObjectDataInput input = Mockito.mock(ObjectDataInput.class);
         Mockito.when(input.readObject()).thenReturn(null);
-        Optional read = new OptionalSerializer().read(input);
-        Assert.assertFalse(read.isPresent());
+        Optional<?> read = new OptionalSerializer().read(input);
+        Assertions.assertFalse(read.isPresent());
     }
 
 
     @Test
-    public void getTypeId() throws Exception {
-        Assert.assertEquals(1, new OptionalSerializer().getTypeId());
+    void getTypeId() {
+        Assertions.assertEquals(1, new OptionalSerializer().getTypeId());
     }
 
 
     @Test
-    public void createConfig() throws Exception {
+    void createConfig() {
         SerializerConfig config = OptionalSerializer.createConfig();
-        Assert.assertNotNull(config);
-        Assert.assertEquals(Optional.class, config.getTypeClass());
-        Assert.assertEquals(OptionalSerializer.class.getCanonicalName(), config.getClassName());
+        Assertions.assertNotNull(config);
+        Assertions.assertEquals(Optional.class, config.getTypeClass());
+        Assertions.assertEquals(OptionalSerializer.class.getCanonicalName(), config.getClassName());
     }
 
 }

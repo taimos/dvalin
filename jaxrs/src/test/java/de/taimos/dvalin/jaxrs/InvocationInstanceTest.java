@@ -20,45 +20,43 @@ package de.taimos.dvalin.jaxrs;
  * #L%
  */
 
+import de.taimos.dvalin.jaxrs.monitoring.INanoTimer;
 import de.taimos.dvalin.jaxrs.monitoring.InvocationInstance;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(InvocationInstance.class)
-@PowerMockIgnore("javax.management.*")
-public class InvocationInstanceTest {
+@ExtendWith(MockitoExtension.class)
+class InvocationInstanceTest {
 
     @Test
-    public void testStartNano() throws Exception {
-        PowerMockito.mockStatic(System.class);
-        PowerMockito.when(System.nanoTime()).thenReturn(42L);
+    void testStartNano() {
+        Mockito.mockStatic(INanoTimer.class).when(INanoTimer::system).thenReturn((INanoTimer) () -> 42L);
         InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.start();
-        Assert.assertEquals(42L, ii.getStartNano());
+        Assertions.assertEquals(42L, ii.getStartNano());
     }
 
     @Test
-    public void testDuration() throws Exception {
-        PowerMockito.mockStatic(System.class);
-        PowerMockito.when(System.nanoTime()).thenReturn(1000L);
+    void testDuration() {
+        MockedStatic<INanoTimer> timerMock = Mockito.mockStatic(INanoTimer.class);
+        timerMock.when(INanoTimer::system).thenReturn((INanoTimer) () -> 1000L);
         UUID uuid = UUID.randomUUID();
         InvocationInstance ii = new InvocationInstance(uuid.toString(), "/");
         ii.start();
-        PowerMockito.when(System.nanoTime()).thenReturn(2001000L);
+        timerMock.when(INanoTimer::system).thenReturn((INanoTimer) () -> 2001000L);
         ii.stop();
-        Assert.assertEquals(1000L, ii.getStartNano());
-        Assert.assertEquals(2001000L, ii.getEndNano());
-        Assert.assertEquals(2L, ii.getDuration());
-        String msg = "Message " + uuid.toString() + " was 2 ms inflight. Access was to class 'null' and method 'null' via URI '/'";
-        Assert.assertEquals(msg, ii.toString());
+        Assertions.assertEquals(1000L, ii.getStartNano());
+        Assertions.assertEquals(2001000L, ii.getEndNano());
+        Assertions.assertEquals(2L, ii.getDuration());
+        String msg = "Message " + uuid +
+                     " was 2 ms inflight. Access was to class 'null' and method 'null' via URI '/'";
+        Assertions.assertEquals(msg, ii.toString());
     }
 
     @Test
@@ -66,16 +64,16 @@ public class InvocationInstanceTest {
         InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.setCalledMethod(InvocationInstanceTest.class.getMethod("testCalledMethod"));
 
-        Assert.assertEquals("testCalledMethod", ii.getCalledMethodName());
-        Assert.assertEquals("de.taimos.dvalin.jaxrs.InvocationInstanceTest", ii.getCalledClass());
+        Assertions.assertEquals("testCalledMethod", ii.getCalledMethodName());
+        Assertions.assertEquals("de.taimos.dvalin.jaxrs.InvocationInstanceTest", ii.getCalledClass());
     }
 
     @Test
-    public void testCalledMethodNull() throws Exception {
+    void testCalledMethodNull() {
         InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.setCalledMethod(null);
-        Assert.assertEquals(null, ii.getCalledMethodName());
-        Assert.assertEquals(null, ii.getCalledClass());
-        Assert.assertEquals(null, ii.getCalledMethod());
+        Assertions.assertNull(ii.getCalledMethodName());
+        Assertions.assertNull(ii.getCalledClass());
+        Assertions.assertNull(ii.getCalledMethod());
     }
 }

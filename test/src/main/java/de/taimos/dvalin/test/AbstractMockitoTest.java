@@ -20,16 +20,15 @@ package de.taimos.dvalin.test;
  * #L%
  */
 
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AbstractMockitoTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void init() throws Exception {
         new Log4jLoggingConfigurer().simpleLogging();
     }

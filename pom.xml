@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.taimos</groupId>
@@ -55,8 +56,7 @@
         <joda.time.version>2.11.2</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
         <log4j.version>2.19.0</log4j.version>
-        <powermock.version>2.0.9</powermock.version>
-        <junit.version>4.13.2</junit.version>
+        <junit.version>5.9.3</junit.version>
         <aws.version>1.12.344</aws.version>
         <activemq.version>5.16.5</activemq.version>
         <cxf.version>3.5.4</cxf.version>
@@ -71,6 +71,7 @@
         <mongock.version>5.1.6</mongock.version>
         <mongo-java-server.version>1.42.0</mongo-java-server.version>
         <xdocreport.version>2.0.4</xdocreport.version>
+        <mockito-core.version>4.6.1</mockito-core.version>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/taimos/dvalin.git</connection>
@@ -440,20 +441,14 @@
             </dependency>
 
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>${powermock.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito2</artifactId>
-                <version>${powermock.version}</version>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -476,19 +471,21 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito-core.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -528,25 +525,6 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-                    <!--<execution>-->
-                    <!--<id>default-instrument</id>-->
-                    <!--<goals>-->
-                    <!--<goal>instrument</goal>-->
-                    <!--</goals>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                    <!--<id>default-restore-instrumented-classes</id>-->
-                    <!--<goals>-->
-                    <!--<goal>restore-instrumented-classes</goal>-->
-                    <!--</goals>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                    <!--<id>default-report</id>-->
-                    <!--<phase>prepare-package</phase>-->
-                    <!--<goals>-->
-                    <!--<goal>report</goal>-->
-                    <!--</goals>-->
-                    <!--</execution>-->
                 </executions>
             </plugin>
         </plugins>

@@ -20,32 +20,29 @@ package de.taimos.dvalin.test.jaxrs;
  * #L%
  */
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import de.taimos.daemon.spring.SpringDaemonExtension;
+import de.taimos.dvalin.jaxrs.MapperFactory;
+import de.taimos.dvalin.jaxrs.websocket.ClientSocketAdapter;
+import de.taimos.httputils.HTTPRequest;
+import de.taimos.httputils.HTTPResponse;
+import de.taimos.httputils.WS;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Value;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
-import org.junit.Assert;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import de.taimos.daemon.spring.SpringDaemonTestRunner;
-import de.taimos.dvalin.jaxrs.MapperFactory;
-import de.taimos.dvalin.jaxrs.websocket.ClientSocketAdapter;
-import de.taimos.httputils.HTTPRequest;
-import de.taimos.httputils.HTTPResponse;
-import de.taimos.httputils.WS;
-
-@RunWith(SpringDaemonTestRunner.class)
+@ExtendWith(SpringDaemonExtension.class)
 public abstract class APITest {
 
     private static final String APPLICATION_JSON = "application/json";
@@ -88,7 +85,7 @@ public abstract class APITest {
      * @param res the response to check
      */
     protected final void assertOK(HTTPResponse res) {
-        Assert.assertTrue(String.format("Expected OK - was %s", res.getStatus()), res.isStatusOK());
+        Assertions.assertTrue(res.isStatusOK(), String.format("Expected OK - was %s", res.getStatus()));
     }
 
     /**
@@ -98,7 +95,8 @@ public abstract class APITest {
      * @param status the status to check against
      */
     protected final void assertStatus(HTTPResponse res, Status status) {
-        Assert.assertTrue(String.format("Expected %s - was %s", status.getStatusCode(), res.getStatus()), res.getStatus() == status.getStatusCode());
+        Assertions.assertEquals(res.getStatus(), status.getStatusCode(),
+            String.format("Expected %s - was %s", status.getStatusCode(), res.getStatus()));
     }
 
     /**
@@ -107,7 +105,8 @@ public abstract class APITest {
      * @param res the response to check
      */
     protected final void assertOK(Response res) {
-        Assert.assertTrue(String.format("Expected OK - was %s", res.getStatus()), (res.getStatus() >= 200) && (res.getStatus() <= 299));
+        Assertions.assertTrue((res.getStatus() >= 200) && (res.getStatus() <= 299),
+            String.format("Expected OK - was %s", res.getStatus()));
     }
 
     /**
@@ -117,7 +116,8 @@ public abstract class APITest {
      * @param status the status to check against
      */
     protected final void assertStatus(Response res, Status status) {
-        Assert.assertTrue(String.format("Expected %s - was %s", status.getStatusCode(), res.getStatus()), res.getStatus() == status.getStatusCode());
+        Assertions.assertEquals(res.getStatus(), status.getStatusCode(),
+            String.format("Expected %s - was %s", status.getStatusCode(), res.getStatus()));
     }
 
     /**
