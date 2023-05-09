@@ -1,4 +1,7 @@
 # current master
+* Migrated from JUnit 4 to JUnit 5
+    * Drop support for Powermock
+    * Switch Mockito to Mockito Inline for usage in static mocks
 
 # 1.33
 * Update dependencies
