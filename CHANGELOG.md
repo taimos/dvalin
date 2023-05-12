@@ -1,4 +1,12 @@
 # current master
+* Update dependencies
+    * Spring 5.3.27
+    * AWS 1.12.467
+    * Jetty 9.4.51.v20230217
+    * Apache CXF 3.5.6
+    * JSON Small and Fast Parser 2.4.9
+* Fixed vulnerabilities: CVE-2023-26048, CVE-2023-26049, CVE-2023-1370, CVE-2023-20861, CVE-2023-20863, CVE-2023-1370, 
+CVE-2022-40152, CVE-2022-46364, CVE-2022-46363
 
 # 1.33
 * Update dependencies

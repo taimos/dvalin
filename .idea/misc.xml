@@ -5,6 +5,7 @@
       <item index="0" class="java.lang.String" itemvalue="de.taimos.dvalin.jaxrs.JaxRsComponent" />
     </list>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JsBowerSettings">
     <exe-path>/usr/local/bin/bower</exe-path>
     <config-path />
