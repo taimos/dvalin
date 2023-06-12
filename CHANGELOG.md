@@ -5,8 +5,13 @@
     * Jetty 9.4.51.v20230217
     * Apache CXF 3.5.6
     * JSON Small and Fast Parser 2.4.9
+    * Jackson 2.15.2
+    * Guava 32.0.0
+    * Hazelcast 5.3.0
+    * Swagger 2.2.10
+    * Liquibase 4.21.1
 * Fixed vulnerabilities: CVE-2023-26048, CVE-2023-26049, CVE-2023-1370, CVE-2023-20861, CVE-2023-20863, CVE-2023-1370, 
-CVE-2022-40152, CVE-2022-46364, CVE-2022-46363
+CVE-2022-40152, CVE-2022-46364, CVE-2022-46363, CVE-2023-2976, CVE-2020-8908, CVE-2022-1471, CVE-2023-33264
 
 # 1.33
 * Update dependencies
