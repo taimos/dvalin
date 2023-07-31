@@ -68,7 +68,7 @@
         <bson.version>2.13.1</bson.version>
         <jongo.version>1.5.0</jongo.version>
         <mongo.version>4.8.0</mongo.version>
-        <mongock.version>5.1.6</mongock.version>
+        <mongock.version>5.2.4</mongock.version>
         <mongo-java-server.version>1.42.0</mongo-java-server.version>
         <xdocreport.version>2.0.4</xdocreport.version>
     </properties>
