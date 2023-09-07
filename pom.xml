@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.taimos</groupId>
@@ -7,7 +6,7 @@
         <version>6</version>
     </parent>
     <artifactId>dvalin-parent</artifactId>
-    <version>1.34-SNAPSHOT</version>
+    <version>1.35-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
     <inceptionYear>2015</inceptionYear>
@@ -51,24 +50,24 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>5.3.23</org.springframework.version>
-        <jackson.version>2.14.0</jackson.version>
+        <org.springframework.version>5.3.27</org.springframework.version>
+        <jackson.version>2.15.2</jackson.version>
         <joda.time.version>2.11.2</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
         <log4j.version>2.19.0</log4j.version>
         <junit.version>5.9.3</junit.version>
-        <aws.version>1.12.344</aws.version>
+        <aws.version>1.12.467</aws.version>
         <activemq.version>5.16.5</activemq.version>
-        <cxf.version>3.5.4</cxf.version>
-        <jetty.version>9.4.49.v20220914</jetty.version>
-        <guava.version>31.1-jre</guava.version>
+        <cxf.version>3.5.6</cxf.version>
+        <jetty.version>9.4.51.v20230217</jetty.version>
+        <guava.version>32.0.0-jre</guava.version>
         <hibernate.version>5.6.14.Final</hibernate.version>
         <http.version>2.2</http.version>
         <velocity.version>2.3</velocity.version>
         <bson.version>2.13.1</bson.version>
         <jongo.version>1.5.0</jongo.version>
         <mongo.version>4.8.0</mongo.version>
-        <mongock.version>5.1.6</mongock.version>
+        <mongock.version>5.2.4</mongock.version>
         <mongo-java-server.version>1.42.0</mongo-java-server.version>
         <xdocreport.version>2.0.4</xdocreport.version>
         <mockito-core.version>4.6.1</mockito-core.version>
@@ -529,6 +528,35 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>taimos-oss-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <modules>
         <module>daemon</module>
         <module>test</module>
