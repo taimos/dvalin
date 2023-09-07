@@ -22,6 +22,7 @@ package de.taimos.dvalin.jaxrs;
 
 import de.taimos.dvalin.jaxrs.monitoring.INanoTimer;
 import de.taimos.dvalin.jaxrs.monitoring.InvocationInstance;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +35,10 @@ import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
 class InvocationInstanceTest {
 
+    static MockedStatic<INanoTimer> timerMock = Mockito.mockStatic(INanoTimer.class);
     @Test
     void testStartNano() {
-        Mockito.mockStatic(INanoTimer.class).when(INanoTimer::system).thenReturn((INanoTimer) () -> 42L);
+		InvocationInstanceTest.timerMock.when(INanoTimer::system).thenReturn((INanoTimer) () -> 42L);
         InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.start();
         Assertions.assertEquals(42L, ii.getStartNano());
@@ -44,12 +46,12 @@ class InvocationInstanceTest {
 
     @Test
     void testDuration() {
-        MockedStatic<INanoTimer> timerMock = Mockito.mockStatic(INanoTimer.class);
-        timerMock.when(INanoTimer::system).thenReturn((INanoTimer) () -> 1000L);
+
+		InvocationInstanceTest.timerMock.when(INanoTimer::system).thenReturn((INanoTimer) () -> 1000L);
         UUID uuid = UUID.randomUUID();
         InvocationInstance ii = new InvocationInstance(uuid.toString(), "/");
         ii.start();
-        timerMock.when(INanoTimer::system).thenReturn((INanoTimer) () -> 2001000L);
+		InvocationInstanceTest.timerMock.when(INanoTimer::system).thenReturn((INanoTimer) () -> 2001000L);
         ii.stop();
         Assertions.assertEquals(1000L, ii.getStartNano());
         Assertions.assertEquals(2001000L, ii.getEndNano());
@@ -75,5 +77,10 @@ class InvocationInstanceTest {
         Assertions.assertNull(ii.getCalledMethodName());
         Assertions.assertNull(ii.getCalledClass());
         Assertions.assertNull(ii.getCalledMethod());
+    }
+
+    @AfterAll
+    public static void close() {
+		InvocationInstanceTest.timerMock.close();
     }
 }
