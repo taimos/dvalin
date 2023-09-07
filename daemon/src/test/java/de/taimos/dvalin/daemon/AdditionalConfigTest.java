@@ -1,11 +1,11 @@
 package de.taimos.dvalin.daemon;
 
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
-import de.taimos.daemon.spring.SpringDaemonTestRunner;
-import de.taimos.daemon.spring.SpringDaemonTestRunner.AdditionalRunnerConfiguration;
-import de.taimos.daemon.spring.SpringDaemonTestRunner.RunnerConfiguration;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import de.taimos.daemon.spring.AdditionalRunnerConfiguration;
+import de.taimos.daemon.spring.RunnerConfiguration;
+import de.taimos.daemon.spring.SpringDaemonExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author fzwirn
  */
-@RunWith(SpringDaemonTestRunner.class)
+@ExtendWith(SpringDaemonExtension.class)
 @RunnerConfiguration(config = DvalinTestRunnerConfig.class, loggingConfigurer = Log4jLoggingConfigurer.class, svc = "AdditionalConfigTest")
 @AdditionalRunnerConfiguration(config = {AdditionalTestConfig.class})
 public class AdditionalConfigTest {
@@ -33,3 +33,4 @@ public class AdditionalConfigTest {
             AdditionalTestConfig.TEST_VALUE, this.jwtIssuer);
     }
 }
+

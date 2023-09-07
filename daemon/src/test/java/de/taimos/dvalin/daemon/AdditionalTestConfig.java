@@ -1,6 +1,6 @@
 package de.taimos.dvalin.daemon;
 
-import de.taimos.daemon.spring.SpringDaemonTestRunner.TestConfiguration;
+import de.taimos.daemon.spring.AdditionalRunnerConfiguration.TestConfiguration;
 
 import java.util.Properties;
 

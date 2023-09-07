@@ -2,6 +2,7 @@ package de.taimos.daemon.spring;
 
 import de.taimos.daemon.DaemonProperties;
 import de.taimos.daemon.ILoggingConfigurer;
+import de.taimos.daemon.spring.AdditionalRunnerConfiguration.TestConfiguration;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -48,6 +49,14 @@ public class SpringDaemonExtension implements TestInstancePostProcessor, BeforeA
         lc.simpleLogging();
 
         RunnerConfig cfg = SpringDaemonExtension.getRunnerConfig(cfgClass);
+
+        final AdditionalRunnerConfiguration addCfgClass = this.findAdditionalConfigAnnotation(extensionContext.getRequiredTestClass());
+        if (addCfgClass != null) {
+            SpringDaemonExtension.logger.trace("Adding additional configurations to test.");
+            for (Class<? extends TestConfiguration> aClass : addCfgClass.config()) {
+                aClass.newInstance().getProps().forEach((o, o2) -> cfg.addProperty((String) o, (String) o2));
+            }
+        }
 
         try {
             SpringDaemonExtension.this.springTest = this.createSpringTest(extensionContext, cfgClass, cfg);
@@ -138,6 +147,17 @@ public class SpringDaemonExtension implements TestInstancePostProcessor, BeforeA
         RunnerConfiguration cfgClass = clazz.getAnnotation(RunnerConfiguration.class);
         if (cfgClass == null) {
             cfgClass = this.findConfigAnnotation(clazz.getSuperclass());
+        }
+        return cfgClass;
+    }
+
+    private AdditionalRunnerConfiguration findAdditionalConfigAnnotation(Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        }
+        AdditionalRunnerConfiguration cfgClass = clazz.getAnnotation(AdditionalRunnerConfiguration.class);
+        if (cfgClass == null) {
+            cfgClass = this.findAdditionalConfigAnnotation(clazz.getSuperclass());
         }
         return cfgClass;
     }
