@@ -20,7 +20,7 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 /**
  * Interconnect object member

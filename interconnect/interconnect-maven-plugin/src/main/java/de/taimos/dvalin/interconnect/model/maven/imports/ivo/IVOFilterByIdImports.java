@@ -8,7 +8,7 @@ import de.taimos.dvalin.interconnect.model.maven.imports.Imports;
 import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

@@ -22,8 +22,8 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.CollectionTypeAdapter;
 
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * the supported collection types

@@ -23,7 +23,7 @@ package de.taimos.dvalin.mongo;
 import java.io.IOException;
 import java.util.Scanner;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;

@@ -6,8 +6,8 @@ import de.taimos.dvalin.interconnect.model.ivo.Direction;
 import de.taimos.dvalin.interconnect.model.ivo.IPageable;
 import de.taimos.dvalin.interconnect.model.ivo.IVO;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * $model.getComment()

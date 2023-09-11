@@ -23,7 +23,7 @@ package de.taimos.dvalin.mongo;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;

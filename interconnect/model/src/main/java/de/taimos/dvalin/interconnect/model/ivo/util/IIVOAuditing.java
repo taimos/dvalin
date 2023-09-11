@@ -27,7 +27,7 @@ package de.taimos.dvalin.interconnect.model.ivo.util;
 import de.taimos.dvalin.interconnect.model.ivo.IVO;
 import org.joda.time.DateTime;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface IIVOAuditing extends IVO {
 

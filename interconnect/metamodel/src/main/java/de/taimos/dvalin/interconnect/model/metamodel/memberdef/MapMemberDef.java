@@ -22,9 +22,9 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 import com.google.common.collect.Multimap;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.util.Map;
 
 /**

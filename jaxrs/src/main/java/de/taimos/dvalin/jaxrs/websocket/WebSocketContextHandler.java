@@ -23,7 +23,7 @@ package de.taimos.dvalin.jaxrs.websocket;
  * #L%
  */
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

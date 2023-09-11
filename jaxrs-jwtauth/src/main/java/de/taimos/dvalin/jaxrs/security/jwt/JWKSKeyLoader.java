@@ -1,6 +1,6 @@
 package de.taimos.dvalin.jaxrs.security.jwt;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.google.common.cache.CacheLoader;
 import com.nimbusds.jose.jwk.RSAKey;

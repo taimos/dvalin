@@ -22,8 +22,8 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 
 import org.joda.time.DateTime;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 import java.time.ZonedDateTime;
 
 /**

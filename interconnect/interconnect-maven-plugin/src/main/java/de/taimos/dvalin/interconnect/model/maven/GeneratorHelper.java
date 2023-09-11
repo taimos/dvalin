@@ -31,8 +31,8 @@ import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.event.implement.IncludeRelativePath;
 import org.apache.velocity.runtime.RuntimeConstants;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,7 +46,6 @@ import java.util.Properties;
 public class GeneratorHelper {
 
     /**
-     * @param log       the logger
      * @param model     the generator model
      * @param targetDir the target path for generation
      * @throws MojoExecutionException on errors

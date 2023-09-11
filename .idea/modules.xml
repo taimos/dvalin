@@ -2,25 +2,35 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/archetypes/dvalin-archetype-parent.iml" filepath="$PROJECT_DIR$/archetypes/dvalin-archetype-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" filepath="$PROJECT_DIR$/cloud/aws/dvalin-cloud-aws.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud/aws-ssm/dvalin-cloud-aws-ssm.iml" filepath="$PROJECT_DIR$/cloud/aws-ssm/dvalin-cloud-aws-ssm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" filepath="$PROJECT_DIR$/cloud/dvalin-cloud-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/cluster/hazelcast/dvalin-cluster-hazelcast.iml" filepath="$PROJECT_DIR$/cluster/hazelcast/dvalin-cluster-hazelcast.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cluster/dvalin-cluster-parent.iml" filepath="$PROJECT_DIR$/cluster/dvalin-cluster-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/daemon/dvalin-daemon.iml" filepath="$PROJECT_DIR$/daemon/dvalin-daemon.iml" />
       <module fileurl="file://$PROJECT_DIR$/dynamodb/dvalin-dynamodb.iml" filepath="$PROJECT_DIR$/dynamodb/dvalin-dynamodb.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/core/dvalin-interconnect-core.iml" filepath="$PROJECT_DIR$/interconnect/core/dvalin-interconnect-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/interconnect/dvalin-interconnect-parent.iml" filepath="$PROJECT_DIR$/interconnect/dvalin-interconnect-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/test/dvalin-interconnect-test.iml" filepath="$PROJECT_DIR$/interconnect/test/dvalin-interconnect-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" filepath="$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" filepath="$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jaxrs-swagger/dvalin-jaxrs-swagger.iml" filepath="$PROJECT_DIR$/jaxrs-swagger/dvalin-jaxrs-swagger.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa/dvalin-jpa.iml" filepath="$PROJECT_DIR$/jpa/dvalin-jpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" filepath="$PROJECT_DIR$/mongodb/dvalin-mongodb.iml" />
       <module fileurl="file://$PROJECT_DIR$/monitoring/aws/dvalin-monitoring-aws.iml" filepath="$PROJECT_DIR$/monitoring/aws/dvalin-monitoring-aws.iml" />
       <module fileurl="file://$PROJECT_DIR$/monitoring/core/dvalin-monitoring-core.iml" filepath="$PROJECT_DIR$/monitoring/core/dvalin-monitoring-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/monitoring/logging/dvalin-monitoring-logging.iml" filepath="$PROJECT_DIR$/monitoring/logging/dvalin-monitoring-logging.iml" />
+      <module fileurl="file://$PROJECT_DIR$/monitoring/dvalin-monitoring-parent.iml" filepath="$PROJECT_DIR$/monitoring/dvalin-monitoring-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/notification/aws/dvalin-notification-aws.iml" filepath="$PROJECT_DIR$/notification/aws/dvalin-notification-aws.iml" />
       <module fileurl="file://$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" filepath="$PROJECT_DIR$/notification/core/dvalin-notification-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notification/dvalin-notification-parent.iml" filepath="$PROJECT_DIR$/notification/dvalin-notification-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/orchestration/core/dvalin-orchestration-core.iml" filepath="$PROJECT_DIR$/orchestration/core/dvalin-orchestration-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/orchestration/etcd/dvalin-orchestration-etcd.iml" filepath="$PROJECT_DIR$/orchestration/etcd/dvalin-orchestration-etcd.iml" />
+      <module fileurl="file://$PROJECT_DIR$/orchestration/dvalin-orchestration-parent.iml" filepath="$PROJECT_DIR$/orchestration/dvalin-orchestration-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dvalin-parent.iml" filepath="$PROJECT_DIR$/dvalin-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/template/dvalin-template-parent.iml" filepath="$PROJECT_DIR$/template/dvalin-template-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" filepath="$PROJECT_DIR$/template/velocity/dvalin-template-velocity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" filepath="$PROJECT_DIR$/template/xdocreport/dvalin-template-xdocreport.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/dvalin-test.iml" filepath="$PROJECT_DIR$/test/dvalin-test.iml" />
     </modules>
   </component>

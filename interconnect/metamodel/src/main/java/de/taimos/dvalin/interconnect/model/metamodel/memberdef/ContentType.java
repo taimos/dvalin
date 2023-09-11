@@ -23,8 +23,8 @@ package de.taimos.dvalin.interconnect.model.metamodel.memberdef;
 import de.taimos.dvalin.interconnect.model.metamodel.xmladapter.ContentTypeAdapter;
 import org.joda.time.DateTime;
 
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.math.BigDecimal;
 import java.util.UUID;
 

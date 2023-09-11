@@ -20,7 +20,6 @@ package de.taimos.dvalin.mongo.config;
  * #L%
  */
 
-import com.mongodb.ConnectionString;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClients;

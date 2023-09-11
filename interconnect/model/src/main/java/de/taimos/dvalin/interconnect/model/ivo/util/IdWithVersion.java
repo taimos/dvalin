@@ -1,6 +1,6 @@
 package de.taimos.dvalin.interconnect.model.ivo.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 
 /**

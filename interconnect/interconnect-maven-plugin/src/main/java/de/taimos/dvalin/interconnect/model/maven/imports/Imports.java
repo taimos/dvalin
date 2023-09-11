@@ -10,8 +10,8 @@ import de.taimos.dvalin.interconnect.model.maven.model.AbstractInterconnectModel
 import de.taimos.dvalin.interconnect.model.metamodel.IGeneratorDefinition;
 import org.joda.time.DateTime;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;

@@ -34,8 +34,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,24 +56,24 @@ import mousio.etcd4j.responses.EtcdKeysResponse;
 @Service
 @OnSystemProperty(propertyName = "orchestration.etcd.peers")
 public class EtcdGlobalConfiguration implements GlobalConfiguration {
-    
+
     public static final Logger LOGGER = LoggerFactory.getLogger(EtcdServiceDiscovery.class);
-    
+
     private static final String BASE_KEY = "/dvalin/config";
-    
+
     @Value("${orchestration.etcd.peers}")
     private String peers;
-    
+
     private EtcdClient client;
-    
+
     private ConcurrentMap<String, String> configuration = new ConcurrentHashMap<>();
-    
+
     private final List<ConfigListener> listeners = new ArrayList<>();
-    
+
     private final AtomicLong etcdIndex = new AtomicLong(1);
-    
+
     private final AtomicBoolean running = new AtomicBoolean(true);
-    
+
     @PostConstruct
     public void init() {
         List<URI> uris = Arrays.stream(this.peers.split(",")).map(URI::create).collect(Collectors.toList());
@@ -87,31 +87,31 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
                         .timeout(10, TimeUnit.SECONDS)
                         .recursive()
                         .send();
-    
+
                     this.parseWaitResponse(send);
                 } catch (IOException e) {
                     LOGGER.warn("Error waiting for instance updates", e);
                 }
             }
-            
+
         }, "etcd-config-poller").start();
         this.addConfigurationListener(new ConfigListener() {
             @Override
             public void added(String key, String value) {
                 EtcdGlobalConfiguration.this.configuration.put(key, value);
             }
-            
+
             @Override
             public void changed(String key, String oldValue, String newValue) {
                 EtcdGlobalConfiguration.this.configuration.put(key, newValue);
             }
-            
+
             @Override
             public void removed(String key, String lastValue) {
                 EtcdGlobalConfiguration.this.configuration.remove(key);
             }
         });
-        
+
         try {
             EtcdKeysResponse response = this.client.get(BASE_KEY).timeout(10, TimeUnit.SECONDS).send().get();
             response.getNode().getNodes().forEach(node -> {
@@ -125,7 +125,7 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
             throw new RuntimeException(e);
         }
     }
-    
+
     private void parseWaitResponse(EtcdResponsePromise<EtcdKeysResponse> send) throws IOException {
         try {
 			EtcdKeysResponse response = send.get();
@@ -133,7 +133,7 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
 			String key = response.node.getKey();
 			if (key.startsWith(BASE_KEY)) {
 				String configKey = key.substring(BASE_KEY.length() + 1);
-				
+
 				switch (response.action) {
 				case set:
 				case create:
@@ -168,13 +168,13 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
 			}
 		}
     }
-    
+
     @PreDestroy
     public void shutdown() {
         this.listeners.clear();
         this.running.set(false);
     }
-    
+
     @Override
     public void setConfiguration(String key, String value) {
         try {
@@ -184,7 +184,7 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void setConfiguration(String key, String value, Integer ttlSeconds) {
         try {
@@ -194,7 +194,7 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void removeConfiguration(String key) {
         try {
@@ -204,22 +204,22 @@ public class EtcdGlobalConfiguration implements GlobalConfiguration {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public String getConfiguration(String key) {
         return this.configuration.get(key);
     }
-    
+
     @Override
     public void addConfigurationListener(ConfigListener listener) {
         this.listeners.add(listener);
     }
-    
+
     @Override
     public void removeConfigurationListener(ConfigListener listener) {
         this.listeners.remove(listener);
     }
-    
+
     private Collection<ConfigListener> getListeners() {
         return new ArrayList<>(this.listeners);
     }

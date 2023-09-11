@@ -37,10 +37,10 @@ import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MapMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.StringMemberDef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.UUIDMemberDef;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElements;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**

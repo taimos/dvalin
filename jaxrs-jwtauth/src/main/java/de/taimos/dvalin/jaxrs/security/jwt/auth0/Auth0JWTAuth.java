@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;

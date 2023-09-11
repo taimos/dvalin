@@ -20,8 +20,8 @@ package de.taimos.dvalin.interconnect.model.metamodel.xmladapter;
  * #L%
  */
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.ContentType;
 

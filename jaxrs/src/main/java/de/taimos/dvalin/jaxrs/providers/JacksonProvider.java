@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import de.taimos.dvalin.jaxrs.MapperFactory;
 
-import javax.annotation.Priority;
+import jakarta.annotation.Priority;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Priorities;

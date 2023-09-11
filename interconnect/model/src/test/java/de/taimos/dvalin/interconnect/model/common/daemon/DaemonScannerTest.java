@@ -34,7 +34,6 @@ import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.omg.CORBA.SystemException;
 
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +61,7 @@ public class DaemonScannerTest {
     public interface ITestWrongMultiExceptionTypes extends IDaemon, IDaemonHandler {
 
         @DaemonRequestMethod(idempotent = false)
-        void testVoid(final VoidIVO ivo) throws DaemonError, SystemException;
+        void testVoid(final VoidIVO ivo) throws DaemonError;
     }
 
 	@Test(expected = IllegalStateException.class)

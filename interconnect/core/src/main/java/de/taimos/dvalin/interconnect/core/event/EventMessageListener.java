@@ -28,7 +28,6 @@ import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.IEventHandler;
 import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,8 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.MessageListenerContainer;
 import org.springframework.util.ErrorHandler;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import javax.jms.ConnectionFactory;
 import javax.jms.Message;
 import javax.jms.MessageListener;
