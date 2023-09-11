@@ -13,6 +13,9 @@
 * Fixed vulnerabilities: CVE-2023-26048, CVE-2023-26049, CVE-2023-1370, CVE-2023-20861, CVE-2023-20863, CVE-2023-1370, 
 CVE-2022-40152, CVE-2022-46364, CVE-2022-46363, CVE-2023-2976, CVE-2020-8908, CVE-2022-1471, CVE-2023-33264
 * Added support for additional configuration files when using SpringDaemonTestRunner
+* Migrated from JUnit 4 to JUnit 5
+    * Drop support for Powermock
+    * Switch Mockito to Mockito Inline for usage in static mocks
 
 # 1.33
 * Update dependencies

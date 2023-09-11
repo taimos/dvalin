@@ -20,25 +20,23 @@ package de.taimos.dvalin.cloud.aws;
  * #L%
  */
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
-
 import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
 import com.amazonaws.services.cloudformation.model.ResourceSignalStatus;
 import com.amazonaws.services.cloudformation.model.SignalResourceRequest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CloudFormationTest {
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
+@ExtendWith(MockitoExtension.class)
+class CloudFormationTest {
 
     @Mock
     private EC2Context ec2Mock;
@@ -47,10 +45,9 @@ public class CloudFormationTest {
 
     private CloudFormation cloudFormation;
 
-    @Before
-    public void setup() throws NoSuchFieldException, IllegalAccessException {
+    @BeforeEach
+    void setup() throws NoSuchFieldException, IllegalAccessException {
         Mockito.when(this.ec2Mock.getInstanceId()).thenReturn("localId");
-        Mockito.when(this.ec2Mock.getInstanceTags()).thenReturn(new HashMap<String, String>());
 
         this.cloudFormation = new CloudFormation();
 
@@ -64,52 +61,49 @@ public class CloudFormationTest {
     }
 
     @Test
-    public void signalInstanceReady() throws Exception {
+    void signalInstanceReady() {
         try {
             this.cloudFormation.signalReady("stack", null);
-            Assert.fail("Null check failed for resource");
+            Assertions.fail("Null check failed for resource");
         } catch (Exception e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getClass());
+            Assertions.assertEquals(IllegalArgumentException.class, e.getClass());
         }
 
         try {
             this.cloudFormation.signalReady("stack", "");
-            Assert.fail("Empty check failed for resource");
+            Assertions.fail("Empty check failed for resource");
         } catch (Exception e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getClass());
+            Assertions.assertEquals(IllegalArgumentException.class, e.getClass());
         }
 
         try {
             this.cloudFormation.signalReady(null, "resource");
-            Assert.fail("Null check failed for stack");
+            Assertions.fail("Null check failed for stack");
         } catch (Exception e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getClass());
+            Assertions.assertEquals(IllegalArgumentException.class, e.getClass());
         }
 
         try {
             this.cloudFormation.signalReady("", "resource");
-            Assert.fail("Empty check failed for stack");
+            Assertions.fail("Empty check failed for stack");
         } catch (Exception e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getClass());
+            Assertions.assertEquals(IllegalArgumentException.class, e.getClass());
         }
 
-        Mockito.doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                SignalResourceRequest req = (SignalResourceRequest) invocationOnMock.getArguments()[0];
-                Assert.assertEquals("stack", req.getStackName());
-                Assert.assertEquals("resource", req.getLogicalResourceId());
-                Assert.assertEquals(ResourceSignalStatus.SUCCESS.toString(), req.getStatus());
-                Assert.assertEquals("localId", req.getUniqueId());
-                return null;
-            }
+        Mockito.doAnswer((Answer<Object>) invocationOnMock -> {
+            SignalResourceRequest req = (SignalResourceRequest) invocationOnMock.getArguments()[0];
+            Assertions.assertEquals("stack", req.getStackName());
+            Assertions.assertEquals("resource", req.getLogicalResourceId());
+            Assertions.assertEquals(ResourceSignalStatus.SUCCESS.toString(), req.getStatus());
+            Assertions.assertEquals("localId", req.getUniqueId());
+            return null;
         }).when(this.cfnMock).signalResource(Mockito.any(SignalResourceRequest.class));
 
         this.cloudFormation.signalReady("stack", "resource");
     }
 
     @Test
-    public void signalInstanceReadyLocalStack() throws Exception {
+    void signalInstanceReadyLocalStack() {
         HashMap<String, String> tags = new HashMap<>();
         tags.put(CloudFormation.TAG_CLOUDFORMATION_LOGICAL_ID, "resourceTag");
         tags.put(CloudFormation.TAG_CLOUDFORMATION_STACK_NAME, "stackTag");
@@ -117,50 +111,44 @@ public class CloudFormationTest {
 
         try {
             this.cloudFormation.signalReady(null);
-            Assert.fail("Null check failed for resource");
+            Assertions.fail("Null check failed for resource");
         } catch (Exception e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getClass());
+            Assertions.assertEquals(IllegalArgumentException.class, e.getClass());
         }
 
         try {
             this.cloudFormation.signalReady("");
-            Assert.fail("Empty check failed for resource");
+            Assertions.fail("Empty check failed for resource");
         } catch (Exception e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getClass());
+            Assertions.assertEquals(IllegalArgumentException.class, e.getClass());
         }
 
-        Mockito.doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                SignalResourceRequest req = (SignalResourceRequest) invocationOnMock.getArguments()[0];
-                Assert.assertEquals("stackTag", req.getStackName());
-                Assert.assertEquals("resource", req.getLogicalResourceId());
-                Assert.assertEquals(ResourceSignalStatus.SUCCESS.toString(), req.getStatus());
-                Assert.assertEquals("localId", req.getUniqueId());
-                return null;
-            }
+        Mockito.doAnswer((Answer<Object>) invocationOnMock -> {
+            SignalResourceRequest req = (SignalResourceRequest) invocationOnMock.getArguments()[0];
+            Assertions.assertEquals("stackTag", req.getStackName());
+            Assertions.assertEquals("resource", req.getLogicalResourceId());
+            Assertions.assertEquals(ResourceSignalStatus.SUCCESS.toString(), req.getStatus());
+            Assertions.assertEquals("localId", req.getUniqueId());
+            return null;
         }).when(this.cfnMock).signalResource(Mockito.any(SignalResourceRequest.class));
 
         this.cloudFormation.signalReady("resource");
     }
 
     @Test
-    public void signalInstanceReadyLocalStackAndResource() throws Exception {
+    void signalInstanceReadyLocalStackAndResource() {
         HashMap<String, String> tags = new HashMap<>();
         tags.put(CloudFormation.TAG_CLOUDFORMATION_LOGICAL_ID, "resourceTag");
         tags.put(CloudFormation.TAG_CLOUDFORMATION_STACK_NAME, "stackTag");
         Mockito.when(this.ec2Mock.getInstanceTags()).thenReturn(tags);
 
-        Mockito.doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                SignalResourceRequest req = (SignalResourceRequest) invocationOnMock.getArguments()[0];
-                Assert.assertEquals("stackTag", req.getStackName());
-                Assert.assertEquals("resourceTag", req.getLogicalResourceId());
-                Assert.assertEquals(ResourceSignalStatus.SUCCESS.toString(), req.getStatus());
-                Assert.assertEquals("localId", req.getUniqueId());
-                return null;
-            }
+        Mockito.doAnswer((Answer<Object>) invocationOnMock -> {
+            SignalResourceRequest req = (SignalResourceRequest) invocationOnMock.getArguments()[0];
+            Assertions.assertEquals("stackTag", req.getStackName());
+            Assertions.assertEquals("resourceTag", req.getLogicalResourceId());
+            Assertions.assertEquals(ResourceSignalStatus.SUCCESS.toString(), req.getStatus());
+            Assertions.assertEquals("localId", req.getUniqueId());
+            return null;
         }).when(this.cfnMock).signalResource(Mockito.any(SignalResourceRequest.class));
 
         this.cloudFormation.signalReady();

@@ -20,38 +20,35 @@ package de.taimos.dvalin.monitoring.aws;
  * #L%
  */
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Random;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
-
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.MetricDatum;
 import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
-
 import de.taimos.dvalin.monitoring.MetricInfo;
 import de.taimos.dvalin.monitoring.MetricUnit;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AWSMetricSenderTest {
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Random;
+
+@ExtendWith(MockitoExtension.class)
+class AWSMetricSenderTest {
 
     @Mock
     private AmazonCloudWatch cloudWatch;
 
     private AWSMetricSender sender;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         this.sender = new AWSMetricSender();
 
         Field field = AWSMetricSender.class.getDeclaredField("cloudWatch");
@@ -60,7 +57,7 @@ public class AWSMetricSenderTest {
     }
 
     @Test
-    public void sendMetric() throws Exception {
+    void sendMetric() {
         final String ns = "My/Namespace";
         final String metric = "Test metric";
         final MetricUnit unit = MetricUnit.Count;
@@ -68,26 +65,23 @@ public class AWSMetricSenderTest {
 
         final int val = new Random().nextInt(100);
 
-        Mockito.doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                PutMetricDataRequest req = (PutMetricDataRequest) invocationOnMock.getArguments()[0];
-                Assert.assertEquals(ns, req.getNamespace());
-                List<MetricDatum> data = req.getMetricData();
-                Assert.assertEquals(1, data.size());
-                MetricDatum datum = data.get(0);
-                Assert.assertEquals(metric, datum.getMetricName());
-                Assert.assertEquals(unit.toString(), datum.getUnit());
-                Assert.assertEquals(Double.valueOf(val), datum.getValue());
-                return null;
-            }
+        Mockito.doAnswer((Answer<Object>) invocationOnMock -> {
+            PutMetricDataRequest req = (PutMetricDataRequest) invocationOnMock.getArguments()[0];
+            Assertions.assertEquals(ns, req.getNamespace());
+            List<MetricDatum> data = req.getMetricData();
+            Assertions.assertEquals(1, data.size());
+            MetricDatum datum = data.get(0);
+            Assertions.assertEquals(metric, datum.getMetricName());
+            Assertions.assertEquals(unit.toString(), datum.getUnit());
+            Assertions.assertEquals(Double.valueOf(val), datum.getValue());
+            return null;
         }).when(this.cloudWatch).putMetricData(Mockito.any(PutMetricDataRequest.class));
 
         this.sender.sendMetric(info, (double) val);
     }
 
     @Test
-    public void sendMetricWithDimension() throws Exception {
+    void sendMetricWithDimension() {
         final String ns = "My/Namespace";
         final String metric = "Test metric";
         final MetricUnit unit = MetricUnit.Count;
@@ -98,72 +92,78 @@ public class AWSMetricSenderTest {
 
         final int val = new Random().nextInt(100);
 
-        Mockito.doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                PutMetricDataRequest req = (PutMetricDataRequest) invocationOnMock.getArguments()[0];
-                Assert.assertEquals(ns, req.getNamespace());
-                List<MetricDatum> data = req.getMetricData();
-                Assert.assertEquals(1, data.size());
-                MetricDatum datum = data.get(0);
-                Assert.assertEquals(metric, datum.getMetricName());
-                Assert.assertEquals(unit.toString(), datum.getUnit());
-                Assert.assertEquals(Double.valueOf(val), datum.getValue());
+        Mockito.doAnswer((Answer<Object>) invocationOnMock -> {
+            PutMetricDataRequest req = (PutMetricDataRequest) invocationOnMock.getArguments()[0];
+            Assertions.assertEquals(ns, req.getNamespace());
+            List<MetricDatum> data = req.getMetricData();
+            Assertions.assertEquals(1, data.size());
+            MetricDatum datum = data.get(0);
+            Assertions.assertEquals(metric, datum.getMetricName());
+            Assertions.assertEquals(unit.toString(), datum.getUnit());
+            Assertions.assertEquals(Double.valueOf(val), datum.getValue());
 
-                Assert.assertEquals(1, datum.getDimensions().size());
-                Dimension dimension = datum.getDimensions().get(0);
-                Assert.assertEquals(dimensionName, dimension.getName());
-                Assert.assertEquals(dimensionValue, dimension.getValue());
-                return null;
-            }
+            Assertions.assertEquals(1, datum.getDimensions().size());
+            Dimension dimension = datum.getDimensions().get(0);
+            Assertions.assertEquals(dimensionName, dimension.getName());
+            Assertions.assertEquals(dimensionValue, dimension.getValue());
+            return null;
         }).when(this.cloudWatch).putMetricData(Mockito.any(PutMetricDataRequest.class));
 
         this.sender.sendMetric(info, (double) val);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void missingNamespace() throws Exception {
-        new MetricInfo(null, "someMetric", MetricUnit.Count);
+    @Test()
+    void missingNamespace() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo(null, "someMetric", MetricUnit.Count));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void missingMetric() throws Exception {
-        new MetricInfo("Some/Namespace", null, MetricUnit.Count);
+    @Test()
+    void missingMetric() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("Some/Namespace", null, MetricUnit.Count));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void missingUnit() throws Exception {
-        new MetricInfo("Some/Namespace", "someMetric", null);
+    @Test()
+    void missingUnit() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("Some/Namespace", "someMetric", null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void emptyNamespace() throws Exception {
-        new MetricInfo("", "someMetric", MetricUnit.Count);
+    @Test()
+    void emptyNamespace() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("", "someMetric", MetricUnit.Count));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void emptyMetric() throws Exception {
-        new MetricInfo("Some/Namespace", "", MetricUnit.Count);
+    @Test()
+    void emptyMetric() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("Some/Namespace", "", MetricUnit.Count));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void missingDimensionName() throws Exception {
-        new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension(null, "value");
+    @Test()
+    void missingDimensionName() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension(null, "value"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void emptyDimensionName() throws Exception {
-        new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension("", "value");
+    @Test()
+    void emptyDimensionName() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension("", "value"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void missingDimensionValue() throws Exception {
-        new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension("name", null);
+    @Test()
+    void missingDimensionValue() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension("name", null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void emptyDimensionValue() throws Exception {
-        new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension("name", "");
+    @Test()
+    void emptyDimensionValue() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new MetricInfo("Some/Namespace", "someMetric", MetricUnit.Count).withDimension("name", ""));
     }
 
 }
