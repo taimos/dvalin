@@ -1,5 +1,6 @@
 # current master
 * Update dependencies
+    * Java 17
     * Spring 5.3.27
     * AWS 1.12.467
     * Jetty 9.4.51.v20230217
@@ -10,6 +11,7 @@
     * Hazelcast 5.3.0
     * Swagger 2.2.10
     * Liquibase 4.21.1
+    * cxf 3.5.6
 * Fixed vulnerabilities: CVE-2023-26048, CVE-2023-26049, CVE-2023-1370, CVE-2023-20861, CVE-2023-20863, CVE-2023-1370, 
 CVE-2022-40152, CVE-2022-46364, CVE-2022-46363, CVE-2023-2976, CVE-2020-8908, CVE-2022-1471, CVE-2023-33264
 * Added support for additional configuration files when using SpringDaemonTestRunner
