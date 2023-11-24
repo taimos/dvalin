@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.taimos</groupId>
@@ -50,27 +51,27 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>5.3.27</org.springframework.version>
+        <org.springframework.version>5.3.31</org.springframework.version>
         <jackson.version>2.15.2</jackson.version>
-        <joda.time.version>2.11.2</joda.time.version>
+        <joda.time.version>2.12.5</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <log4j.version>2.19.0</log4j.version>
-        <junit.version>5.9.3</junit.version>
-        <aws.version>1.12.467</aws.version>
-        <activemq.version>5.16.5</activemq.version>
-        <cxf.version>3.5.6</cxf.version>
+        <log4j.version>2.22.0</log4j.version>
+        <junit.version>5.10.1</junit.version>
+        <aws.version>1.12.595</aws.version>
+        <activemq.version>5.16.7</activemq.version>
+        <cxf.version>3.5.7</cxf.version>
         <jetty.version>9.4.53.v20231009</jetty.version>
-        <guava.version>32.0.0-jre</guava.version>
+        <guava.version>32.1.3-jre</guava.version>
         <hibernate.version>5.6.14.Final</hibernate.version>
         <http.version>2.2</http.version>
         <velocity.version>2.3</velocity.version>
-        <bson.version>2.13.1</bson.version>
-        <jongo.version>1.5.0</jongo.version>
-        <mongo.version>4.8.0</mongo.version>
-        <mongock.version>5.2.4</mongock.version>
-        <mongo-java-server.version>1.42.0</mongo-java-server.version>
+        <bson.version>2.15.0</bson.version>
+        <jongo.version>1.5.1</jongo.version>
+        <mongo.version>4.11.1</mongo.version>
+        <mongock.version>5.3.5</mongock.version>
+        <mongo-java-server.version>1.43.0</mongo-java-server.version>
         <xdocreport.version>2.0.4</xdocreport.version>
-        <mockito-core.version>4.6.1</mockito-core.version>
+        <mockito-core.version>4.11.0</mockito-core.version>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/taimos/dvalin.git</connection>
@@ -107,7 +108,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.15</version>
+                <version>1.16.0</version>
             </dependency>
             <dependency>
                 <groupId>de.taimos</groupId>
@@ -367,17 +368,17 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-core</artifactId>
-                <version>3.8.6</version>
+                <version>3.9.5</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
-                <version>3.8.6</version>
+                <version>3.9.5</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
-                <version>3.6.4</version>
+                <version>3.10.2</version>
             </dependency>
 
 
@@ -493,7 +494,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -502,15 +503,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
+                <version>3.6.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
+                <version>0.8.11</version>
                 <executions>
                     <execution>
                         <goals>
@@ -526,6 +529,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
     <profiles>
@@ -536,7 +540,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
