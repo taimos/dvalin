@@ -15,11 +15,13 @@
     * Mongock 5.3.5
     * Mongo Java Server 1.43.0
     * Mockito 4.11.0
+    * Bouncycastle Provider 1.74
     * Maven core and maven plugins
 * Added support for additional configuration files when using SpringDaemonTestRunner
 * Migrated from JUnit 4 to JUnit 5
     * Drop support for Powermock
     * Switch Mockito to Mockito Inline for usage in static mocks
+* Fixed vulnerabilities: CVE-2023-33201(Bouncycastle),CVE-2023-40167(Jetty),CVE-2023-45860(Hazelcast),CVE-2023-46604(ActiveMQ)
 
 # 1.34
 * Update dependencies
