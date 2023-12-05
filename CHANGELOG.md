@@ -1,5 +1,32 @@
 # current master
 * Update dependencies
+    * Spring 5.3.31
+    * AWS 1.12.595
+    * Jetty 9.4.53.v20231009
+    * Log4J 2.22.0
+    * ActiveMQ 5.16.7
+    * Apache CXF 3.5.7
+    * JSON Small and Fast Parser 2.5.0
+    * Guava 32.1.3-jre
+    * Hazelcast 5.3.6
+    * Swagger 2.2.19
+    * Liquibase 4.25.0
+    * Mongo Java Driver 4.11.1
+    * Mongock 5.3.5
+    * Mongo Java Server 1.43.0
+    * Mockito 4.11.0
+    * Bouncycastle Provider 1.74
+    * Maven core and maven plugins
+* Added support for additional configuration files when using SpringDaemonTestRunner
+* Migrated from JUnit 4 to JUnit 5
+    * Drop support for Powermock
+    * Switch Mockito to Mockito Inline for usage in static mocks
+* Fixing an recurring ActiveMQ problem where messages can't be sent because ActiveMQ is to slow opening destination. 
+  We do a resend after configurable retry time. If problem does not occur, nothing hanges.
+* Fixed vulnerabilities: CVE-2023-33201(Bouncycastle),CVE-2023-40167(Jetty),CVE-2023-45860(Hazelcast),CVE-2023-46604(ActiveMQ)
+
+# 1.34
+* Update dependencies
     * Spring 5.3.27
     * AWS 1.12.467
     * Jetty 9.4.51.v20230217
@@ -12,10 +39,6 @@
     * Liquibase 4.21.1
 * Fixed vulnerabilities: CVE-2023-26048, CVE-2023-26049, CVE-2023-1370, CVE-2023-20861, CVE-2023-20863, CVE-2023-1370, 
 CVE-2022-40152, CVE-2022-46364, CVE-2022-46363, CVE-2023-2976, CVE-2020-8908, CVE-2022-1471, CVE-2023-33264
-* Added support for additional configuration files when using SpringDaemonTestRunner
-* Migrated from JUnit 4 to JUnit 5
-    * Drop support for Powermock
-    * Switch Mockito to Mockito Inline for usage in static mocks
 
 # 1.33
 * Update dependencies

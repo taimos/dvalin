@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core.spring;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,23 +19,6 @@ package de.taimos.dvalin.interconnect.core.spring;
  * limitations under the License.
  * #L%
  */
-
-import java.util.HashMap;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 
 import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.interconnect.core.InterconnectConnector;
@@ -45,6 +28,21 @@ import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
 import de.taimos.dvalin.interconnect.model.CryptoException;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.InvalidDestinationException;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import java.util.HashMap;
 
 
 /**
@@ -62,8 +60,13 @@ public final class DaemonMessageSender implements IDaemonMessageSender {
     @Qualifier("jmsTemplate")
     private JmsTemplate template;
 
+    @Value("${interconnect.tempqueue.retry:100}")
+    private int tempQueueRetry;
 
-    /** */
+
+    /**
+     *
+     */
     public DaemonMessageSender() {
         this.logger.trace("new bean instance created");
     }
@@ -76,7 +79,9 @@ public final class DaemonMessageSender implements IDaemonMessageSender {
         InterconnectConnector.start();
     }
 
-    /** */
+    /**
+     *
+     */
     @PreDestroy
     public void stop() {
         try {
@@ -88,25 +93,35 @@ public final class DaemonMessageSender implements IDaemonMessageSender {
 
     private void sendIVO(final String correlationID, final Destination replyTo, final InterconnectObject ico, final boolean secure) throws Exception {
         final String json = InterconnectMapper.toJson(ico);
-        this.logger.debug("TextMessage send: " + json);
-        this.template.send(replyTo, new MessageCreator() {
-
-            @Override
-            public Message createMessage(final Session session) throws JMSException {
-                final TextMessage textMessage = session.createTextMessage();
-                textMessage.setStringProperty(InterconnectConnector.HEADER_ICO_CLASS, ico.getClass().getName());
-                textMessage.setJMSCorrelationID(correlationID);
-                textMessage.setText(json);
-                if (secure) {
-                    try {
-                        MessageConnector.secureMessage(textMessage);
-                    } catch (CryptoException e) {
-                        throw new JMSException(e.getMessage());
-                    }
-                }
-                return textMessage;
+        this.logger.debug("TextMessage send: {}", json);
+        try {
+            this.template.send(replyTo, this.createMessageCreator(correlationID, ico, secure, json));
+        } catch (InvalidDestinationException e) {
+            if (e.getMessage().contains("temp-queue://")) {
+                this.logger.warn("Retrying message send to {} after {}ms", replyTo, this.tempQueueRetry);
+                Thread.sleep(this.tempQueueRetry);
+                this.template.send(replyTo, this.createMessageCreator(correlationID, ico, secure, json));
+            } else {
+                throw e;
             }
-        });
+        }
+    }
+
+    private MessageCreator createMessageCreator(String correlationID, InterconnectObject ico, boolean secure, String json) {
+        return session -> {
+            final TextMessage textMessage = session.createTextMessage();
+            textMessage.setStringProperty(InterconnectConnector.HEADER_ICO_CLASS, ico.getClass().getName());
+            textMessage.setJMSCorrelationID(correlationID);
+            textMessage.setText(json);
+            if (secure) {
+                try {
+                    MessageConnector.secureMessage(textMessage);
+                } catch (CryptoException e) {
+                    throw new JMSException(e.getMessage());
+                }
+            }
+            return textMessage;
+        };
     }
 
     @Override
@@ -161,5 +176,4 @@ public final class DaemonMessageSender implements IDaemonMessageSender {
     public void sendToQueue(final String queue, final InterconnectObject ico, final boolean secure, final String replyToQueue, final String correlationId, final DaemonMessageSenderHeader... headers) throws Exception {
         InterconnectConnector.sendToQueue(queue, ico, DaemonMessageSender.wrapHeaders(headers), secure, replyToQueue, correlationId);
     }
-
 }

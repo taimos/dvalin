@@ -21,13 +21,13 @@
         <module name="dvalin-i18n" />
         <module name="dvalin-cloud-aws" />
         <module name="dvalin-interconnect-model" />
-        <module name="dvalin-template-xdocreport" />
         <module name="dvalin-archetype-basic" />
         <module name="dvalin-monitoring-core" />
         <module name="dvalin-notification-aws" />
         <module name="dvalin-jpa" />
         <module name="dvalin-cloud-aws-ssm" />
         <module name="dvalin-jaxrs-jwtauth" />
+        <module name="model-maven-plugin" />
         <module name="dvalin-cluster-hazelcast" />
         <module name="dvalin-mongodb" />
         <module name="dvalin-interconnect-test" />
@@ -36,21 +36,23 @@
         <module name="dvalin-monitoring-logging" />
         <module name="dvalin-daemon" />
         <module name="dvalin-interconnect-metamodel" />
-        <module name="dvalin-orchestration-etcd" />
         <module name="dvalin-template-velocity" />
         <module name="dvalin-archetype-docker" />
         <module name="dvalin-test" />
         <module name="dvalin-jaxrs-swagger" />
         <module name="dvalin-jaxrs" />
         <module name="dvalin-notification-core" />
-        <module name="dvalin-orchestration-core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="dvalin-examples-jaxrs-hello-world" target="1.8" />
       <module name="dvalin-examples-parent" target="1.8" />
       <module name="dvalin-interconnect-demo" target="1.8" />
+      <module name="dvalin-orchestration-core" target="1.8" />
+      <module name="dvalin-orchestration-etcd" target="1.8" />
+      <module name="dvalin-orchestration-parent" target="1.8" />
       <module name="dvalin-template-jasperreports" target="1.8" />
+      <module name="dvalin-template-xdocreport" target="1.8" />
       <module name="dvlain-i18n" target="1.8" />
     </bytecodeTargetLevel>
   </component>
