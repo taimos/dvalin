@@ -23,6 +23,7 @@
     * Switch Mockito to Mockito Inline for usage in static mocks
 * Fixing an recurring ActiveMQ problem where messages can't be sent because ActiveMQ is to slow opening destination. 
   We do a resend after configurable retry time. If problem does not occur, nothing hanges.
+* IVO generator: replaced old Apache BeanUtils with Spring beans BeanUtils
 * Fixed vulnerabilities: CVE-2023-33201(Bouncycastle),CVE-2023-40167(Jetty),CVE-2023-45860(Hazelcast),CVE-2023-46604(ActiveMQ)
 
 # 1.34

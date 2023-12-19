@@ -86,7 +86,6 @@
         <dependency>
             <groupId>io.mongock</groupId>
             <artifactId>mongodb-sync-v4-driver</artifactId>
-            <!--<artifactId>mongodb-v3-driver</artifactId> for MongoDB driver v3-->
         </dependency>
         <dependency>
             <groupId>de.bwaldvogel</groupId>
