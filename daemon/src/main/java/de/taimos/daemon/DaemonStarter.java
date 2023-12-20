@@ -391,7 +391,7 @@ public class DaemonStarter {
             DaemonStarter.rlog.error("Custom abort failed", e);
         }
         if (error != null) {
-            DaemonStarter.rlog.error("Unrecoverable error encountered  --> Exiting : {}", error.getMessage());
+            DaemonStarter.rlog.error("Unrecoverable error encountered  --> Exiting", error);
             DaemonStarter.getLifecycleListener().exception(LifecyclePhase.ABORTING, error);
         } else {
             DaemonStarter.rlog.error("Unrecoverable error encountered --> Exiting");
