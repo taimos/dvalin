@@ -8,8 +8,8 @@ import de.taimos.dvalin.interconnect.model.maven.model.ivo.AbstractIVOModel;
 import de.taimos.dvalin.interconnect.model.metamodel.defs.IVODef;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.FilterableType;
 import de.taimos.dvalin.interconnect.model.metamodel.memberdef.MemberDef;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.springframework.beans.BeanUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -58,17 +58,15 @@ public abstract class AbstractFindModel extends AbstractIVOModel {
     }
 
     protected void createMinMaxMember(MemberDef member) {
-        try {
-            MemberDef min = (MemberDef) BeanUtils.cloneBean(member);
-            min.setName(min.getName() + "Min");
-            min.setFilterable(FilterableType.single);
-            this.addChild(min);
-            MemberDef max = (MemberDef) BeanUtils.cloneBean(member);
-            max.setName(max.getName() + "Max");
-            min.setFilterable(FilterableType.single);
-            this.addChild(max);
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-            //skip
-        }
-    }
+		MemberDef min = BeanUtils.instantiateClass(member.getClass());
+		BeanUtils.copyProperties(member, min);
+		min.setName(min.getName() + "Min");
+		min.setFilterable(FilterableType.single);
+		this.addChild(min);
+		MemberDef max = BeanUtils.instantiateClass(member.getClass());
+		BeanUtils.copyProperties(member, max);
+		max.setName(max.getName() + "Max");
+		max.setFilterable(FilterableType.single);
+		this.addChild(max);
+	}
 }
