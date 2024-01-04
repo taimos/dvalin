@@ -25,6 +25,7 @@
   We do a resend after configurable retry time. If problem does not occur, nothing hanges.
 * IVO generator: replaced old Apache BeanUtils with Spring beans BeanUtils
 * Better error handling for DaemonStarter.abortSystem
+* Interconnect: Check topic name for null values
 * Fixed vulnerabilities: CVE-2023-33201(Bouncycastle),CVE-2023-40167(Jetty),CVE-2023-45860(Hazelcast),CVE-2023-46604(ActiveMQ)
 
 # 1.34
