@@ -59,6 +59,10 @@ public abstract class ToTopicSender {
      * @param topicName name of the topic you want to use
      */
     protected void send(Serializable object, String topicName) {
+        if(topicName == null) {
+            this.logger.error("Invalid topic name: a non-null name is required");
+            throw new IllegalArgumentException("Invalid topic name: a non-null name is required");
+        }
         Connection connection = null;
         try {
             connection = this.pooledConnectionFactory.createConnection();
