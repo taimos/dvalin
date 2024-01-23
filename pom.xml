@@ -51,7 +51,7 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>5.3.31</org.springframework.version>
+        <org.springframework.version>6.0.15</org.springframework.version>
         <jackson.version>2.15.2</jackson.version>
         <joda.time.version>2.12.5</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
