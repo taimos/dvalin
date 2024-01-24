@@ -57,7 +57,7 @@
         <slf4j.version>1.7.36</slf4j.version>
         <log4j.version>2.22.0</log4j.version>
         <junit.version>5.10.1</junit.version>
-        <aws.version>1.12.595</aws.version>
+        <aws.version>1.12.641</aws.version>
         <activemq.version>5.16.7</activemq.version>
         <cxf.version>3.5.7</cxf.version>
         <jetty.version>9.4.53.v20231009</jetty.version>

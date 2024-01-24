@@ -1,7 +1,7 @@
 # current master
 * Update dependencies
     * Spring 5.3.31
-    * AWS 1.12.595
+    * AWS 1.12.641
     * Jetty 9.4.53.v20231009
     * Log4J 2.22.0
     * ActiveMQ 5.16.7
@@ -26,7 +26,7 @@
 * IVO generator: replaced old Apache BeanUtils with Spring beans BeanUtils
 * Better error handling for DaemonStarter.abortSystem
 * Interconnect: Check topic name for null values
-* Fixed vulnerabilities: CVE-2023-33201(Bouncycastle),CVE-2023-40167(Jetty),CVE-2023-45860(Hazelcast),CVE-2023-46604(ActiveMQ)
+* Fixed vulnerabilities: CVE-2023-33201(Bouncycastle),CVE-2023-40167(Jetty),CVE-2023-45860(Hazelcast),CVE-2023-46604(ActiveMQ),CVE-2024-21634(AWS)
 
 # 1.34
 * Update dependencies
