@@ -86,7 +86,7 @@ public abstract class ADaemonMessageHandler {
      * Create a new request handler.
      *
      * @return ADaemonHandler
-     * @param registryEntry
+     * @param registryEntry the registry entry
      */
     protected abstract IDaemonHandler createRequestHandler(RegistryEntry registryEntry);
 

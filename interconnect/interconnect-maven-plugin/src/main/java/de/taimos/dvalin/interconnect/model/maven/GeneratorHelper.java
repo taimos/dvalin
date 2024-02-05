@@ -46,7 +46,6 @@ import java.util.Properties;
 public class GeneratorHelper {
 
     /**
-     * @param log       the logger
      * @param model     the generator model
      * @param targetDir the target path for generation
      * @throws MojoExecutionException on errors

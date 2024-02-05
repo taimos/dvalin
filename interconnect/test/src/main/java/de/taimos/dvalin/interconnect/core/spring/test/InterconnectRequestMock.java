@@ -153,18 +153,18 @@ public class InterconnectRequestMock implements IRequestMock {
     public interface RequestMockHandler {
 
         /**
-         * @param <R>
-         * @param uuid
-         * @param ico
-         * @param responseClazz
+         * @param <R> response class type
+         * @param uuid the uuid
+         * @param ico the interconnect object
+         * @param responseClazz the response class
          * @return the response
-         * @throws DaemonError
+         * @throws DaemonError if deamon error
          */
         <R> R handle(UUID uuid, InterconnectObject ico, Class<R> responseClazz) throws DaemonError;
 
         /**
-         * @param uuid
-         * @param ico
+         * @param uuid the uuid
+         * @param ico the interconnect object
          */
         void handle(UUID uuid, InterconnectObject ico);
 
