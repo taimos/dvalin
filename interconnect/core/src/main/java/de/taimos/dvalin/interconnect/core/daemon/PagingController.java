@@ -35,7 +35,7 @@ import de.taimos.dvalin.interconnect.model.service.IDaemon;
 
 /**
  * You can give me a Request-IVO and an IDaemon interface and I will get all the pages for that request as an Iterable if the result is an
- * IVOQueryResultIVO_v1<E extends IVO>. Be sure to type me according to the return of the Daemon otherwise I will produce a class cast
+ * IVOQueryResultIVO_v1. Be sure to type me according to the return of the Daemon otherwise I will produce a class cast
  * exception at runtime.<br>
  * New Pages are fetched on hasNext() call so be prepared that a call to hasNext() will block all this.limit items for a while.
  *

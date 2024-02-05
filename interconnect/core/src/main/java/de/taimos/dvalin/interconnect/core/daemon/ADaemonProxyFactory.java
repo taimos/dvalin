@@ -56,7 +56,7 @@ public abstract class ADaemonProxyFactory implements IDaemonProxyFactory {
      * @param uuid          Universally unique identifier of the request
      * @param queue         Queue name
      * @param request       Request IVO
-     * @param responseClazz
+     * @param responseClazz the response class
      * @param timeout       maximum time to wait
      * @param unit          time unit of the timeout argument
      * @param secure        Secure (encrypted communication)

@@ -97,6 +97,7 @@ public final class InterconnectMapper {
      * Returns a clone of the given object using JSON (de)serialization.
      *
      * @param object the object to be cloned
+     * @param <T> the cloned object class name
      * @return a clone of this object.
      * @throws JsonGenerationException if the JSON data could not be generated
      * @throws JsonMappingException    if the object could not be mapped to a JSON string

@@ -33,6 +33,7 @@ public interface IDaemon {
 	/**
 	 * @param req {@link PingIVO}
 	 * @return {@link PongIVO}
+     * @throws DaemonError the daemon error
 	 */
 	@DaemonRequestMethod(idempotent = true)
     PongIVO alive(PingIVO req) throws DaemonError;

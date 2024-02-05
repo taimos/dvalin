@@ -702,6 +702,8 @@ public final class MessageConnector {
     /**
      * @param txt the message to encrypt
      * @throws CryptoException on crypto errors
+     * @throws InfrastructureException on infrastructure exception
+     * @return if message is secure
      */
     public static boolean isMessageSecure(final TextMessage txt) throws CryptoException, InfrastructureException {
         try {

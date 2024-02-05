@@ -30,6 +30,7 @@ public class InterfaceIVOModel extends AbstractIVOModel {
     /**
      * @param definition the definition
      * @param logger     the logger
+     * @param additionalMemberHandlers the additional member handlers
      */
     public InterfaceIVOModel(IVODef definition, Log logger, IAdditionalMemberHandler... additionalMemberHandlers) {
         super(additionalMemberHandlers);
