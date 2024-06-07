@@ -20,32 +20,39 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Sorts;
+import org.bson.BsonDocument;
+import org.bson.BsonObjectId;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
-import org.jongo.Jongo;
-import org.jongo.Mapper;
-import org.jongo.MongoCollection;
-import org.jongo.MongoCursor;
-import org.jongo.bson.BsonDocument;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoDatabase;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends AbstractMongoDAO<T> implements ICrudAuditedDAO<T> {
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
 
-    protected MongoCollection jongoHistoryCollection;
-    private com.mongodb.client.MongoCollection historyCollection;
-    private Mapper jongoMapper;
+/**
+ * @param <T> the entity this DAO is used for
+ * @author Thorsten Hoeger
+ */
+public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends AbstractMongoDAO<T>
+    implements ICrudAuditedDAO<T> {
+
+    private static final String HISTORY_OBJECT_ID = "originalId";
+
+    private MongoCollection<Document> historyCollection;
+    private ObjectMapper mapper;
 
     @Override
-    protected void customInit(MongoDatabase db, Jongo jongo) {
+    protected void customInit() {
+        this.mapper = this.dataAccess.getMapper();
         String collectionName = this.dataAccess.getCollectionName() + "_history";
-        this.jongoHistoryCollection = jongo.getCollection(collectionName);
-        this.historyCollection = db.getCollection(collectionName);
-        this.jongoMapper = jongo.getMapper();
+        this.historyCollection = this.dataAccess.getDb().getCollection(collectionName);
     }
 
     @Override
@@ -54,17 +61,22 @@ public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends 
             return this.findById(id);
         }
 
-        MongoCursor<T> as = this.jongoHistoryCollection.find("{originalId:#, version:#}", new ObjectId(id), version).as(this.dataAccess.getEntityClass());
-        if (as.hasNext()) {
-            return as.next();
-        }
-        return null;
+        return this.historyCollection.find(and(eq(AbstractAuditedMongoDAO.getIdFilter(id)), eq("version", version)))
+            .map(this::mapToEntity).first();
     }
 
     @Override
     public List<T> findHistoryElements(String id) {
-        Iterable<T> as = this.jongoHistoryCollection.find("{originalId : #}", new ObjectId(id)).sort("{version: -1}").as(this.dataAccess.getEntityClass());
-        return this.dataAccess.convertIterable(as);
+        return this.historyCollection.find(AbstractAuditedMongoDAO.getIdFilter(id)).sort(Sorts.descending("version"))
+            .map(this::mapToEntity).into(new ArrayList<>());
+    }
+
+    private T mapToEntity(Document document) {
+        return this.dataAccess.mapToEntity(document);
+    }
+
+    private static Bson getIdFilter(String id) {
+        return eq(AbstractAuditedMongoDAO.HISTORY_OBJECT_ID, new ObjectId(id));
     }
 
     @Override
@@ -81,15 +93,17 @@ public abstract class AbstractAuditedMongoDAO<T extends AAuditedEntity> extends 
     @Override
     protected void afterSave(T object) {
         try {
-            BsonDocument bsonDocument = this.jongoMapper.getMarshaller().marshall(object);
-            BasicDBObject dbObject = new BasicDBObject(bsonDocument.toDBObject().toMap());
-            dbObject.removeField("_id");
-            dbObject.put("originalId", new ObjectId(object.getId()));
-            Document doc = Document.parse(dbObject.toString());
-            this.historyCollection.insertOne(doc);
+            String json = this.mapper.writeValueAsString(object);
+            BsonDocument bsonDocument = BsonDocument.parse(json);
+            bsonDocument.remove(this.dataAccess.idField());
+            bsonDocument.append(AbstractAuditedMongoDAO.HISTORY_OBJECT_ID,
+                new BsonObjectId(new ObjectId(object.getId())));
+
+            this.historyCollection.insertOne(this.bsonToDocument(bsonDocument));
         } catch (Exception e) {
             String message = String.format("Unable to save object %s due to a marshalling error", object);
             throw new IllegalArgumentException(message, e);
         }
     }
+
 }

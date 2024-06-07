@@ -20,23 +20,27 @@ package de.taimos.dvalin.mongo.config;
  * #L%
  */
 
-import java.util.concurrent.TimeUnit;
-
-import com.mongodb.DB;
-import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import de.taimos.dvalin.mongo.JongoFactory;
+import de.taimos.dvalin.mongo.JodaCodec;
 import io.mongock.api.config.LegacyMigration;
 import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.mongock.runner.standalone.MongockStandalone;
 import io.mongock.runner.standalone.RunnerStandaloneBuilder;
-import org.jongo.Jongo;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.bson.codecs.pojo.Conventions.DEFAULT_CONVENTIONS;
 
 @Configuration
 public class MongoDBConfig {
@@ -57,7 +61,7 @@ public class MongoDBConfig {
     private String basePackage;
 
     @Bean
-    public RunnerStandaloneBuilder mongockRunner(com.mongodb.client.MongoClient mongoClient, Jongo jongo, DB legacyDB) {
+    public RunnerStandaloneBuilder mongockRunner(MongoClient mongoClient, MongoDatabase mongoDatabase) {
 
         MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(mongoClient, this.dbName);
         driver.setWriteConcern(WriteConcern.MAJORITY.withJournal(true).withWTimeout(1000, TimeUnit.MILLISECONDS));
@@ -65,32 +69,30 @@ public class MongoDBConfig {
         driver.setReadPreference(ReadPreference.primary());
         driver.disableTransaction();
 
-        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver).setTransactionEnabled(false);
-        if (this.basePackage == null || this.basePackage.isEmpty()){
+        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver)
+            .setTransactionEnabled(false);
+        if (this.basePackage == null || this.basePackage.isEmpty()) {
             throw new RuntimeException("LegacyMigration basePackage must be set!");
         }
         runnerStandaloneBuilder.addMigrationScanPackage(this.basePackage);
-        if(mongockLegacyMigrationEnabled) {
+        if (mongockLegacyMigrationEnabled) {
             LegacyMigration legacyMigration = new LegacyMigration();
             legacyMigration.setOrigin(this.mongockLegacyTable);
             runnerStandaloneBuilder.setLegacyMigration(legacyMigration);
         }
-        runnerStandaloneBuilder.addDependency(jongo).addDependency(legacyDB).buildRunner().execute();
+        runnerStandaloneBuilder.addDependency(mongoDatabase).buildRunner().execute();
         return runnerStandaloneBuilder;
     }
 
     @Bean
     public MongoDatabase mongoDatabase(MongoClient mongoClient) {
-        return mongoClient.getDatabase(this.dbName);
-    }
+        MongoDatabase database = mongoClient.getDatabase(this.dbName);
 
-    @Bean
-    public Jongo jongo(MongoClient mongoClient) {
-        return JongoFactory.createDefault(mongoClient.getDB(this.dbName));
-    }
+        CodecRegistry codecReg = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+            CodecRegistries.fromCodecs(new JodaCodec()), CodecRegistries.fromProviders(
+                PojoCodecProvider.builder().conventions(DEFAULT_CONVENTIONS).automatic(true).build()));
+        database.withCodecRegistry(codecReg);
 
-    @Bean
-    public DB mongoDB(MongoClient mongoClient){
-        return mongoClient.getDB(this.dbName);
+        return database;
     }
 }

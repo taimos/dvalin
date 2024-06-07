@@ -23,6 +23,7 @@ package de.taimos.dvalin.mongo;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -33,6 +34,7 @@ import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.mongock.runner.standalone.MongockStandalone;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.jongo.Mapper;
 import org.jongo.marshall.jackson.JacksonMapper;
@@ -40,6 +42,7 @@ import org.jongo.marshall.jackson.JacksonMapper.Builder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class Tester extends ABaseTest {
 
@@ -71,6 +74,20 @@ public class Tester extends ABaseTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testObjectId() throws JsonProcessingException {
+        TestObject to = new TestObject();
+        Tester.dao.dataAccess.save(to);
+
+        Document result = Tester.dao.dataAccess.getCollection().findOne().as(Document.class);
+
+        Assertions.assertNotNull(result);
+
+//        TestObject mappedObject = mapper.readValue(result.toJson(), TestObject.class);
+        Object id = result.get("_id");
+        Assertions.assertEquals(new ObjectId(to.getId()), id);
     }
 
     @Test

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
     <list size="1">
@@ -26,6 +27,9 @@
         <option value="$PROJECT_DIR$/examples/pom.xml" />
       </set>
     </option>
+  </component>
+  <component name="PWA">
+    <option name="wasEnabledAtLeastOnce" value="true" />
   </component>
   <component name="ProjectResources">
     <resource url="http://maven.apache.org/xsd/assembly-1.1.2.xsd" location="" />

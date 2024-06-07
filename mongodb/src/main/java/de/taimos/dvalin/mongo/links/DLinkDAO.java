@@ -1,14 +1,16 @@
 package de.taimos.dvalin.mongo.links;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.jongo.Jongo;
-import org.jongo.MongoCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * #%L
@@ -34,22 +36,23 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DLinkDAO implements IDLinkDAO {
 
-    private final Jongo jongo;
+    private final MongoDatabase mongoDatabase;
 
     @Autowired
-    public DLinkDAO(Jongo jongo) {
-        this.jongo = jongo;
+    public DLinkDAO(MongoDatabase mongoDatabase) {
+        this.mongoDatabase = mongoDatabase;
     }
 
     @Override
     public <T extends AReferenceableEntity<T>> T resolve(DocumentLink<T> link) {
-        MongoCollection collection = this.jongo.getCollection(link.getTargetClass().getSimpleName());
-        return collection.findOne(new ObjectId(link.getObjectId())).as(link.getTargetClass());
+        MongoCollection<T> collection = this.mongoDatabase.getCollection(link.getTargetClass().getSimpleName(),
+            link.getTargetClass());
+        return (T) collection.find(new Document("_id", link.getObjectId()), link.getTargetClass()).first();
     }
 
     @Override
     public <T extends AReferenceableEntity<T>> List<T> resolve(List<DocumentLink<T>> links, Class<T> targetClass) {
-        MongoCollection collection = this.jongo.getCollection(targetClass.getSimpleName());
+        MongoCollection<T> collection = this.mongoDatabase.getCollection(targetClass.getSimpleName(), targetClass);
         List<ObjectId> ids = new ArrayList<>();
         for (DocumentLink<T> link : links) {
             if (!link.getTargetClass().equals(targetClass)) {
@@ -57,10 +60,10 @@ public class DLinkDAO implements IDLinkDAO {
             }
             ids.add(new ObjectId(link.getObjectId()));
         }
-        Iterator<T> it = collection.find("{\"_id\" : {\"$in\" : #}}", ids).as(targetClass).iterator();
+        FindIterable<T> it = collection.find(Filters.in("_id", ids), targetClass);
         List<T> resolved = new ArrayList<>();
-        while (it.hasNext()) {
-            resolved.add(it.next());
+        for (T t : it) {
+            resolved.add(t);
         }
         return resolved;
     }
