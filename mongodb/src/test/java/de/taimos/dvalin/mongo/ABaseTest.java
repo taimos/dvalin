@@ -36,7 +36,7 @@ import de.bwaldvogel.mongo.ServerVersion;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 import org.jongo.Jongo;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Copyright 2015 Taimos GmbH<br>
@@ -50,9 +50,9 @@ public class ABaseTest {
     private static final ServerAddress serverAddress = new ServerAddress(new MongoServer(new MemoryBackend().version(ServerVersion.MONGO_3_6)).bind());
 
     public static final MongoClient mongo = MongoClients.create(new ConnectionString(String.format("mongodb://%s:%d", ABaseTest.serverAddress.getHost(), ABaseTest.serverAddress.getPort())));
-    public static final com.mongodb.MongoClient oldMongo = new com.mongodb.MongoClient(new ServerAddress(new MongoServer(new MemoryBackend().version(ServerVersion.MONGO_3_6)).bind()));;
+    public static final com.mongodb.MongoClient oldMongo = new com.mongodb.MongoClient(new ServerAddress(new MongoServer(new MemoryBackend().version(ServerVersion.MONGO_3_6)).bind()));
 
-    public static final DB oldDB = ABaseTest.oldMongo.getDB(ABaseTest.dbName);
+	public static final DB oldDB = ABaseTest.oldMongo.getDB(ABaseTest.dbName);
     public static final Jongo jongo = JongoFactory.createDefault(ABaseTest.oldMongo.getDB(ABaseTest.dbName));
     public static final MongoDatabase database = ABaseTest.mongo.getDatabase(ABaseTest.dbName);
 
@@ -66,7 +66,7 @@ public class ABaseTest {
 
 
     protected static void assertEquals(BigDecimal bd1, BigDecimal bd2) {
-        Assert.assertEquals(bd1.doubleValue(), bd2.doubleValue(), 0);
+        Assertions.assertEquals(bd1.doubleValue(), bd2.doubleValue(), 0);
     }
 
     /**

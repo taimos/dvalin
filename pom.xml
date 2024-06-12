@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>de.taimos</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>6</version>
-    </parent>
+    <groupId>de.taimos</groupId>
     <artifactId>dvalin-parent</artifactId>
     <version>1.36-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
     <inceptionYear>2015</inceptionYear>
+    <organization>
+        <name>Taimos GmbH</name>
+        <url>http://www.taimos.de</url>
+    </organization>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -50,24 +50,25 @@
         </contributor>
     </contributors>
     <properties>
-        <org.springframework.version>5.3.31</org.springframework.version>
-        <jackson.version>2.15.2</jackson.version>
-        <joda.time.version>2.12.5</joda.time.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework.version>5.3.36</org.springframework.version>
+        <jackson.version>2.17.1</jackson.version>
+        <joda.time.version>2.12.7</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <log4j.version>2.22.0</log4j.version>
-        <junit.version>5.10.1</junit.version>
-        <aws.version>1.12.641</aws.version>
+        <log4j.version>2.23.1</log4j.version>
+        <junit.version>5.10.2</junit.version>
+        <aws.version>1.12.739</aws.version>
         <activemq.version>5.16.7</activemq.version>
-        <cxf.version>3.5.7</cxf.version>
-        <jetty.version>9.4.53.v20231009</jetty.version>
-        <guava.version>32.1.3-jre</guava.version>
+        <cxf.version>3.5.8</cxf.version>
+        <jetty.version>9.4.54.v20240208</jetty.version>
+        <guava.version>33.2.1-jre</guava.version>
         <hibernate.version>5.6.14.Final</hibernate.version>
         <http.version>2.2</http.version>
         <velocity.version>2.3</velocity.version>
-        <bson.version>2.15.0</bson.version>
+        <bson.version>2.15.1</bson.version>
         <jongo.version>1.5.1</jongo.version>
-        <mongo.version>4.11.1</mongo.version>
-        <mongock.version>5.3.5</mongock.version>
+        <mongo.version>4.11.2</mongo.version>
+        <mongock.version>5.4.2</mongock.version>
         <mongo-java-server.version>1.43.0</mongo-java-server.version>
         <xdocreport.version>2.0.4</xdocreport.version>
         <mockito-core.version>4.11.0</mockito-core.version>
@@ -82,6 +83,34 @@
         <system>GitHub</system>
         <url>https://github.com/taimos/dvalin/issues</url>
     </issueManagement>
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+    <prerequisites>
+        <maven>3.5.0</maven>
+    </prerequisites>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -95,14 +124,9 @@
                 <version>${joda.time.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>3.0.2</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.16.0</version>
+                <version>1.17.0</version>
             </dependency>
             <dependency>
                 <groupId>de.taimos</groupId>
@@ -455,10 +479,6 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -469,7 +489,6 @@
             <artifactId>junit-jupiter</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -496,6 +515,28 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <goals>deploy nexus-staging:release</goals>
+                    <arguments>-Ptaimos-oss-release</arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>sonatype-nexus-staging</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.2</version>
             </plugin>
@@ -514,12 +555,12 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
-                        </goals> 
+                        </goals>
                         <configuration>
                             <gpgArguments>
                                 <arg>&#45;&#45;pinentry-mode</arg>
                                 <arg>loopback</arg>
-                            </gpgArguments> 
+                            </gpgArguments>
                             <passphraseServerId>${gpg.keyname}</passphraseServerId>
                         </configuration>
                     </execution>
@@ -552,6 +593,32 @@
             <id>taimos-oss-release</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>

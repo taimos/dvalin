@@ -2,8 +2,8 @@ package de.taimos.dvalin.i18n;
 
 import de.taimos.dvalin.i18n.xml.I18nXMLHandler;
 import de.taimos.dvalin.i18n.yaml.I18nYAMLHandler;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 
 import java.util.ArrayList;
@@ -38,13 +38,13 @@ public class ResourceFrameworkXmlAndYamlTest extends AbstractResourceFrameworkTe
         {
             //default locale
             String text = this.resourceAccess.getString("xmlOnly");
-            Assert.assertEquals("nur in XML", text);
+            Assertions.assertEquals("nur in XML", text);
         }
 
         {
             //fixed locale
             String text = this.resourceAccess.getString(Locale.ENGLISH, "yamlOnly");
-            Assert.assertEquals("only in YAML", text);
+            Assertions.assertEquals("only in YAML", text);
         }
     }
 }

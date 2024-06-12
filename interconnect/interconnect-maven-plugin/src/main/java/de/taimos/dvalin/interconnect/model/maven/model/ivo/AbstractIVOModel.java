@@ -62,7 +62,7 @@ public abstract class AbstractIVOModel extends AbstractInterconnectModel<IVODef,
             builder.append(", ");
             builder.append(i.getName());
         }
-        if (builder.toString().trim().length() < 1) {
+        if (builder.toString().trim().isEmpty()) {
             return "";
         }
         return "extends " + builder.substring(2);

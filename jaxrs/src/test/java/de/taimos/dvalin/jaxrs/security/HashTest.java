@@ -24,8 +24,6 @@ package de.taimos.dvalin.jaxrs.security;
  * #L%
  */
 
-import org.junit.Assert;
-
 import com.google.common.base.Stopwatch;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

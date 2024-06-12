@@ -23,7 +23,6 @@ package de.taimos.dvalin.jaxrs;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.provider.StringTextProvider;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

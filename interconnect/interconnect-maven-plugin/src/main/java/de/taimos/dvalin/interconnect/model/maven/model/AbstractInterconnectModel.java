@@ -229,7 +229,7 @@ public abstract class AbstractInterconnectModel<T extends IGeneratorDefinition, 
             builder.append(", ");
             builder.append(i.getName());
         }
-        if (builder.toString().trim().length() < 1) {
+        if (builder.toString().trim().isEmpty()) {
             return "";
         }
         return "extends " + builder.substring(2);

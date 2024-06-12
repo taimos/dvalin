@@ -41,7 +41,7 @@ public final class InterconnectConnectorBurstTest implements Runnable {
 	 * @throws Exception If ...
 	 */
 	public static void main(String[] args) throws Exception {
-		TestHelper.initBrokerEnv("failover:tcp://localhost:61616");
+		de.taimos.dvalin.interconnect.core.TestHelper.initBrokerEnv("failover:tcp://localhost:61616");
 		try {
 			System.out.println("begin");
 			for (int i = 0; i < InterconnectConnectorBurstTest.THREADS; i++) {
@@ -54,7 +54,7 @@ public final class InterconnectConnectorBurstTest implements Runnable {
 			System.out.println("end");
 			System.out.println("duration: " + ((end - begin) / 1000L / 1000L) + " ms");
 		} finally {
-			TestHelper.closeBrokerEnv();
+			de.taimos.dvalin.interconnect.core.TestHelper.closeBrokerEnv();
 		}
 	}
 
