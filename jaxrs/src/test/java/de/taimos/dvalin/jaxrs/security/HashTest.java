@@ -24,8 +24,6 @@ package de.taimos.dvalin.jaxrs.security;
  * #L%
  */
 
-import org.junit.Assert;
-
 import com.google.common.base.Stopwatch;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -57,7 +55,7 @@ class HashTest {
         w.start();
         boolean validate = hns.validate(password);
         w.stop();
-        System.out.println(w.toString());
+        System.out.println(w);
         Assertions.assertTrue(validate);
     }
 

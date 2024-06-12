@@ -28,7 +28,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
-import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
 import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import de.taimos.dvalin.mongo.id.IdEntity;
@@ -51,7 +50,6 @@ import static com.mongodb.client.model.Filters.eq;
 
 /**
  * @param <T> document class for which this will be the DB access
- * @author hoegertn
  * @author fzwirn
  */
 @Repository

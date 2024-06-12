@@ -29,17 +29,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
+/**
+ * A "fake" mongo db client, used for creating tests
+ *
+ * @author fzwirn
+ */
 @OnSystemProperty(propertyName = "mongodb.type", propertyValue = "fake")
 @Configuration
 public class FakeClientConfig {
 
 
+    /**
+     * @return a fake mongo server
+     */
     @Bean
     public MongoServer mongoServer() {
         return new MongoServer(new MemoryBackend());
     }
 
 
+    /**
+     * @param mongoServer the mongo server to be used for the client
+     * @return a mongo client that connects with the fake mongo server
+     */
     @Bean
     public MongoClient mongoClient(MongoServer mongoServer) {
         return MongoClients.create(mongoServer.bindAndGetConnectionString());

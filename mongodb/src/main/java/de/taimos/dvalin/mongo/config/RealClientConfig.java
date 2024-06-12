@@ -23,9 +23,9 @@ package de.taimos.dvalin.mongo.config;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
-import de.taimos.dvalin.mongo.MongoClientOptionsFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +33,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.TimeUnit;
 
 
+/**
+ * Configuration for a mongo client
+ *
+ * @author fzwirn
+ */
 @OnSystemProperty(propertyName = "mongodb.type", propertyValue = "real")
 @Configuration
 public class RealClientConfig {
@@ -46,9 +51,11 @@ public class RealClientConfig {
     @Value("${mongodb.connecttimeout:${mongodb.connectTimeout:10000}}")
     private int connectTimeout;
 
-
+    /**
+     * @return the configured mongo client
+     */
     @Bean
-    public com.mongodb.client.MongoClient mongoClient() {
+    public MongoClient mongoClient() {
         Builder settingsBuilder = MongoClientSettings.builder();
         settingsBuilder.applyConnectionString(new ConnectionString(this.mongoURI));
         settingsBuilder.applyToSocketSettings(builder -> {

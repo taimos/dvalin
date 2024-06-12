@@ -1,7 +1,9 @@
-## mongodb
+## mongodb-legacy (Deprecated)
 
-The mongodb library adds support for the MongoDB document store. By adding the dependency you get the 
-full support to interact with MongoDB databases including an in-memory database for tests. 
+The mongodb-legacy library adds support for the MongoDB document store. By adding the dependency you get the 
+full support to interact with MongoDB databases including an in-memory database for tests.
+
+This library uses the mongodb-driver-legacy mongo driver for java.
 
 ### Connection properties
 

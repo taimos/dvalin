@@ -8,8 +8,7 @@ import org.bson.codecs.EncoderContext;
 import org.joda.time.DateTime;
 
 /**
- * Copyright 2024 Cinovo AG<br>
- * <br>
+ * Joda DateTime codec for mongo db
  *
  * @author fzwirn
  */

@@ -22,7 +22,6 @@ package de.taimos.dvalin.mongo.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.taimos.dvalin.mongo.AAuditedEntity;
-import de.taimos.dvalin.mongo.AEntity;
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
