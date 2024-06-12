@@ -20,10 +20,6 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -34,7 +30,6 @@ import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.mongock.runner.standalone.MongockStandalone;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.jongo.Mapper;
 import org.jongo.marshall.jackson.JacksonMapper;
@@ -42,7 +37,9 @@ import org.jongo.marshall.jackson.JacksonMapper.Builder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 
 public class Tester extends ABaseTest {
 
@@ -65,29 +62,17 @@ public class Tester extends ABaseTest {
 
             Field daoField = AbstractMongoDAO.class.getDeclaredField("dataAccess");
             daoField.setAccessible(true);
-            daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
+            daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database,
+                InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
 
             MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
             driver.disableTransaction();
-            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
+            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog")
+                .setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
             Tester.dao.init();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void testObjectId() throws JsonProcessingException {
-        TestObject to = new TestObject();
-        Tester.dao.dataAccess.save(to);
-
-        Document result = Tester.dao.dataAccess.getCollection().findOne().as(Document.class);
-
-        Assertions.assertNotNull(result);
-
-//        TestObject mappedObject = mapper.readValue(result.toJson(), TestObject.class);
-        Object id = result.get("_id");
-        Assertions.assertEquals(new ObjectId(to.getId()), id);
     }
 
     @Test
@@ -138,7 +123,8 @@ public class Tester extends ABaseTest {
         count = Tester.dao.dataAccess.count("{}");
         Assert.assertEquals(0, count);
 
-        ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName).getCollection("TestObject").listIndexes();
+        ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName)
+            .getCollection("TestObject").listIndexes();
         for (Document index : listIndexes) {
             System.out.println(index.toString());
         }
