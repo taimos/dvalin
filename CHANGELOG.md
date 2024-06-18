@@ -24,6 +24,10 @@
 * Removed (unused) cglib from  dvalin-jaxrs
 * Removed concordion-extensions
 * Migrated all JUnit tests to Junit 5 syntax
+* Removed mongodb-driver-legacy from mongodb
+    * Deprecated mongo functionality was removed
+    * Complete overhaul for entity handling
+    * The old functionality is still available with the mongodb-legacy library
 * Breaking: Removed Junit 5 Vintage engine and Junit 4 (can be added in projects that need it)
 * Fixed vulnerabilities: CVE-2023-52428(nimbus-jose-jwt), CVE-2024-29857,CVE-2024-30171,CVE-2024-30172,CVE-2024-34447 (bouncycastle), CVE-2024-28752 (Apache CXF)
     
@@ -50,10 +54,6 @@
 * Migrated from JUnit 4 to JUnit 5
     * Drop support for Powermock
     * Switch Mockito to Mockito Inline for usage in static mocks
-* Removed mongodb-driver-legacy from mongodb
-    * Deprecated mongo functionality was removed
-    * Complete overhaul for entity handling
-    * The old functionality is still available with the mongodb-legacy library 
 * Fixing an recurring ActiveMQ problem where messages can't be sent because ActiveMQ is to slow opening destination. 
   We do a resend after configurable retry time. If problem does not occur, nothing hanges.
 * IVO generator: replaced old Apache BeanUtils with Spring beans BeanUtils
