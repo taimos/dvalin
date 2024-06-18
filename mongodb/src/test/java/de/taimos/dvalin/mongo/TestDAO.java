@@ -20,9 +20,12 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
+import com.mongodb.client.model.Filters;
+import de.taimos.dvalin.mongo.model.TestObject;
+
 public class TestDAO extends AbstractMongoDAO<TestObject> {
-    
+
     public TestObject findByName(String name) {
-        return this.findFirstByQuery("{name:#}", null, name);
+        return this.findFirstByQuery(Filters.eq("name", name), null);
     }
 }

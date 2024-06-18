@@ -28,7 +28,6 @@ import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.IEventHandler;
 import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

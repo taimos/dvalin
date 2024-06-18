@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.taimos</groupId>
@@ -65,7 +66,6 @@
         <http.version>2.2</http.version>
         <velocity.version>2.3</velocity.version>
         <bson.version>2.15.0</bson.version>
-        <jongo.version>1.5.1</jongo.version>
         <mongo.version>4.11.1</mongo.version>
         <mongock.version>5.3.5</mongock.version>
         <mongo-java-server.version>1.43.0</mongo-java-server.version>
@@ -345,11 +345,7 @@
                 <artifactId>hibernate-core</artifactId>
                 <version>${hibernate.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.mongodb</groupId>
-                <artifactId>mongodb-driver-legacy</artifactId>
-                <version>${mongo.version}</version>
-            </dependency>
+
 
             <dependency>
                 <groupId>com.amazonaws</groupId>
@@ -509,20 +505,20 @@
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.1.0</version>
                 <!-- <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals> 
-                        <configuration>
-                            <gpgArguments>
-                                <arg>&#45;&#45;pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments> 
-                            <passphraseServerId>${gpg.keyname}</passphraseServerId>
-                        </configuration>
-                    </execution>
+<execution>
+<id>sign-artifacts</id>
+<phase>verify</phase>
+<goals>
+<goal>sign</goal>
+</goals>
+<configuration>
+<gpgArguments>
+<arg>&#45;&#45;pinentry-mode</arg>
+<arg>loopback</arg>
+</gpgArguments>
+<passphraseServerId>${gpg.keyname}</passphraseServerId>
+</configuration>
+</execution>
                 </executions> -->
             </plugin>
             <plugin>
@@ -587,6 +583,7 @@
         <module>jaxrs-jwtauth</module>
         <module>jaxrs-swagger</module>
         <module>mongodb</module>
+        <module>mongodb-legacy</module>
         <module>monitoring</module>
         <module>jpa</module>
         <module>dynamodb</module>

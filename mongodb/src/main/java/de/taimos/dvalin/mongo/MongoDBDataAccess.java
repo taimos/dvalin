@@ -20,360 +20,341 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.Function;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
+import com.mongodb.client.model.Sorts;
+import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import de.taimos.dvalin.mongo.id.IdEntity;
+import de.taimos.dvalin.mongo.mapper.JacksonConfig;
+import org.bson.BsonDocument;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-import org.jongo.Find;
-import org.jongo.Jongo;
-import org.jongo.MongoCollection;
-import org.jongo.ResultHandler;
-import org.jongo.Update;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StreamUtils;
 
-import com.mongodb.DBObject;
-import com.mongodb.MapReduceCommand;
-import com.mongodb.MapReduceOutput;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.gridfs.GridFSBucket;
-import com.mongodb.client.gridfs.GridFSBuckets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import de.taimos.dvalin.daemon.spring.InjectionUtils;
+import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * @param <T> document class for which this will be the DB access
+ * @author fzwirn
+ */
 @Repository
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class MongoDBDataAccess<T> {
+@SuppressWarnings("unused")
+public class MongoDBDataAccess<T extends IdEntity> {
 
     /**
      * Query to perform a full text search
      */
     public static final String FULLTEXT_QUERY = "{\"$text\" : {\"$search\" : #}}";
+    public static final String DEFAULT_ID = "_id";
 
     private final MongoDatabase db;
     private final Class<T> entityClass;
-    private final MongoCollection collection;
+    private final MongoCollection<Document> collection;
+    private ObjectMapper mapper;
 
+    /**
+     * @param db database
+     * @param ip injection point
+     */
     @Autowired
-    public MongoDBDataAccess(Jongo jongo, MongoDatabase db, InjectionPoint ip) {
+    public MongoDBDataAccess(MongoDatabase db, InjectionPoint ip) {
         this.db = db;
+        //noinspection unchecked
         this.entityClass = (Class<T>) InjectionUtils.getGenericType(ip);
-        this.collection = jongo.getCollection(this.getCollectionName());
+        this.collection = db.getCollection(this.getCollectionName());
+        this.initMapper();
     }
 
+    protected void initMapper() {
+        this.mapper = JacksonConfig.createObjectMapper();
+    }
+
+    /**
+     * @return the mapper
+     */
+    public ObjectMapper getMapper() {
+        return this.mapper;
+    }
+
+    /**
+     * @param mapper the mapper to set
+     */
+    public void setMapper(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    /**
+     * @return the id Field used by the entity
+     */
+    public String idField() {
+        return MongoDBDataAccess.DEFAULT_ID;
+    }
+
+    /**
+     * @return the name of the collection
+     */
     public String getCollectionName() {
         return this.entityClass.getSimpleName();
     }
 
+    /**
+     * @return the class of the entity
+     */
     public Class<T> getEntityClass() {
         return this.entityClass;
     }
 
     /**
-     * runs a map-reduce-job on the collection. same as {@link #mapReduce(String, DBObject, DBObject, Map, MapReduceResultHandler)
-     * mapReduce(name, null, null, null, conv)}
-     *
-     * @param <R>  the type of the result class
-     * @param name the name of the map-reduce functions
-     * @param conv the converter to convert the result
-     * @return an {@link Iterable} with the result entries
+     * @return all elements sorted by id field
      */
-    public final <R> Iterable<R> mapReduce(String name, final MapReduceResultHandler<R> conv) {
-        return this.mapReduce(name, null, null, null, conv);
-    }
-
-    /**
-     * runs a map-reduce-job on the collection. The functions are read from the classpath in the folder mongodb. The systems reads them from
-     * files called &lt;name&gt;.map.js, &lt;name&gt;.reduce.js and optionally &lt;name&gt;.finalize.js. After this the result is converted
-     * using the given {@link MapReduceResultHandler}
-     *
-     * @param <R>   the type of the result class
-     * @param name  the name of the map-reduce functions
-     * @param query the query to filter the elements used for the map-reduce
-     * @param sort  sort query to sort elements before running map-reduce
-     * @param scope the global scope for the JavaScript run
-     * @param conv  the converter to convert the result
-     * @return an {@link Iterable} with the result entries
-     * @throws RuntimeException if resources cannot be read
-     */
-    public final <R> Iterable<R> mapReduce(String name, DBObject query, DBObject sort, Map<String, Object> scope, final MapReduceResultHandler<R> conv) {
-        String map = this.getMRFunction(name, "map");
-        String reduce = this.getMRFunction(name, "reduce");
-
-        MapReduceCommand mrc = new MapReduceCommand(this.collection.getDBCollection(), map, reduce, null, MapReduceCommand.OutputType.INLINE, query);
-        String finalizeFunction = this.getMRFunction(name, "finalize");
-        if(finalizeFunction != null) {
-            mrc.setFinalize(finalizeFunction);
-        }
-        if(sort != null) {
-            mrc.setSort(sort);
-        }
-        if(scope != null) {
-            mrc.setScope(scope);
-        }
-        MapReduceOutput mr = this.collection.getDBCollection().mapReduce(mrc);
-        return new ConverterIterable<>(mr.results().iterator(), conv);
-    }
-
-    private String getMRFunction(String name, String type) {
-        try {
-            InputStream stream = this.getClass().getResourceAsStream("/mongodb/" + name + "." + type + ".js");
-            if(stream != null) {
-                return StreamUtils.copyToString(stream, Charset.defaultCharset());
-            }
-            return null;
-        } catch(IOException e) {
-            throw new RuntimeException("Failed to read resource", e);
-        }
-    }
-
     public final List<T> findList() {
-        Iterable<T> as = this.collection.find().sort("{_id:1}").as(this.entityClass);
-        return this.convertIterable(as);
+        return this.collection.find().sort(Sorts.ascending(this.idField())).map(this::mapToEntity)
+            .into(new ArrayList<>());
     }
 
+    /**
+     * @param sortProp      property to sort by
+     * @param sortDirection direction to sort by
+     * @param skip          the number of elements to skip
+     * @param limit         the number of elements to fetch
+     * @return the list of elements found
+     */
     public List<T> findList(String sortProp, Integer sortDirection, Integer limit, Integer skip) {
-        return this.findSortedByQuery("{}", "{" + sortProp + ":" + sortDirection + "}", skip, limit);
-    }
-
-    /**
-     * converts the given {@link Iterable} to a {@link List}
-     *
-     * @param <P> the element type
-     * @param as  the {@link Iterable}
-     * @return the converted {@link List}
-     */
-    public final <P> List<P> convertIterable(Iterable<P> as) {
-        List<P> objects = new ArrayList<>();
-        for(P mp : as) {
-            objects.add(mp);
-        }
-        return objects;
-    }
-
-    /**
-     * finds all elements matching the given query
-     *
-     * @param query  the query to search for
-     * @param params the parameters to replace # symbols
-     * @return the list of elements found
-     */
-    public final List<T> findByQuery(String query, Object... params) {
-        return this.findSortedByQuery(query, null, params);
-    }
-
-    /**
-     * finds all elements matching the given query and sorts them accordingly
-     *
-     * @param query  the query to search for
-     * @param sort   the sort query to apply
-     * @param params the parameters to replace # symbols
-     * @return the list of elements found
-     */
-    public final List<T> findSortedByQuery(String query, String sort, Object... params) {
-        return this.findSortedByQuery(query, sort, null, (Integer) null, params);
+        return this.collection.find().sort(sortDirection == -1 ? Sorts.descending(sortProp) : Sorts.ascending(sortProp))
+            .skip(skip).limit(limit).map(this::mapToEntity).into(new ArrayList<>());
     }
 
     /**
      * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
-     * rename or filter fields in the result elements. Instead of returning objects it returns objects of type
-     * <code>as</code>
-     *
-     * @param query      the query to search for
-     * @param sort       the sort query to apply
-     * @param projection the projection of fields to use
-     * @param as         the target to convert result elements to
-     * @param params     the parameters to replace # symbols
-     * @param <P>        the element type
-     * @return the list of elements found
-     */
-    public final <P> List<P> findSortedByQuery(String query, String sort, String projection, Class<P> as, Object... params) {
-        return this.findSortedByQuery(query, sort, null, null, projection, as, params);
-    }
-
-    /**
-     * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
-     * rename or filter fields in the result elements. Instead of returning objects it returns objects converted
-     * by the given {@link ResultHandler}
-     *
-     * @param query      the query to search for
-     * @param sort       the sort query to apply
-     * @param projection the projection of fields to use
-     * @param handler    the handler to convert result elements with
-     * @param params     the parameters to replace # symbols
-     * @param <P>        the element type
-     * @return the list of elements found
-     */
-    protected final <P> List<P> findSortedByQuery(String query, String sort, String projection, ResultHandler<P> handler, Object... params) {
-        return this.findSortedByQuery(query, sort, null, null, projection, handler, params);
-    }
-
-    /**
-     * finds all elements matching the given query and sorts them accordingly
-     *
-     * @param query  the query to search for
-     * @param sort   the sort query to apply
-     * @param skip   the number of elements to skip
-     * @param limit  the number of elements to fetch
-     * @param params the parameters to replace # symbols
-     * @return the list of elements found
-     */
-    public final List<T> findSortedByQuery(String query, String sort, Integer skip, Integer limit, Object... params) {
-        return this.findSortedByQuery(query, sort, skip, limit, null, this.entityClass, params);
-    }
-
-    /**
-     * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
-     * rename or filter fields in the result elements. Instead of returning objects it returns objects of type
-     * <code>as</code>
+     * rename or filter fields in the result elements.
      *
      * @param query      the query to search for
      * @param sort       the sort query to apply
      * @param skip       the number of elements to skip
      * @param limit      the number of elements to fetch
      * @param projection the projection of fields to use
-     * @param as         the target to convert result elements to
-     * @param params     the parameters to replace # symbols
-     * @param <P>        the element type
      * @return the list of elements found
      */
-    public final <P> List<P> findSortedByQuery(String query, String sort, Integer skip, Integer limit, String projection, Class<P> as, Object... params) {
-        Find find = this.createFind(query, sort, skip, limit, projection, params);
-        return this.convertIterable(find.as(as));
+    public final List<T> findSortedByQuery(Bson query, Bson sort, Integer skip, Integer limit, Bson projection) {
+        return this.innerFindSortedByQuery(query, sort, skip, limit, projection).map(this::mapToEntity)
+            .into(new ArrayList<>());
     }
+
+    private FindIterable<Document> innerFindSortedByQuery(Bson query, Bson sort, Integer skip, Integer limit, Bson projection) {
+        FindIterable<Document> result = this.collection.find(query).sort(sort).limit(limit != null ? limit : 0)
+            .projection(projection);
+        if (skip != null) {
+            result = result.skip(skip);
+        }
+        return result;
+    }
+
 
     /**
      * finds all elements matching the given query and sorts them accordingly. With this method it is possible to specify a projection to
      * rename or filter fields in the result elements. Instead of returning objects it returns objects converted
-     * by the given {@link ResultHandler}
+     * by the given {@link Function}
      *
-     * @param query      the query to search for
-     * @param sort       the sort query to apply
-     * @param skip       the number of elements to skip
-     * @param limit      the number of elements to fetch
-     * @param projection the projection of fields to use
-     * @param handler    the handler to convert result elements with
-     * @param params     the parameters to replace # symbols
-     * @param <P>        the element type
+     * @param query           the query to search for
+     * @param sort            the sort query to apply
+     * @param skip            the number of elements to skip
+     * @param limit           the number of elements to fetch
+     * @param projection      the projection of fields to use
+     * @param mappingFunction the handler to convert result elements with
+     * @param <R>             the element type
      * @return the list of elements found
      */
-    public final <P> List<P> findSortedByQuery(String query, String sort, Integer skip, Integer limit, String projection, ResultHandler<P> handler, Object... params) {
-        Find find = this.createFind(query, sort, skip, limit, projection, params);
-        return this.convertIterable(find.map(handler));
-    }
-
-    private Find createFind(String query, String sort, Integer skip, Integer limit, String projection, Object... params) {
-        Find find = this.collection.find(query, params);
-        if((sort != null) && !sort.isEmpty()) {
-            find.sort(sort);
-        }
-        if((projection != null) && !projection.isEmpty()) {
-            find.projection(projection);
-        }
-        if(skip != null) {
-            find.skip(skip);
-        }
-        if(limit != null) {
-            find.limit(limit);
-        }
-        return find;
+    public final <R> List<R> findSortedByQuery(Bson query, Bson sort, Integer skip, Integer limit, Bson projection, Function<T, R> mappingFunction) {
+        return this.innerFindSortedByQuery(query, sort, skip, limit, projection).map(this::mapToEntity)
+            .map(mappingFunction).into(new ArrayList<>());
     }
 
     /**
      * finds all elements containing the given searchString in any text field and sorts them accordingly.
      *
-     * @param searchString      the searchString to search for
-     * @param sort       the sort query to apply
+     * @param searchString the searchString to search for
+     * @param sort         the sort query to apply
      * @return the list of elements found
      */
-    public final List<T> searchSorted(String searchString, String sort) {
-        return this.findSortedByQuery(MongoDBDataAccess.FULLTEXT_QUERY, sort, searchString);
+    public final List<T> searchSorted(String searchString, Bson sort) {
+        return this.findSortedByQuery(MongoDBDataAccess.createQuery(MongoDBDataAccess.FULLTEXT_QUERY, searchString),
+            sort, null, null, null);
     }
 
+
     /**
-     * queries with the given string, sorts the result and returns the first element. <code>null</code> is returned if no element is found.
+     * queries with the given query, sorts the result and returns the first element. Empty Optional is returned if no element is found.
      *
-     * @param query  the query string
-     * @param sort   the sort string
-     * @param params the parameters to replace # symbols
-     * @return the first element found or <code>null</code> if none is found
+     * @param query the query
+     * @param sort  the sort
+     * @return optional of the first element found or <code>null</code> if none is found
      */
-    public final Optional<T> findFirstByQuery(String query, String sort, Object... params) {
-        Find find = this.collection.find(query, params);
-        if((sort != null) && !sort.isEmpty()) {
-            find.sort(sort);
-        }
-        Iterable<T> as = find.limit(1).as(this.entityClass);
-        Iterator<T> iterator = as.iterator();
-        if(iterator.hasNext()) {
-            return Optional.of(iterator.next());
-        }
-        return Optional.empty();
-    }
-
-    public final Optional<T> findByObjectId(String id) {
-        return Optional.ofNullable(this.collection.findOne(new ObjectId(id)).as(this.entityClass));
-    }
-
-    public final Optional<T> findByStringId(String id) {
-        return Optional.ofNullable(this.collection.findOne("{\"_id\":#}", id).as(this.entityClass));
+    public final Optional<T> findFirstByQuery(Bson query, Bson sort) {
+        return Optional.ofNullable(this.collection.find(query).sort(sort).map(this::mapToEntity).first());
     }
 
     /**
-     * @param query the query string
-     * @param parameter the parameters to replace # symbols
+     * @param id of the object
+     * @return optional with the object or empty optional
+     */
+    public final Optional<T> findById(String id) {
+        return Optional.ofNullable(
+            this.collection.find(MongoDBDataAccess.getIdFilter(id)).map(this::mapToEntity).first());
+    }
+
+    private static Bson getIdFilter(String id) {
+        return eq(new ObjectId(id));
+    }
+
+    /**
+     * @param id the id
+     * @deprecated use findById - this one will be deleted with next version
+     */
+    @Deprecated
+    public final Optional<T> findByObjectId(String id) {
+        return this.findById(id);
+    }
+
+    /**
+     * @param id the id
+     * @deprecated use findById - this one will be deleted with next version
+     */
+    @Deprecated
+    public final Optional<T> findByStringId(String id) {
+        return this.findById(id);
+    }
+
+    /**
+     * @param query the query as Bson
      * @return the number of elements matching the query
      */
-    public final long count(String query, Object... parameter) {
-        return this.collection.count(query, parameter);
+    public final long count(Bson query) {
+        return this.collection.countDocuments(query);
     }
 
+    private static Bson createQuery(String query, Object... params) {
+        String filledQuery = query;
+
+        for (Object param : params) {
+            if (filledQuery.indexOf('#') != -1) {
+                filledQuery = filledQuery.replaceFirst("#", "\\\"" + param.toString() + "\\\"");
+            }
+        }
+
+        return BsonDocument.parse(filledQuery);
+    }
+
+
+    protected T mapToEntity(Document document) {
+        try {
+            return this.mapper.readValue(document.toJson(), this.entityClass);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @param object to save
+     * @return saved object
+     */
     public final T save(T object) {
-        this.collection.save(object);
-        return object;
+        try {
+            Document document = Document.parse(this.mapper.writeValueAsString(object));
+            if (this.collection.countDocuments(MongoDBDataAccess.getIdFilter(object.getId())) == 0) {
+                this.collection.insertOne(document);
+            } else {
+                this.collection.replaceOne(MongoDBDataAccess.getIdFilter(object.getId()), document);
+            }
+            return object;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public final void deleteByObjectId(String id) {
-        this.collection.remove(new ObjectId(id));
+    /**
+     * @param id of the object, that will be deleted
+     */
+    public final void deleteById(String id) {
+        this.collection.deleteOne(MongoDBDataAccess.getIdFilter(id));
     }
 
-    public final void deleteByStringId(String id) {
-        this.collection.remove("{\"_id\":#}", id);
-    }
-
-    public final void delete(String query, Object... parameter) {
-        this.collection.remove(query, parameter);
-    }
-
-    public final Update update(ObjectId id) {
-        return this.collection.update(id);
-    }
-
-    public final Update update(String query) {
-        return this.collection.update(query);
-    }
-
-    public final Update update(String query, Object... parameter) {
-        return this.collection.update(query, parameter);
-    }
-
+    /**
+     * @param id the di
+     * @deprecated use deleteById - this one will be deleted with next version
+     */
     @Deprecated
-    public MongoCollection getCollection() {
+    public final void deleteByObjectId(String id) {
+        this.deleteById(id);
+    }
+
+    /**
+     * @param id the di
+     * @deprecated use deleteById - this one will be deleted with next version
+     */
+    @Deprecated
+    public final void deleteByStringId(String id) {
+        this.deleteById(id);
+    }
+
+    /**
+     * @param query to select the objects that will be deleted
+     */
+    public final void delete(String query) {
+        this.collection.deleteOne(BsonDocument.parse(query));
+    }
+
+    /**
+     * @param id     of the object
+     * @param update list of updates to perfom
+     */
+    public final void update(ObjectId id, List<? extends Bson> update) {
+        this.collection.updateOne(eq(id), update);
+    }
+
+    /**
+     * @param query  to select the objects that will be updated
+     * @param update list of updates to perfom
+     */
+    public final void update(String query, List<? extends Bson> update) {
+        this.collection.updateOne(BsonDocument.parse(query), update);
+    }
+
+    /**
+     * @return the MongoCollection
+     */
+    public MongoCollection<Document> getCollection() {
         return this.collection;
     }
 
+    /**
+     * @return the db
+     */
+    public MongoDatabase getDb() {
+        return this.db;
+    }
+
+    /**
+     * @param bucket name of the bucket
+     * @return the GridFS bucket
+     */
     public GridFSBucket getGridFSBucket(String bucket) {
-        if(bucket == null || bucket.isEmpty()) {
+        if (bucket == null || bucket.isEmpty()) {
             throw new IllegalArgumentException();
         }
         return GridFSBuckets.create(this.db, bucket);

@@ -20,10 +20,13 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
+import com.mongodb.client.model.Filters;
+import de.taimos.dvalin.mongo.model.LinkObject;
+
 public class LinkDAO extends AbstractMongoDAO<LinkObject> {
 
     public LinkObject findByName(String name) {
-        return this.findFirstByQuery("{name:#}", null, name);
+        return this.findFirstByQuery(Filters.eq("name", name), null);
     }
 
 }

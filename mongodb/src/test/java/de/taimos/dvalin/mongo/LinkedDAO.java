@@ -20,6 +20,8 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
+import de.taimos.dvalin.mongo.model.LinkedObject;
+
 public class LinkedDAO extends AbstractMongoDAO<LinkedObject> {
 
     //

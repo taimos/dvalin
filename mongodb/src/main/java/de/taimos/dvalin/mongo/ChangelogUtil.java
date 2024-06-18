@@ -21,7 +21,10 @@ package de.taimos.dvalin.mongo;
  */
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.IndexOptions;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Copyright 2015 Hoegernet<br>
@@ -44,11 +47,13 @@ public final class ChangelogUtil {
      * @param ttl        the TTL to set on the given field
      * @throws IllegalArgumentException if the TTL is less or equal 0
      */
-    public static void addTTLIndex(DBCollection collection, String field, int ttl) {
+    public static void addTTLIndex(MongoCollection collection, String field, int ttl) {
         if (ttl <= 0) {
             throw new IllegalArgumentException("TTL must be positive");
         }
-        collection.createIndex(new BasicDBObject(field, 1), new BasicDBObject("expireAfterSeconds", ttl));
+        IndexOptions indexOptions = new IndexOptions();
+        indexOptions.expireAfter((long) ttl, TimeUnit.SECONDS);
+        collection.createIndex(new BasicDBObject(field, 1), indexOptions);
     }
 
     /**
@@ -59,9 +64,11 @@ public final class ChangelogUtil {
      * @param asc        the sorting direction. <code>true</code> to sort ascending; <code>false</code> to sort descending
      * @param background iff <code>true</code> the index is created in the background
      */
-    public static void addIndex(DBCollection collection, String field, boolean asc, boolean background) {
+    public static void addIndex(MongoCollection collection, String field, boolean asc, boolean background) {
         int dir = (asc) ? 1 : -1;
-        collection.createIndex(new BasicDBObject(field, dir), new BasicDBObject("background", background));
+        IndexOptions indexOptions = new IndexOptions();
+        indexOptions.background(background);
+        collection.createIndex(new BasicDBObject(field, dir), indexOptions);
     }
 
     /**
@@ -69,8 +76,8 @@ public final class ChangelogUtil {
      *
      * @param collection the collection to use for the index
      */
-    public static void addTextIndex(DBCollection collection) {
-		collection.createIndex(new BasicDBObject("$**", "text"));
+    public static void addTextIndex(MongoCollection collection) {
+        collection.createIndex(new BasicDBObject("$**", "text"));
     }
 
 }
