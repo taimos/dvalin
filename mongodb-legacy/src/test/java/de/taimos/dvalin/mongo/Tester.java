@@ -71,12 +71,13 @@ public class Tester extends ABaseTest {
                 .setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
             Tester.dao.init();
         } catch (Exception e) {
+            System.out.println("Initialization failure");
             e.printStackTrace();
         }
     }
 
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         TestObject o = new TestObject();
         o.setName("bar");
         o.setValue(new BigDecimal("5"));
@@ -131,7 +132,7 @@ public class Tester extends ABaseTest {
     }
 
     @Test
-    public void serialize() throws Exception {
+    void serialize() {
         TestObject o = new TestObject();
         o.setName("bar");
         o.setValue(new BigDecimal("5"));
