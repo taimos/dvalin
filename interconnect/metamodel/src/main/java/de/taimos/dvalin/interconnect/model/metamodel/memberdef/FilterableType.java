@@ -43,5 +43,5 @@ public enum FilterableType {
     /**
      * filterable by collection of values
      */
-    multi;
+    multi
 }

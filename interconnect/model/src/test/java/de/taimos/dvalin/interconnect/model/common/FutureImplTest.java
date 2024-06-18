@@ -20,6 +20,11 @@ package de.taimos.dvalin.interconnect.model.common;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.FutureImpl;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -27,175 +32,146 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import de.taimos.dvalin.interconnect.model.FutureImpl;
-import de.taimos.dvalin.interconnect.model.FutureImpl.CancelListener;
-
 @SuppressWarnings("javadoc")
-public final class FutureImplTest {
+final class FutureImplTest {
 
-	@Test(timeout = 1000)
-	public void testGet() throws Exception {
+	@Test
+    void testGet() throws Exception {
 		final FutureImpl<Integer> f = new FutureImpl<>();
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				f.set(1);
-			}
-		}).start();
+        Assertions.assertTimeout(Duration.ofMillis(1000), () ->
+        new Thread(() -> f.set(1)).start());
 		final Integer i = f.get();
-		Assert.assertEquals(Integer.valueOf(1), i);
-		Assert.assertFalse(f.isCancelled());
-		Assert.assertTrue(f.isDone());
+		Assertions.assertEquals(Integer.valueOf(1), i);
+		Assertions.assertFalse(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
 	}
 
-	@Test(timeout = 1000)
-	public void testGetNull() throws Exception {
+	@Test
+    void testGetNull() throws Exception {
 		final FutureImpl<Integer> f = new FutureImpl<>();
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				f.set((Integer) null);
-			}
-		}).start();
+        Assertions.assertTimeout(Duration.ofMillis(1000), () ->
+        new Thread(() -> f.set((Integer) null)).start());
 		final Integer i = f.get();
-		Assert.assertNull(i);
-		Assert.assertFalse(f.isCancelled());
-		Assert.assertTrue(f.isDone());
+		Assertions.assertNull(i);
+		Assertions.assertFalse(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
 	}
 
-	@Test(timeout = 1000, expected = ExecutionException.class)
-	public void testGetWithException() throws Exception {
-		final FutureImpl<Integer> f = new FutureImpl<>();
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				f.set(new Exception("test"));
-			}
-		}).start();
-		f.get();
+	@Test
+    void testGetWithException() {
+        Assertions.assertThrows(ExecutionException.class, () -> {
+            final FutureImpl<Integer> f = new FutureImpl<>();
+            Assertions.assertTimeout(Duration.ofMillis(1000), () ->
+                new Thread(() -> f.set(new Exception("test"))).start());
+            f.get();
+        });
 	}
 
-	@Test(timeout = 1000)
-	public void testGetWithTimeout() throws Exception {
+	@Test
+    void testGetWithTimeout() throws Exception {
 		final FutureImpl<Integer> f = new FutureImpl<>();
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				f.set(1);
-			}
-		}).start();
+        Assertions.assertTimeout(Duration.ofMillis(1000), () ->
+		new Thread(() -> f.set(1)).start());
 		final Integer i = f.get(500, TimeUnit.MILLISECONDS);
-		Assert.assertEquals(Integer.valueOf(1), i);
-		Assert.assertFalse(f.isCancelled());
-		Assert.assertTrue(f.isDone());
-	}
-
-	@Test(timeout = 1000, expected = TimeoutException.class)
-	public void testGetWithTimeoutWithExpiry() throws Exception {
-		final FutureImpl<Integer> f = new FutureImpl<>();
-		f.get(500, TimeUnit.MILLISECONDS);
-	}
-
-	@Test(timeout = 1000, expected = ExecutionException.class)
-	public void testGetWithTimeoutWithException() throws Exception {
-		final FutureImpl<Integer> f = new FutureImpl<>();
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				f.set(new Exception("test"));
-			}
-		}).start();
-		f.get(500, TimeUnit.MILLISECONDS);
+		Assertions.assertEquals(Integer.valueOf(1), i);
+		Assertions.assertFalse(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
 	}
 
 	@Test
-	public void testCancel() {
-		final FutureImpl<Integer> f = new FutureImpl<>();
-		Assert.assertTrue(f.cancel(true));
-		Assert.assertTrue(f.isCancelled());
-		Assert.assertTrue(f.isDone());
+    void testGetWithTimeoutWithExpiry() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
+            final FutureImpl<Integer> f = new FutureImpl<>();
+            f.get(500, TimeUnit.MILLISECONDS);
+        });
 	}
 
 	@Test
-	public void testCancelCancelled() {
-		final FutureImpl<Integer> f = new FutureImpl<>();
-		Assert.assertTrue(f.cancel(true));
-		Assert.assertFalse(f.cancel(true));
-		Assert.assertTrue(f.isCancelled());
-		Assert.assertTrue(f.isDone());
+    void testGetWithTimeoutWithException() {
+        Assertions.assertThrows(ExecutionException.class, () -> {
+            final FutureImpl<Integer> f = new FutureImpl<>();
+            Assertions.assertTimeout(Duration.ofMillis(1000), () ->
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    f.set(new Exception("test"));
+                }
+            }).start());
+            f.get(500, TimeUnit.MILLISECONDS);
+        });
 	}
 
 	@Test
-	public void testCancelDone() {
+    void testCancel() {
+		final FutureImpl<Integer> f = new FutureImpl<>();
+		Assertions.assertTrue(f.cancel(true));
+		Assertions.assertTrue(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
+	}
+
+	@Test
+    void testCancelCancelled() {
+		final FutureImpl<Integer> f = new FutureImpl<>();
+		Assertions.assertTrue(f.cancel(true));
+		Assertions.assertFalse(f.cancel(true));
+		Assertions.assertTrue(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
+	}
+
+	@Test
+    void testCancelDone() {
 		final FutureImpl<Integer> f = new FutureImpl<>();
 		f.set(1);
-		Assert.assertFalse(f.cancel(true));
-		Assert.assertFalse(f.isCancelled());
-		Assert.assertTrue(f.isDone());
+		Assertions.assertFalse(f.cancel(true));
+		Assertions.assertFalse(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
 	}
 
-	@Test(expected = CancellationException.class)
-	public void testGetAfterCancel() throws Exception {
-		final FutureImpl<Integer> f = new FutureImpl<>();
-		Assert.assertTrue(f.cancel(true));
-		Assert.assertTrue(f.isCancelled());
-		Assert.assertTrue(f.isDone());
-		f.get();
+	@Test
+    void testGetAfterCancel() {
+        Assertions.assertThrows(CancellationException.class, () -> {
+            final FutureImpl<Integer> f = new FutureImpl<>();
+            Assertions.assertTrue(f.cancel(true));
+            Assertions.assertTrue(f.isCancelled());
+            Assertions.assertTrue(f.isDone());
+            f.get();
+        });
 	}
 
 	@Test
 	public void testSetValueAfterCancel() {
 		final FutureImpl<Integer> f = new FutureImpl<>();
-		Assert.assertTrue(f.cancel(true));
-		Assert.assertTrue(f.isCancelled());
-		Assert.assertTrue(f.isDone());
+		Assertions.assertTrue(f.cancel(true));
+		Assertions.assertTrue(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
 		f.set(1);
 	}
 
 	@Test
 	public void testSetExceptionAfterCancel() {
 		final FutureImpl<Integer> f = new FutureImpl<>();
-		Assert.assertTrue(f.cancel(true));
-		Assert.assertTrue(f.isCancelled());
-		Assert.assertTrue(f.isDone());
+		Assertions.assertTrue(f.cancel(true));
+		Assertions.assertTrue(f.isCancelled());
+		Assertions.assertTrue(f.isDone());
 		f.set(new Exception("test"));
 	}
 
 	@Test
-	public void testCancelListener() {
+    void testCancelListener() {
 		final FutureImpl<Integer> f = new FutureImpl<>();
 		final AtomicReference<UUID> cancelledUUid = new AtomicReference<>(null);
-		f.addCancelListener(new CancelListener<Integer>() {
-
-			@Override
-			public void wasCancelled(final UUID id) {
-				cancelledUUid.compareAndSet(null, id);
-			}
-		});
-		Assert.assertTrue(f.cancel(true));
-		Assert.assertEquals(f.getId(), cancelledUUid.get());
+		f.addCancelListener(id -> cancelledUUid.compareAndSet(null, id));
+		Assertions.assertTrue(f.cancel(true));
+		Assertions.assertEquals(f.getId(), cancelledUUid.get());
 	}
 
 	@Test
-	public void testCancelListenerAfterCancel() {
+    void testCancelListenerAfterCancel() {
 		final FutureImpl<Integer> f = new FutureImpl<>();
 		final AtomicReference<UUID> cancelledUUid = new AtomicReference<>(null);
-		Assert.assertTrue(f.cancel(true));
-		f.addCancelListener(new CancelListener<Integer>() {
-
-			@Override
-			public void wasCancelled(final UUID id) {
-				cancelledUUid.compareAndSet(null, id);
-			}
-		});
-		Assert.assertEquals(f.getId(), cancelledUUid.get());
+		Assertions.assertTrue(f.cancel(true));
+		f.addCancelListener(id -> cancelledUUid.compareAndSet(null, id));
+		Assertions.assertEquals(f.getId(), cancelledUUid.get());
 	}
 }

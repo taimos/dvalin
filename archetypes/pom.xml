@@ -2,8 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <parent>
-        <artifactId>dvalin-parent</artifactId>
         <groupId>de.taimos</groupId>
+        <artifactId>dvalin-parent</artifactId>
         <version>1.36-SNAPSHOT</version>
     </parent>
     <artifactId>dvalin-archetype-parent</artifactId>

@@ -13,7 +13,7 @@ public class ModelTools {
         if(buffer == null) {
             return "";
         }
-        return buffer.length() > 0 ? buffer.substring(0, 1).toUpperCase() + buffer.substring(1) : "";
+        return !buffer.isEmpty() ? buffer.substring(0, 1).toUpperCase() + buffer.substring(1) : "";
     }
 
 }

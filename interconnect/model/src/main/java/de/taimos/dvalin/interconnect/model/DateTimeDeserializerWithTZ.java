@@ -57,7 +57,7 @@ public class DateTimeDeserializerWithTZ extends StdScalarDeserializer<DateTime> 
 		}
 		if (t == JsonToken.VALUE_STRING) {
 			String str = jp.getText().trim();
-			if (str.length() == 0) { // [JACKSON-360]
+			if (str.isEmpty()) { // [JACKSON-360]
 				return null;
 			}
 			// catch serialized time zones

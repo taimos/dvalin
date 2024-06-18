@@ -93,8 +93,8 @@ public class GeneratorHelper {
      */
     public static Properties getVelocityDefaultProps() {
         Properties props = new Properties();
-        props.put("resource.loader", "class");
-        props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        props.put("resource.loaders", "class");
+        props.put("resource.loader.class.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         props.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName());
         return props;
     }

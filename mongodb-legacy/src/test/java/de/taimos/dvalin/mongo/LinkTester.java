@@ -30,9 +30,9 @@ import de.taimos.dvalin.daemon.spring.InjectionUtils;
 import de.taimos.dvalin.mongo.links.DLinkDAO;
 import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.mongock.runner.standalone.MongockStandalone;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Copyright 2015 Taimos GmbH<br>
@@ -48,7 +48,7 @@ public class LinkTester {
     private static final DLinkDAO dlinkDAO = new DLinkDAO(ABaseTest.jongo);
 
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         try {
             System.setProperty("mongodb.name", ABaseTest.dbName);
@@ -85,10 +85,10 @@ public class LinkTester {
         lo.getLinks().add(lo2.asLink());
         lo = LinkTester.dao.save(lo);
 
-        Assert.assertEquals(2, lo.getLinks().size());
+        Assertions.assertEquals(2, lo.getLinks().size());
 
         List<LinkedObject> list = LinkTester.dlinkDAO.resolve(lo.getLinks(), LinkedObject.class);
-        Assert.assertEquals(2, list.size());
+        Assertions.assertEquals(2, list.size());
     }
 
 }

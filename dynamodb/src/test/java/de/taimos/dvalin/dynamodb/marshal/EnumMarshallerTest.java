@@ -9,9 +9,9 @@ package de.taimos.dvalin.dynamodb.marshal;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,35 +20,35 @@ package de.taimos.dvalin.dynamodb.marshal;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EnumMarshallerTest {
 
     @Test
     public void marshall() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
-        Assert.assertEquals(TestEnum.EnumValue1.toString(), m.marshall(TestEnum.EnumValue1));
-        Assert.assertEquals(TestEnum.ENUMVALUE2.toString(), m.marshall(TestEnum.ENUMVALUE2));
+        Assertions.assertEquals(TestEnum.EnumValue1.toString(), m.marshall(TestEnum.EnumValue1));
+        Assertions.assertEquals(TestEnum.ENUMVALUE2.toString(), m.marshall(TestEnum.ENUMVALUE2));
     }
 
     @Test
     public void marshallNull() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
-        Assert.assertNull(m.marshall(null));
+        Assertions.assertNull(m.marshall(null));
     }
 
     @Test
     public void unmarshall() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
-        Assert.assertEquals(TestEnum.EnumValue1, m.unmarshall(TestEnum.class, TestEnum.EnumValue1.toString()));
-        Assert.assertEquals(TestEnum.ENUMVALUE2, m.unmarshall(TestEnum.class, TestEnum.ENUMVALUE2.toString()));
+        Assertions.assertEquals(TestEnum.EnumValue1, m.unmarshall(TestEnum.class, TestEnum.EnumValue1.toString()));
+        Assertions.assertEquals(TestEnum.ENUMVALUE2, m.unmarshall(TestEnum.class, TestEnum.ENUMVALUE2.toString()));
     }
 
     @Test
     public void unmarshallNull() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
-        Assert.assertNull(m.unmarshall(TestEnum.class, null));
+        Assertions.assertNull(m.unmarshall(TestEnum.class, null));
     }
 
 }

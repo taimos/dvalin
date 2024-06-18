@@ -13,9 +13,9 @@ package de.taimos.dvalin.test.inject;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,192 +24,205 @@ package de.taimos.dvalin.test.inject;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import de.taimos.dvalin.test.AbstractMockitoTest;
 
-public class InjectionUtilsTest extends AbstractMockitoTest {
+class InjectionUtilsTest extends AbstractMockitoTest {
 
 	@Test
-	public void injectSingle() throws Exception {
+    void injectSingle() {
 		BeanA a = new BeanA();
 		BeanB b = new BeanB();
 
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
 
 		InjectionUtils.inject(bean, a);
-		Assert.assertTrue(bean.getaField() == a);
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
+		Assertions.assertSame(bean.getaField(), a);
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
 
 		InjectionUtils.inject(bean, b);
-		Assert.assertTrue(bean.getaField() == a);
-		Assert.assertTrue(bean.getbField() == b);
-		Assert.assertNull(bean.getcField());
+		Assertions.assertSame(bean.getaField(), a);
+		Assertions.assertSame(bean.getbField(), b);
+		Assertions.assertNull(bean.getcField());
 	}
 
 	@Test
-	public void injectMulti() throws Exception {
+    void injectMulti() {
 		BeanA a = new BeanA();
 		BeanB b = new BeanB();
 
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
 
 		InjectionUtils.inject(bean, a, b);
 
-		Assert.assertTrue(bean.getaField() == a);
-		Assert.assertTrue(bean.getbField() == b);
-		Assert.assertNull(bean.getcField());
+		Assertions.assertSame(bean.getaField(), a);
+		Assertions.assertSame(bean.getbField(), b);
+		Assertions.assertNull(bean.getcField());
 	}
 
     @Test
-    public void injectAll() throws Exception {
+    void injectAll() {
         MyBean bean = new MyBean();
-        Assert.assertNull(bean.getaField());
-        Assert.assertNull(bean.getbField());
-        Assert.assertNull(bean.getcField());
+        Assertions.assertNull(bean.getaField());
+        Assertions.assertNull(bean.getbField());
+        Assertions.assertNull(bean.getcField());
 
         InjectionMock mocks = InjectionUtils.injectMocks(bean);
-        Assert.assertNotNull(bean.getaField());
-        Assert.assertNotNull(bean.getbField());
-        Assert.assertNotNull(bean.getcField());
-        Assert.assertNull(bean.getoField());
-        Assert.assertNull(bean.getValue1());
-        Assert.assertNull(bean.getValue2());
-        Assert.assertNull(bean.getValue3());
+        Assertions.assertNotNull(bean.getaField());
+        Assertions.assertNotNull(bean.getbField());
+        Assertions.assertNotNull(bean.getcField());
+        Assertions.assertNull(bean.getoField());
+        Assertions.assertNull(bean.getValue1());
+        Assertions.assertNull(bean.getValue2());
+        Assertions.assertNull(bean.getValue3());
 
-        Assert.assertSame(bean.getaField(), mocks.getMock("aField"));
-        Assert.assertSame(bean.getaField(), mocks.getMock(BeanA.class));
-        Assert.assertSame(bean.getbField(), mocks.getMock("bField"));
-        Assert.assertSame(bean.getbField(), mocks.getMock(BeanB.class));
-        Assert.assertSame(bean.getcField(), mocks.getMock("cField"));
-        Assert.assertSame(bean.getcField(), mocks.getMock(BeanC.class));
-        Assert.assertSame(bean.getcField(), mocks.getMock(BeanC.class, "specialBean"));
-        Assert.assertNull(mocks.getMock(BeanC.class, "invalidQualifier"));
+        Assertions.assertSame(bean.getaField(), mocks.getMock("aField"));
+        Assertions.assertSame(bean.getaField(), mocks.getMock(BeanA.class));
+        Assertions.assertSame(bean.getbField(), mocks.getMock("bField"));
+        Assertions.assertSame(bean.getbField(), mocks.getMock(BeanB.class));
+        Assertions.assertSame(bean.getcField(), mocks.getMock("cField"));
+        Assertions.assertSame(bean.getcField(), mocks.getMock(BeanC.class));
+        Assertions.assertSame(bean.getcField(), mocks.getMock(BeanC.class, "specialBean"));
+        Assertions.assertNull(mocks.getMock(BeanC.class, "invalidQualifier"));
 
-        Assert.assertNull(mocks.getMock(BeanA.class, "invalidQualifier"));
-        Assert.assertNull(mocks.getMock(Object.class));
-        Assert.assertNull(mocks.getMock("oField"));
-        Assert.assertNull(mocks.getMock("nonExisting"));
+        Assertions.assertNull(mocks.getMock(BeanA.class, "invalidQualifier"));
+        Assertions.assertNull(mocks.getMock(Object.class));
+        Assertions.assertNull(mocks.getMock("oField"));
+        Assertions.assertNull(mocks.getMock("nonExisting"));
     }
 
 	@Test
-	public void injectWithQualifier() throws Exception {
+    void injectWithQualifier() {
 		BeanC c = new BeanC();
 
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
 
 		InjectionUtils.inject(bean, "specialBean", c);
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertTrue(bean.getcField() == c);
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertSame(bean.getcField(), c);
 	}
 
 	@Test
-	public void injectUnqualifiedFieldWithQualifier() throws Exception {
+    void injectUnqualifiedFieldWithQualifier() {
 		BeanB b = new BeanB();
 
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
 
 		InjectionUtils.inject(bean, "myQualifier", b);
-		Assert.assertNull(bean.getaField());
-		Assert.assertTrue(bean.getbField() == b);
-		Assert.assertNull(bean.getcField());
-	}
-
-	@Test(expected = RuntimeException.class)
-	public void injectWithWrongQualifier() throws Exception {
-		BeanC c = new BeanC();
-
-		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
-
-		InjectionUtils.inject(bean, "wrongQualifier", c);
-	}
-
-	@Test(expected = RuntimeException.class)
-	public void injectWithoutQualifier() throws Exception {
-		BeanC c = new BeanC();
-
-		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
-
-		InjectionUtils.inject(bean, c);
-	}
-
-	@Test(expected = RuntimeException.class)
-	public void injectNonwiredDependency() throws Exception {
-		Object o = new Object();
-
-		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getaField());
-		Assert.assertNull(bean.getbField());
-		Assert.assertNull(bean.getcField());
-
-		InjectionUtils.inject(bean, o);
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertSame(bean.getbField(), b);
+		Assertions.assertNull(bean.getcField());
 	}
 
 	@Test
-	public void injectValue() throws Exception {
+    void injectWithWrongQualifier() {
+		BeanC c = new BeanC();
+
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getValue1());
-		Assert.assertNull(bean.getValue2());
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            InjectionUtils.inject(bean, "wrongQualifier", c);
+        });
+	}
+
+	@Test
+    void injectWithoutQualifier() {
+		BeanC c = new BeanC();
+
+		MyBean bean = new MyBean();
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            InjectionUtils.inject(bean, c);
+        });
+	}
+
+	@Test
+    void injectNonwiredDependency() {
+		Object o = new Object();
+
+		MyBean bean = new MyBean();
+		Assertions.assertNull(bean.getaField());
+		Assertions.assertNull(bean.getbField());
+		Assertions.assertNull(bean.getcField());
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            InjectionUtils.inject(bean, o);
+        });
+	}
+
+	@Test
+    void injectValue() {
+		MyBean bean = new MyBean();
+		Assertions.assertNull(bean.getValue1());
+		Assertions.assertNull(bean.getValue2());
 
 		InjectionUtils.injectValue(bean, "value2", "foobar");
-		Assert.assertNull(bean.getValue1());
-		Assert.assertEquals("foobar", bean.getValue2());
+		Assertions.assertNull(bean.getValue1());
+		Assertions.assertEquals("foobar", bean.getValue2());
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void injectValueIntoNonannotatedField() throws Exception {
+	@Test
+    void injectValueIntoNonannotatedField() {
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getValue1());
-		Assert.assertNull(bean.getValue2());
+		Assertions.assertNull(bean.getValue1());
+		Assertions.assertNull(bean.getValue2());
 
-		InjectionUtils.injectValue(bean, "value1", "foobar");
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            InjectionUtils.injectValue(bean, "value1", "foobar");
+        });
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void injectValueIntoNonStringField() throws Exception {
+	@Test
+    void injectValueIntoNonStringField() {
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getValue1());
-		Assert.assertNull(bean.getValue2());
+		Assertions.assertNull(bean.getValue1());
+		Assertions.assertNull(bean.getValue2());
 
-		InjectionUtils.injectValue(bean, "oField", "foobar");
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            InjectionUtils.injectValue(bean, "oField", "foobar");
+        });
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void injectValueIntoNonStringField2() throws Exception {
+	@Test
+    void injectValueIntoNonStringField2() {
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getValue1());
-		Assert.assertNull(bean.getValue2());
+		Assertions.assertNull(bean.getValue1());
+		Assertions.assertNull(bean.getValue2());
 
-		InjectionUtils.injectValue(bean, "value3", "foobar");
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            InjectionUtils.injectValue(bean, "value3", "foobar");
+        });
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void injectValueIntoNonExistingField() throws Exception {
+	@Test
+    void injectValueIntoNonExistingField() {
 		MyBean bean = new MyBean();
-		Assert.assertNull(bean.getValue1());
-		Assert.assertNull(bean.getValue2());
+		Assertions.assertNull(bean.getValue1());
+		Assertions.assertNull(bean.getValue2());
 
-		InjectionUtils.injectValue(bean, "nonExisting", "foobar");
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            InjectionUtils.injectValue(bean, "nonExisting", "foobar");
+        });
 	}
 }

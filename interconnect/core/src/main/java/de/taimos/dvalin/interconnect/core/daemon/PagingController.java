@@ -120,7 +120,7 @@ public final class PagingController<E extends IVO> implements Iterator<E> {
 
     @Override
     public boolean hasNext() {
-        if ((this.batch != null) && (this.batch.size() == 0)) { // we are at the end of the query because we have an empty result
+        if ((this.batch != null) && (this.batch.isEmpty())) { // we are at the end of the query because we have an empty result
             return false;
         }
         final int nextBatchIndex = this.batchIndex + 1;
@@ -156,7 +156,7 @@ public final class PagingController<E extends IVO> implements Iterator<E> {
             this.batch = list.getElements();
 
             // check if we are at the end of the query
-            return this.batch.size() != 0;
+            return !this.batch.isEmpty();
         }
         return true;
     }

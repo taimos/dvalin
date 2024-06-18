@@ -83,7 +83,7 @@ public class GenericConverter {
     private static Object getFieldValue(Object object, Field field) throws IllegalAccessException {
         try {
             String capitalizedFieldName = field.getName();
-            if((capitalizedFieldName != null) && (capitalizedFieldName.length() > 0)) {
+            if((capitalizedFieldName != null) && (!capitalizedFieldName.isEmpty())) {
                 capitalizedFieldName = capitalizedFieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + capitalizedFieldName.substring(1);
             }
             Method getter = object.getClass().getMethod("get" + capitalizedFieldName);

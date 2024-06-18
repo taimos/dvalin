@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model.ivo.daemon;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,11 +20,10 @@ package de.taimos.dvalin.interconnect.model.ivo.daemon;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
 public final class PongIVOTest {
@@ -34,7 +33,7 @@ public final class PongIVOTest {
 		final PongIVO in = new PongIVO.PongIVOBuilder().build();
 		final String json = InterconnectMapper.toJson(in);
 		final InterconnectObject out = InterconnectMapper.fromJson(json);
-		Assert.assertEquals(in.getClass().getCanonicalName(), out.getClass().getCanonicalName());
+		Assertions.assertEquals(in.getClass().getCanonicalName(), out.getClass().getCanonicalName());
 	}
 
 }

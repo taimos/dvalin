@@ -443,7 +443,7 @@ public final class MessageConnector {
                                 throw new InfrastructureException(MessageConnector.RECEIVE_FAILED, e);
                             }
                             if (response == null) {
-                                if (messages.size() == 0) {
+                                if (messages.isEmpty()) {
                                     // first read timed out, so we throw a TimeoutException
                                     throw new TimeoutException(timeout);
                                 }

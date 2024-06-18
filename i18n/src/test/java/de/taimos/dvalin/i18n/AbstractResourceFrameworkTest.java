@@ -6,9 +6,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -69,7 +69,7 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
 
     protected abstract List<II18nResourceHandler> getResourceHandler();
 
-    @Before
+    @BeforeEach
     public void setUp() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         InjectionUtils.injectValue(this.resourceAccess, "DEFAULT_LOCALE_STRING", "de");
         InjectionUtils.inject(this.resourceAccess, this.getResourceHandler());
@@ -82,7 +82,7 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
     @Test
     public void testNonExisting() {
         String notExisting = this.resourceAccess.getString("notExisting");
-        Assert.assertEquals("!notExisting!", notExisting);
+        Assertions.assertEquals("!notExisting!", notExisting);
     }
 
     @Test
@@ -90,19 +90,19 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
         {
             //default locale
             String text = this.resourceAccess.getString("textA");
-            Assert.assertEquals("TextAGerman", text);
+            Assertions.assertEquals("TextAGerman", text);
         }
 
         {
             //fixed locale
             String text = this.resourceAccess.getString(Locale.ENGLISH, "textA");
-            Assert.assertEquals("TextAEnglish", text);
+            Assertions.assertEquals("TextAEnglish", text);
         }
 
         {
             //nonexistant locale -> default to default language
             String text = this.resourceAccess.getString(Locale.ITALIAN, "textA");
-            Assert.assertEquals("TextAGerman", text);
+            Assertions.assertEquals("TextAGerman", text);
         }
     }
 
@@ -111,19 +111,19 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
         {
             //default locale
             String text = this.resourceAccess.getString("textB", "aTest1", "aTest2", "aTest3");
-            Assert.assertEquals("TextBGerman aTest1 aTest3", text);
+            Assertions.assertEquals("TextBGerman aTest1 aTest3", text);
         }
 
         {
             //fixed locale
             String text = this.resourceAccess.getString(Locale.ENGLISH, "textB", "aTest1", "aTest2", "aTest3");
-            Assert.assertEquals("TextBEnglish aTest1 aTest3", text);
+            Assertions.assertEquals("TextBEnglish aTest1 aTest3", text);
         }
 
         {
             //nonexistant locale -> default to default language
             String text = this.resourceAccess.getString(Locale.ITALIAN, "textB", "aTest1", "aTest2", "aTest3");
-            Assert.assertEquals("TextBGerman aTest1 aTest3", text);
+            Assertions.assertEquals("TextBGerman aTest1 aTest3", text);
         }
     }
 
@@ -132,19 +132,19 @@ public abstract class AbstractResourceFrameworkTest extends AbstractMockitoTest 
         {
             //default locale
             String text = this.resourceAccess.getString(TestEnum.FIELD_A);
-            Assert.assertEquals("EnumFieldAGerman", text);
+            Assertions.assertEquals("EnumFieldAGerman", text);
         }
 
         {
             //fixed locale
             String text = this.resourceAccess.getString(Locale.ENGLISH, TestEnum.FIELD_A);
-            Assert.assertEquals("EnumFieldAEnglish", text);
+            Assertions.assertEquals("EnumFieldAEnglish", text);
         }
 
         {
             //nonexistant locale -> default to default language
             String text = this.resourceAccess.getString(Locale.ITALIAN, TestEnum.FIELD_B);
-            Assert.assertEquals("EnumFieldBGerman", text);
+            Assertions.assertEquals("EnumFieldBGerman", text);
         }
     }
 }
