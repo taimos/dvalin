@@ -31,7 +31,7 @@ public class TestChangelog {
 
     @Execution
     public void index1() {
-        ChangelogUtil.addIndex(ABaseTest.oldDB.getCollection("TestObject"), "name", true, true);
+        ChangelogUtil.addIndex(ABaseTest.mongo.getDatabase(ABaseTest.dbName).getCollection("TestObject"), "name", true, true);
     }
 
     @RollbackExecution

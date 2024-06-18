@@ -20,16 +20,24 @@ package de.taimos.dvalin.mongo.config;
  * #L%
  */
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoClientSettings.Builder;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.concurrent.TimeUnit;
 
+
+/**
+ * Configuration for a mongo client
+ *
+ * @author fzwirn
+ */
 @OnSystemProperty(propertyName = "mongodb.type", propertyValue = "real")
 @Configuration
 public class RealClientConfig {
@@ -43,24 +51,19 @@ public class RealClientConfig {
     @Value("${mongodb.connecttimeout:${mongodb.connectTimeout:10000}}")
     private int connectTimeout;
 
-
+    /**
+     * @return the configured mongo client
+     */
     @Bean
     public MongoClient mongoClient() {
-        MongoClientOptions.Builder builder = MongoClientOptions.builder();
-        builder.socketTimeout(this.socketTimeout);
-        builder.connectTimeout(this.connectTimeout);
-
-        return new MongoClient(new MongoClientURI(this.mongoURI, builder));
+        Builder settingsBuilder = MongoClientSettings.builder();
+        settingsBuilder.applyConnectionString(new ConnectionString(this.mongoURI));
+        settingsBuilder.applyToSocketSettings(builder -> {
+            builder.connectTimeout(RealClientConfig.this.connectTimeout, TimeUnit.MILLISECONDS);
+            builder.readTimeout(RealClientConfig.this.socketTimeout, TimeUnit.MILLISECONDS);
+        });
+        return MongoClients.create(settingsBuilder.build());
     }
-
-    @Bean
-    public com.mongodb.client.MongoClient mongoClient2() {
-        MongoClientOptions.Builder builder = MongoClientOptions.builder();
-        builder.socketTimeout(this.socketTimeout);
-        builder.connectTimeout(this.connectTimeout);
-        return MongoClients.create(new MongoClientURI(this.mongoURI, builder).getURI());
-    }
-
 
 
 }

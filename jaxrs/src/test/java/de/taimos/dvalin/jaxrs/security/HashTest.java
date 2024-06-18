@@ -55,7 +55,7 @@ class HashTest {
         w.start();
         boolean validate = hns.validate(password);
         w.stop();
-        System.out.println(w.toString());
+        System.out.println(w);
         Assertions.assertTrue(validate);
     }
 

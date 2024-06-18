@@ -20,9 +20,6 @@ package de.taimos.dvalin.mongo;
  * #L%
  */
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -40,6 +37,9 @@ import org.jongo.marshall.jackson.JacksonMapper.Builder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 
 public class Tester extends ABaseTest {
 
@@ -62,11 +62,13 @@ public class Tester extends ABaseTest {
 
             Field daoField = AbstractMongoDAO.class.getDeclaredField("dataAccess");
             daoField.setAccessible(true);
-            daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
+            daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database,
+                InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
 
             MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
             driver.disableTransaction();
-            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
+            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog")
+                .setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
             Tester.dao.init();
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,7 +123,8 @@ public class Tester extends ABaseTest {
         count = Tester.dao.dataAccess.count("{}");
         Assertions.assertEquals(0, count);
 
-        ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName).getCollection("TestObject").listIndexes();
+        ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName)
+            .getCollection("TestObject").listIndexes();
         for (Document index : listIndexes) {
             System.out.println(index.toString());
         }

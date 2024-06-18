@@ -1,14 +1,20 @@
 package de.taimos.dvalin.mongo.links;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import de.taimos.dvalin.mongo.mapper.JacksonConfig;
+import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.jongo.Jongo;
-import org.jongo.MongoCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 /*
  * #%L
@@ -34,22 +40,30 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DLinkDAO implements IDLinkDAO {
 
-    private final Jongo jongo;
+    private final MongoDatabase mongoDatabase;
+    private ObjectMapper mapper;
 
     @Autowired
-    public DLinkDAO(Jongo jongo) {
-        this.jongo = jongo;
+    public DLinkDAO(MongoDatabase mongoDatabase) {
+        this.mongoDatabase = mongoDatabase;
+        this.initMapper();
+    }
+
+    protected void initMapper() {
+        this.mapper = JacksonConfig.createObjectMapper();
     }
 
     @Override
     public <T extends AReferenceableEntity<T>> T resolve(DocumentLink<T> link) {
-        MongoCollection collection = this.jongo.getCollection(link.getTargetClass().getSimpleName());
-        return collection.findOne(new ObjectId(link.getObjectId())).as(link.getTargetClass());
+        MongoCollection<Document> collection = this.mongoDatabase.getCollection(link.getTargetClass().getSimpleName());
+        return collection.find(eq(new ObjectId(link.getObjectId())))
+            .map(doc -> this.mapToEntity(doc, link.getTargetClass())).first();
     }
 
     @Override
     public <T extends AReferenceableEntity<T>> List<T> resolve(List<DocumentLink<T>> links, Class<T> targetClass) {
-        MongoCollection collection = this.jongo.getCollection(targetClass.getSimpleName());
+        MongoCollection<Document> collection = this.mongoDatabase.getCollection(targetClass.getSimpleName());
+
         List<ObjectId> ids = new ArrayList<>();
         for (DocumentLink<T> link : links) {
             if (!link.getTargetClass().equals(targetClass)) {
@@ -57,12 +71,16 @@ public class DLinkDAO implements IDLinkDAO {
             }
             ids.add(new ObjectId(link.getObjectId()));
         }
-        Iterator<T> it = collection.find("{\"_id\" : {\"$in\" : #}}", ids).as(targetClass).iterator();
-        List<T> resolved = new ArrayList<>();
-        while (it.hasNext()) {
-            resolved.add(it.next());
-        }
-        return resolved;
+        return collection.find(Filters.in("_id", ids)).map(doc -> this.mapToEntity(doc, targetClass))
+            .into(new ArrayList<>());
     }
 
+
+    protected <T extends AReferenceableEntity<T>> T mapToEntity(Document document, Class<T> targetClass) {
+        try {
+            return this.mapper.readValue(document.toJson(), targetClass);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

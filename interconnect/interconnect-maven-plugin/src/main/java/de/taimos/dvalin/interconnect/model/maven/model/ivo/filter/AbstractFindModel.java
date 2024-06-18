@@ -12,7 +12,6 @@ import org.apache.maven.plugin.logging.Log;
 import org.springframework.beans.BeanUtils;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -58,15 +57,15 @@ public abstract class AbstractFindModel extends AbstractIVOModel {
     }
 
     protected void createMinMaxMember(MemberDef member) {
-		MemberDef min = BeanUtils.instantiateClass(member.getClass());
-		BeanUtils.copyProperties(member, min);
-		min.setName(min.getName() + "Min");
-		min.setFilterable(FilterableType.single);
-		this.addChild(min);
-		MemberDef max = BeanUtils.instantiateClass(member.getClass());
-		BeanUtils.copyProperties(member, max);
-		max.setName(max.getName() + "Max");
-		max.setFilterable(FilterableType.single);
-		this.addChild(max);
-	}
+        MemberDef min = BeanUtils.instantiateClass(member.getClass());
+        BeanUtils.copyProperties(member, min);
+        min.setName(min.getName() + "Min");
+        min.setFilterable(FilterableType.single);
+        this.addChild(min);
+        MemberDef max = BeanUtils.instantiateClass(member.getClass());
+        BeanUtils.copyProperties(member, max);
+        max.setName(max.getName() + "Max");
+        max.setFilterable(FilterableType.single);
+        this.addChild(max);
+    }
 }

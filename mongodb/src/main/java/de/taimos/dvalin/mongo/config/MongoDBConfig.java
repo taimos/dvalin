@@ -20,24 +20,32 @@ package de.taimos.dvalin.mongo.config;
  * #L%
  */
 
-import java.util.concurrent.TimeUnit;
-
-import com.mongodb.DB;
-import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import de.taimos.dvalin.mongo.JongoFactory;
+import de.taimos.dvalin.mongo.JodaCodec;
 import io.mongock.api.config.LegacyMigration;
 import io.mongock.driver.mongodb.sync.v4.driver.MongoSync4Driver;
 import io.mongock.runner.standalone.MongockStandalone;
 import io.mongock.runner.standalone.RunnerStandaloneBuilder;
-import org.jongo.Jongo;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.concurrent.TimeUnit;
+
+import static org.bson.codecs.pojo.Conventions.DEFAULT_CONVENTIONS;
+
+/**
+ * Configuration of the mongo db
+ *
+ * @author fzwirn
+ */
 @Configuration
 public class MongoDBConfig {
 
@@ -56,41 +64,65 @@ public class MongoDBConfig {
     @Value("${mongock.basepackage:${mongock.basePackage:}}")
     private String basePackage;
 
+    /**
+     * @param mongoClient to be used
+     * @return a configured mongo database
+     */
     @Bean
-    public RunnerStandaloneBuilder mongockRunner(com.mongodb.client.MongoClient mongoClient, Jongo jongo, DB legacyDB) {
+    public MongoDatabase mongoDatabase(MongoClient mongoClient) {
+        return mongoClient.getDatabase(this.dbName) //
+            .withCodecRegistry(CodecRegistries.fromRegistries( //
+                MongoClientSettings.getDefaultCodecRegistry(), //
+                CodecRegistries.fromCodecs(new JodaCodec()), //
+                CodecRegistries.fromProviders(MongoDBConfig.getPojoCodecProvider()) //
+            ));
+    }
 
+    /**
+     * Will create and return a {@link RunnerStandaloneBuilder}.
+     * <p>
+     * Within the bean creation the builder is also constructed and executed.
+     *
+     * @param mongoClient   to be used
+     * @param mongoDatabase to be used
+     * @return mongock standalone builder
+     */
+    @Bean
+    public RunnerStandaloneBuilder mongockRunner(MongoClient mongoClient, MongoDatabase mongoDatabase) {
+        if (this.basePackage == null || this.basePackage.isEmpty()) {
+            throw new RuntimeException("LegacyMigration basePackage must be set!");
+        }
+
+        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder() //
+            .setDriver(this.createMongoSyncDriver(mongoClient)) //
+            .setEnabled(this.mongockEnabled) //
+            .setTransactionEnabled(false) //
+            .addMigrationScanPackage(this.basePackage)
+            .setLegacyMigration(this.mongockLegacyMigrationEnabled ? this.getLegacyMigration() : null) //
+            .addDependency(mongoDatabase);
+
+        runnerStandaloneBuilder.buildRunner().execute();
+
+        return runnerStandaloneBuilder;
+    }
+
+    private MongoSync4Driver createMongoSyncDriver(MongoClient mongoClient) {
         MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(mongoClient, this.dbName);
         driver.setWriteConcern(WriteConcern.MAJORITY.withJournal(true).withWTimeout(1000, TimeUnit.MILLISECONDS));
         driver.setReadConcern(ReadConcern.MAJORITY);
         driver.setReadPreference(ReadPreference.primary());
         driver.disableTransaction();
-
-        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver).setTransactionEnabled(false);
-        if (this.basePackage == null || this.basePackage.isEmpty()){
-            throw new RuntimeException("LegacyMigration basePackage must be set!");
-        }
-        runnerStandaloneBuilder.addMigrationScanPackage(this.basePackage);
-        if(mongockLegacyMigrationEnabled) {
-            LegacyMigration legacyMigration = new LegacyMigration();
-            legacyMigration.setOrigin(this.mongockLegacyTable);
-            runnerStandaloneBuilder.setLegacyMigration(legacyMigration);
-        }
-        runnerStandaloneBuilder.addDependency(jongo).addDependency(legacyDB).buildRunner().execute();
-        return runnerStandaloneBuilder;
+        return driver;
     }
 
-    @Bean
-    public MongoDatabase mongoDatabase(MongoClient mongoClient) {
-        return mongoClient.getDatabase(this.dbName);
+    private LegacyMigration getLegacyMigration() {
+        LegacyMigration legacyMigration = new LegacyMigration();
+        legacyMigration.setOrigin(this.mongockLegacyTable);
+        return legacyMigration;
     }
 
-    @Bean
-    public Jongo jongo(MongoClient mongoClient) {
-        return JongoFactory.createDefault(mongoClient.getDB(this.dbName));
-    }
 
-    @Bean
-    public DB mongoDB(MongoClient mongoClient){
-        return mongoClient.getDB(this.dbName);
+    private static PojoCodecProvider getPojoCodecProvider() {
+        return PojoCodecProvider.builder().conventions(DEFAULT_CONVENTIONS).automatic(true).build();
     }
 }
