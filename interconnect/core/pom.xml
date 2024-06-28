@@ -20,16 +20,11 @@
             <artifactId>dvalin-interconnect-model</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-pool</artifactId>
-            <version>${activemq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-client</artifactId>
-            <version>${activemq.version}</version>
+            <groupId>de.taimos</groupId>
+            <artifactId>dvalin-jms-core</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Spring Framework -->
@@ -106,5 +101,6 @@
             <version>${org.springframework.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>

@@ -21,7 +21,7 @@ package de.taimos.dvalin.interconnect.core;
  */
 
 
-import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.jms.exceptions.InfrastructureException;
 
 public final class TestHelper {
 
@@ -39,7 +39,9 @@ public final class TestHelper {
         }
     }
 
-    /** */
+    /**
+     *
+     */
     public static void closeBrokerEnv() {
         try {
             MessageConnector.stop();

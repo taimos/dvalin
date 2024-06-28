@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core.daemon;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,27 @@ package de.taimos.dvalin.interconnect.core.daemon;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.core.model.DvalinInterconnectJmsSendObject;
+import de.taimos.dvalin.interconnect.core.model.DvalinInterconnectJmsSendObject.DvalinInterconnectJmsSendObjectBuilder;
+import de.taimos.dvalin.interconnect.model.FutureImpl;
+import de.taimos.dvalin.interconnect.model.InterconnectList;
+import de.taimos.dvalin.interconnect.model.InterconnectMapper;
+import de.taimos.dvalin.interconnect.model.InterconnectObject;
+import de.taimos.dvalin.interconnect.model.ivo.daemon.DaemonErrorIVO;
+import de.taimos.dvalin.interconnect.model.service.ADaemonErrorNumber;
+import de.taimos.dvalin.interconnect.model.service.DaemonError;
+import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
+import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
+import de.taimos.dvalin.jms.IJmsConnector;
+import de.taimos.dvalin.jms.exceptions.InfrastructureException;
+import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import de.taimos.dvalin.jms.model.DvalinJmsResponseObject;
+import de.taimos.dvalin.jms.model.JmsTarget;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.UUID;
@@ -30,17 +51,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.DataFormatException;
 
-import de.taimos.dvalin.interconnect.core.InterconnectConnector;
-import de.taimos.dvalin.interconnect.core.MessageConnector;
-import de.taimos.dvalin.interconnect.model.FutureImpl;
-import de.taimos.dvalin.interconnect.model.InterconnectList;
-import de.taimos.dvalin.interconnect.model.InterconnectObject;
-import de.taimos.dvalin.interconnect.model.ivo.daemon.DaemonErrorIVO;
-import de.taimos.dvalin.interconnect.model.service.ADaemonErrorNumber;
-import de.taimos.dvalin.interconnect.model.service.DaemonError;
-import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
-import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
-
 public final class DaemonRequestResponse implements IDaemonRequestResponse {
 
     private static final long DEFAULT_TIMEOUT = 10;
@@ -49,11 +59,16 @@ public final class DaemonRequestResponse implements IDaemonRequestResponse {
 
     private final Executor executor = Executors.newCachedThreadPool();
 
+    private final IJmsConnector jmsConnector;
+
+    @Autowired
+    public DaemonRequestResponse(IJmsConnector jmsConnector) {
+        this.jmsConnector = jmsConnector;
+    }
 
     private static final class GenericError extends ADaemonErrorNumber {
 
         private static final long serialVersionUID = 1L;
-
 
         public GenericError(int aNumber, String aDaemon) {
             super(aNumber, aDaemon);
@@ -84,7 +99,8 @@ public final class DaemonRequestResponse implements IDaemonRequestResponse {
 
     @Override
     public <R> R sync(final UUID uuid, final String queue, final InterconnectObject request, final Class<R> responseClazz) throws ExecutionException {
-        return this.sync(uuid, queue, request, responseClazz, DaemonRequestResponse.DEFAULT_TIMEOUT, DaemonRequestResponse.DEFAULT_TIMEOUT_UNIT);
+        return this.sync(uuid, queue, request, responseClazz, DaemonRequestResponse.DEFAULT_TIMEOUT,
+            DaemonRequestResponse.DEFAULT_TIMEOUT_UNIT);
     }
 
     @Override
@@ -95,8 +111,8 @@ public final class DaemonRequestResponse implements IDaemonRequestResponse {
     @Override
     public <R> R sync(final UUID uuid, final String queue, final InterconnectObject request, final Class<R> responseClazz, final long timeout, final TimeUnit unit, final boolean secure) throws ExecutionException {
         try {
-            final InterconnectObject response = InterconnectConnector.request(uuid, queue, request, null, secure, TimeUnit.MILLISECONDS.convert(timeout, unit), TimeUnit.MILLISECONDS.convert(timeout, unit), MessageConnector.MSGPRIORITY);
-            return DaemonRequestResponse.toResponse(response, responseClazz);
+            InterconnectObject ico = this.request(uuid, queue, request, timeout, unit, secure);
+            return DaemonRequestResponse.toResponse(ico, responseClazz);
         } catch (final Exception e) {
             throw new ExecutionException(e);
         }
@@ -104,7 +120,8 @@ public final class DaemonRequestResponse implements IDaemonRequestResponse {
 
     @Override
     public <R> Future<R> async(final UUID uuid, final String queue, InterconnectObject request, Class<R> responseClazz) {
-        return this.async(uuid, queue, request, responseClazz, DaemonRequestResponse.DEFAULT_TIMEOUT, DaemonRequestResponse.DEFAULT_TIMEOUT_UNIT);
+        return this.async(uuid, queue, request, responseClazz, DaemonRequestResponse.DEFAULT_TIMEOUT,
+            DaemonRequestResponse.DEFAULT_TIMEOUT_UNIT);
     }
 
     @Override
@@ -115,20 +132,41 @@ public final class DaemonRequestResponse implements IDaemonRequestResponse {
     @Override
     public <R> Future<R> async(final UUID uuid, final String queue, final InterconnectObject request, final Class<R> responseClazz, final long timeout, final TimeUnit unit, final boolean secure) {
         final FutureImpl<R> f = new FutureImpl<>();
-        this.executor.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    final InterconnectObject response = InterconnectConnector.request(uuid, queue, request, null, secure, TimeUnit.MILLISECONDS.convert(timeout, unit), TimeUnit.MILLISECONDS.convert(timeout, unit), MessageConnector.MSGPRIORITY);
-                    f.set(DaemonRequestResponse.toResponse(response, responseClazz));
-                } catch (final Exception e) {
-                    f.set(e);
-                }
-
+        this.executor.execute(() -> {
+            try {
+                InterconnectObject ico = this.request(uuid, queue, request, timeout, unit, secure);
+                f.set(DaemonRequestResponse.toResponse(ico, responseClazz));
+            } catch (final Exception e) {
+                f.set(e);
             }
+
         });
 
         return f;
+    }
+
+    private static InterconnectObject castToInterconnectObject(TextMessage textMessage) throws InfrastructureException {
+        InterconnectObject ico;
+        try {
+            ico = InterconnectMapper.fromJson(textMessage.getText());
+        } catch (JMSException | IOException var2) {
+            throw new InfrastructureException("Failed to read message");
+        }
+        return ico;
+    }
+
+    private InterconnectObject request(UUID uuid, String queue, InterconnectObject request, long timeout, TimeUnit unit, boolean secure) throws InfrastructureException, MessageCryptoException {
+        DvalinInterconnectJmsSendObject requestObject = (DvalinInterconnectJmsSendObject) new DvalinInterconnectJmsSendObjectBuilder() //
+            .withUuid(uuid) //
+            .withRequestICO(request) //
+            .withDestinationName(queue) //
+            .withTarget(JmsTarget.QUEUE) //
+            .withSecure(secure) //
+            .withReceiveTimeout(TimeUnit.MILLISECONDS.convert(timeout, unit)) //
+            .withSendTimeout(TimeUnit.MILLISECONDS.convert(timeout, unit)) //
+            .withPriority(IJmsConnector.MSGPRIORITY) //
+            .build();
+        DvalinJmsResponseObject responseObject = this.jmsConnector.request(requestObject);
+        return DaemonRequestResponse.castToInterconnectObject(responseObject.getTextMessage());
     }
 }

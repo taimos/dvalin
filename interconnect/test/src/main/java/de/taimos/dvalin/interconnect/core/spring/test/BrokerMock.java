@@ -20,14 +20,10 @@ package de.taimos.dvalin.interconnect.core.spring.test;
  * #L%
  */
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
-import javax.jms.MessageListener;
-
+import de.taimos.dvalin.interconnect.core.model.DvalinInterconnectJmsSendObject;
+import de.taimos.dvalin.interconnect.core.spring.DaemonMessageSenderHeader;
+import de.taimos.dvalin.interconnect.model.InterconnectMapper;
+import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTextMessage;
@@ -36,10 +32,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.taimos.dvalin.interconnect.core.InterconnectConnector;
-import de.taimos.dvalin.interconnect.core.spring.DaemonMessageSenderHeader;
-import de.taimos.dvalin.interconnect.model.InterconnectMapper;
-import de.taimos.dvalin.interconnect.model.InterconnectObject;
+import javax.jms.MessageListener;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 
 public class BrokerMock {
@@ -96,7 +94,7 @@ public class BrokerMock {
                 ActiveMQTextMessage msg = new ActiveMQTextMessage();
                 msg.setDestination(dest);
                 msg.setText(InterconnectMapper.toJson(ico));
-                msg.setObjectProperty(InterconnectConnector.HEADER_ICO_CLASS, ico.getClass().getName());
+                msg.setObjectProperty(DvalinInterconnectJmsSendObject.HEADER_ICO_CLASS, ico.getClass().getName());
                 if (headers != null) {
                     for (DaemonMessageSenderHeader header : headers) {
                         msg.setObjectProperty(header.getField().getName(), header.getValue());

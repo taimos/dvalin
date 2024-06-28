@@ -20,16 +20,10 @@ package de.taimos.dvalin.interconnect.core.daemon;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
-import de.taimos.dvalin.interconnect.model.ivo.daemon.VoidIVO;
 import de.taimos.dvalin.interconnect.model.service.Daemon;
-import de.taimos.dvalin.interconnect.model.service.DaemonError;
-import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
 import de.taimos.dvalin.interconnect.model.service.IDaemon;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -75,33 +69,7 @@ public abstract class ADaemonProxyFactory implements IDaemonProxyFactory {
             throw new IllegalArgumentException("Daemon interface has no @Daemon annotation");
         }
 
-        return (D) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[]{daemon}, new InvocationHandler() {
-
-            @Override
-            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-                try {
-                    final DaemonScanner.DaemonMethod dm = DaemonScanner.scan(method);
-                    if (dm.getType() == DaemonScanner.Type.voit) {
-                        ADaemonProxyFactory.this.sendToQueue(InterconnectContext.getUuid(), queueName, (InterconnectObject) args[0], dm.isSecure());
-                        return null;
-                    }
-                    final Class<?> responseClass;
-                    if (method.getReturnType().equals(Void.TYPE)) {
-                        responseClass = VoidIVO.class;
-                    } else {
-                        responseClass = method.getReturnType();
-                    }
-                    return ADaemonProxyFactory.this.syncRequest(InterconnectContext.getUuid(), queueName, (InterconnectObject) args[0], responseClass, dm.getTimeoutInMs(), TimeUnit.MILLISECONDS, dm.isSecure());
-                } catch (final ExecutionException e) {
-                    if (e.getCause() instanceof DaemonError) {
-                        throw e.getCause();
-                    }
-                    if (e.getCause() != null) {
-                        throw e.getCause();
-                    }
-                    throw e;
-                }
-            }
-        });
+        return (D) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class<?>[]{daemon},
+            new DaemonInvocationHandler(this, queueName));
     }
 }

@@ -25,8 +25,10 @@
         <module name="dvalin-archetype-basic" />
         <module name="dvalin-monitoring-core" />
         <module name="dvalin-notification-aws" />
+        <module name="dvalin-jms-activemq-classic" />
         <module name="dvalin-jpa" />
         <module name="dvalin-cloud-aws-ssm" />
+        <module name="dvalin-jms-core" />
         <module name="dvalin-jaxrs-jwtauth" />
         <module name="model-maven-plugin" />
         <module name="dvalin-cluster-hazelcast" />
@@ -38,7 +40,9 @@
         <module name="dvalin-daemon" />
         <module name="dvalin-interconnect-metamodel" />
         <module name="dvalin-orchestration-etcd" />
+        <module name="dvalin-interconnect-core-legacy" />
         <module name="dvalin-template-velocity" />
+        <module name="dvalin-interonnect-core-legacy-exceptions" />
         <module name="dvalin-archetype-docker" />
         <module name="dvalin-test" />
         <module name="dvalin-jaxrs-swagger" />
@@ -51,9 +55,12 @@
     <bytecodeTargetLevel>
       <module name="dvalin-examples-jaxrs-hello-world" target="1.8" />
       <module name="dvalin-examples-parent" target="1.8" />
+      <module name="dvalin-interconnect-activemq-artemis" target="1.8" />
+      <module name="dvalin-interconnect-activemq-classic" target="1.8" />
       <module name="dvalin-interconnect-demo" target="1.8" />
       <module name="dvalin-template-jasperreports" target="1.8" />
       <module name="dvlain-i18n" target="1.8" />
+      <module name="jms-core" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

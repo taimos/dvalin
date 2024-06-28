@@ -58,7 +58,7 @@ public class DaemonRequestResponseMock implements IDaemonRequestResponse {
         try {
             return this.async(uuid, queue, request, responseClazz, timeout, unit).get(timeout, unit);
         } catch (final TimeoutException e) {
-            throw new ExecutionException(new de.taimos.dvalin.interconnect.core.exceptions.TimeoutException(timeout));
+            throw new ExecutionException(new de.taimos.dvalin.jms.exceptions.TimeoutException(timeout));
         } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new ExecutionException(e);

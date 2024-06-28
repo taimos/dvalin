@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.taimos.dvalin.interconnect.core.InterconnectConnector.Response;
-import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
+import de.taimos.dvalin.jms.exceptions.TimeoutException;
 import de.taimos.dvalin.interconnect.model.InterconnectConstants;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
@@ -82,16 +82,21 @@ public final class InterconnectConnectorITTest {
             public void run() {
                 try {
                     final Response request = InterconnectConnector.receiveFromQueueEnhanced(q, "", 5000, false);
-                    Assert.assertNotNull(request.getJMSTextMessage().getStringProperty(InterconnectConnector.HEADER_REQUEST_UUID));
-                    Assert.assertNotNull(request.getJMSTextMessage().getStringProperty(InterconnectConnector.HEADER_ICO_CLASS));
+                    Assert.assertNotNull(
+                        request.getJMSTextMessage().getStringProperty(InterconnectConnector.HEADER_REQUEST_UUID));
+                    Assert.assertNotNull(
+                        request.getJMSTextMessage().getStringProperty(InterconnectConnector.HEADER_ICO_CLASS));
                     Assert.assertEquals(VoidIVO.class, request.getICO().getClass());
-                    MessageConnector.sendToDestination(request.getJMSTextMessage().getJMSReplyTo(), InterconnectMapper.toJson(new VoidIVOBuilder().build()), new HashMap<String, Object>(), false, null, request.getJMSTextMessage().getJMSCorrelationID());
+                    MessageConnector.sendToDestination(request.getJMSTextMessage().getJMSReplyTo(),
+                        InterconnectMapper.toJson(new VoidIVOBuilder().build()), new HashMap<String, Object>(), false,
+                        null, request.getJMSTextMessage().getJMSCorrelationID());
                 } catch (final Exception e) {
                     Assert.fail("Exception");
                 }
             }
         }).start();
-        final InterconnectObject res = InterconnectConnector.request(UUID.randomUUID(), q, new VoidIVOBuilder().build(), new HashMap<String, Object>());
+        final InterconnectObject res = InterconnectConnector.request(UUID.randomUUID(), q, new VoidIVOBuilder().build(),
+            new HashMap<String, Object>());
         Assert.assertEquals(VoidIVO.class, res.getClass());
     }
 
@@ -110,24 +115,29 @@ public final class InterconnectConnectorITTest {
                     Assert.assertNotEquals(json, tm.getText());
                     MessageConnector.decryptMessage(tm);
                     Assert.assertEquals(json, tm.getText());
-                    MessageConnector.sendToDestination(tm.getJMSReplyTo(), json, new HashMap<String, Object>(), true, null, tm.getJMSCorrelationID());
+                    MessageConnector.sendToDestination(tm.getJMSReplyTo(), json, new HashMap<String, Object>(), true,
+                        null, tm.getJMSCorrelationID());
                 } catch (final Exception e) {
                     Assert.fail("Exception");
                 }
             }
         }).start();
-        final InterconnectObject res = InterconnectConnector.request(UUID.randomUUID(), q, new VoidIVOBuilder().build(), new HashMap<String, Object>(), true, MessageConnector.REQUEST_TIMEOUT, MessageConnector.REQUEST_TIMEOUT, MessageConnector.MSGPRIORITY);
+        final InterconnectObject res = InterconnectConnector.request(UUID.randomUUID(), q, new VoidIVOBuilder().build(),
+            new HashMap<String, Object>(), true, MessageConnector.REQUEST_TIMEOUT, MessageConnector.REQUEST_TIMEOUT,
+            MessageConnector.MSGPRIORITY);
         Assert.assertEquals(VoidIVO.class, res.getClass());
     }
 
     @Test(timeout = 11000, expected = TimeoutException.class)
     public void testDefaultTimeoutRequest() throws Exception {
-        InterconnectConnector.request(UUID.randomUUID(), this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>());
+        InterconnectConnector.request(UUID.randomUUID(), this.queueName, new VoidIVOBuilder().build(),
+            new HashMap<String, Object>());
     }
 
     @Test(timeout = 2000, expected = TimeoutException.class)
     public void testCustomTimeoutRequest() throws Exception {
-        InterconnectConnector.request(UUID.randomUUID(), this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>(), true, 1000, MessageConnector.REQUEST_TIMEOUT, MessageConnector.MSGPRIORITY);
+        InterconnectConnector.request(UUID.randomUUID(), this.queueName, new VoidIVOBuilder().build(),
+            new HashMap<String, Object>(), true, 1000, MessageConnector.REQUEST_TIMEOUT, MessageConnector.MSGPRIORITY);
     }
 
     @Test
@@ -142,7 +152,8 @@ public final class InterconnectConnectorITTest {
 
     @Test
     public void testSecureSendAndReceive() throws Exception {
-        InterconnectConnector.sendToQueue(this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>(), true);
+        InterconnectConnector.sendToQueue(this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>(),
+            true);
         final Response res = InterconnectConnector.receiveFromQueueEnhanced(this.queueName, null, 1000, true);
         Assert.assertEquals(VoidIVO.class, res.getICO().getClass());
         Assert.assertNotNull(res.getJMSTextMessage().getStringProperty(InterconnectConnector.HEADER_ICO_CLASS));
@@ -152,7 +163,8 @@ public final class InterconnectConnectorITTest {
 
     @Test
     public void testSecureSendAndReceiveWithReplyTo() throws Exception {
-        InterconnectConnector.sendToQueue(this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>(), "test", null);
+        InterconnectConnector.sendToQueue(this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>(),
+            "test", null);
         final Response res = InterconnectConnector.receiveFromQueueEnhanced(this.queueName, null, 1000, false);
         Assert.assertEquals(VoidIVO.class, res.getICO().getClass());
         Assert.assertNotNull(res.getJMSTextMessage().getStringProperty(InterconnectConnector.HEADER_ICO_CLASS));
@@ -163,7 +175,8 @@ public final class InterconnectConnectorITTest {
 
     @Test
     public void testSecureSendAndReceiveWithCorrelationId() throws Exception {
-        InterconnectConnector.sendToQueue(this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>(), null, "test123");
+        InterconnectConnector.sendToQueue(this.queueName, new VoidIVOBuilder().build(), new HashMap<String, Object>(),
+            null, "test123");
         final Response res = InterconnectConnector.receiveFromQueueEnhanced(this.queueName, null, 1000, false);
         Assert.assertEquals(VoidIVO.class, res.getICO().getClass());
         Assert.assertNotNull(res.getJMSTextMessage().getStringProperty(InterconnectConnector.HEADER_ICO_CLASS));
@@ -180,11 +193,16 @@ public final class InterconnectConnectorITTest {
             @Override
             public void run() {
                 try {
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
                 } catch (final Exception e) {
                     Assert.fail("Exception");
                 }
@@ -201,7 +219,8 @@ public final class InterconnectConnectorITTest {
             @Override
             public void run() {
                 try {
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
                 } catch (final Exception e) {
                     Assert.fail("Exception");
                 }
@@ -218,12 +237,18 @@ public final class InterconnectConnectorITTest {
             @Override
             public void run() {
                 try {
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
-                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName, new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
+                    InterconnectConnector.sendToQueue(InterconnectConnectorITTest.this.queueName,
+                        new VoidIVOBuilder().build(), null);
                 } catch (final Exception e) {
                     Assert.fail("Exception");
                 }

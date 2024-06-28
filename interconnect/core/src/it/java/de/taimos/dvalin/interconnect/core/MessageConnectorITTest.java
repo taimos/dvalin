@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.core;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
+import de.taimos.dvalin.jms.exceptions.TimeoutException;
 import de.taimos.dvalin.interconnect.model.InterconnectConstants;
 
 
@@ -72,7 +72,8 @@ public final class MessageConnectorITTest {
                 try {
                     final TextMessage tm = MessageConnector.receiveFromQueue(q, "", 5000, false);
                     Assert.assertEquals("ping", tm.getText());
-                    MessageConnector.sendToDestination(tm.getJMSReplyTo(), "pong", new HashMap<String, Object>(), false, null, tm.getJMSCorrelationID());
+                    MessageConnector.sendToDestination(tm.getJMSReplyTo(), "pong", new HashMap<String, Object>(), false,
+                        null, tm.getJMSCorrelationID());
                 } catch (final Exception e) {
                     Assert.fail("Exception");
                 }
@@ -94,13 +95,15 @@ public final class MessageConnectorITTest {
                     Assert.assertNotEquals("ping", tm.getText());
                     MessageConnector.decryptMessage(tm);
                     Assert.assertEquals("ping", tm.getText());
-                    MessageConnector.sendToDestination(tm.getJMSReplyTo(), "pong", new HashMap<String, Object>(), true, null, tm.getJMSCorrelationID());
+                    MessageConnector.sendToDestination(tm.getJMSReplyTo(), "pong", new HashMap<String, Object>(), true,
+                        null, tm.getJMSCorrelationID());
                 } catch (final Exception e) {
                     Assert.fail("Exception");
                 }
             }
         }).start();
-        final TextMessage res = MessageConnector.request(q, "ping", new HashMap<String, Object>(), true, MessageConnector.REQUEST_TIMEOUT, MessageConnector.REQUEST_TIMEOUT, MessageConnector.MSGPRIORITY);
+        final TextMessage res = MessageConnector.request(q, "ping", new HashMap<String, Object>(), true,
+            MessageConnector.REQUEST_TIMEOUT, MessageConnector.REQUEST_TIMEOUT, MessageConnector.MSGPRIORITY);
         Assert.assertEquals("pong", res.getText());
     }
 
@@ -111,7 +114,8 @@ public final class MessageConnectorITTest {
 
     @Test(timeout = 2000, expected = TimeoutException.class)
     public void testCustomTimeoutRequest() throws Exception {
-        MessageConnector.request(this.queueName, "ping", new HashMap<String, Object>(), true, 1000, MessageConnector.REQUEST_TIMEOUT, MessageConnector.MSGPRIORITY);
+        MessageConnector.request(this.queueName, "ping", new HashMap<String, Object>(), true, 1000,
+            MessageConnector.REQUEST_TIMEOUT, MessageConnector.MSGPRIORITY);
     }
 
     @Test

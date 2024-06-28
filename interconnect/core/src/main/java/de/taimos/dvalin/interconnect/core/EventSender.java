@@ -23,39 +23,33 @@ package de.taimos.dvalin.interconnect.core;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
+import de.taimos.dvalin.jms.IJmsConnector;
 import org.springframework.core.annotation.AnnotationUtils;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 
-public class EventSender extends ToTopicSender {
+public class EventSender extends AToTopicSender {
 
     private static final String PROP_DEFAULT_VIRTUAL_TOPIC_PREFIX = "VirtualTopic";
 
-    private static EventSender instance = new EventSender();
 
-    private String virtualTopicPrefix;
+    private final String virtualTopicPrefix;
 
-    private EventSender() {
-        super();
-        this.virtualTopicPrefix = System.getProperty(MessageConnector.SYSPROP_VIRTUAL_TOPIC_PREFIX, EventSender.PROP_DEFAULT_VIRTUAL_TOPIC_PREFIX);
-    }
-
-    /**
-     * @return the singleton
-     */
-    public static EventSender getInstance() {
-        return EventSender.instance;
+    public EventSender(ConnectionFactory connectionFactory) {
+        super(connectionFactory);
+        this.virtualTopicPrefix = System.getProperty(IJmsConnector.SYSPROP_VIRTUAL_TOPIC_PREFIX,
+            EventSender.PROP_DEFAULT_VIRTUAL_TOPIC_PREFIX);
     }
 
 
     @Override
     public void send(Serializable object, String topicName) {
-        if(object instanceof IEvent) {
+        if (object instanceof IEvent) {
             this.send((IEvent) object);
         } else {
             super.send(object, topicName);
@@ -66,20 +60,20 @@ public class EventSender extends ToTopicSender {
      * @param object the object
      */
     public void send(IEvent object) {
-        Annotation domainAnnotation = AnnotationUtils.findAnnotation(object.getClass(), EventDomain.class);
-        if(domainAnnotation == null) {
+        EventDomain domainAnnotation = AnnotationUtils.findAnnotation(object.getClass(), EventDomain.class);
+        if (domainAnnotation == null) {
             this.logger.error("The event {} has no domain annotation", object.getClass().getSimpleName());
             return;
         }
-        if(((EventDomain) domainAnnotation).value().isEmpty()) {
+        if (domainAnnotation.value().isEmpty()) {
             this.logger.error("The domainname for the event {} is empty", object.getClass().getSimpleName());
             return;
         }
-        super.send(object, this.virtualTopicPrefix + "." + ((EventDomain) domainAnnotation).value());
+        super.send(object, this.virtualTopicPrefix + "." + domainAnnotation.value());
     }
 
     protected Message getMessage(Serializable object, Session session) throws JMSException, IOException {
-        if(object instanceof IEvent) {
+        if (object instanceof IEvent) {
             String json = InterconnectMapper.toJson((IEvent) object);
             return session.createTextMessage(json);
         }

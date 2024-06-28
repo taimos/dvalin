@@ -4,13 +4,14 @@ import de.taimos.dvalin.interconnect.core.daemon.ADaemonMessageHandler;
 import de.taimos.dvalin.interconnect.core.daemon.DaemonMethodRegistry.RegistryEntry;
 import de.taimos.dvalin.interconnect.core.daemon.DaemonResponse;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
+import de.taimos.dvalin.jms.crypto.ICryptoService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 
 import java.util.Collection;
 
 /**
- *  Copyright 2022 Taimos GmbH<br>
+ * Copyright 2022 Taimos GmbH<br>
  * <br>
  *
  * @author psigloch
@@ -27,11 +28,12 @@ public class MultiDaemonMessageHandler extends ADaemonMessageHandler {
     /**
      * @param aLogger         the logger
      * @param aHandlerClazzes the handler classes
+     * @param cryptoService   the message crypt service
      * @param aMessageSender  the message sender
      * @param beanFactory     the bean factory
      */
-    public MultiDaemonMessageHandler(final Logger aLogger, final Collection<Class<? extends IDaemonHandler>> aHandlerClazzes, final IDaemonMessageSender aMessageSender, BeanFactory beanFactory) {
-        super(aHandlerClazzes, false);
+    public MultiDaemonMessageHandler(final Logger aLogger, final Collection<Class<? extends IDaemonHandler>> aHandlerClazzes, final ICryptoService cryptoService, final IDaemonMessageSender aMessageSender, BeanFactory beanFactory) {
+        super(aHandlerClazzes, cryptoService, false);
         this.logger = aLogger;
         this.messageSender = aMessageSender;
         this.beanFactory = beanFactory;

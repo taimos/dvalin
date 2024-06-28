@@ -20,14 +20,15 @@ package de.taimos.dvalin.interconnect.core.spring;
  * #L%
  */
 
-import java.util.UUID;
-
 import com.google.common.base.Preconditions;
-
-import de.taimos.dvalin.interconnect.core.InterconnectConnector;
+import de.taimos.dvalin.interconnect.core.model.DvalinInterconnectJmsSendObject;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
 
+import java.util.UUID;
 
+/**
+ * @author thoeger
+ */
 public final class DaemonMessageSenderHeader {
 
     public enum Field {
@@ -35,12 +36,12 @@ public final class DaemonMessageSenderHeader {
         /**
          * Universally unique identifier of the request.
          */
-        RequestUUID(InterconnectConnector.HEADER_REQUEST_UUID),
+        RequestUUID(DvalinInterconnectJmsSendObject.HEADER_REQUEST_UUID),
 
         /**
          * Interconnect Object class.
          */
-        icoClass(InterconnectConnector.HEADER_ICO_CLASS);
+        icoClass(DvalinInterconnectJmsSendObject.HEADER_ICO_CLASS);
 
         private final String name;
 

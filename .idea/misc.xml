@@ -20,11 +20,15 @@
         <option value="$PROJECT_DIR$/archetypes/basic/pom.xml" />
         <option value="$PROJECT_DIR$/monitoring/pom.xml" />
         <option value="$PROJECT_DIR$/../core-model-common/pom.xml" />
+        <option value="$PROJECT_DIR$/interconnect/activemq-classic/pom.xml" />
+        <option value="$PROJECT_DIR$/jms/jms-activemq-classic/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/examples/pom.xml" />
+        <option value="$PROJECT_DIR$/interconnect/activemq-artemis/pom.xml" />
+        <option value="$PROJECT_DIR$/interconnect/activemq-classic/pom.xml" />
       </set>
     </option>
   </component>

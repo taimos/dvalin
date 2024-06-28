@@ -41,7 +41,15 @@
     <file url="file://$PROJECT_DIR$/i18n/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/i18n/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/activemq-artemis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/activemq-artemis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/activemq-classic/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/activemq-classic/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/core-legacy-exceptions/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/core-legacy-exceptions/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/core-legacy/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/core-legacy/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/core/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/interconnect-maven-plugin" charset="UTF-8" />
@@ -67,6 +75,12 @@
     <file url="file://$PROJECT_DIR$/jaxrs-swagger/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/activemq-classic/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/activemq-classic/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa/src/main/resources" charset="UTF-8" />

@@ -5,11 +5,12 @@ import de.taimos.dvalin.interconnect.core.daemon.DaemonMethodRegistry.RegistryEn
 import de.taimos.dvalin.interconnect.core.daemon.DaemonResponse;
 import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
+import de.taimos.dvalin.jms.crypto.ICryptoService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
- *  Copyright 2022 Taimos GmbH<br>
+ * Copyright 2022 Taimos GmbH<br>
  * <br>
  *
  * @author psigloch
@@ -26,11 +27,12 @@ public class SingleDaemonMessageHandler extends ADaemonMessageHandler {
     /**
      * @param aLogger        the logger
      * @param aHandlerClazz  the handler clazz
+     * @param cryptoService  the message acrype service
      * @param aMessageSender the message sender
      * @param beanFactory    the bean factory
      */
-    public SingleDaemonMessageHandler(final Logger aLogger, final Class<? extends ADaemonHandler> aHandlerClazz, final IDaemonMessageSender aMessageSender, BeanFactory beanFactory) {
-        super(aHandlerClazz, false);
+    public SingleDaemonMessageHandler(final Logger aLogger, final Class<? extends ADaemonHandler> aHandlerClazz, final ICryptoService cryptoService, final IDaemonMessageSender aMessageSender, BeanFactory beanFactory) {
+        super(aHandlerClazz, cryptoService, false);
         this.logger = aLogger;
         this.messageSender = aMessageSender;
         this.beanFactory = beanFactory;

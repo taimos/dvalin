@@ -6,6 +6,7 @@ import de.taimos.dvalin.interconnect.core.spring.IDaemonMessageSender;
 import de.taimos.dvalin.interconnect.core.spring.MultiDaemonMessageHandler;
 import de.taimos.dvalin.interconnect.core.spring.RequestHandler;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
+import de.taimos.dvalin.jms.crypto.ICryptoService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class MultiRequestHandlerConfig {
 
     @Bean
     @Primary
-    public IDaemonMessageHandlerFactory createDaemonMessageHandlerFactory(ApplicationContext applicationContext, IDaemonMessageSender messageSender) {
+    public IDaemonMessageHandlerFactory createDaemonMessageHandlerFactory(ApplicationContext applicationContext, IDaemonMessageSender messageSender, ICryptoService cryptoService) {
         return logger -> {
             Set<Class<? extends IDaemonHandler>> handlers = new HashSet<>();
             for (Object o : applicationContext.getBeansWithAnnotation(RequestHandler.class).values()) {
@@ -34,7 +35,8 @@ public class MultiRequestHandlerConfig {
                     handlers.add(((IDaemonHandler) o).getClass());
                 }
             }
-            return new MultiDaemonMessageHandler(logger, handlers, messageSender, applicationContext.getAutowireCapableBeanFactory());
+            return new MultiDaemonMessageHandler(logger, handlers, cryptoService, messageSender,
+                applicationContext.getAutowireCapableBeanFactory());
         };
     }
 }

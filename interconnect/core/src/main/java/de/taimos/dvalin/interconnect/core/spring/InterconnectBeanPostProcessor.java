@@ -37,6 +37,25 @@ package de.taimos.dvalin.interconnect.core.spring;
  */
 
 
+import de.taimos.dvalin.interconnect.core.daemon.Interconnect;
+import de.taimos.dvalin.interconnect.model.service.IDaemon;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.InjectionMetadata;
+import org.springframework.beans.factory.annotation.InjectionMetadata.InjectedElement;
+import org.springframework.beans.factory.config.DependencyDescriptor;
+import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import org.springframework.core.BridgeMethodResolver;
+import org.springframework.core.MethodParameter;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -45,61 +64,24 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.annotation.InjectionMetadata;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.DependencyDescriptor;
-import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
-import org.springframework.core.BridgeMethodResolver;
-import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-
-import de.taimos.dvalin.interconnect.core.daemon.Interconnect;
-import de.taimos.dvalin.interconnect.model.service.IDaemon;
-
+/**
+ * @author thoeger
+ */
 @Component
 @SuppressWarnings("serial")
-public class InterconnectBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, Serializable {
+public class InterconnectBeanPostProcessor
+    implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, Serializable {
 
-    private transient ConfigurableListableBeanFactory beanFactory;
     private transient DaemonProxyFactory proxyFactory;
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
         Assert.notNull(beanFactory, "BeanFactory must not be null");
-        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
         this.proxyFactory = beanFactory.getBean(DaemonProxyFactory.class);
     }
 
     @Override
-    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
-        return null;
-    }
-
-    @Override
-    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
-        return true;
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
-
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
-
-    @Override
-    public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
+    public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
         InjectionMetadata metadata = this.buildResourceMetadata(bean.getClass());
         try {
             metadata.inject(bean, beanName, pvs);
@@ -109,43 +91,63 @@ public class InterconnectBeanPostProcessor implements InstantiationAwareBeanPost
         return pvs;
     }
 
+    @Override
+    @Deprecated
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
+        return this.postProcessProperties(pvs, bean, beanName);
+    }
+
     private InjectionMetadata buildResourceMetadata(Class<?> clazz) {
-        LinkedList<InjectionMetadata.InjectedElement> elements = new LinkedList<InjectionMetadata.InjectedElement>();
+        LinkedList<InjectionMetadata.InjectedElement> elements = new LinkedList<>();
         Class<?> targetClass = clazz;
 
         do {
-            LinkedList<InjectionMetadata.InjectedElement> currElements = new LinkedList<InjectionMetadata.InjectedElement>();
-            for (Field field : targetClass.getDeclaredFields()) {
-                if (field.isAnnotationPresent(Interconnect.class)) {
-                    if (Modifier.isStatic(field.getModifiers())) {
-                        throw new IllegalStateException("@Interconnect annotation is not supported on static fields");
-                    }
-                    currElements.add(new InterconnectElement(field, null));
-                }
-            }
-            for (Method method : targetClass.getDeclaredMethods()) {
-                Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
-                if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {
-                    continue;
-                }
-                if (method.equals(ClassUtils.getMostSpecificMethod(method, clazz))) {
-                    if (bridgedMethod.isAnnotationPresent(Interconnect.class)) {
-                        if (Modifier.isStatic(method.getModifiers())) {
-                            throw new IllegalStateException("@Interconnect annotation is not supported on static methods");
-                        }
-                        if (method.getParameterTypes().length != 1) {
-                            throw new IllegalStateException("@Interconnect annotation requires a single-arg method: " + method);
-                        }
-                        PropertyDescriptor pd = BeanUtils.findPropertyForMethod(bridgedMethod, clazz);
-                        currElements.add(new InterconnectElement(method, pd));
-                    }
-                }
-            }
+            LinkedList<InjectionMetadata.InjectedElement> currElements = new LinkedList<>();
+            currElements.addAll(this.getFieldInjections(targetClass));
+            currElements.addAll(this.getMethodInjections(clazz, targetClass));
             elements.addAll(0, currElements);
             targetClass = targetClass.getSuperclass();
         } while ((targetClass != null) && (targetClass != Object.class));
 
         return new InjectionMetadata(clazz, elements);
+    }
+
+    private LinkedList<InjectedElement> getFieldInjections(Class<?> targetClass) {
+        LinkedList<InjectedElement> currElements = new LinkedList<>();
+        for (Field field : targetClass.getDeclaredFields()) {
+            if (field.isAnnotationPresent(Interconnect.class)) {
+                if (Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("@Interconnect annotation is not supported on static fields");
+                }
+                currElements.add(new InterconnectElement(field, null));
+            }
+        }
+        return currElements;
+    }
+
+    private LinkedList<InjectedElement> getMethodInjections(Class<?> clazz, Class<?> targetClass) {
+        LinkedList<InjectedElement> currElements = new LinkedList<>();
+        for (Method method : targetClass.getDeclaredMethods()) {
+            Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
+            if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {
+                continue;
+            }
+            if (method.equals(ClassUtils.getMostSpecificMethod(method, clazz))) {
+                if (bridgedMethod.isAnnotationPresent(Interconnect.class)) {
+                    if (Modifier.isStatic(method.getModifiers())) {
+                        throw new IllegalStateException(
+                            "@Interconnect annotation is not supported on static methods");
+                    }
+                    if (method.getParameterTypes().length != 1) {
+                        throw new IllegalStateException(
+                            "@Interconnect annotation requires a single-arg method: " + method);
+                    }
+                    PropertyDescriptor pd = BeanUtils.findPropertyForMethod(bridgedMethod, clazz);
+                    currElements.add(new InterconnectElement(method, pd));
+                }
+            }
+        }
+        return currElements;
     }
 
 
@@ -170,7 +172,8 @@ public class InterconnectBeanPostProcessor implements InstantiationAwareBeanPost
         protected Object getResourceToInject(Object target, String requestingBeanName) {
             Class<?> dependencyType = this.getDependencyDescriptor().getDependencyType();
             if (!IDaemon.class.isAssignableFrom(dependencyType)) {
-                throw new RuntimeException("Field has to be of type IDaemon but was of type " + dependencyType.getCanonicalName());
+                throw new RuntimeException(
+                    "Field has to be of type IDaemon but was of type " + dependencyType.getCanonicalName());
             }
             return InterconnectBeanPostProcessor.this.proxyFactory.create((Class<? extends IDaemon>) dependencyType);
         }

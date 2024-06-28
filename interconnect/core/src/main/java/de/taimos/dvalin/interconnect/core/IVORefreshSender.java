@@ -23,27 +23,27 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
+import de.taimos.dvalin.jms.IJmsConnector;
+
+import javax.jms.ConnectionFactory;
 import java.io.Serializable;
 
-public class IVORefreshSender extends ToTopicSender {
+/**
+ * Abstract IVO refresh sender.
+ *
+ * @author fzwirn
+ */
+public class IVORefreshSender extends AToTopicSender {
 
-    private static IVORefreshSender instance = new IVORefreshSender();
 
-    private IVORefreshSender() {
-        super();
-    }
-
-    /**
-     * @return the singleton
-     */
-    public static IVORefreshSender getInstance() {
-        return IVORefreshSender.instance;
+    public IVORefreshSender(ConnectionFactory connectionFactory) {
+        super(connectionFactory);
     }
 
     /**
      * @param object the object
      */
     public void send(Serializable object) {
-        this.send(object, System.getProperty(MessageConnector.SYSPROP_UPDATE_TOPIC));
+        this.send(object, System.getProperty(IJmsConnector.SYSPROP_UPDATE_TOPIC));
     }
 }

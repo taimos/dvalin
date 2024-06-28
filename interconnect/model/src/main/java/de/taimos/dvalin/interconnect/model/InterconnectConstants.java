@@ -37,10 +37,5 @@ public final class InterconnectConstants {
 	/** name of the boolean message property that indicates whether the message contains a regular result or an error object */
     public static final String MSGPROP_ERROR = "error";
 
-    /** Constant for the system property that holds the AES key for message encryption */
-    public static final String PROPERTY_CRYPTO_AESKEY = "interconnect.crypto.aes";
-
-    /** Constant for the system property that holds the Signature key for message encryption */
-    public static final String PROPERTY_CRYPTO_SIGNATURE = "interconnect.crypto.signature";
 
 }
