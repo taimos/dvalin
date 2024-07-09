@@ -25,7 +25,7 @@ package de.taimos.dvalin.jms.exceptions;
  *
  * @author fzwirn
  */
-public class MessageCryptoException extends Exception {
+public class MessageCryptoException extends SerializationException {
 
 
     private static final long serialVersionUID = -6378917176126978412L;

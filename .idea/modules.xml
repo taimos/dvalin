@@ -12,7 +12,6 @@
       <module fileurl="file://$PROJECT_DIR$/dynamodb/dvalin-dynamodb.iml" filepath="$PROJECT_DIR$/dynamodb/dvalin-dynamodb.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/core/dvalin-interconnect-core.iml" filepath="$PROJECT_DIR$/interconnect/core/dvalin-interconnect-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/interconnect/dvalin-interconnect-parent.iml" filepath="$PROJECT_DIR$/interconnect/dvalin-interconnect-parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/interconnect/test/dvalin-interconnect-test.iml" filepath="$PROJECT_DIR$/interconnect/test/dvalin-interconnect-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" filepath="$PROJECT_DIR$/jaxrs/dvalin-jaxrs.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" filepath="$PROJECT_DIR$/jaxrs-jwtauth/dvalin-jaxrs-jwtauth.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa/dvalin-jpa.iml" filepath="$PROJECT_DIR$/jpa/dvalin-jpa.iml" />

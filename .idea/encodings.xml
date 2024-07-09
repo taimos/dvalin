@@ -64,9 +64,9 @@
     <file url="file://$PROJECT_DIR$/interconnect/model/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/interconnect/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/interconnect/test" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/interconnect/test/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/interconnect/test/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/test-legacy" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/test-legacy/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/interconnect/test-legacy/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs-jwtauth" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jaxrs-jwtauth/src/main/java" charset="UTF-8" />
@@ -79,6 +79,8 @@
     <file url="file://$PROJECT_DIR$/jms/activemq-classic/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jms/core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jms/core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/jms-test/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms/jms-test/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jms/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jms/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jpa" charset="UTF-8" />

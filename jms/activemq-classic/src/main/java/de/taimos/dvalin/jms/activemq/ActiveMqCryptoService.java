@@ -1,12 +1,12 @@
 package de.taimos.dvalin.jms.activemq;
 
-import de.taimos.dvalin.jms.crypto.CryptoService;
+import de.taimos.dvalin.jms.crypto.ACryptoService;
 import de.taimos.dvalin.jms.crypto.JmsMessageCryptoUtil;
 import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.springframework.stereotype.Service;
 
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.TextMessage;
 
 /**
@@ -15,11 +15,14 @@ import javax.jms.TextMessage;
  *
  * @author fzwirn
  */
-@Service
-public class ActiveMqCryptoService extends CryptoService {
+public class ActiveMqCryptoService extends ACryptoService {
 
     @Override
-    public TextMessage decryptMessage(TextMessage txt) throws MessageCryptoException {
+    public Message decryptMessage(Message msg) throws MessageCryptoException {
+        if (!(msg instanceof TextMessage)) {
+            return msg;
+        }
+        TextMessage txt = (TextMessage) msg;
         try {
             if (!txt.propertyExists(JmsMessageCryptoUtil.SIGNATURE_HEADER)) {
                 throw new MessageCryptoException();

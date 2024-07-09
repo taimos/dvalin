@@ -18,6 +18,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="dvalin-interconnect-core" />
         <module name="dvalin-dynamodb" />
+        <module name="dvalin-interconnect-test-legacy" />
         <module name="dvalin-i18n" />
         <module name="dvalin-cloud-aws" />
         <module name="dvalin-interconnect-model" />
@@ -33,16 +34,15 @@
         <module name="model-maven-plugin" />
         <module name="dvalin-cluster-hazelcast" />
         <module name="dvalin-mongodb" />
-        <module name="dvalin-interconnect-test" />
         <module name="dvalin-monitoring-aws" />
         <module name="interconnect-maven-plugin" />
         <module name="dvalin-monitoring-logging" />
         <module name="dvalin-daemon" />
+        <module name="dvalin-jms-test" />
         <module name="dvalin-interconnect-metamodel" />
         <module name="dvalin-orchestration-etcd" />
         <module name="dvalin-interconnect-core-legacy" />
         <module name="dvalin-template-velocity" />
-        <module name="dvalin-interonnect-core-legacy-exceptions" />
         <module name="dvalin-archetype-docker" />
         <module name="dvalin-test" />
         <module name="dvalin-jaxrs-swagger" />
@@ -58,6 +58,8 @@
       <module name="dvalin-interconnect-activemq-artemis" target="1.8" />
       <module name="dvalin-interconnect-activemq-classic" target="1.8" />
       <module name="dvalin-interconnect-demo" target="1.8" />
+      <module name="dvalin-interconnect-test" target="1.8" />
+      <module name="dvalin-interonnect-core-legacy-exceptions" target="1.8" />
       <module name="dvalin-template-jasperreports" target="1.8" />
       <module name="dvlain-i18n" target="1.8" />
       <module name="jms-core" target="1.8" />

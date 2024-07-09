@@ -9,29 +9,42 @@ package de.taimos.dvalin.jms.exceptions;
 public class CommunicationFailureException extends InfrastructureException {
     private static final long serialVersionUID = 5815412583044204150L;
 
+    private final CommunicationError communicationError;
+
     /**
-     * @param communicationCause of the exception
+     * @param communicationError of the exception
      */
-    public CommunicationFailureException(CommunicationCause communicationCause) {
-        super(communicationCause.getMsg());
+    public CommunicationFailureException(CommunicationError communicationError) {
+        super(communicationError.getMsg());
+        this.communicationError = communicationError;
     }
 
     /**
-     * @param communicationCause of the exception
-     * @param cause     for the exception
+     * @param communicationError of the exception
+     * @param cause              for the exception
      */
-    public CommunicationFailureException(CommunicationCause communicationCause, Throwable cause) {
-        super(communicationCause.getMsg(), cause);
+    public CommunicationFailureException(CommunicationError communicationError, Throwable cause) {
+        super(communicationError.getMsg(), cause);
+        this.communicationError = communicationError;
     }
 
-    public enum CommunicationCause {
-        SEND("Error while sending messages"), //
-        RECEIVE("Error while receiving messages"),
-        INVALID_RESPONSE("Invalid response message received"),
-        FAILED_TO_CREATE_MESSAGE("Failed to create message");
+    /**
+     * @return the communicationError
+     */
+    public CommunicationError getCommunicationError() {
+        return this.communicationError;
+    }
+
+    public static class CommunicationError {
+
+        public static final CommunicationError SEND = new CommunicationError("Error while sending messages");
+        public static final CommunicationError RECEIVE = new CommunicationError("Error while receiving messages");
+        public static final CommunicationError INVALID_RESPONSE = new CommunicationError(
+            "Invalid response message received");
+
         private final String msg;
 
-        CommunicationCause(String msg) {
+        CommunicationError(String msg) {
             this.msg = msg;
         }
 

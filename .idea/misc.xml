@@ -29,6 +29,7 @@
         <option value="$PROJECT_DIR$/examples/pom.xml" />
         <option value="$PROJECT_DIR$/interconnect/activemq-artemis/pom.xml" />
         <option value="$PROJECT_DIR$/interconnect/activemq-classic/pom.xml" />
+        <option value="$PROJECT_DIR$/interconnect/core-legacy-exceptions/pom.xml" />
       </set>
     </option>
   </component>

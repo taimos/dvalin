@@ -19,7 +19,6 @@
         <module>interconnect-maven-plugin</module>
         <module>core</module>
         <module>core-legacy</module>
-        <module>core-legacy-exceptions</module>
-        <module>test</module>
+        <module>test-legacy</module>
     </modules>
 </project>

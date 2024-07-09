@@ -5,3 +5,6 @@ Interface IJmsConnector for usage of java messenging system. Use with `dvalin-jm
 
 ### dvalin-jms--activemq-classic
 ActiveMQ Classic implementation for the Dvalin JMS core.
+
+### dvalin-jms-test
+Mocks to use for testing applications.

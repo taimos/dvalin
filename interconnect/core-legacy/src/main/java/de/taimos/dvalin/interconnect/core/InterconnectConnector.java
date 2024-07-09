@@ -36,9 +36,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.base.Preconditions;
 
 import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
 
 /**
  * Connector to connect to Interconnect.

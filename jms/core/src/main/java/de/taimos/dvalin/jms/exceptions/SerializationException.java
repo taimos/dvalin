@@ -21,9 +21,11 @@ package de.taimos.dvalin.jms.exceptions;
  */
 
 /**
- * Exception for all problems concerning the serialization or deserialization of Interconnect data.
+ * Exception for all problems concerning the serialization or deserialization of data.
+ *
+ * @author thoeger
  */
-public class SerializationException extends InfrastructureException {
+public class SerializationException extends Exception {
 
     /**
      * version UID for serialization
@@ -35,7 +37,7 @@ public class SerializationException extends InfrastructureException {
      * Default constructor.
      */
     public SerializationException() {
-        this("A problem occured during the serialization or deserialization of Interconnect data.", null);
+        this("A problem occured during the serialization or deserialization of data.", null);
     }
 
     /**

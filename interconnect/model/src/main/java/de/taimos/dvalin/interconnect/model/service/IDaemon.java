@@ -28,14 +28,14 @@ import de.taimos.dvalin.interconnect.model.ivo.daemon.PongIVO;
  */
 public interface IDaemon {
 
-	// marker interface
+    // marker interface
 
-	/**
-	 * @param req {@link PingIVO}
-	 * @return {@link PongIVO}
+    /**
+     * @param req {@link PingIVO}
+     * @return {@link PongIVO}
      * @throws DaemonError the daemon error
-	 */
-	@DaemonRequestMethod(idempotent = true)
+     */
+    @DaemonRequestMethod(idempotent = true)
     PongIVO alive(PingIVO req) throws DaemonError;
 
 }

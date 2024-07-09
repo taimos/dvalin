@@ -14,16 +14,32 @@ import javax.jms.ExceptionListener;
  *
  * @author fzwirn
  */
+@SuppressWarnings("unused")
 public class DvalinActiveMqConnectionFactory extends DvalinConnectionFactory {
 
+    /**
+     * Construct a {@link DvalinConnectionFactory} for ActiveMQ Classic, uses {@link DvalinConnectionFactory#getBrokerURL()} default broker url
+     */
     public DvalinActiveMqConnectionFactory() {
         this(DvalinConnectionFactory.getBrokerURL());
     }
 
+    /**
+     * Construct a {@link DvalinConnectionFactory} for ActiveMQ Classic, uses the supplied broker url.
+     *
+     * @param brokerURL url for the broker
+     */
     public DvalinActiveMqConnectionFactory(String brokerURL) {
         super(new ActiveMQConnectionFactory(brokerURL));
     }
 
+    /**
+     * Construct a {@link DvalinConnectionFactory} for ActiveMQ Classic, uses the supplied broker url.
+     *
+     * @param brokerURL url for the broker
+     * @param userName  used by the broker
+     * @param password  used by the broker
+     */
     public DvalinActiveMqConnectionFactory(String brokerURL, String userName, String password) {
         super(new ActiveMQConnectionFactory(brokerURL), userName, password);
     }
@@ -82,6 +98,5 @@ public class DvalinActiveMqConnectionFactory extends DvalinConnectionFactory {
                 ((ActiveMQConnectionFactory) this.innerFactory).setTransportListener(listener);
             }
         }
-
     }
 }

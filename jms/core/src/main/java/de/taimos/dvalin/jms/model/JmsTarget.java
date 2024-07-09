@@ -9,5 +9,8 @@ package de.taimos.dvalin.jms.model;
 public enum JmsTarget {
     DESTINATION,
     QUEUE,
-    TOPIC
+    TEMPORARY_QUEUE,
+    TOPIC,
+    TEMPORARY_TOPIC,
+    RECEPTION_CONTEXT
 }

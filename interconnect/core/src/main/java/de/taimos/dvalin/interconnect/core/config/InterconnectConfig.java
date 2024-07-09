@@ -2,26 +2,22 @@ package de.taimos.dvalin.interconnect.core.config;
 
 import de.taimos.dvalin.interconnect.core.EventSender;
 import de.taimos.dvalin.interconnect.core.IVORefreshSender;
-import de.taimos.dvalin.interconnect.core.daemon.DaemonRequestResponse;
-import de.taimos.dvalin.interconnect.core.daemon.IDaemonRequestResponse;
-import de.taimos.dvalin.interconnect.core.spring.DaemonMessageListener;
-import de.taimos.dvalin.interconnect.core.spring.IDaemonMessageHandlerFactory;
-import de.taimos.dvalin.interconnect.core.spring.IDaemonMessageSender;
-import de.taimos.dvalin.interconnect.core.spring.SingleDaemonMessageHandler;
-import de.taimos.dvalin.interconnect.model.service.ADaemonHandler;
+import de.taimos.dvalin.interconnect.core.daemon.IDaemonMessageHandlerFactory;
+import de.taimos.dvalin.interconnect.core.daemon.IDaemonMessageSender;
+import de.taimos.dvalin.interconnect.core.daemon.handler.DefaultMessageHandlerFactory;
+import de.taimos.dvalin.interconnect.core.daemon.jms.DaemonMessageListener;
 import de.taimos.dvalin.jms.DvalinConnectionFactory;
+import de.taimos.dvalin.jms.IDestinationService;
 import de.taimos.dvalin.jms.IJmsConnector;
 import de.taimos.dvalin.jms.crypto.ICryptoService;
-import org.springframework.beans.factory.BeanFactory;
+import de.taimos.dvalin.jms.model.JmsTarget;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.jms.Destination;
 
@@ -33,45 +29,68 @@ import javax.jms.Destination;
  */
 @Configuration
 @Profile(de.taimos.daemon.spring.Configuration.PROFILES_PRODUCTION)
-@EnableTransactionManagement
 public class InterconnectConfig {
 
     @Value("${interconnect.jms.consumers:2-8}")
     private String consumers;
 
+    @Value("${serviceName}")
+    private String serviceName;
 
+    /**
+     * @param applicationContext spring application context
+     * @param cryptoService      used for encryption and decryption
+     * @param messageSender      for sending messages
+     * @param requestHandlerMode mode of the request handler: "multi" has special handling
+     * @return a daemon message handler factory
+     */
     @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public IDaemonRequestResponse requestResponse(IJmsConnector jmsConnector) {
-        return new DaemonRequestResponse(jmsConnector);
+    public IDaemonMessageHandlerFactory createDaemonMessageHandlerFactory(ApplicationContext applicationContext, //
+        ICryptoService cryptoService,  //
+        IDaemonMessageSender messageSender, //
+        @Value("${interconnect.requesthandler.mode:}") String requestHandlerMode) {
+        return new DefaultMessageHandlerFactory(applicationContext, messageSender, cryptoService, requestHandlerMode);
     }
 
-    @Bean
-    public IDaemonMessageHandlerFactory createDaemonMessageHandlerFactory(BeanFactory beanFactory, ICryptoService cryptoService, IDaemonMessageSender messageSender) {
-        return logger -> {
-            final ADaemonHandler rh = (ADaemonHandler) beanFactory.getBean("requestHandler");
-            return new SingleDaemonMessageHandler(logger, rh.getClass(), cryptoService, messageSender, beanFactory);
-        };
+    /**
+     * @param jmsFactory                      JMS factory
+     * @param defaultDaemonRequestDestination destination used for the daemon message listener
+     * @param handlerFactory                  message handler factory
+     * @return default message listener container
+     */
+    @Bean(name = "messageListener", destroyMethod = "stop")
+    public DefaultMessageListenerContainer jmsListenerContainer(@Qualifier("DvalinConnectionFactory") DvalinConnectionFactory jmsFactory, //
+        @Qualifier("defaultDaemonRequestDestination") Destination defaultDaemonRequestDestination, //
+        IDaemonMessageHandlerFactory handlerFactory) {
+        return new DaemonMessageListener(jmsFactory, this.consumers, handlerFactory::create,
+            defaultDaemonRequestDestination);
     }
 
-    @Bean
-    public DefaultMessageListenerContainer jmsListenerContainer(@Qualifier("DvalinConnectionFactory") DvalinConnectionFactory jmsFactory, DaemonMessageListener messageListener, Destination serviceRequestQueue) {
-        DefaultMessageListenerContainer dmlc = new DefaultMessageListenerContainer();
-        dmlc.setConnectionFactory(jmsFactory);
-        dmlc.setErrorHandler(messageListener);
-        dmlc.setConcurrency(this.consumers);
-        dmlc.setDestination(serviceRequestQueue);
-        dmlc.setMessageListener(messageListener);
-        return dmlc;
+    /**
+     * @param destinationService creates the default daemon request destination
+     * @return default daemon request destination
+     */
+    @Bean(name = "defaultDaemonRequestDestination")
+    public Destination getDefaultDaemonRequestDestination(IDestinationService destinationService) {
+        return destinationService.createDestination(JmsTarget.QUEUE,
+            this.serviceName + ".request");
     }
 
+    /**
+     * @param jmsConnector JMS connector to be used
+     * @return an instance of a new event sender
+     */
     @Bean
-    public EventSender eventSender(@Qualifier("DvalinConnectionFactory") DvalinConnectionFactory connectionFactory) {
-        return new EventSender(connectionFactory);
+    public EventSender eventSender(IJmsConnector jmsConnector) {
+        return new EventSender(jmsConnector);
     }
 
+    /**
+     * @param jmsConnector JMS connector to be used
+     * @return an instance of a new ivo refresh sender
+     */
     @Bean
-    public IVORefreshSender ivoRefreshSender(@Qualifier("DvalinConnectionFactory") DvalinConnectionFactory connectionFactory) {
-        return new IVORefreshSender(connectionFactory);
+    public IVORefreshSender ivoRefreshSender(IJmsConnector jmsConnector) {
+        return new IVORefreshSender(jmsConnector);
     }
 }

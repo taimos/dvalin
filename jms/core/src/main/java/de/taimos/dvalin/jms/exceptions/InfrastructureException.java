@@ -22,6 +22,8 @@ package de.taimos.dvalin.jms.exceptions;
 
 /**
  * Exception for all problems concerning the Interconnect infrastructure.
+ *
+ * @author thoeger
  */
 public class InfrastructureException extends Exception {
 

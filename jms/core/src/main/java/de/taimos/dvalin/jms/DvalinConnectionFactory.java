@@ -15,8 +15,9 @@ import javax.jms.JMSException;
  * Copyright 2022 Cinovo AG<br>
  * <br>
  *
- * @author aeichel
+ * @author aeichel, fzwirn
  */
+@SuppressWarnings("unused")
 public class DvalinConnectionFactory implements ConnectionFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DvalinConnectionFactory.class);
@@ -28,18 +29,25 @@ public class DvalinConnectionFactory implements ConnectionFactory {
      */
     public static final String SYSPROP_IBROKERURL = "interconnect.jms.broker";
 
+    private static final String FALLBACK_BROKER_URL = "tcp://localhost:61616";
+
     protected ConnectionFactory innerFactory;
     protected ConnectionFactory innerAdapter;
 
     private final String userName;
     private final String password;
 
+    /**
+     * Uses {@link DvalinConnectionFactory#SYSPROP_IBROKERURL} as a broker url, or a default broker {@link DvalinConnectionFactory#FALLBACK_BROKER_URL}.
+     *
+     * @return a broker url
+     */
     public static String getBrokerURL() {
         String brokerURL = System.getProperty(DvalinConnectionFactory.SYSPROP_IBROKERURL);
         if (brokerURL == null) {
-            DvalinConnectionFactory.LOGGER.warn(
-                "No " + DvalinConnectionFactory.SYSPROP_IBROKERURL + " configured, using tcp://localhost:61616.");
-            brokerURL = "tcp://localhost:61616";
+            DvalinConnectionFactory.LOGGER.warn("No {} configured, using default {}",
+                DvalinConnectionFactory.SYSPROP_IBROKERURL, DvalinConnectionFactory.FALLBACK_BROKER_URL);
+            brokerURL = DvalinConnectionFactory.FALLBACK_BROKER_URL;
         }
         return brokerURL;
     }
@@ -90,10 +98,16 @@ public class DvalinConnectionFactory implements ConnectionFactory {
         // Implement if needed
     }
 
+    /**
+     * Start the connection factory
+     */
     public void start() {
         // Implement if needed
     }
 
+    /**
+     * Stop the connection factory
+     */
     public void stop() {
         // Implement if needed
     }

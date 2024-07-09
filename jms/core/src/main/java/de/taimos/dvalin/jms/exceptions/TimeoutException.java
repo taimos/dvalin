@@ -20,6 +20,11 @@ package de.taimos.dvalin.jms.exceptions;
  * #L%
  */
 
+/**
+ * Timeout exception
+ *
+ * @author thoeger
+ */
 public class TimeoutException extends InfrastructureException {
 
     private static final long serialVersionUID = 1L;

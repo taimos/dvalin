@@ -20,19 +20,21 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
+import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.jms.IJmsConnector;
+import de.taimos.dvalin.jms.exceptions.TimeoutException;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * Event sender
+ *
+ * @author psigloch, fzwirn
+ */
+@SuppressWarnings("unused")
 public class EventSender extends AToTopicSender {
 
     private static final String PROP_DEFAULT_VIRTUAL_TOPIC_PREFIX = "VirtualTopic";
@@ -40,15 +42,18 @@ public class EventSender extends AToTopicSender {
 
     private final String virtualTopicPrefix;
 
-    public EventSender(ConnectionFactory connectionFactory) {
-        super(connectionFactory);
+    /**
+     * @param jmsConnector that will create the JMS connections
+     */
+    public EventSender(IJmsConnector jmsConnector) {
+        super(jmsConnector);
         this.virtualTopicPrefix = System.getProperty(IJmsConnector.SYSPROP_VIRTUAL_TOPIC_PREFIX,
             EventSender.PROP_DEFAULT_VIRTUAL_TOPIC_PREFIX);
     }
 
 
     @Override
-    public void send(Serializable object, String topicName) {
+    public void send(Serializable object, String topicName) throws DaemonError, TimeoutException {
         if (object instanceof IEvent) {
             this.send((IEvent) object);
         } else {
@@ -58,8 +63,10 @@ public class EventSender extends AToTopicSender {
 
     /**
      * @param object the object
+     * @throws DaemonError      with specific error code
+     * @throws TimeoutException in case of communication timeout
      */
-    public void send(IEvent object) {
+    public void send(IEvent object) throws DaemonError, TimeoutException {
         EventDomain domainAnnotation = AnnotationUtils.findAnnotation(object.getClass(), EventDomain.class);
         if (domainAnnotation == null) {
             this.logger.error("The event {} has no domain annotation", object.getClass().getSimpleName());
@@ -70,13 +77,5 @@ public class EventSender extends AToTopicSender {
             return;
         }
         super.send(object, this.virtualTopicPrefix + "." + domainAnnotation.value());
-    }
-
-    protected Message getMessage(Serializable object, Session session) throws JMSException, IOException {
-        if (object instanceof IEvent) {
-            String json = InterconnectMapper.toJson((IEvent) object);
-            return session.createTextMessage(json);
-        }
-        return session.createObjectMessage(object);
     }
 }

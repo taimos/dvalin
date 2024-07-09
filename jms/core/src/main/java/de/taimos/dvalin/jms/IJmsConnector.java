@@ -21,13 +21,13 @@ package de.taimos.dvalin.jms;
  */
 
 import de.taimos.dvalin.jms.exceptions.InfrastructureException;
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
-import de.taimos.dvalin.jms.model.DvalinJmsReceiveObject;
-import de.taimos.dvalin.jms.model.DvalinJmsResponseObject;
-import de.taimos.dvalin.jms.model.DvalinJmsSendObject;
-import de.taimos.dvalin.jms.model.JmsTarget;
+import de.taimos.dvalin.jms.exceptions.SerializationException;
+import de.taimos.dvalin.jms.model.JmsContext;
+import de.taimos.dvalin.jms.model.JmsResponseContext;
 
-import javax.jms.Destination;
+import javax.annotation.Nonnull;
+import javax.jms.Message;
+import java.util.List;
 
 /**
  * Connector to connect to JMS providers.
@@ -35,6 +35,7 @@ import javax.jms.Destination;
  * @author Thorsten Hoeger
  * @author fzwirn
  */
+@SuppressWarnings("unused")
 public interface IJmsConnector {
     /**
      * name of the system property that contains the interconnect update topic name
@@ -47,7 +48,7 @@ public interface IJmsConnector {
     String SYSPROP_VIRTUAL_TOPIC_PREFIX = "interconnect.jms.virtualtopic.prefix";
 
     /**
-     * the default request timeout
+     * the default request timeout (in Milliseconds)
      */
     long REQUEST_TIMEOUT = 10000;
 
@@ -56,17 +57,37 @@ public interface IJmsConnector {
      */
     int MSGPRIORITY = 5;
 
-    void send(DvalinJmsSendObject object) throws MessageCryptoException, InfrastructureException;
-
-    DvalinJmsResponseObject request(DvalinJmsSendObject object) throws MessageCryptoException, InfrastructureException;
-
-    DvalinJmsResponseObject receive(DvalinJmsReceiveObject object) throws InfrastructureException, MessageCryptoException;
 
     /**
-     * @param type of the destination
-     * @param name of the destination
-     * @return a JMS destination
+     * @param context holds all necessary information for the send operation
+     * @throws InfrastructureException in case of general errors
+     * @throws SerializationException  in case of problems with encryption
      */
-    Destination createDestination(JmsTarget type, String name);
+    void send(@Nonnull JmsContext context) throws InfrastructureException, SerializationException;
+
+    /**
+     * @param context holds all necessary information for the request operation
+     * @return response of the request
+     * @throws InfrastructureException in case of general errors
+     * @throws SerializationException  in case of problems with encryption
+     */
+    JmsResponseContext<? extends Message> request(@Nonnull JmsContext context) throws InfrastructureException, SerializationException;
+
+    /**
+     * @param context holds all necessary information for the reception operation
+     * @return response received
+     * @throws InfrastructureException in case of general errors
+     * @throws SerializationException  in case of problems with encryption
+     */
+    JmsResponseContext<? extends Message> receive(@Nonnull JmsContext context) throws InfrastructureException, SerializationException;
+
+    /**
+     * @param context holds all necessary information for the request operation
+     * @param maxSize maximum number of messages to wait for.
+     * @return List of response {@link Message}
+     * @throws InfrastructureException in case of general errors
+     * @throws SerializationException  in case of problems with encryption
+     */
+    List<Message> receiveBulkFromDestination(JmsContext context, int maxSize) throws InfrastructureException, SerializationException;
 
 }

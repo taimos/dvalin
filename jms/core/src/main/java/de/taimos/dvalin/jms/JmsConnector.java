@@ -2,21 +2,18 @@ package de.taimos.dvalin.jms;
 
 import de.taimos.dvalin.jms.crypto.ICryptoService;
 import de.taimos.dvalin.jms.exceptions.CommunicationFailureException;
-import de.taimos.dvalin.jms.exceptions.CommunicationFailureException.CommunicationCause;
+import de.taimos.dvalin.jms.exceptions.CommunicationFailureException.CommunicationError;
 import de.taimos.dvalin.jms.exceptions.CreationException;
 import de.taimos.dvalin.jms.exceptions.CreationException.Source;
 import de.taimos.dvalin.jms.exceptions.InfrastructureException;
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import de.taimos.dvalin.jms.exceptions.SerializationException;
 import de.taimos.dvalin.jms.exceptions.TimeoutException;
-import de.taimos.dvalin.jms.model.DvalinJmsReceiveObject;
-import de.taimos.dvalin.jms.model.DvalinJmsResponseObject;
-import de.taimos.dvalin.jms.model.DvalinJmsSendObject;
-import de.taimos.dvalin.jms.model.JmsTarget;
+import de.taimos.dvalin.jms.model.JmsContext;
+import de.taimos.dvalin.jms.model.JmsResponseContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import javax.annotation.Nonnull;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
@@ -31,10 +28,8 @@ import javax.jms.TemporaryQueue;
 import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Copyright 2024 Cinovo AG<br>
@@ -42,8 +37,7 @@ import java.util.UUID;
  *
  * @author fzwirn
  */
-@Service
-public abstract class JmsConnector implements IJmsConnector {
+public class JmsConnector implements IJmsConnector {
 
     private final ConnectionFactory connectionFactory;
     private final ICryptoService cryptoService;
@@ -54,394 +48,179 @@ public abstract class JmsConnector implements IJmsConnector {
      * @param connectionFactory to use with this connector
      * @param cryptoService     to use with this connector
      */
-    @Autowired
     public JmsConnector(ConnectionFactory connectionFactory, ICryptoService cryptoService) {
         this.connectionFactory = connectionFactory;
         this.cryptoService = cryptoService;
     }
 
     @Override
-    public void send(DvalinJmsSendObject object) throws MessageCryptoException, InfrastructureException {
-        GetDestinationAction action = JmsConnector.getGetDestinationAction(object);
-        this.sendToDestination(action, object.getBody(), object.getHeaders(), object.isSecure(),
-            object.getSendTimeout(), object.getPriority(), object.getReplyToQueueName(), object.getCorrelationId());
-    }
-
-    @Override
-    public DvalinJmsResponseObject request(DvalinJmsSendObject object) throws MessageCryptoException, InfrastructureException {
-        TextMessage response = this.request(object.getDestinationName(), object.getBody(), object.getHeaders(),
-            object.isSecure(), object.getReceiveTimeout(), object.getSendTimeout(), object.getPriority());
-        return new DvalinJmsResponseObject(response);
-    }
-
-    @Override
-    public DvalinJmsResponseObject receive(DvalinJmsReceiveObject object) throws InfrastructureException, MessageCryptoException {
-        GetDestinationAction action = JmsConnector.getGetDestinationAction(object);
-        final List<TextMessage> messages = this.receiveBulkFromDestination(action, object.getSelector(), 1,
-            object.getReceiveTimeout(), object.isSecure());
-        if (messages.size() != 1) {
-            throw new CommunicationFailureException(CommunicationCause.RECEIVE);
-        }
-        return new DvalinJmsResponseObject(messages.get(0));
-    }
-
-    private static GetDestinationAction getGetDestinationAction(DvalinJmsSendObject object) {
-        GetDestinationAction action = null;
-        switch (object.getTarget()) {
-            case DESTINATION:
-                action = new GetSimpleDestinationAction(object.getDestination());
-                break;
-            case QUEUE:
-                new GetResolveDestinationAction(true, object.getDestinationName());
-                break;
-            case TOPIC:
-                new GetResolveDestinationAction(false, object.getDestinationName());
-                break;
-        }
-        return action;
-    }
-
-
-    private void sendToDestination(final GetDestinationAction getDestinationAction, final String body, final Map<String, Object> headers, final boolean secure, long sendTimeout, int priority, final String replyToQueueName, final String correlationId) throws InfrastructureException, MessageCryptoException {
-        Connection connection = null;
-        try {
-            connection = this.connectionFactory.createConnection();
-            Session session = null;
-            try {
-                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                TextMessage txt = this.createTextMessage(session, body, headers, secure, replyToQueueName,
-                    correlationId);
-                final Destination destination;
-                try {
-                    destination = getDestinationAction.get(session);
-                } catch (final JMSException e) {
-                    throw new CreationException(Source.DESTINATION, e);
-                }
-                JmsConnector.createProducerAndSend(session, destination, txt, DeliveryMode.PERSISTENT, sendTimeout,
-                    priority);
+    public void send(@Nonnull JmsContext context) throws SerializationException, InfrastructureException {
+        try (Connection connection = this.connectionFactory.createConnection()) {
+            try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
+                final Destination destination = JmsConnector.createDestination(session, context);
+                Message txt = this.createTextMessageForDestination(session, context, null);
+                JmsConnector.sendMessage(session, destination, txt,
+                    context.getTimeToLive(), context.getPriority());
             } catch (final JMSException e) {
                 throw new CreationException(Source.SESSION, e);
-            } finally {
-                try {
-                    if (session != null) {
-                        session.close();
-                    }
-                } catch (final JMSException e) {
-                    JmsConnector.logger.warn("Can not close session", e);
-                }
             }
         } catch (JMSException e) {
             throw new CreationException(Source.CONNECTION, e);
-        } finally {
-            try {
-
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not close connection", e);
-            }
         }
     }
 
+    @Override
+    public JmsResponseContext<? extends Message> receive(@Nonnull JmsContext context) throws InfrastructureException, SerializationException {
+        try (Connection connection = this.connectionFactory.createConnection()) {
+            try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
+                try (MessageConsumer consumer = session.createConsumer(JmsConnector.createDestination(session, context),
+                    context.getSelector())) {
+                    connection.start();
+                    Message message = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(),
+                        context.isSecure());
+                    return new JmsResponseContext<>(message);
+                } catch (final JMSException e) {
+                    throw new CreationException(Source.CONSUMER, e);
+                }
+            } catch (final JMSException e) {
+                throw new CreationException(Source.SESSION, e);
+            }
+        } catch (JMSException e) {
+            throw new CreationException(Source.CONNECTION, e);
+        }
+    }
 
-    private static void createProducerAndSend(Session session, Destination destination, TextMessage txt, int deliveryMode, long sendTimeout, int priority) throws InfrastructureException {
-        MessageProducer producer = null;
-        try {
-            producer = session.createProducer(destination);
+    @Override
+    public JmsResponseContext<? extends Message> request(@Nonnull JmsContext context) throws SerializationException, InfrastructureException {
+        try (Connection connection = this.connectionFactory.createConnection()) {
+            try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
+                try {
+                    final TemporaryQueue temporaryQueue = session.createTemporaryQueue();
+                    final Queue requestQueue = session.createQueue(context.getDestinationName());
+                    final Message txt = this.createTextMessageForDestination(session, context, temporaryQueue);
+
+                    try (MessageConsumer consumer = session.createConsumer(temporaryQueue, context.getSelector())) {
+                        connection.start();
+                        JmsConnector.sendMessage(session, requestQueue, txt,
+                            context.getTimeToLive(), context.getPriority());
+                        Message response = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(),
+                            context.isSecure());
+                        return new JmsResponseContext<>(response);
+                    } catch (final JMSException e) {
+                        throw new CreationException(Source.CONSUMER);
+                    }
+                } catch (final JMSException e) {
+                    throw new CreationException(Source.DESTINATION, e);
+                }
+            } catch (final JMSException e) {
+                throw new CreationException(Source.SESSION, e);
+            }
+        } catch (JMSException e) {
+            throw new CreationException(Source.CONNECTION, e);
+        }
+    }
+
+    private static void sendMessage(Session session, Destination destination, Message txt, long timeToLive, int priority) throws InfrastructureException {
+        try (MessageProducer producer = session.createProducer(destination)) {
             try {
-                producer.send(destination, txt, deliveryMode, priority, sendTimeout);
+                producer.send(destination, txt, DeliveryMode.PERSISTENT, priority, timeToLive);
             } catch (JMSException e) {
-                throw new CommunicationFailureException(CommunicationCause.SEND, e);
+                throw new CommunicationFailureException(CommunicationError.SEND, e);
             }
         } catch (final JMSException e) {
             throw new CreationException(Source.PRODUCER, e);
-        } finally {
-            try {
-                if (producer != null) {
-                    producer.close();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not close producer", e);
-            }
         }
     }
 
-    private List<TextMessage> receiveBulkFromDestination(final GetDestinationAction getDestinationAction, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, MessageCryptoException {
-        Connection connection = null;
-        try {
-            connection = this.connectionFactory.createConnection();
-            return this.createSessionAndReceiveMessages(getDestinationAction, selector, maxSize, timeout, secure,
-                connection);
-        } catch (JMSException e) {
-            throw new CreationException(Source.CONNECTION, e);
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not close connection", e);
-            }
-        }
-    }
-
-    private List<TextMessage> createSessionAndReceiveMessages(GetDestinationAction getDestinationAction, String selector, int maxSize, long timeout, boolean secure, Connection connection) throws CreationException, CommunicationFailureException, TimeoutException, MessageCryptoException {
-        Session session = null;
-        try {
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            final Destination responseQueue;
-            try {
-                responseQueue = getDestinationAction.get(session);
-            } catch (final JMSException e) {
-                throw new CreationException(Source.DESTINATION, e);
-            }
-            return this.createConsumerAndReceiveMessages(selector, maxSize, timeout, secure, session, responseQueue,
-                connection);
-        } catch (final JMSException e) {
-            throw new CreationException(Source.SESSION, e);
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not close session", e);
-            }
-        }
-    }
-
-    private List<TextMessage> createConsumerAndReceiveMessages(String selector, int maxSize, long timeout, boolean secure, Session session, Destination responseQueue, Connection connection) throws CommunicationFailureException, TimeoutException, MessageCryptoException, CreationException {
-        MessageConsumer consumer = null;
-        try {
-            consumer = session.createConsumer(responseQueue, selector);
-            try {
-                return this.receiveTextMessages(connection, consumer, maxSize, timeout, secure);
-            } catch (final JMSException e) {
-                throw new CommunicationFailureException(CommunicationCause.RECEIVE, e);
-            } finally {
-                connection.stop();
-            }
-        } catch (final JMSException e) {
-            throw new CreationException(Source.CONSUMER, e);
-        } finally {
-            try {
-                if (consumer != null) {
-                    consumer.close();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not close consumer", e);
-            }
-        }
-    }
-
-    private List<TextMessage> receiveTextMessages(Connection connection, MessageConsumer consumer, int maxSize, long timeout, boolean secure) throws JMSException, CommunicationFailureException, TimeoutException, MessageCryptoException {
-        final List<TextMessage> messages = new ArrayList<>(maxSize);
-        while (messages.size() < maxSize) {
-            connection.start();
-            final Message response;
-            try {
-                response = consumer.receive(timeout); // Wait for response.
-            } catch (final JMSException e) {
-                throw new CommunicationFailureException(CommunicationCause.RECEIVE, e);
-            }
-            if (response == null) {
-                if (messages.isEmpty()) {
-                    // first read timed out, so we throw a TimeoutException
-                    throw new TimeoutException(timeout);
-                }
-                // consecutive read timed out, so we just return the result
-                break;
-            }
-            if (response instanceof TextMessage) {
-                final TextMessage txtRes = (TextMessage) response;
-                if (secure) {
-                    this.cryptoService.decryptMessage(txtRes);
-                }
-                messages.add(txtRes);
-            } else {
-                throw new CommunicationFailureException(CommunicationCause.INVALID_RESPONSE);
-            }
-        }
-        return messages;
-    }
-
-
-    private TextMessage request(String queueName, String body, Map<String, Object> headers, boolean secure, long receiveTimeout, long sendTimeout, int priority) throws InfrastructureException, MessageCryptoException {
-        final String correlationId = UUID.randomUUID().toString();
-
-        Connection connection = null;
-        try {
-            connection = this.connectionFactory.createConnection();
-            Session session = null;
-            try {
-                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                final TemporaryQueue temporaryQueue;
-                final Queue requestQueue;
-                try {
-                    temporaryQueue = session.createTemporaryQueue();
-                    requestQueue = session.createQueue(queueName);
-                } catch (final JMSException e) {
-                    throw new CreationException(Source.DESTINATION, e);
-                }
-                return this.createConsumerAndReceiveMessage(body, headers, secure, receiveTimeout, sendTimeout, priority, session,
-                    temporaryQueue,
-                    correlationId, requestQueue, connection);
-            } catch (final JMSException e) {
-                throw new CreationException(Source.SESSION, e);
-            } finally {
-                try {
-                    if (session != null) {
-                        session.close();
+    @Override
+    public List<Message> receiveBulkFromDestination(JmsContext context, final int maxMessages) throws InfrastructureException, SerializationException {
+        try (Connection connection = this.connectionFactory.createConnection()) {
+            try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
+                Destination destination = JmsConnector.createDestination(session, context);
+                List<Message> messages = new ArrayList<>();
+                try (MessageConsumer consumer = session.createConsumer(destination, context.getSelector())) {
+                    connection.start();
+                    while (messages.size() < maxMessages) {
+                        Message message = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(),
+                            context.isSecure());
+                        messages.add(message);
                     }
                 } catch (final JMSException e) {
-                    JmsConnector.logger.warn("Can not close session", e);
+                    throw new CreationException(Source.CONSUMER, e);
                 }
+                return messages;
+            } catch (final JMSException e) {
+                throw new CreationException(Source.SESSION, e);
             }
         } catch (JMSException e) {
             throw new CreationException(Source.CONNECTION, e);
-        } finally {
-            try {
-
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not close connection", e);
-            }
         }
-
     }
 
-    private TextMessage createConsumerAndReceiveMessage(String body, Map<String, Object> headers, boolean secure, long receiveTimeout, long sendTimeout, int priority, Session session, TemporaryQueue temporaryQueue, String correlationId, Queue requestQueue, Connection connection) throws MessageCryptoException, InfrastructureException {
-        MessageConsumer consumer = null;
+    private static Destination createDestination(Session session, JmsContext context) throws CreationException {
         try {
-            consumer = session.createConsumer(temporaryQueue, "JMSCorrelationID = '" + correlationId + "'");
-            final TextMessage txt = this.createTextMessage(session, body, headers, secure, temporaryQueue,
-                correlationId);
-            JmsConnector.createProducerAndSend(session, requestQueue, txt, DeliveryMode.NON_PERSISTENT,
-                sendTimeout, priority);
+            switch (context.getTarget()) {
+                case DESTINATION:
+                    return context.getDestination();
+                case QUEUE:
+                    return session.createQueue(context.getDestinationName());
+                case TOPIC:
+                    return session.createTopic(context.getDestinationName());
+                default:
+                    throw new CreationException(Source.DESTINATION);
+            }
+        } catch (JMSException e) {
+            throw new CreationException(Source.DESTINATION);
+        }
+    }
 
-            final Message receive;
-            try {
-                connection.start();
-                receive = consumer.receive(receiveTimeout);
-                connection.stop();
-            } catch (final JMSException e) {
-                throw new CommunicationFailureException(CommunicationCause.RECEIVE, e);
+
+    private Message syncReceiveSingleMessage(MessageConsumer consumer, long timeout, boolean secure) throws CommunicationFailureException, TimeoutException, SerializationException {
+        try {
+            final Message response = consumer.receive(timeout); // Wait for response.
+            if (response == null) {
+                throw new TimeoutException(timeout);
             }
-            if (receive == null) {
-                throw new TimeoutException(receiveTimeout);
-            }
-            if (receive instanceof TextMessage) {
-                final TextMessage txtRes = (TextMessage) receive;
+            if (response instanceof TextMessage) {
+                TextMessage txtRes = (TextMessage) response;
                 if (secure) {
-                    this.cryptoService.decryptMessage(txtRes);
+                    txtRes = (TextMessage) this.cryptoService.decryptMessage(txtRes);
                 }
                 return txtRes;
             }
-            throw new CommunicationFailureException(CommunicationCause.INVALID_RESPONSE);
+            return response;
         } catch (final JMSException e) {
-            throw new CreationException(Source.CONSUMER, e);
-        } finally {
-            try {
-                if (consumer != null) {
-                    consumer.close();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not close consumer", e);
-            }
-            try {
-                if (temporaryQueue != null) {
-                    temporaryQueue.delete();
-                }
-            } catch (final JMSException e) {
-                JmsConnector.logger.warn("Can not destroy temporary queue", e);
-            }
+            throw new CommunicationFailureException(CommunicationError.RECEIVE, e);
         }
     }
 
-    private TextMessage createTextMessage(Session session, String body, Map<String, Object> headers, boolean secure, String replyToQueueName, String correlationId) throws InfrastructureException, MessageCryptoException {
-        Destination replyTo = null;
-        if (replyToQueueName != null) {
-            try {
-                replyTo = session.createQueue(replyToQueueName);
 
-            } catch (final JMSException e) {
-                throw new CreationException(Source.REPLY_TO_DESTINATION, e);
-            }
-        }
-        return this.createTextMessage(session, body, headers, secure, replyTo, correlationId);
-    }
-
-    private TextMessage createTextMessage(Session session, String body, Map<String, Object> headers, boolean secure, Destination replyToDestination, String correlationId) throws MessageCryptoException, InfrastructureException {
-        final TextMessage txt;
+    private Message createTextMessageForDestination(Session session, JmsContext sendContext, Destination replyToDestination) throws SerializationException, InfrastructureException {
         try {
-            txt = session.createTextMessage(body);
+            Message txt;
+            if (sendContext.getBody() instanceof String) {
+                txt = session.createTextMessage((String) sendContext.getBody());
+            } else {
+                txt = session.createObjectMessage(sendContext.getBody());
+            }
             if (replyToDestination != null) {
                 txt.setJMSReplyTo(replyToDestination);
             }
-            if (correlationId != null) {
-                txt.setJMSCorrelationID(correlationId);
+            if (sendContext.getCorrelationId() != null) {
+                txt.setJMSCorrelationID(sendContext.getCorrelationId());
             }
-            if (headers != null) {
-                final Set<Entry<String, Object>> entrySet = headers.entrySet();
+            if (sendContext.getHeaders() != null) {
+                final Set<Entry<String, Object>> entrySet = sendContext.getHeaders().entrySet();
                 for (final Entry<String, Object> entry : entrySet) {
                     txt.setObjectProperty(entry.getKey(), entry.getValue());
                 }
             }
-            if (secure) {
-                this.cryptoService.secureMessage(txt);
+            if (sendContext.isSecure()) {
+                txt = this.cryptoService.secureMessage(txt);
             }
+            return txt;
         } catch (final JMSException e) {
-            throw new CommunicationFailureException(CommunicationCause.FAILED_TO_CREATE_MESSAGE, e);
+            throw new CreationException(Source.FAILED_TO_CREATE_MESSAGE, e);
         }
-        return txt;
-    }
-
-    @Override
-    public abstract Destination createDestination(JmsTarget type, String name);
-
-
-    private interface GetDestinationAction {
-        Destination get(Session session) throws JMSException;
-    }
-
-    private static final class GetResolveDestinationAction implements GetDestinationAction {
-
-        private final boolean isQueue;
-        private final String destinationName;
-
-
-        GetResolveDestinationAction(boolean isQueue, String destinationName) {
-            super();
-            this.isQueue = isQueue;
-            this.destinationName = destinationName;
-        }
-
-        @Override
-        public Destination get(final Session session) throws JMSException {
-            if (this.isQueue) {
-                return session.createQueue(this.destinationName);
-            }
-            return session.createTopic(this.destinationName);
-        }
-    }
-
-    private static final class GetSimpleDestinationAction implements GetDestinationAction {
-
-        private final Destination destination;
-
-
-        GetSimpleDestinationAction(Destination destination) {
-            super();
-            this.destination = destination;
-        }
-
-        @Override
-        public Destination get(final Session session) {
-            return this.destination;
-        }
-
     }
 }

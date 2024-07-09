@@ -20,14 +20,13 @@ package de.taimos.dvalin.interconnect.core.event;
  * #L%
  */
 
-import de.taimos.daemon.spring.annotations.ProdComponent;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.IEventHandler;
 import de.taimos.dvalin.jms.DvalinConnectionFactory;
-import de.taimos.dvalin.jms.IJmsConnector;
+import de.taimos.dvalin.jms.IDestinationService;
 import de.taimos.dvalin.jms.crypto.ICryptoService;
 import de.taimos.dvalin.jms.model.JmsTarget;
 import org.slf4j.Logger;
@@ -39,8 +38,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.MessageListenerContainer;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ErrorHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jms.Message;
@@ -50,7 +51,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@ProdComponent("eventMessageListener")
+/**
+ * Event listener
+ *
+ * @author psigloch, fzwirn
+ */
+@Component("eventMessageListener")
 public class EventMessageListener implements MessageListener, ErrorHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -70,7 +76,7 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
-    private IJmsConnector jmsConnector;
+    private IDestinationService destinationService;
     @Autowired
     private ICryptoService cryptoService;
 
@@ -116,14 +122,15 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
     }
 
     @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void onMessage(Message message) {
         try {
             if (message instanceof TextMessage) {
-                final TextMessage textMessage = (TextMessage) message;
+                TextMessage textMessage = (TextMessage) message;
                 this.logger.debug("TextMessage received: {}", textMessage.getText());
                 final boolean secure = this.cryptoService.isMessageSecure(textMessage);
                 if (secure) {
-                    this.cryptoService.decryptMessage(textMessage);
+                    textMessage = (TextMessage) this.cryptoService.decryptMessage(textMessage);
                 }
                 InterconnectObject eventIn = InterconnectMapper.fromJson(textMessage.getText(),
                     InterconnectObject.class);
@@ -140,18 +147,17 @@ public class EventMessageListener implements MessageListener, ErrorHandler {
     }
 
     @Override
-    public void handleError(Throwable throwable) {
+    public void handleError(@Nonnull Throwable throwable) {
         this.logger.warn("An error during event handling occured", throwable);
     }
 
     private DefaultMessageListenerContainer createQueueListener(String domain) {
-
         DefaultMessageListenerContainer dmlc = new DefaultMessageListenerContainer();
         dmlc.setConnectionFactory(this.jmsFactory);
         dmlc.setErrorHandler(this);
         dmlc.setConcurrency(this.consumers);
         String queueName = this.consumerPrefix + "." + this.serviceName + "." + this.virtualTopicPrefix + "." + domain;
-        dmlc.setDestination(this.jmsConnector.createDestination(JmsTarget.QUEUE, queueName));
+        dmlc.setDestination(this.destinationService.createDestination(JmsTarget.QUEUE, queueName));
         dmlc.setMessageListener(this);
         dmlc.afterPropertiesSet();
         dmlc.start();

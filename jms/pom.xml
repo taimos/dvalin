@@ -18,6 +18,7 @@
     </dependencies>
     <modules>
         <module>core</module>
+        <module>jms-test</module>
         <module>activemq-classic</module>
     </modules>
 </project>

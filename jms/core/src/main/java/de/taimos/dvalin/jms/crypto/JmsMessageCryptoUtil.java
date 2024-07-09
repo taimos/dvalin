@@ -20,6 +20,17 @@ package de.taimos.dvalin.jms.crypto;
  * #L%
  */
 
+import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -31,23 +42,23 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Scanner;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
-import org.apache.commons.codec.binary.Base64;
-
+/**
+ * Utility class for encryption and decryption of JMS Messages.
+ *
+ * @author thoeger
+ */
 public final class JmsMessageCryptoUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(JmsMessageCryptoUtil.class);
 
-    /** Constant for the system property that holds the AES key for message encryption */
+    /**
+     * Constant for the system property that holds the AES key for message encryption
+     */
     public static final String PROPERTY_CRYPTO_AESKEY = "interconnect.crypto.aes";
 
-    /** Constant for the system property that holds the Signature key for message encryption */
+    /**
+     * Constant for the system property that holds the Signature key for message encryption
+     */
     public static final String PROPERTY_CRYPTO_SIGNATURE = "interconnect.crypto.signature";
 
     private JmsMessageCryptoUtil() {
@@ -157,7 +168,6 @@ public final class JmsMessageCryptoUtil {
      *
      * @param args the CLI arguments
      */
-    @SuppressWarnings("resource")
     public static void main(String[] args) {
         try {
             System.out.println("Select (k=generate key; c=crypt; d=decrypt):");
@@ -184,20 +194,19 @@ public final class JmsMessageCryptoUtil {
                     break;
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            JmsMessageCryptoUtil.logger.error("Unknown exception", e);
         }
     }
 
     private static void generateKey() {
         try {
-
             final KeyGenerator kgen = KeyGenerator.getInstance("AES");
             kgen.init(128);
             final SecretKey skey = kgen.generateKey();
             String key = Base64.encodeBase64String(skey.getEncoded());
             System.out.println("Key: " + key);
         } catch (final NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            JmsMessageCryptoUtil.logger.error("Unknown encryption algorithm", e);
         }
     }
 

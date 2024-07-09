@@ -1,10 +1,9 @@
 package de.taimos.dvalin.jms.crypto;
 
-import de.taimos.dvalin.jms.exceptions.InfrastructureException;
 import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
 
 import javax.jms.JMSException;
-import javax.jms.TextMessage;
+import javax.jms.Message;
 
 /**
  * Copyright 2024 Cinovo AG<br>
@@ -17,17 +16,16 @@ public interface ICryptoService {
     /**
      * @param txt the message to encrypt
      * @return if message is secure
-     * @throws MessageCryptoException  on crypto errors
-     * @throws InfrastructureException on infrastructure exception
+     * @throws MessageCryptoException on crypto errors
      */
-    boolean isMessageSecure(final TextMessage txt) throws MessageCryptoException, InfrastructureException;
+    boolean isMessageSecure(final Message txt) throws MessageCryptoException;
 
     /**
      * @param txt the message to encrypt
      * @return the decrypted text message
      * @throws MessageCryptoException on crypto errors
      */
-    TextMessage decryptMessage(final TextMessage txt) throws MessageCryptoException;
+    Message decryptMessage(final Message txt) throws MessageCryptoException;
 
     /**
      * @param txt the message to encrypt
@@ -35,5 +33,5 @@ public interface ICryptoService {
      * @throws JMSException           on JMS errors
      * @throws MessageCryptoException on crypto errors
      */
-    TextMessage secureMessage(final TextMessage txt) throws JMSException, MessageCryptoException;
+    Message secureMessage(final Message txt) throws JMSException, MessageCryptoException;
 }

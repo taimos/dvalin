@@ -20,11 +20,11 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.core.crypto.JmsMessageCryptoUtil;
 import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
 import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
 import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
-import de.taimos.dvalin.jms.crypto.JmsMessageCryptoUtil;
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.slf4j.Logger;
@@ -299,7 +299,7 @@ public final class MessageConnector {
      * @param replyToQueueName the name of the queue to reply to or null
      * @param correlationId    the correlated id
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on secure transport errors
+     * @throws MessageCryptoException  on secure transport errors
      */
     private static void sendToDestination(final boolean isQueue, final String destinationName, final String body, final Map<String, Object> headers, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, MessageCryptoException {
         MessageConnector.sendToDestination(new GetResolveDestinationAction(isQueue, destinationName), body, headers,
@@ -314,7 +314,7 @@ public final class MessageConnector {
      * @param replyToQueueName the name of the queue to reply to or null
      * @param correlationId    the correlated id
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on secure transport errors
+     * @throws MessageCryptoException  on secure transport errors
      */
     public static void sendToDestination(final Destination destination, final String body, final Map<String, Object> headers, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, MessageCryptoException {
         MessageConnector.sendToDestination(new GetSimpleDestinationAction(destination), body, headers, secure,
@@ -329,7 +329,7 @@ public final class MessageConnector {
      * @param replyToQueueName the name of the queue to reply to or null
      * @param correlationId    the correlated id
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on secure transport errors
+     * @throws MessageCryptoException  on secure transport errors
      */
     public static void sendToQueue(final String queueName, final String body, final Map<String, Object> headers, final boolean secure, final String replyToQueueName, final String correlationId) throws InfrastructureException, MessageCryptoException {
         MessageConnector.sendToDestination(true, queueName, body, headers, secure, replyToQueueName, correlationId);
@@ -341,7 +341,7 @@ public final class MessageConnector {
      * @param headers   the request headers
      * @param secure    enable secure transport
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on secure transport errors
+     * @throws MessageCryptoException  on secure transport errors
      */
     public static void sendToQueue(final String queueName, final String body, final Map<String, Object> headers, final boolean secure) throws InfrastructureException, MessageCryptoException {
         MessageConnector.sendToQueue(queueName, body, headers, secure, null, null);
@@ -383,7 +383,7 @@ public final class MessageConnector {
      * @param headers   the request headers
      * @param secure    enable secure transport
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on secure transport errors
+     * @throws MessageCryptoException  on secure transport errors
      */
     public static void sendToTopic(final String topicName, final String body, final Map<String, Object> headers, final boolean secure) throws InfrastructureException, MessageCryptoException {
         MessageConnector.sendToDestination(false, topicName, body, headers, secure, null, null);
@@ -410,7 +410,7 @@ public final class MessageConnector {
      * @param secure    enable secure transport
      * @return the received {@link TextMessage}
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on crypto errors
+     * @throws MessageCryptoException  on crypto errors
      * @deprecated use receiveFromQueue instead
      */
     @Deprecated
@@ -521,7 +521,7 @@ public final class MessageConnector {
      * @param secure    enable secure transport
      * @return the received {@link TextMessage}
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on crypto errors
+     * @throws MessageCryptoException  on crypto errors
      */
     public static TextMessage receiveFromQueue(final String queueName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, MessageCryptoException {
         return MessageConnector.receiveFromDestination(new GetResolveDestinationAction(true, queueName), selector,
@@ -536,7 +536,7 @@ public final class MessageConnector {
      * @param secure    enable secure transport
      * @return the received {@link TextMessage}s
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on crypto errors
+     * @throws MessageCryptoException  on crypto errors
      */
     public static List<TextMessage> receiveBulkFromQueue(final String queueName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, MessageCryptoException {
         return MessageConnector.receiveBulkFromDestination(new GetResolveDestinationAction(true, queueName), selector,
@@ -550,7 +550,7 @@ public final class MessageConnector {
      * @param secure    enable secure transport
      * @return the received {@link TextMessage}
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on crypto errors
+     * @throws MessageCryptoException  on crypto errors
      */
     public static TextMessage receiveFromTopic(final String topicName, final String selector, final long timeout, final boolean secure) throws InfrastructureException, MessageCryptoException {
         return MessageConnector.receiveFromDestination(new GetResolveDestinationAction(false, topicName), selector,
@@ -565,7 +565,7 @@ public final class MessageConnector {
      * @param secure    enable secure transport
      * @return the received {@link TextMessage}s
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on crypto errors
+     * @throws MessageCryptoException  on crypto errors
      */
     public static List<TextMessage> receiveBulkFromTopic(final String topicName, final String selector, final int maxSize, final long timeout, final boolean secure) throws InfrastructureException, MessageCryptoException {
         return MessageConnector.receiveBulkFromDestination(new GetResolveDestinationAction(false, topicName), selector,
@@ -582,7 +582,7 @@ public final class MessageConnector {
      * @param priority       the message priority
      * @return the response {@link TextMessage}
      * @throws InfrastructureException on errors
-     * @throws MessageCryptoException         on secure transport errors
+     * @throws MessageCryptoException  on secure transport errors
      */
     public static TextMessage request(final String queueName, final String body, final Map<String, Object> headers, final boolean secure, final long receiveTimeout, final long sendTimeout, final int priority) throws InfrastructureException, MessageCryptoException {
         MessageConnector.checkInit();
@@ -712,7 +712,7 @@ public final class MessageConnector {
     /**
      * @param txt the message to encrypt
      * @return if message is secure
-     * @throws MessageCryptoException         on crypto errors
+     * @throws MessageCryptoException  on crypto errors
      * @throws InfrastructureException on infrastructure exception
      */
     public static boolean isMessageSecure(final TextMessage txt) throws MessageCryptoException, InfrastructureException {
@@ -751,7 +751,7 @@ public final class MessageConnector {
 
     /**
      * @param txt the message to encrypt
-     * @throws JMSException    on JMS errors
+     * @throws JMSException           on JMS errors
      * @throws MessageCryptoException on crypto errors
      */
     public static void secureMessage(final TextMessage txt) throws JMSException, MessageCryptoException {

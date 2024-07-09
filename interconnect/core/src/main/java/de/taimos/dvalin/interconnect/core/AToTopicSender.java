@@ -20,18 +20,17 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.core.daemon.util.DaemonExceptionMapper;
+import de.taimos.dvalin.interconnect.model.service.DaemonError;
+import de.taimos.dvalin.jms.IJmsConnector;
+import de.taimos.dvalin.jms.exceptions.InfrastructureException;
+import de.taimos.dvalin.jms.exceptions.SerializationException;
+import de.taimos.dvalin.jms.exceptions.TimeoutException;
+import de.taimos.dvalin.jms.model.JmsContext.JmsContextBuilder;
+import de.taimos.dvalin.jms.model.JmsTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.DeliveryMode;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.Topic;
-import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -42,74 +41,30 @@ import java.io.Serializable;
 public abstract class AToTopicSender implements IToTopicSender {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected ConnectionFactory connectionFactory;
 
-    protected AToTopicSender(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
+    protected IJmsConnector jmsConnector;
 
-    protected Message getMessage(Serializable object, Session session) throws JMSException, IOException {
-        return session.createObjectMessage(object);
+    protected AToTopicSender(IJmsConnector jmsConnector) {
+        this.jmsConnector = jmsConnector;
     }
 
     /**
      * @param object    the object
      * @param topicName name of the topic you want to use
+     * @throws DaemonError is throw if there is a problem with sending the event
      */
-    public void send(Serializable object, String topicName) {
+    public void send(Serializable object, String topicName) throws DaemonError, TimeoutException {
         if (topicName == null) {
             this.logger.error("Invalid topic name: a non-null name is required");
             throw new IllegalArgumentException("Invalid topic name: a non-null name is required");
         }
+        JmsContextBuilder context = new JmsContextBuilder().withTarget(JmsTarget.TOPIC)
+            .withDestinationName(topicName).withBody(object);
 
-        Connection connection = null;
         try {
-            connection = this.connectionFactory.createConnection();
-            this.createSessionAndSend(object, topicName, connection);
-        } catch (JMSException | IOException e) {
-            this.logger.error("Can not send message", e);
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (final JMSException e) {
-                    this.logger.warn("Can not close connection", e);
-                }
-            }
-        }
-    }
-
-    private void createSessionAndSend(Serializable object, String topicName, Connection connection) throws JMSException, IOException {
-        Session session = null;
-        try {
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            final Topic topic = session.createTopic(topicName);
-            this.createProducerAndSendToTopic(object, session, topic);
-        } finally {
-            if (session != null) {
-                try {
-                    session.close();
-                } catch (final JMSException e) {
-                    this.logger.warn("Can not close session", e);
-                }
-            }
-        }
-    }
-
-    private void createProducerAndSendToTopic(Serializable object, Session session, Topic topic) throws JMSException, IOException {
-        MessageProducer topicmp = null;
-        try {
-            topicmp = session.createProducer(topic);
-            topicmp.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-            topicmp.send(this.getMessage(object, session));
-        } finally {
-            if (topicmp != null) {
-                try {
-                    topicmp.close();
-                } catch (final JMSException e) {
-                    this.logger.warn("Can not close producer", e);
-                }
-            }
+            this.jmsConnector.send(context.build());
+        } catch (InfrastructureException | SerializationException e) {
+            DaemonExceptionMapper.mapAndThrow(e);
         }
     }
 }

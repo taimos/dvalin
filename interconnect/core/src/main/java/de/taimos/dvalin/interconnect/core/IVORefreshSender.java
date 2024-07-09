@@ -23,27 +23,34 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.jms.IJmsConnector;
+import de.taimos.dvalin.jms.exceptions.TimeoutException;
 
-import javax.jms.ConnectionFactory;
 import java.io.Serializable;
 
 /**
  * Abstract IVO refresh sender.
  *
- * @author fzwirn
+ * @author psigloch, fzwirn
  */
+@SuppressWarnings("unused")
 public class IVORefreshSender extends AToTopicSender {
 
 
-    public IVORefreshSender(ConnectionFactory connectionFactory) {
-        super(connectionFactory);
+    /**
+     * @param jmsConnector that will create the JMS connections
+     */
+    public IVORefreshSender(IJmsConnector jmsConnector) {
+        super(jmsConnector);
     }
 
     /**
      * @param object the object
+     * @throws DaemonError      with specific error code
+     * @throws TimeoutException in case of communication timeout
      */
-    public void send(Serializable object) {
+    public void send(Serializable object) throws DaemonError, TimeoutException {
         this.send(object, System.getProperty(IJmsConnector.SYSPROP_UPDATE_TOPIC));
     }
 }
