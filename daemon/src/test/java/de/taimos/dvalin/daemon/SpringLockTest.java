@@ -20,10 +20,10 @@ package de.taimos.dvalin.daemon;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class SpringLockTest {
+class SpringLockTest {
 
 	@Test
 	public void startContext() throws Exception {
@@ -35,8 +35,8 @@ public class SpringLockTest {
 	public void testCtx() throws Exception {
 		TestAdapter adapter = new TestAdapter("good");
 		adapter.doStart();
-		Assert.assertNotNull(adapter.getContext());
-		Assert.assertNotNull(adapter.getContext().getId());
+		Assertions.assertNotNull(adapter.getContext());
+		Assertions.assertNotNull(adapter.getContext().getId());
 		adapter.doStop();
 	}
 
@@ -45,16 +45,16 @@ public class SpringLockTest {
 		TestAdapter adapter = new TestAdapter("bad");
 		try {
 			adapter.doStart();
-			Assert.fail();
+			Assertions.fail();
 		} catch (Exception e) {
 			// should happen
 		}
-		Assert.assertNull(adapter.getContext());
+		Assertions.assertNull(adapter.getContext());
 		try {
 			adapter.doStop();
-			Assert.fail();
+			Assertions.fail();
 		} catch (Exception e) {
-			Assert.assertEquals(RuntimeException.class, e.getClass());
+			Assertions.assertEquals(RuntimeException.class, e.getClass());
 		}
 	}
 
@@ -62,12 +62,12 @@ public class SpringLockTest {
 	public void testDoubleStart() throws Exception {
 		TestAdapter adapter = new TestAdapter("good");
 		adapter.doStart();
-		Assert.assertNotNull(adapter.getContext());
+		Assertions.assertNotNull(adapter.getContext());
 		try {
 			adapter.doStart();
-			Assert.fail();
+			Assertions.fail();
 		} catch (Exception e) {
-			Assert.assertEquals(RuntimeException.class, e.getClass());
+			Assertions.assertEquals(RuntimeException.class, e.getClass());
 		}
 		adapter.doStop();
 	}
@@ -76,13 +76,13 @@ public class SpringLockTest {
 	public void testDoubleStop() throws Exception {
 		TestAdapter adapter = new TestAdapter("good");
 		adapter.doStart();
-		Assert.assertNotNull(adapter.getContext());
+		Assertions.assertNotNull(adapter.getContext());
 		adapter.doStop();
 		try {
 			adapter.doStop();
-			Assert.fail();
+			Assertions.fail();
 		} catch (Exception e) {
-			Assert.assertEquals(RuntimeException.class, e.getClass());
+			Assertions.assertEquals(RuntimeException.class, e.getClass());
 		}
 	}
 }

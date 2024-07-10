@@ -36,7 +36,7 @@ import de.bwaldvogel.mongo.ServerVersion;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 import org.jongo.Jongo;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Copyright 2015 Taimos GmbH<br>
@@ -66,7 +66,7 @@ public class ABaseTest {
 
 
     protected static void assertEquals(BigDecimal bd1, BigDecimal bd2) {
-        Assert.assertEquals(bd1.doubleValue(), bd2.doubleValue(), 0);
+        Assertions.assertEquals(bd1.doubleValue(), bd2.doubleValue(), 0);
     }
 
     /**
