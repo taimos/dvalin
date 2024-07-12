@@ -1,7 +1,7 @@
 /**
  *
  */
-package de.taimos.dvalin.interconnect.model.common;
+package de.taimos.dvalin.jms.crypto;
 
 /*
  * #%L
@@ -23,28 +23,26 @@ package de.taimos.dvalin.interconnect.model.common;
  * #L%
  */
 
-import de.taimos.dvalin.interconnect.model.CryptoException;
-import de.taimos.dvalin.interconnect.model.InterconnectConstants;
-import de.taimos.dvalin.interconnect.model.MessageCryptoUtil;
+import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class MessageCryptoUtilTest {
 
-	/**
-	 * @throws CryptoException -
-	 */
-	@Test
-    void crypt() throws CryptoException {
-        System.setProperty(InterconnectConstants.PROPERTY_CRYPTO_AESKEY, "4b5c6acc6cedc3093d7ad49d195af14a");
-        System.setProperty(InterconnectConstants.PROPERTY_CRYPTO_SIGNATURE, "8602266778973c0edd198713985b9e56");
+    /**
+     * @throws MessageCryptoException -
+     */
+    @Test
+    void crypt() throws MessageCryptoException {
+        System.setProperty(JmsMessageCryptoUtil.PROPERTY_CRYPTO_AESKEY, "4b5c6acc6cedc3093d7ad49d195af14a");
+        System.setProperty(JmsMessageCryptoUtil.PROPERTY_CRYPTO_SIGNATURE, "8602266778973c0edd198713985b9e56");
 
-		// i'm curious ;)
+        // i'm curious ;)
         // TODO: 17.02.16 fix umlauts in docker release environment
         // String data = "hallali lö lä lü li";
-		String data = "hallali li li li li";
-		String crypt = MessageCryptoUtil.crypt(data);
-		String decrypt = MessageCryptoUtil.decrypt(crypt);
-		Assertions.assertEquals(data, decrypt);
-	}
+        String data = "hallali li li li li";
+        String crypt = JmsMessageCryptoUtil.crypt(data);
+        String decrypt = JmsMessageCryptoUtil.decrypt(crypt);
+        Assertions.assertEquals(data, decrypt);
+    }
 }
