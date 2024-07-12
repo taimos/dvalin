@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18nBundle>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-1">
+        <language locale="de" value="Framework Fehler"/>
+        <language locale="en" value="Framework Error"/>
+    </label>
+
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-20">
+        <language locale="de" value="Unerwarter Typ Fehler"/>
+        <language locale="en" value="Unexpected type error"/>
+    </label>
+
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-50">
+        <language locale="de" value="Fehler beim Senden"/>
+        <language locale="en" value="Send error"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-51">
+        <language locale="de" value="Erneuter Sendungsversuch fehlgeschlagen"/>
+        <language locale="en" value="Send retry failed"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-52">
+        <language locale="de" value="Empfangsfehler"/>
+        <language locale="en" value="Receive error"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-53">
+        <language locale="de" value="Ungültige Anwort"/>
+        <language locale="en" value="Invalid response"/>
+    </label>
+
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-70">
+        <language locale="de" value="Erzeugung der Verbindung fehlgeschlagen"/>
+        <language locale="en" value="Connection creation failed"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-71">
+        <language locale="de" value="Erzeugung der Sitzung fehlgeschlagen"/>
+        <language locale="en" value="Session creation failed"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-72">
+        <language locale="de" value="Erzeugung des Empfängers fehlgeschlagen"/>
+        <language locale="en" value="Consumer creation failed"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-73">
+        <language locale="de" value="Erzeugung des Erzeuger fehlgeschlagen"/>
+        <language locale="en" value="Producer creation failed"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-74">
+        <language locale="de" value="Erzeugung des Rückantwortziel fehlgeschlagen"/>
+        <language locale="en" value="ReplyTo destination creation failed"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-75">
+        <language locale="de" value="Erzeugung des Ziels fehlgeschlagen"/>
+        <language locale="en" value="Destination creation failed"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-76">
+        <language locale="de" value="Erzeugung der Nachricht fehlgeschlagen"/>
+        <language locale="en" value="Message creation failed"/>
+    </label>
+
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-90">
+        <language locale="de" value="Serialisierung der Nachricht fehlgeschlagen"/>
+        <language locale="en" value="Message serialisation error"/>
+    </label>
+    <label id="de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkError.-91">
+        <language locale="de" value="Nachrichtenverschlüsselungsfehler"/>
+        <language locale="en" value="Message crypto error"/>
+    </label>
+</i18nBundle>

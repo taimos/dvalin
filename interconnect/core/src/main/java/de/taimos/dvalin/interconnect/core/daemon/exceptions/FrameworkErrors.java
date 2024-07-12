@@ -11,7 +11,8 @@ import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
  */
 public class FrameworkErrors {
     public static final DaemonErrorNumber FRAMEWORK_ERROR = new FrameworkError(-1);
-    public static final DaemonErrorNumber TYPE_ERROR = new FrameworkError(-20);
+
+    public static final DaemonErrorNumber UNEXPECTED_TYPE_ERROR = new FrameworkError(-20);
 
     public static final DaemonErrorNumber SEND_ERROR = new FrameworkError(-50);
     public static final DaemonErrorNumber RETRY_FAILED_ERROR = new FrameworkError(-51);

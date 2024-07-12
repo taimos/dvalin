@@ -50,7 +50,7 @@ public class DaemonExceptionMapper {
             return e;
         }
         if (e instanceof UnexpectedTypeException) {
-            return new DaemonError(FrameworkErrors.TYPE_ERROR, e);
+            return new DaemonError(FrameworkErrors.UNEXPECTED_TYPE_ERROR, e);
         }
         if (e instanceof TimeoutException) {
             return e;
