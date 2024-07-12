@@ -34,9 +34,9 @@ import org.joda.time.DateTime;
 import org.jongo.Mapper;
 import org.jongo.marshall.jackson.JacksonMapper;
 import org.jongo.marshall.jackson.JacksonMapper.Builder;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -45,7 +45,7 @@ public class Tester extends ABaseTest {
 
     private static final TestDAO dao = new TestDAO();
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         try {
             Field mongoField = AbstractMongoDAO.class.getDeclaredField("mongo");
@@ -71,57 +71,58 @@ public class Tester extends ABaseTest {
                 .setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
             Tester.dao.init();
         } catch (Exception e) {
+            System.out.println("Initialization failure");
             e.printStackTrace();
         }
     }
 
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         TestObject o = new TestObject();
         o.setName("bar");
         o.setValue(new BigDecimal("5"));
-        Assert.assertEquals("bar", o.getName());
+        Assertions.assertEquals("bar", o.getName());
         String id = o.getId();
 
         TestObject save = Tester.dao.save(o);
-        Assert.assertEquals("bar", save.getName());
+        Assertions.assertEquals("bar", save.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), save.getValue());
-        Assert.assertNotNull(save.getId());
-        Assert.assertNotNull(save.getDt());
+        Assertions.assertNotNull(save.getId());
+        Assertions.assertNotNull(save.getDt());
 
         TestObject find = Tester.dao.findById(id);
-        Assert.assertNotNull(find);
-        Assert.assertEquals("bar", find.getName());
+        Assertions.assertNotNull(find);
+        Assertions.assertEquals("bar", find.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), find.getValue());
-        Assert.assertEquals(id, find.getId());
-        Assert.assertNotNull(find.getDt());
+        Assertions.assertEquals(id, find.getId());
+        Assertions.assertNotNull(find.getDt());
 
         find.setName("blubb");
 
         TestObject save2 = Tester.dao.save(find);
-        Assert.assertNotNull(save2);
-        Assert.assertEquals("blubb", save2.getName());
+        Assertions.assertNotNull(save2);
+        Assertions.assertEquals("blubb", save2.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), save2.getValue());
-        Assert.assertEquals(id, save2.getId());
-        Assert.assertNotNull(save2.getDt());
+        Assertions.assertEquals(id, save2.getId());
+        Assertions.assertNotNull(save2.getDt());
 
         TestObject find3 = Tester.dao.findByName("blubb");
-        Assert.assertNotNull(find3);
-        Assert.assertEquals("blubb", find3.getName());
+        Assertions.assertNotNull(find3);
+        Assertions.assertEquals("blubb", find3.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), find3.getValue());
-        Assert.assertEquals(id, find3.getId());
-        Assert.assertNotNull(find3.getDt());
+        Assertions.assertEquals(id, find3.getId());
+        Assertions.assertNotNull(find3.getDt());
 
         long count = Tester.dao.dataAccess.count("{}");
-        Assert.assertEquals(1, count);
+        Assertions.assertEquals(1, count);
 
         Tester.dao.delete(id);
 
         TestObject find2 = Tester.dao.findById(id);
-        Assert.assertNull(find2);
+        Assertions.assertNull(find2);
 
         count = Tester.dao.dataAccess.count("{}");
-        Assert.assertEquals(0, count);
+        Assertions.assertEquals(0, count);
 
         ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName)
             .getCollection("TestObject").listIndexes();
@@ -131,11 +132,11 @@ public class Tester extends ABaseTest {
     }
 
     @Test
-    public void serialize() throws Exception {
+    void serialize() {
         TestObject o = new TestObject();
         o.setName("bar");
         o.setValue(new BigDecimal("5"));
-        Assert.assertEquals("bar", o.getName());
+        Assertions.assertEquals("bar", o.getName());
 
         DBObject dbObject = this.createMapper().getMarshaller().marshall(o).toDBObject();
         System.out.println(dbObject);
@@ -144,9 +145,9 @@ public class Tester extends ABaseTest {
 
         Object parse = BasicDBObject.parse(json);
         System.out.println(parse);
-        Assert.assertEquals(BasicDBObject.class, parse.getClass());
-        Assert.assertEquals(Double.class, ((DBObject) parse).get("value").getClass());
-        Assert.assertEquals(5.0D, (double) ((DBObject) parse).get("value"), 0);
+        Assertions.assertEquals(BasicDBObject.class, parse.getClass());
+        Assertions.assertEquals(Double.class, ((DBObject) parse).get("value").getClass());
+        Assertions.assertEquals(5.0D, (double) ((DBObject) parse).get("value"), 0);
     }
 
     protected Mapper createMapper() {

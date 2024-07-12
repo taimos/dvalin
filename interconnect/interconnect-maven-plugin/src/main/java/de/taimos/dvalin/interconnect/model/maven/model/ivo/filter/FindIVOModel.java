@@ -111,7 +111,7 @@ public class FindIVOModel extends AbstractFindModel {
             .filter(i -> Boolean.FALSE.equals(i.getSkipOnFilter()))//
             .map(ImplementsDef::getName).collect(Collectors.joining(", "));
 
-        if (interfaces.length() < 1) {
+        if (interfaces.isEmpty()) {
             return "";
         }
 
