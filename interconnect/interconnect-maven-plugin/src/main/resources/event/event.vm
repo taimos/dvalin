@@ -57,13 +57,9 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
          * @return the builder
          *
          **/
-        #if ( $field.required )
         @Nonnull
-        #else
-        @Nullable
-        #end
         @SuppressWarnings("unchecked")
-        public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+        public E with$tool.upperCaseFirst( $field.name )(#if ( $field.required )@Nonnull#else@Nullable#end $field.getTypeAsString(false) p$field.name) {
            this.$field.name = p$field.name;
            return (E) this;
         }
@@ -92,6 +88,7 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
         #if ( $model.hasParentClazz() )
         @Override
         #end
+        @Nonnull
         public $model.getClazzName() build() {
         #foreach ( $field in $model.getAllFields() )
             #if ( $field.required )
@@ -121,6 +118,11 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
     #if ( $field.jsonTransientFlag )
     @JsonIgnore
     #end
+    #if ( $field.required )
+    @Nonnull
+    #else
+    @Nullable
+    #end
     @Override
     public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
         return this.$field.name;
@@ -130,6 +132,11 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #foreach ( $field in $model.getCollectionFields() )
     #if ( $field.jsonTransientFlag )
     @JsonIgnore
+    #end
+    #if ( $field.required )
+    @Nonnull
+    #else
+    @Nullable
     #end
     @Override
     public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
@@ -145,6 +152,11 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
     #if ( $field.jsonTransientFlag )
     @JsonIgnore
     #end
+    #if ( $field.required )
+    @Nonnull
+    #else
+    @Nullable
+    #end
     @Override
     public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
     #if( $field.mapType == "Map" )
@@ -158,8 +170,8 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 
     @SuppressWarnings("unchecked")
     @Override
-    public
-    <T extends IEventBuilder> T createBuilder() {
+    @Nonnull
+    public <T extends IEventBuilder> T createBuilder() {
         ${model.getClazzName()}Builder builder = new ${model.getClazzName()}Builder();
         builder.internalFillFromIVO(this);
         return (T) builder;
