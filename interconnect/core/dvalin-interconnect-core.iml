@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$/src/it/java" isTestSource="false" />
+    </content>
+  </component>
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false" profiles="prod" />
-        <fileset id="fileset2" name="Spring Application Context (2)" removed="false" profiles="prod">
-          <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/interconnect/core/config/JMSConfig.java</file>
+        <fileset id="fileset2" name="Spring Application Context" removed="false" profiles="prod">
+          <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/interconnect/core/config/InterconnectConfig.java</file>
+          <file>file://$MODULE_DIR$/../../daemon/src/main/resources/spring/dvalin.xml</file>
+          <file>file://$MODULE_DIR$/../../daemon/src/main/resources/spring/daemon.xml</file>
+          <file>file://$MODULE_DIR$/src/main/java/de/taimos/dvalin/interconnect/core/config/MultiRequestHandlerConfig.java</file>
+          <file>file://$MODULE_DIR$/../../jms/activemq-classic/src/main/java/de/taimos/dvalin/jms/activemq/config/JMSConfig.java</file>
         </fileset>
       </configuration>
     </facet>

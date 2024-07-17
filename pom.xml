@@ -661,5 +661,6 @@
         <module>interconnect</module>
         <module>i18n</module>
         <module>archetypes</module>
+        <module>jms</module>
     </modules>
 </project>

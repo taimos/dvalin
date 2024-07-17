@@ -18,6 +18,7 @@
         <module>metamodel</module>
         <module>interconnect-maven-plugin</module>
         <module>core</module>
-        <module>test</module>
+        <module>core-legacy</module>
+        <module>test-legacy</module>
     </modules>
 </project>
