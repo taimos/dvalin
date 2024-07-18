@@ -69,7 +69,6 @@ import java.util.LinkedList;
  * @author thoeger
  */
 @Component
-@SuppressWarnings("serial")
 public class InterconnectBeanPostProcessor
     implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, Serializable {
 

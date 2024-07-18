@@ -26,10 +26,10 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class KeyTest {
+class KeyTest {
 
     @Test
-    public void shouldMatchPattern() throws Exception {
+    void shouldMatchPattern() {
         Pattern keyPattern = Pattern.compile("/dvalin/discovery/testservice/([A-Fa-f0-9\\-]+)");
 
         Matcher matcher = keyPattern.matcher("/dvalin/discovery/testservice/AE7AB5B7-E6FC-46E3-BF62-EC2D25908DF6");

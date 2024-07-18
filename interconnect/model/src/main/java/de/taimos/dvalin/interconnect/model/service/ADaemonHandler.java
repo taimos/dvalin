@@ -91,6 +91,7 @@ public abstract class ADaemonHandler implements IDaemonHandler {
 		/**
 		 * @param aRequestClass Request class
 		 * @param anUUID Universally unique identifier of the request
+         * @deprecated use other constructor
 		 */
 		@Deprecated
 		public Context(final Class<? extends IVO> aRequestClass, final UUID anUUID) {

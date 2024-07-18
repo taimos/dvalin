@@ -25,11 +25,10 @@ import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("javadoc")
-public final class PongIVOTest {
+final class PongIVOTest {
 
 	@Test
-	public void testICO() throws Exception {
+    void testICO() throws Exception {
 		final PongIVO in = new PongIVO.PongIVOBuilder().build();
 		final String json = InterconnectMapper.toJson(in);
 		final InterconnectObject out = InterconnectMapper.fromJson(json);

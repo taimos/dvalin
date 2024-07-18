@@ -9,9 +9,9 @@ package de.taimos.dvalin.interconnect.model.ivo.util;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -126,7 +126,7 @@ public class IVOQueryResultIVO_v1<E extends IVO> extends AbstractIVO implements 
     @SuppressWarnings("unchecked")
     @Override
     public IVOQueryResultIVO_v1Builder<E> createBuilder() {
-        IVOQueryResultIVO_v1Builder<E> builder = new IVOQueryResultIVO_v1Builder<E>();
+        IVOQueryResultIVO_v1Builder<E> builder = new IVOQueryResultIVO_v1Builder<>();
         builder.withElements(this.elements);
         builder.withPossibleResults(this.possibleResults);
         return builder;

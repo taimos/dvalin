@@ -174,10 +174,10 @@ public abstract class ADaemonMessageHandler {
                         if (this.throwExceptionOnTimeout) {
                             throw new Exception("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext());
                         }
-                        this.getLogger().warn("Response skipped because runtime " + runtime + " ms was greater than timeout " + method.getTimeoutInMs() + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext());
+                        this.getLogger().warn("Response skipped because runtime {} ms was greater than timeout {} ms for {}({}) with {}", runtime, method.getTimeoutInMs(), method.getMethod().getName(), icoClass.getSimpleName(), InterconnectContext.getContext());
                         return;
                     } else if (runtime > (method.getTimeoutInMs() / 2L)) {
-                        this.getLogger().info("Slow response because runtime " + runtime + " ms for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext());
+                        this.getLogger().info("Slow response because runtime {} ms for {}({}) with {}", runtime, method.getMethod().getName(), icoClass.getSimpleName(), InterconnectContext.getContext());
                     }
                 } catch (final DaemonError e) {
                     this.getLogger().debug("DaemonError for " + method.getMethod().getName() + "(" + icoClass.getSimpleName() + ")" + " with " + InterconnectContext.getContext(), e);

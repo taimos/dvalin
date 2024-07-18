@@ -42,7 +42,7 @@ public abstract class AMemberDef extends ArrayList<Object> {
 
     protected EnumMemberDef createEnumMemberDef(Class<? extends Enum<?>> clazz, String name, String comment) {
         EnumMemberDef emd = new EnumMemberDef();
-        emd.setComment(name);
+        emd.setComment(comment);
         emd.setName(name);
         emd.setClazz(clazz.getSimpleName());
         emd.setPkgName(clazz.getPackage().getName());

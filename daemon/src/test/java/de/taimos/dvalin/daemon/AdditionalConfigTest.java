@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 @ExtendWith(SpringDaemonExtension.class)
 @RunnerConfiguration(config = DvalinTestRunnerConfig.class, loggingConfigurer = Log4jLoggingConfigurer.class, svc = "AdditionalConfigTest")
 @AdditionalRunnerConfiguration(config = {AdditionalTestConfig.class})
-public class AdditionalConfigTest {
+class AdditionalConfigTest {
 
     @Value("${jwtauth.issuer}")
     private String jwtIssuer;
@@ -27,7 +27,7 @@ public class AdditionalConfigTest {
      * Test if the property from {@link AdditionalTestConfig} was set up.
      */
     @Test
-    public void testAdditionalConfiguration() {
+    void testAdditionalConfiguration() {
         Assertions.assertEquals(AdditionalTestConfig.TEST_VALUE, this.jwtIssuer, "The propery 'jwtauth.issuer' was not equals to the value of AdditionalTestConfig.TEST_VALUE");
     }
 }

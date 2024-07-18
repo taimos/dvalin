@@ -26,8 +26,7 @@ import org.junit.jupiter.api.Test;
 import de.taimos.dvalin.interconnect.model.service.ADaemonErrorNumber;
 import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
 
-@SuppressWarnings("javadoc")
-public final class ADaemonErrorNumberTest {
+final class ADaemonErrorNumberTest {
 
 	private static final class TestError extends ADaemonErrorNumber {
 
@@ -42,23 +41,23 @@ public final class ADaemonErrorNumberTest {
 
 
 	@Test
-	public void testEquals1() {
+    void testEquals1() {
 		Assertions.assertEquals(new TestError(1, "test"), new TestError(1, "test"));
 	}
 
 	@Test
-	public void testEquals2() {
+    void testEquals2() {
 		final DaemonErrorNumber den = new TestError(1, "test");
 		Assertions.assertEquals(den, den);
 	}
 
 	@Test
-	public void testNotEquals1() {
+    void testNotEquals1() {
 		Assertions.assertNotEquals(new TestError(1, "test"), new TestError(2, "test"));
 	}
 
 	@Test
-	public void testNotEquals2() {
+    void testNotEquals2() {
 		Assertions.assertNotEquals(new TestError(1, "test1"), new TestError(1, "test2"));
 	}
 

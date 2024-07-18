@@ -23,30 +23,30 @@ package de.taimos.dvalin.dynamodb.marshal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class EnumMarshallerTest {
+class EnumMarshallerTest {
 
     @Test
-    public void marshall() throws Exception {
+    void marshall() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
         Assertions.assertEquals(TestEnum.EnumValue1.toString(), m.marshall(TestEnum.EnumValue1));
         Assertions.assertEquals(TestEnum.ENUMVALUE2.toString(), m.marshall(TestEnum.ENUMVALUE2));
     }
 
     @Test
-    public void marshallNull() throws Exception {
+    void marshallNull() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
         Assertions.assertNull(m.marshall(null));
     }
 
     @Test
-    public void unmarshall() throws Exception {
+    void unmarshall() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
         Assertions.assertEquals(TestEnum.EnumValue1, m.unmarshall(TestEnum.class, TestEnum.EnumValue1.toString()));
         Assertions.assertEquals(TestEnum.ENUMVALUE2, m.unmarshall(TestEnum.class, TestEnum.ENUMVALUE2.toString()));
     }
 
     @Test
-    public void unmarshallNull() throws Exception {
+    void unmarshallNull() throws Exception {
         EnumMarshaller m = new EnumMarshaller();
         Assertions.assertNull(m.unmarshall(TestEnum.class, null));
     }
