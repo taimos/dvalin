@@ -154,6 +154,7 @@ public class ${clazzName} extends $model.getParentClazzName() implements I${claz
 		/**
 		 * @return the entry
 		 **/
+        @Nonnull
 		public ${clazzName} build() {
 			if (this.ids == null) {
 				throw new IllegalStateException("The attribute ids must not be null!");
@@ -170,6 +171,7 @@ public class ${clazzName} extends $model.getParentClazzName() implements I${claz
 	}
 
     @Override
+    @Nonnull
 	public List<String> getIds() {
 		return this.ids.stream().map(iv->iv.getId()).collect(Collectors.toList());
 	}
@@ -180,6 +182,7 @@ public class ${clazzName} extends $model.getParentClazzName() implements I${claz
     }
 
     @Override
+    @Nonnull
     public List<IdWithVersion> getIdsWithVersion() {
         return new ArrayList<>(this.ids);
     }
@@ -191,6 +194,7 @@ public class ${clazzName} extends $model.getParentClazzName() implements I${claz
 
 	@SuppressWarnings("unchecked")
 	@Override
+    @Nonnull
 	public <T extends IVOBuilder> T createBuilder() {
 		${clazzName}Builder builder = new ${clazzName}Builder();
 		builder.internalFillFromIVO(this);

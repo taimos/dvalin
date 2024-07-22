@@ -56,9 +56,9 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 		 * @return the builder $field.filterable
 		 *
 		 **/
-	 	@Nullable
+	 	@Nonnull
 #if ($field.filterable == 'single')
-		public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+		public E with$tool.upperCaseFirst( $field.name )(@Nullable $field.getTypeAsString(false) p$field.name) {
 			this.$field.name = p$field.name;
 			return (E) this;
 		}
@@ -71,7 +71,7 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 			return this.$field.name;
 		}
 #else
-		public E with$tool.upperCaseFirst( $field.name )(Set<$field.getTypeAsString(true)> p$field.name) {
+		public E with$tool.upperCaseFirst( $field.name )(@Nullable Set<$field.getTypeAsString(true)> p$field.name) {
 			this.$field.name = p$field.name;
 			return (E) this;
 		}
@@ -95,6 +95,7 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 		/**
 		 * @return the entry
 		 **/
+        @Nonnull
 		public ${clazzName} build() {
 			${clazzName} result = new ${clazzName}(this);
 			return result;
@@ -138,12 +139,14 @@ public class ${clazzName} extends ${model.getParentClazzName()} implements I${cl
 
 	@SuppressWarnings("unchecked")
 	@Override
+    @Nonnull
 	public IPageableBuilder createPageableBuilder() {
 		return (IPageableBuilder) createBuilder();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
+    @Nonnull
 	public <T extends IVOBuilder> T createBuilder() {
 		${clazzName}Builder builder = new ${clazzName}Builder();
 		builder.internalFillFromIVO(this);

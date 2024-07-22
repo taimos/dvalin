@@ -79,13 +79,9 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
          * @return the builder
          *
          **/
-#if ( $field.required )
         @Nonnull
-#else
-        @Nullable
-#end
         @SuppressWarnings("unchecked")
-        public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+        public E with$tool.upperCaseFirst( $field.name )(#if ( $field.required )@Nonnull#else@Nullable#end $field.getTypeAsString(false) p$field.name) {
             this.$field.name = p$field.name;
             return (E) this;
         }
@@ -117,6 +113,7 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #if ( $model.hasParentClazz() )
         @Override
 #end
+        @Nonnull
         public $model.getClazzName() build() {
 #foreach ( $field in $model.getAllFields() )
 #if ( $field.required )
@@ -172,6 +169,11 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #if ( $field.jsonTransientFlag )
     @JsonIgnore
 #end
+#if ( $field.required )
+    @Nonnull
+#else
+    @Nullable
+#end
     @Override
     public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
         return this.$field.name;
@@ -182,12 +184,17 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #if ( $field.jsonTransientFlag )
     @JsonIgnore
 #end
+#if ( $field.required )
+    @Nonnull
+#else
+    @Nullable
+#end
     @Override
     public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
 #if( $field.collectionType == "List" )
-        return this.$field.name == null ? null : Collections.unmodifiableList(this.$field.name);
+        return this.$field.name == null ? #if ( $field.required )Collections.emptyList() #else null #end: Collections.unmodifiableList(this.$field.name);
 #else
-        return this.$field.name == null ? null : Collections.unmodifiableSet(this.$field.name);
+        return this.$field.name == null ? #if ( $field.required )Collections.emptySet() #else null #end: Collections.unmodifiableSet(this.$field.name);
 #end
     }
 
@@ -196,10 +203,15 @@ public class $model.getClazzName() extends $model.getParentClazzName() implement
 #if ( $field.jsonTransientFlag )
     @JsonIgnore
 #end
+#if ( $field.required )
+    @Nonnull
+#else
+    @Nullable
+#end
     @Override
     public $field.getTypeAsString( false ) get$tool.upperCaseFirst( $field.name )() {
 #if( $field.mapType == "Map" )
-        return this.$field.name == null ? null : Collections.unmodifiableMap(this.$field.name);
+        return this.$field.name == null ? #if ( $field.required ) Collections.emptyMap() #else null #end: Collections.unmodifiableMap(this.$field.name);
 #else
         return this.$field.name == null ? null : Multimaps.unmodifiableMultimap(this.$field.name);
 #end

@@ -71,6 +71,7 @@ private static final long serialVersionUID = ${model.getSerialVersion()}L;
 		/**
 		 * @return the entry
 		 **/
+        @Nonnull
 		public ${clazzName} build() {
 			if (this.value == null) {
 				throw new IllegalStateException("The attribute value must not be null!");
@@ -89,12 +90,14 @@ private static final long serialVersionUID = ${model.getSerialVersion()}L;
 		this.value = builder.value;
 	}
 
+    @Nonnull
 	public ${model.getClazzName()} getValue() {
 		return this.value;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
+    @Nonnull
 	public <T extends IVOBuilder> T createBuilder() {
 		${clazzName}Builder builder = new ${clazzName}Builder();
 		builder.internalFillFromIVO(this);

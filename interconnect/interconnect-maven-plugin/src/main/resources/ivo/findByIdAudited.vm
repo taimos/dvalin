@@ -71,8 +71,8 @@ public class ${clazzName} extends $model.getParentClazzName() implements I${claz
          * @return the builder $field.filterable
          *
          **/
-        @Nullable
-        public E with$tool.upperCaseFirst( $field.name )($field.getTypeAsString(false) p$field.name) {
+        @Nonnull
+        public E with$tool.upperCaseFirst( $field.name )(@Nullable $field.getTypeAsString(false) p$field.name) {
             this.$field.name = p$field.name;
             return (E) this;
         }
@@ -95,6 +95,7 @@ public class ${clazzName} extends $model.getParentClazzName() implements I${claz
 		/**
 		 * @return the entry
 		 **/
+        @Nonnull
 		public ${clazzName} build() {
 			if (this.id == null) {
 				throw new IllegalStateException("The attribute id must not be null!");
