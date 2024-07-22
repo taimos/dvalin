@@ -62,7 +62,7 @@ class InvocationInstanceTest {
     }
 
     @Test
-    void testCalledMethod() throws Exception {
+    public void testCalledMethod() throws Exception {
         InvocationInstance ii = new InvocationInstance(UUID.randomUUID().toString(), "/");
         ii.setCalledMethod(InvocationInstanceTest.class.getMethod("testCalledMethod"));
 
