@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author thoeger
  */
-public class LinkTester {
+public class LinkTest {
 
     private static final LinkDAO dao = new LinkDAO();
     private static final LinkedDAO ldao = new LinkedDAO();
@@ -55,39 +55,39 @@ public class LinkTester {
 
             Field dao2Field = AbstractMongoDAO.class.getDeclaredField("dataAccess");
             dao2Field.setAccessible(true);
-            dao2Field.set(LinkTester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTester.dao)));
-            dao2Field.set(LinkTester.ldao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTester.ldao)));
+            dao2Field.set(LinkTest.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTest.dao)));
+            dao2Field.set(LinkTest.ldao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database, InjectionUtils.createDependencyDescriptor(dao2Field, LinkTest.ldao)));
 
 
             MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
             driver.disableTransaction();
             MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
-            LinkTester.dao.init();
-            LinkTester.ldao.init();
+            LinkTest.dao.init();
+            LinkTest.ldao.init();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void testLinks() {
+    void testLinks() {
         LinkedObject lo1 = new LinkedObject();
         lo1.setName("LinkedObject1");
-        lo1 = LinkTester.ldao.save(lo1);
+        lo1 = LinkTest.ldao.save(lo1);
 
         LinkedObject lo2 = new LinkedObject();
         lo2.setName("LinkedObject2");
-        lo2 = LinkTester.ldao.save(lo2);
+        lo2 = LinkTest.ldao.save(lo2);
 
         LinkObject lo = new LinkObject();
         lo.setName("LinkObject");
         lo.getLinks().add(lo1.asLink());
         lo.getLinks().add(lo2.asLink());
-        lo = LinkTester.dao.save(lo);
+        lo = LinkTest.dao.save(lo);
 
         Assertions.assertEquals(2, lo.getLinks().size());
 
-        List<LinkedObject> list = LinkTester.dlinkDAO.resolve(lo.getLinks(), LinkedObject.class);
+        List<LinkedObject> list = LinkTest.dlinkDAO.resolve(lo.getLinks(), LinkedObject.class);
         Assertions.assertEquals(2, list.size());
     }
 

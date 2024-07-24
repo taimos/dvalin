@@ -26,11 +26,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-@SuppressWarnings("javadoc")
-public final class VoidIVOTest {
+final class VoidIVOTest {
 
 	@Test
-	public void testICO() throws Exception {
+    void testICO() throws Exception {
 		final VoidIVO in = new VoidIVO.VoidIVOBuilder().build();
 		final String json = InterconnectMapper.toJson(in);
 		final InterconnectObject out = InterconnectMapper.fromJson(json);

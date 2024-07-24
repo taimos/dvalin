@@ -30,19 +30,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @ExtendWith(SpringDaemonExtension.class)
 @RunnerConfiguration(config = DvalinTestRunnerConfig.class, loggingConfigurer = Log4jLoggingConfigurer.class, svc = "AspectTest")
-@SuppressWarnings("javadoc")
-public class AspectTest {
+class AspectTest {
 
     @Autowired
     private TestBean bean;
 
     @Test
-    public void timeTest() throws Exception {
+    void timeTest() throws Exception {
         this.bean.doSomething();
     }
 
     @Test
-    public void timeTestWithDimension() throws Exception {
+    void timeTestWithDimension() throws Exception {
         this.bean.doSomethingWithDimensions();
     }
 }

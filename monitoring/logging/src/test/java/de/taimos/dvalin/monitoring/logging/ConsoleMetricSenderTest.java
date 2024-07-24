@@ -31,7 +31,7 @@ import de.taimos.daemon.log4j.Log4jLoggingConfigurer;
 import de.taimos.dvalin.monitoring.MetricInfo;
 import de.taimos.dvalin.monitoring.MetricUnit;
 
-public class ConsoleMetricSenderTest {
+class ConsoleMetricSenderTest {
 
     private ConsoleMetricSender sender;
     private Logger targetLogger;
@@ -48,7 +48,7 @@ public class ConsoleMetricSenderTest {
     }
 
     @Test
-    public void sendMetric() throws Exception {
+    void sendMetric() throws Exception {
         final String ns = "My/Namespace";
         final String metric = "Test metric";
         final MetricUnit unit = MetricUnit.Count;

@@ -43,7 +43,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@SuppressWarnings({"javadoc", "unused"})
+@SuppressWarnings({"unused"})
 public class DaemonScannerTest {
 
 	@BeforeAll

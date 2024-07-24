@@ -26,13 +26,13 @@ import org.junit.jupiter.api.Test;
 class SpringLockTest {
 
 	@Test
-	public void startContext() throws Exception {
+    void startContext() throws Exception {
 		TestAdapter adapter = new TestAdapter("good");
 		adapter.doStart();
 	}
 
 	@Test
-	public void testCtx() throws Exception {
+    void testCtx() throws Exception {
 		TestAdapter adapter = new TestAdapter("good");
 		adapter.doStart();
 		Assertions.assertNotNull(adapter.getContext());
@@ -41,7 +41,7 @@ class SpringLockTest {
 	}
 
 	@Test
-	public void testStopBad() {
+    void testStopBad() {
 		TestAdapter adapter = new TestAdapter("bad");
 		try {
 			adapter.doStart();
@@ -73,7 +73,7 @@ class SpringLockTest {
 	}
 
 	@Test
-	public void testDoubleStop() throws Exception {
+    void testDoubleStop() throws Exception {
 		TestAdapter adapter = new TestAdapter("good");
 		adapter.doStart();
 		Assertions.assertNotNull(adapter.getContext());

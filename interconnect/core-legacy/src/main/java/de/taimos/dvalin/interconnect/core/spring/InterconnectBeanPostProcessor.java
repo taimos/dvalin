@@ -99,6 +99,7 @@ public class InterconnectBeanPostProcessor implements InstantiationAwareBeanPost
     }
 
     @Override
+    @Deprecated
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
         InjectionMetadata metadata = this.buildResourceMetadata(bean.getClass());
         try {

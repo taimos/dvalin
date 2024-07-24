@@ -105,6 +105,7 @@ public class RemoteServiceBeanPostProcessor implements InstantiationAwareBeanPos
     }
 
     @Override
+    @Deprecated
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
         InjectionMetadata metadata = this.buildResourceMetadata(bean.getClass());
         try {
@@ -116,11 +117,11 @@ public class RemoteServiceBeanPostProcessor implements InstantiationAwareBeanPos
     }
 
     private InjectionMetadata buildResourceMetadata(Class<?> clazz) {
-        LinkedList<InjectionMetadata.InjectedElement> elements = new LinkedList<InjectionMetadata.InjectedElement>();
+        LinkedList<InjectionMetadata.InjectedElement> elements = new LinkedList<>();
         Class<?> targetClass = clazz;
 
         do {
-            LinkedList<InjectionMetadata.InjectedElement> currElements = new LinkedList<InjectionMetadata.InjectedElement>();
+            LinkedList<InjectionMetadata.InjectedElement> currElements = new LinkedList<>();
             for (Field field : targetClass.getDeclaredFields()) {
                 if (field.isAnnotationPresent(RemoteService.class)) {
                     if (Modifier.isStatic(field.getModifiers())) {

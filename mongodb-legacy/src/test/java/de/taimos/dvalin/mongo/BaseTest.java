@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
-public class Tester extends ABaseTest {
+public class BaseTest extends ABaseTest {
 
     private static final TestDAO dao = new TestDAO();
 
@@ -50,26 +50,26 @@ public class Tester extends ABaseTest {
         try {
             Field mongoField = AbstractMongoDAO.class.getDeclaredField("mongo");
             mongoField.setAccessible(true);
-            mongoField.set(Tester.dao, ABaseTest.oldMongo);
+            mongoField.set(BaseTest.dao, ABaseTest.oldMongo);
 
             Field jongoField = AbstractMongoDAO.class.getDeclaredField("jongo");
             jongoField.setAccessible(true);
-            jongoField.set(Tester.dao, ABaseTest.jongo);
+            jongoField.set(BaseTest.dao, ABaseTest.jongo);
 
             Field dbField = AbstractMongoDAO.class.getDeclaredField("db");
             dbField.setAccessible(true);
-            dbField.set(Tester.dao, ABaseTest.database);
+            dbField.set(BaseTest.dao, ABaseTest.database);
 
             Field daoField = AbstractMongoDAO.class.getDeclaredField("dataAccess");
             daoField.setAccessible(true);
-            daoField.set(Tester.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database,
-                InjectionUtils.createDependencyDescriptor(daoField, Tester.dao)));
+            daoField.set(BaseTest.dao, new MongoDBDataAccess<TestObject>(ABaseTest.jongo, ABaseTest.database,
+                InjectionUtils.createDependencyDescriptor(daoField, BaseTest.dao)));
 
             MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
             driver.disableTransaction();
             MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog")
                 .setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
-            Tester.dao.init();
+            BaseTest.dao.init();
         } catch (Exception e) {
             System.out.println("Initialization failure");
             e.printStackTrace();
@@ -84,13 +84,13 @@ public class Tester extends ABaseTest {
         Assertions.assertEquals("bar", o.getName());
         String id = o.getId();
 
-        TestObject save = Tester.dao.save(o);
+        TestObject save = BaseTest.dao.save(o);
         Assertions.assertEquals("bar", save.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), save.getValue());
         Assertions.assertNotNull(save.getId());
         Assertions.assertNotNull(save.getDt());
 
-        TestObject find = Tester.dao.findById(id);
+        TestObject find = BaseTest.dao.findById(id);
         Assertions.assertNotNull(find);
         Assertions.assertEquals("bar", find.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), find.getValue());
@@ -99,29 +99,29 @@ public class Tester extends ABaseTest {
 
         find.setName("blubb");
 
-        TestObject save2 = Tester.dao.save(find);
+        TestObject save2 = BaseTest.dao.save(find);
         Assertions.assertNotNull(save2);
         Assertions.assertEquals("blubb", save2.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), save2.getValue());
         Assertions.assertEquals(id, save2.getId());
         Assertions.assertNotNull(save2.getDt());
 
-        TestObject find3 = Tester.dao.findByName("blubb");
+        TestObject find3 = BaseTest.dao.findByName("blubb");
         Assertions.assertNotNull(find3);
         Assertions.assertEquals("blubb", find3.getName());
         ABaseTest.assertEquals(new BigDecimal("5"), find3.getValue());
         Assertions.assertEquals(id, find3.getId());
         Assertions.assertNotNull(find3.getDt());
 
-        long count = Tester.dao.dataAccess.count("{}");
+        long count = BaseTest.dao.dataAccess.count("{}");
         Assertions.assertEquals(1, count);
 
-        Tester.dao.delete(id);
+        BaseTest.dao.delete(id);
 
-        TestObject find2 = Tester.dao.findById(id);
+        TestObject find2 = BaseTest.dao.findById(id);
         Assertions.assertNull(find2);
 
-        count = Tester.dao.dataAccess.count("{}");
+        count = BaseTest.dao.dataAccess.count("{}");
         Assertions.assertEquals(0, count);
 
         ListIndexesIterable<Document> listIndexes = ABaseTest.mongo.getDatabase(ABaseTest.dbName)

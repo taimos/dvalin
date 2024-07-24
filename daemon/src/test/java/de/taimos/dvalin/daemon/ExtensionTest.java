@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author fzwirn
  */
 @ExtendWith(SpringDaemonExtension.class)
-public class ExtensionTest extends AbstractTest {
+class ExtensionTest extends AbstractTest {
 
     @Test
     void testDemo() {

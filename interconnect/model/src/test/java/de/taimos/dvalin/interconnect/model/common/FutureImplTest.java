@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-@SuppressWarnings("javadoc")
 final class FutureImplTest {
 
 	@Test
@@ -140,7 +139,7 @@ final class FutureImplTest {
 	}
 
 	@Test
-	public void testSetValueAfterCancel() {
+    void testSetValueAfterCancel() {
 		final FutureImpl<Integer> f = new FutureImpl<>();
 		Assertions.assertTrue(f.cancel(true));
 		Assertions.assertTrue(f.isCancelled());
@@ -149,7 +148,7 @@ final class FutureImplTest {
 	}
 
 	@Test
-	public void testSetExceptionAfterCancel() {
+    void testSetExceptionAfterCancel() {
 		final FutureImpl<Integer> f = new FutureImpl<>();
 		Assertions.assertTrue(f.cancel(true));
 		Assertions.assertTrue(f.isCancelled());

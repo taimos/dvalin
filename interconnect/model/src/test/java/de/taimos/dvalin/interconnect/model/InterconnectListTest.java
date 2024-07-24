@@ -28,11 +28,10 @@ import org.junit.jupiter.api.Test;
 
 import de.taimos.dvalin.interconnect.model.ivo.daemon.DaemonErrorIVO;
 
-@SuppressWarnings("javadoc")
-public final class InterconnectListTest {
+final class InterconnectListTest {
 
 	@Test
-	public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
 		final List<DaemonErrorIVO> elements = new ArrayList<>();
 		elements.add(new DaemonErrorIVO.DaemonErrorIVOBuilder().build());
 		elements.add(new DaemonErrorIVO.DaemonErrorIVOBuilder().build());

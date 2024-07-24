@@ -37,14 +37,14 @@ import java.util.Map.Entry;
 public class GenericConverter {
 
     /**
-     * @param <Destination>    the destination
-     * @param <Origin>         the origin
+     * @param <DESTINATION>    the destination
+     * @param <ORIGIN>         the origin
      * @param origin           object to be copied from
      * @param destinationClass destination for reference
      * @return new object copied from origin to destination
      */
     @SuppressWarnings("unchecked")
-    public static <Destination, Origin> Destination convert(Origin origin, Class<Destination> destinationClass) {
+    public static <DESTINATION, ORIGIN> DESTINATION convert(ORIGIN origin, Class<DESTINATION> destinationClass) {
         Class targetClazz = destinationClass;
         boolean usesBuilder = false;
 
@@ -59,10 +59,10 @@ public class GenericConverter {
         if(usesBuilder) {
             return GenericConverter.invokeBuilderMethod(result);
         }
-        return (Destination) result;
+        return (DESTINATION) result;
     }
 
-    private static <Destination, Origin> Destination copy(Origin origin, Destination target) {
+    private static <DESTINATION, ORIGIN> DESTINATION copy(ORIGIN origin, DESTINATION target) {
         HashMap<Field, Field> map = GenericConverter.prepareFieldMapping(origin, target);
         for(Entry<Field, Field> entry : map.entrySet()) {
             //we only want fields which are present in both objects
@@ -83,7 +83,7 @@ public class GenericConverter {
     private static Object getFieldValue(Object object, Field field) throws IllegalAccessException {
         try {
             String capitalizedFieldName = field.getName();
-            if((capitalizedFieldName != null) && (!capitalizedFieldName.isEmpty())) {
+            if(!capitalizedFieldName.isEmpty()) {
                 capitalizedFieldName = capitalizedFieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + capitalizedFieldName.substring(1);
             }
             Method getter = object.getClass().getMethod("get" + capitalizedFieldName);
@@ -97,10 +97,10 @@ public class GenericConverter {
     }
 
     @SuppressWarnings("unchecked")
-    private static <Destination> Destination invokeBuilderMethod(Object result) {
+    private static <DESTINATION> DESTINATION invokeBuilderMethod(Object result) {
         try {
             Method method = result.getClass().getMethod("build");
-            return (Destination) method.invoke(result);
+            return (DESTINATION) method.invoke(result);
         } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("No build method found");
         }
@@ -114,7 +114,7 @@ public class GenericConverter {
         }
     }
 
-    private static <Destination, Origin> HashMap<Field, Field> prepareFieldMapping(Origin origin, Destination destination) {
+    private static <DESTINATION, ORIGIN> HashMap<Field, Field> prepareFieldMapping(ORIGIN origin, DESTINATION destination) {
         HashMap<String, Field> createFieldMap = GenericConverter.createFieldMap(origin);
         HashMap<String, Field> createFieldMap2 = GenericConverter.createFieldMap(destination);
 
