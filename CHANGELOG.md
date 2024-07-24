@@ -31,6 +31,7 @@
 * Breaking: Removed Junit 5 Vintage engine and Junit 4 (can be added in projects that need it)
 * Fixed vulnerabilities: CVE-2023-52428(nimbus-jose-jwt), CVE-2024-29857,CVE-2024-30171,CVE-2024-30172,CVE-2024-34447 (bouncycastle), CVE-2024-28752 (Apache CXF)
 * Corrected the use of @Nullable and @Nonnull annotations on created ivos and events, especially on the generated builders 
+* Add support for h2 embedded database
     
 # 1.35
 * Update dependencies
