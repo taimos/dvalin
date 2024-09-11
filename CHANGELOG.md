@@ -1,24 +1,24 @@
 # current master
 * Update dependencies
-    * Spring 5.3.36
-    * AWS 1.12.739
-    * Jetty 9.4.53.v20231009
+    * Spring 5.3.39
+    * AWS 1.12.772
+    * Jetty 9.4.56.v20240826
     * Joda-Time 2.12.7
     * Log4J 2.23.1
     * ActiveMQ 5.16.7
-    * Apache CXF 3.5.8
+    * Apache CXF 3.5.9
     * JSON Small and Fast Parser 2.5.1
-    * Jackson 2.17.1
-    * Guava 33.2.1-jre
+    * Jackson 2.17.2
+    * Guava 33.3.0-jre
     * Hazelcast 5.3.7
     * Swagger 2.2.22
     * Liquibase 4.28.0
-    * Mongo Java Driver 4.11.2
-    * Mongock 5.4.2
+    * Mongo Java Driver 4.11.4
+    * Mongock 5.4.4
     * Bouncycastle Provider 1.78.1
-    * Nimbus JOSE+JWT 9.40
+    * Nimbus JOSE+JWT 9.41
     * Commons Codec 1.17.0
-    * Junit 5.10.2
+    * Junit 5.10.3
     * Bson 2.15.1
     * Concordion 4.0.1
 * Removed (unused) cglib from  dvalin-jaxrs
@@ -29,7 +29,7 @@
     * Complete overhaul for entity handling
     * The old functionality is still available with the mongodb-legacy library
 * Breaking: Removed Junit 5 Vintage engine and Junit 4 (can be added in projects that need it)
-* Fixed vulnerabilities: CVE-2023-52428(nimbus-jose-jwt), CVE-2024-29857,CVE-2024-30171,CVE-2024-30172,CVE-2024-34447 (bouncycastle), CVE-2024-28752 (Apache CXF)
+* Fixed vulnerabilities: CVE-2023-52428(nimbus-jose-jwt), CVE-2024-29857,CVE-2024-30171,CVE-2024-30172,CVE-2024-34447 (bouncycastle), CVE-2024-28752,CVE-2024-29736 (Apache CXF), CVE-2024-38808 (Spring Framework)
 * Corrected the use of @Nullable and @Nonnull annotations on created ivos and events, especially on the generated builders 
 * Add support for h2 embedded database
     
