@@ -52,7 +52,7 @@
     </contributors>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>5.3.39</org.springframework.version>
+        <org.springframework.version>6.1.14</org.springframework.version>
         <jackson.version>2.17.2</jackson.version>
         <joda.time.version>2.12.7</joda.time.version>
         <slf4j.version>1.7.36</slf4j.version>
