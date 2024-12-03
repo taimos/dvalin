@@ -32,6 +32,7 @@
 * Fixed vulnerabilities: CVE-2023-52428(nimbus-jose-jwt), CVE-2024-29857,CVE-2024-30171,CVE-2024-30172,CVE-2024-34447 (bouncycastle), CVE-2024-28752,CVE-2024-29736 (Apache CXF), CVE-2024-38808 (Spring Framework)
 * Corrected the use of @Nullable and @Nonnull annotations on created ivos and events, especially on the generated builders 
 * Add support for h2 embedded database
+* Fix conflicting jetty ContextHandlers for static files and web frontend
     
 # 1.35
 * Update dependencies
