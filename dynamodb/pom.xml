@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>de.taimos</groupId>
 		<artifactId>dvalin-parent</artifactId>
-		<version>1.36</version>
+		<version>1.37-SNAPSHOT</version>
 	</parent>
 	<artifactId>dvalin-dynamodb</artifactId>
 	<name>DynamoDB support for dvalin</name>
