@@ -5,6 +5,8 @@
     <version>1.36</version>
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
+    <description>Taimos Microservices Framework</description>
+    <url>https://github.com/taimos/dvalin</url>
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>Taimos GmbH</name>
