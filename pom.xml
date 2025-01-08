@@ -5,6 +5,8 @@
     <version>1.37-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
+    <description>Taimos Microservices Framework</description>
+    <url>https://github.com/taimos/dvalin</url>
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>Taimos GmbH</name>
@@ -523,7 +525,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>1.6.13</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>sonatype-nexus-staging</serverId>
