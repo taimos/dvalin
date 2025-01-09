@@ -3,7 +3,7 @@ package de.taimos.dvalin.interconnect.core.daemon.model;
 import com.google.common.base.Preconditions;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
-import de.taimos.dvalin.jms.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
 import de.taimos.dvalin.jms.model.JmsContext;
 import de.taimos.dvalin.jms.model.JmsTarget;
 

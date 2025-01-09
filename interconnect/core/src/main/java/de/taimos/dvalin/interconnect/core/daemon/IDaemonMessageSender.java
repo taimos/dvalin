@@ -22,7 +22,7 @@ package de.taimos.dvalin.interconnect.core.daemon;
 
 import de.taimos.dvalin.interconnect.core.daemon.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
-import de.taimos.dvalin.jms.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 
 import java.util.concurrent.Future;
 

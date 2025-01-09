@@ -2,7 +2,7 @@ package de.taimos.dvalin.jms.activemq;
 
 import de.taimos.dvalin.jms.crypto.ACryptoService;
 import de.taimos.dvalin.jms.crypto.JmsMessageCryptoUtil;
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.JMSException;

@@ -20,8 +20,8 @@ package de.taimos.dvalin.jms;
  * #L%
  */
 
-import de.taimos.dvalin.jms.exceptions.InfrastructureException;
-import de.taimos.dvalin.jms.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
 import de.taimos.dvalin.jms.model.JmsContext;
 import de.taimos.dvalin.jms.model.JmsResponseContext;
 

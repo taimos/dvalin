@@ -24,7 +24,7 @@ import de.taimos.dvalin.interconnect.core.daemon.IDaemonMessageSender;
 import de.taimos.dvalin.interconnect.core.daemon.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.core.daemon.util.DaemonExceptionMapper;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
-import de.taimos.dvalin.jms.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -8,10 +8,10 @@ import de.taimos.dvalin.jms.exceptions.CommunicationFailureException;
 import de.taimos.dvalin.jms.exceptions.CommunicationFailureException.CommunicationError;
 import de.taimos.dvalin.jms.exceptions.CreationException;
 import de.taimos.dvalin.jms.exceptions.CreationException.Source;
-import de.taimos.dvalin.jms.exceptions.InfrastructureException;
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
-import de.taimos.dvalin.jms.exceptions.SerializationException;
-import de.taimos.dvalin.jms.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 
 /**
  * Copyright 2024 Cinovo AG<br>

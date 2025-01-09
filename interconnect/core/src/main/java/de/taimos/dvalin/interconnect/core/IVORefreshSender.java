@@ -25,7 +25,7 @@ package de.taimos.dvalin.interconnect.core;
 
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.jms.IJmsConnector;
-import de.taimos.dvalin.jms.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 
 import java.io.Serializable;
 

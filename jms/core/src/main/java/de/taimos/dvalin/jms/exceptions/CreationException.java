@@ -1,5 +1,7 @@
 package de.taimos.dvalin.jms.exceptions;
 
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+
 /**
  * Copyright 2024 Cinovo AG<br>
  * <br>

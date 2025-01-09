@@ -25,7 +25,7 @@ import de.taimos.dvalin.interconnect.core.daemon.model.InterconnectContext.Inter
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner.DaemonMethod;
-import de.taimos.dvalin.jms.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
 import de.taimos.dvalin.jms.model.JmsResponseContext;
 import de.taimos.dvalin.jms.model.JmsTarget;
 

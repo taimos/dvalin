@@ -1,4 +1,7 @@
 # current master
+* Major bug in interconnect core: DaemonScanner causes IllegalArgumentException due to wrong path of TimeoutException
+
+# 1.36
 * Update dependencies
     * Spring 5.3.39
     * AWS 1.12.772
