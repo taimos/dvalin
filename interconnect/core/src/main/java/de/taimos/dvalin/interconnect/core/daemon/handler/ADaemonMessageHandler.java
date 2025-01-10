@@ -41,7 +41,7 @@ import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner.DaemonMethod;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
 import de.taimos.dvalin.jms.crypto.ICryptoService;
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
 import org.slf4j.Logger;
 
 import javax.jms.JMSException;

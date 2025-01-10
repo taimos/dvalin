@@ -25,7 +25,7 @@ import de.taimos.dvalin.interconnect.core.daemon.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.core.daemon.util.DaemonMethodInvocationHandler;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.interconnect.model.service.IDaemon;
-import de.taimos.dvalin.jms.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 
 /**
  * Copyright 2015 Taimos GmbH<br>

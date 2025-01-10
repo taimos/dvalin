@@ -9,7 +9,7 @@ import de.taimos.dvalin.interconnect.model.service.Daemon;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner.DaemonMethod;
 import de.taimos.dvalin.interconnect.model.service.IDaemon;
-import de.taimos.dvalin.jms.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
 import de.taimos.dvalin.jms.model.JmsTarget;
 
 import java.lang.reflect.InvocationHandler;

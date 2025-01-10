@@ -20,7 +20,7 @@ package de.taimos.dvalin.jms.crypto;
  * #L%
  */
 
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

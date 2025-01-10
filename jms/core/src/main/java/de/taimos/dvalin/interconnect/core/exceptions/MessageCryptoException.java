@@ -1,4 +1,4 @@
-package de.taimos.dvalin.jms.exceptions;
+package de.taimos.dvalin.interconnect.core.exceptions;
 
 /*
  * #%L

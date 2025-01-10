@@ -1,6 +1,6 @@
 package de.taimos.dvalin.jms.crypto;
 
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
 
 import javax.jms.JMSException;
 import javax.jms.Message;

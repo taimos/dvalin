@@ -24,7 +24,7 @@ import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.jms.IJmsConnector;
-import de.taimos.dvalin.jms.exceptions.TimeoutException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.Serializable;

@@ -23,7 +23,7 @@ package de.taimos.dvalin.jms.crypto;
  * #L%
  */
 
-import de.taimos.dvalin.jms.exceptions.MessageCryptoException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
