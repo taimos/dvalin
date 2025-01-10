@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.taimos</groupId>
     <artifactId>dvalin-parent</artifactId>
-    <version>1.37</version>
+    <version>1.38-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
     <description>Taimos Microservices Framework</description>
@@ -78,7 +78,7 @@
         <connection>scm:git:https://github.com/taimos/dvalin.git</connection>
         <developerConnection>scm:git:https://github.com/taimos/dvalin.git</developerConnection>
         <url>scm:git:https://github.com/taimos/dvalin.git</url>
-        <tag>v1.37</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>GitHub</system>
