@@ -20,6 +20,7 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
@@ -27,6 +28,7 @@ import de.taimos.dvalin.jms.IJmsConnector;
 import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import org.springframework.core.annotation.AnnotationUtils;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -76,6 +78,11 @@ public class EventSender extends AToTopicSender {
             this.logger.error("The domainname for the event {} is empty", object.getClass().getSimpleName());
             return;
         }
-        super.send(object, this.virtualTopicPrefix + "." + domainAnnotation.value());
+        try {
+            // mapping to text message or elsewise the objects have to be trusted
+            super.send(InterconnectMapper.toJson(object), this.virtualTopicPrefix + "." + domainAnnotation.value());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

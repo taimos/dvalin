@@ -1,4 +1,7 @@
 # current master
+* Bugfix: Serialize EventSender messages to json
+
+# 1.37
 * Major bug in interconnect core: DaemonScanner causes IllegalArgumentException due to wrong path of TimeoutException
 
 # 1.36
