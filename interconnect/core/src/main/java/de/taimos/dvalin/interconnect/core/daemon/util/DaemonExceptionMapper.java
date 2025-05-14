@@ -31,9 +31,9 @@ public class DaemonExceptionMapper {
      */
     public static void mapAndThrow(Exception e) throws DaemonError, TimeoutException {
         Exception exception = DaemonExceptionMapper.map(e);
-        if (e instanceof DaemonError) {
+        if (exception instanceof DaemonError) {
             throw (DaemonError) exception;
-        } else if (e instanceof TimeoutException) {
+        } else if (exception instanceof TimeoutException) {
             throw (TimeoutException) exception;
         } else {
             throw new UnsupportedOperationException("Failed to map exception", e);
