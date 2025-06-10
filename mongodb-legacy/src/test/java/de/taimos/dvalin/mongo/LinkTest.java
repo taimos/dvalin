@@ -61,7 +61,7 @@ public class LinkTest {
 
             MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
             driver.disableTransaction();
-            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
+            MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog").setTransactional(false).setEnabled(true).buildRunner().execute();
             LinkTest.dao.init();
             LinkTest.ldao.init();
         } catch (Exception e) {

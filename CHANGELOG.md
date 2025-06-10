@@ -1,4 +1,22 @@
 # current master
+* Update dependencies
+    * AWS 1.12.772
+    * Apache CXF 3.5.11
+    * Bouncycastle Provider 1.81
+    * Guava 33.4.2-jre
+    * Jetty 9.4.57.v20241219
+    * Joda-Time 2.14.0
+    * JSON Small and Fast Parser 2.5.2
+    * Junit 5.11.4
+    * Liquibase 4.32.0
+    * Log4J 2.24.3
+    * Mongo Java Driver 4.11.5
+    * Mongock 5.5.1
+    * Nimbus JOSE+JWT 10.3
+    * Swagger 2.2.31
+
+
+# 1.37
 * Major bug in interconnect core: DaemonScanner causes IllegalArgumentException due to wrong path of TimeoutException
 
 # 1.36
