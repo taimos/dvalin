@@ -1,7 +1,8 @@
 # current master
 * Update dependencies
-    * AWS 1.12.772
+    * ActiveMQ 5.16.8
     * Apache CXF 3.5.11
+    * AWS 1.12.772
     * Bouncycastle Provider 1.81
     * Guava 33.4.2-jre
     * Jetty 9.4.57.v20241219
@@ -14,7 +15,8 @@
     * Mongock 5.5.1
     * Nimbus JOSE+JWT 10.3
     * Swagger 2.2.31
-
+* Fixing DaemonExceptionMapper 
+* Fixed vulnerabilities: CVE-2024-13009(Jetty), CVE-2025-23184(Apache CXF), CVE-2024-57699 (Json-smart),CVE-2025-27533 (ActiveMQ)
 
 # 1.37
 * Major bug in interconnect core: DaemonScanner causes IllegalArgumentException due to wrong path of TimeoutException
