@@ -2,19 +2,20 @@
 * Update dependencies
     * ActiveMQ 5.16.8
     * Apache CXF 3.5.11
-    * AWS 1.12.772
+    * AWS 1.12.793
     * Bouncycastle Provider 1.81
     * Guava 33.4.2-jre
-    * Jetty 9.4.57.v20241219
+    * Jetty 9.4.58.v20250814
     * Joda-Time 2.14.0
     * JSON Small and Fast Parser 2.5.2
     * Junit 5.11.4
     * Liquibase 4.32.0
-    * Log4J 2.24.3
+    * Log4J 2.25.2
     * Mongo Java Driver 4.11.5
     * Mongock 5.5.1
     * Nimbus JOSE+JWT 10.3
-    * Swagger 2.2.31
+    * Swagger 2.2.40
+    * Velocity Engine 2.4.1
 * Fixing DaemonExceptionMapper 
 * Fixed vulnerabilities: CVE-2024-13009(Jetty), CVE-2025-23184(Apache CXF), CVE-2024-57699 (Json-smart),CVE-2025-27533 (ActiveMQ)
 
