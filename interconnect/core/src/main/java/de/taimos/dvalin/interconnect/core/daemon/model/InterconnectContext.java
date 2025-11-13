@@ -1,9 +1,9 @@
 package de.taimos.dvalin.interconnect.core.daemon.model;
 
 import com.google.common.base.Preconditions;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.InterconnectObject;
-import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
 import de.taimos.dvalin.jms.model.JmsContext;
 import de.taimos.dvalin.jms.model.JmsTarget;
 
@@ -150,13 +150,13 @@ public class InterconnectContext extends JmsContext {
             return new InterconnectContextBuilder(this)//
                 .withDestination(this.getReplyToDestination()) //
                 .withRequestICO(responseICO) //
-                .withIdempotent(false) //
+                .withIdempotent(true) //
                 .withTarget(JmsTarget.DESTINATION).build();
         }
         return new InterconnectContextBuilder(this)//
             .withDestinationName(this.getReplyToQueueName()) //
             .withRequestICO(responseICO) //
-            .withIdempotent(false) //
+            .withIdempotent(true) //
             .withTarget(JmsTarget.QUEUE).build();
     }
 }
