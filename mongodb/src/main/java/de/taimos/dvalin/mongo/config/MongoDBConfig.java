@@ -96,7 +96,7 @@ public class MongoDBConfig {
         RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder() //
             .setDriver(this.createMongoSyncDriver(mongoClient)) //
             .setEnabled(this.mongockEnabled) //
-            .setTransactionEnabled(false) //
+            .setTransactional(false) //
             .addMigrationScanPackage(this.basePackage)
             .setLegacyMigration(this.mongockLegacyMigrationEnabled ? this.getLegacyMigration() : null) //
             .addDependency(mongoDatabase);
