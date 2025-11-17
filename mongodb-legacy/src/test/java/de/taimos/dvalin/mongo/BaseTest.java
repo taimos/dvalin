@@ -68,7 +68,7 @@ public class BaseTest extends ABaseTest {
             MongoSync4Driver driver = MongoSync4Driver.withDefaultLock(ABaseTest.mongo, ABaseTest.dbName);
             driver.disableTransaction();
             MongockStandalone.builder().setDriver(driver).addMigrationScanPackage("de.taimos.dvalin.mongo.changelog")
-                .setTransactionEnabled(false).setEnabled(true).buildRunner().execute();
+                .setTransactional(false).setEnabled(true).buildRunner().execute();
             BaseTest.dao.init();
         } catch (Exception e) {
             System.out.println("Initialization failure");

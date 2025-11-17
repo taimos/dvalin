@@ -65,7 +65,7 @@ public class MongoDBConfig {
         driver.setReadPreference(ReadPreference.primary());
         driver.disableTransaction();
 
-        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver).setTransactionEnabled(false);
+        RunnerStandaloneBuilder runnerStandaloneBuilder = MongockStandalone.builder().setDriver(driver).setTransactional(false);
         if (this.basePackage == null || this.basePackage.isEmpty()){
             throw new RuntimeException("LegacyMigration basePackage must be set!");
         }
