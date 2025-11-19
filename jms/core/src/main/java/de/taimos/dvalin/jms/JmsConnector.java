@@ -1,13 +1,13 @@
 package de.taimos.dvalin.jms;
 
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import de.taimos.dvalin.jms.crypto.ICryptoService;
 import de.taimos.dvalin.jms.exceptions.CommunicationFailureException;
 import de.taimos.dvalin.jms.exceptions.CommunicationFailureException.CommunicationError;
 import de.taimos.dvalin.jms.exceptions.CreationException;
 import de.taimos.dvalin.jms.exceptions.CreationException.Source;
-import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
-import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
-import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import de.taimos.dvalin.jms.model.JmsContext;
 import de.taimos.dvalin.jms.model.JmsResponseContext;
 import org.slf4j.Logger;
@@ -56,11 +56,11 @@ public class JmsConnector implements IJmsConnector {
     @Override
     public void send(@Nonnull JmsContext context) throws SerializationException, InfrastructureException {
         try (Connection connection = this.connectionFactory.createConnection()) {
+            connection.start();
             try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
                 final Destination destination = JmsConnector.createDestination(session, context);
                 Message txt = this.createTextMessageForDestination(session, context, null);
-                JmsConnector.sendMessage(session, destination, txt,
-                    context.getTimeToLive(), context.getPriority());
+                JmsConnector.sendMessage(session, destination, txt, context.getTimeToLive(), context.getPriority());
             } catch (final JMSException e) {
                 throw new CreationException(Source.SESSION, e);
             }
@@ -72,12 +72,10 @@ public class JmsConnector implements IJmsConnector {
     @Override
     public JmsResponseContext<? extends Message> receive(@Nonnull JmsContext context) throws InfrastructureException, SerializationException {
         try (Connection connection = this.connectionFactory.createConnection()) {
+            connection.start();
             try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
-                try (MessageConsumer consumer = session.createConsumer(JmsConnector.createDestination(session, context),
-                    context.getSelector())) {
-                    connection.start();
-                    Message message = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(),
-                        context.isSecure());
+                try (MessageConsumer consumer = session.createConsumer(JmsConnector.createDestination(session, context), context.getSelector())) {
+                    Message message = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(), context.isSecure());
                     return new JmsResponseContext<>(message);
                 } catch (final JMSException e) {
                     throw new CreationException(Source.CONSUMER, e);
@@ -93,6 +91,7 @@ public class JmsConnector implements IJmsConnector {
     @Override
     public JmsResponseContext<? extends Message> request(@Nonnull JmsContext context) throws SerializationException, InfrastructureException {
         try (Connection connection = this.connectionFactory.createConnection()) {
+            connection.start();
             try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
                 try {
                     final TemporaryQueue temporaryQueue = session.createTemporaryQueue();
@@ -100,11 +99,8 @@ public class JmsConnector implements IJmsConnector {
                     final Message txt = this.createTextMessageForDestination(session, context, temporaryQueue);
 
                     try (MessageConsumer consumer = session.createConsumer(temporaryQueue, context.getSelector())) {
-                        connection.start();
-                        JmsConnector.sendMessage(session, requestQueue, txt,
-                            context.getTimeToLive(), context.getPriority());
-                        Message response = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(),
-                            context.isSecure());
+                        JmsConnector.sendMessage(session, requestQueue, txt, context.getTimeToLive(), context.getPriority());
+                        Message response = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(), context.isSecure());
                         return new JmsResponseContext<>(response);
                     } catch (final JMSException e) {
                         throw new CreationException(Source.CONSUMER);
@@ -135,14 +131,13 @@ public class JmsConnector implements IJmsConnector {
     @Override
     public List<Message> receiveBulkFromDestination(JmsContext context, final int maxMessages) throws InfrastructureException, SerializationException {
         try (Connection connection = this.connectionFactory.createConnection()) {
+            connection.start();
             try (Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE)) {
                 Destination destination = JmsConnector.createDestination(session, context);
                 List<Message> messages = new ArrayList<>();
                 try (MessageConsumer consumer = session.createConsumer(destination, context.getSelector())) {
-                    connection.start();
                     while (messages.size() < maxMessages) {
-                        Message message = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(),
-                            context.isSecure());
+                        Message message = this.syncReceiveSingleMessage(consumer, context.getReceiveTimeout(), context.isSecure());
                         messages.add(message);
                     }
                 } catch (final JMSException e) {

@@ -149,17 +149,18 @@ public abstract class ADaemonMessageHandler implements IDaemonMessageHandler {
 
     private void handleWithReply(IDaemonHandler handler, InterconnectResponseContext context) throws Exception {
         try {
-            final InterconnectObject responseIco = this.handleRequest(handler, context.getCreateResponseMethod(),
-                context.getReceivedContext().getRequestIco());
+            final InterconnectObject responseIco = this.handleRequest(handler, context.getCreateResponseMethod(), context.getReceivedContext().getRequestIco());
             context.setResponseICO(responseIco);
             if (this.duration(context) == HandlingDurationType.TIMEOUT) {
                 return;
             }
             this.reply(context);
         } catch (final DaemonError e) {
-            this.getLogger().debug("DaemonError for " + context.getCreateResponseMethod().getMethod().getName() + "(" +
-                                   context.getReceivedContext().getIcoClass().getSimpleName() + ")" + " with " +
-                                   de.taimos.dvalin.interconnect.model.InterconnectContext.getContext(), e);
+            if (e.getNumber().get() < 0) {
+                this.getLogger().error("DaemonError for " + context.getCreateResponseMethod().getMethod().getName() + "(" + context.getReceivedContext().getIcoClass().getSimpleName() + ")" + " with " + de.taimos.dvalin.interconnect.model.InterconnectContext.getContext(), e);
+            } else {
+                this.getLogger().debug("DaemonError for " + context.getCreateResponseMethod().getMethod().getName() + "(" + context.getReceivedContext().getIcoClass().getSimpleName() + ")" + " with " + de.taimos.dvalin.interconnect.model.InterconnectContext.getContext(), e);
+            }
             this.sendErrorResponse(e, context);
         }
     }
@@ -175,13 +176,9 @@ public abstract class ADaemonMessageHandler implements IDaemonMessageHandler {
     }
 
     private void updateThreadContext(InterconnectResponseContext context) throws Exception {
-        de.taimos.dvalin.interconnect.model.InterconnectContext.setUuid(
-            ADaemonMessageHandler.getUuid(context.getReceivedMessage(),
-                context.getReceivedContext().getIcoClass()));
-        de.taimos.dvalin.interconnect.model.InterconnectContext.setDeliveryCount(
-            this.getDeliveryCount(context.getReceivedMessage()));
-        de.taimos.dvalin.interconnect.model.InterconnectContext.setRedelivered(
-            context.getReceivedMessage().getJMSRedelivered());
+        de.taimos.dvalin.interconnect.model.InterconnectContext.setUuid(ADaemonMessageHandler.getUuid(context.getReceivedMessage(), context.getReceivedContext().getIcoClass()));
+        de.taimos.dvalin.interconnect.model.InterconnectContext.setDeliveryCount(this.getDeliveryCount(context.getReceivedMessage()));
+        de.taimos.dvalin.interconnect.model.InterconnectContext.setRedelivered(context.getReceivedMessage().getJMSRedelivered());
         Class<? extends IVO> ivoClass;
         if (context.getReceivedContext() instanceof IVO) {
             ivoClass = ADaemonMessageHandler.uncheckedCast(context.getResponseICO());
@@ -192,10 +189,7 @@ public abstract class ADaemonMessageHandler implements IDaemonMessageHandler {
     private static DaemonMethod getDaemonMethod(RegistryEntry registryEntry, InterconnectResponseContext context) throws Exception {
         final DaemonMethod method = registryEntry.getMethod();
         if (method.isSecure() != context.getReceivedContext().isSecure()) {
-            throw new Exception(
-                "Insecure call (is " + context.getReceivedContext().isSecure() + " should be " + method.isSecure() +
-                ") for " + context.getReceivedContext().getIcoClass().getSimpleName() + " from " +
-                context.getReceivedMessage().getJMSReplyTo());
+            throw new Exception("Insecure call (is " + context.getReceivedContext().isSecure() + " should be " + method.isSecure() + ") for " + context.getReceivedContext().getIcoClass().getSimpleName() + " from " + context.getReceivedMessage().getJMSReplyTo());
         }
         return method;
     }
@@ -203,9 +197,7 @@ public abstract class ADaemonMessageHandler implements IDaemonMessageHandler {
     private RegistryEntry getRegistryEntry(InterconnectResponseContext context) throws Exception {
         final RegistryEntry registryEntry = this.registry.get(context.getReceivedContext().getIcoClass());
         if (registryEntry == null) {
-            throw new Exception(
-                "No registered method found for " + context.getReceivedContext().getIcoClass().getSimpleName() +
-                " from " + context.getReceivedMessage().getJMSReplyTo());
+            throw new Exception("No registered method found for " + context.getReceivedContext().getIcoClass().getSimpleName() + " from " + context.getReceivedMessage().getJMSReplyTo());
         }
         return registryEntry;
     }
@@ -241,8 +233,7 @@ public abstract class ADaemonMessageHandler implements IDaemonMessageHandler {
                 .append("(").append(context.getReceivedContext().getIcoClass().getSimpleName()).append(")");
             if (context.getReceivedContext().getRequestIco() instanceof IPageable) {
                 sbInvokeLog //
-                    .append(" at Page ").append(((IPageable) context.getReceivedContext().getRequestIco()).getOffset())
-                    .append(";").append(((IPageable) context.getReceivedContext().getRequestIco()).getLimit());
+                    .append(" at Page ").append(((IPageable) context.getReceivedContext().getRequestIco()).getOffset()).append(";").append(((IPageable) context.getReceivedContext().getRequestIco()).getLimit());
             }
             sbInvokeLog.append(" with ").append(de.taimos.dvalin.interconnect.model.InterconnectContext.getContext());
             this.getLogger().info(sbInvokeLog.toString());
@@ -267,15 +258,12 @@ public abstract class ADaemonMessageHandler implements IDaemonMessageHandler {
     private static UUID getUuid(Message message, Class<? extends InterconnectObject> icoClass) throws Exception {
         final String requestUUID = message.getStringProperty(InterconnectContext.HEADER_REQUEST_UUID);
         if (requestUUID == null) {
-            throw new Exception("No request UUID found in message with " + icoClass.getSimpleName() + " from " +
-                                message.getJMSReplyTo());
+            throw new Exception("No request UUID found in message with " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
         }
         try {
             return UUID.fromString(requestUUID);
         } catch (final IllegalArgumentException e) {
-            throw new Exception(
-                "No valid request UUID " + requestUUID + " message with " + icoClass.getSimpleName() + " from " +
-                message.getJMSReplyTo());
+            throw new Exception("No valid request UUID " + requestUUID + " message with " + icoClass.getSimpleName() + " from " + message.getJMSReplyTo());
         }
     }
 
@@ -314,9 +302,7 @@ public abstract class ADaemonMessageHandler implements IDaemonMessageHandler {
                 throw new IdemponentRetryException(targetException);
             }
 
-            this.getLogger().error(
-                "Exception in non-idempotent " + method.getMethod().getName() + "(" + ico.getClass().getSimpleName() +
-                ")" + " with " + de.taimos.dvalin.interconnect.model.InterconnectContext.getContext(), e);
+            this.getLogger().error("Exception in non-idempotent " + method.getMethod().getName() + "(" + ico.getClass().getSimpleName() + ")" + " with " + de.taimos.dvalin.interconnect.model.InterconnectContext.getContext(), e);
             throw new DaemonError(FrameworkErrors.FRAMEWORK_ERROR, targetException);
         } catch (final Exception e) {
             throw new RuntimeException(e);
