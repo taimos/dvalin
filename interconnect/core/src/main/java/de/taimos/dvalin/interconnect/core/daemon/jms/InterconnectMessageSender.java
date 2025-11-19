@@ -26,6 +26,9 @@ import de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkErrors.Gene
 import de.taimos.dvalin.interconnect.core.daemon.exceptions.UnexpectedTypeException;
 import de.taimos.dvalin.interconnect.core.daemon.model.InterconnectContext;
 import de.taimos.dvalin.interconnect.core.daemon.util.DaemonExceptionMapper;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import de.taimos.dvalin.interconnect.model.FutureImpl;
 import de.taimos.dvalin.interconnect.model.InterconnectList;
 import de.taimos.dvalin.interconnect.model.InterconnectMapper;
@@ -35,11 +38,10 @@ import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
 import de.taimos.dvalin.interconnect.model.service.DaemonScanner;
 import de.taimos.dvalin.jms.IJmsConnector;
+import de.taimos.dvalin.jms.exceptions.CommunicationFailureException;
+import de.taimos.dvalin.jms.exceptions.CommunicationFailureException.CommunicationError;
 import de.taimos.dvalin.jms.exceptions.CreationException;
 import de.taimos.dvalin.jms.exceptions.CreationException.Source;
-import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
-import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
-import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import de.taimos.dvalin.jms.model.JmsResponseContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,13 +102,26 @@ public final class InterconnectMessageSender implements IDaemonMessageSender {
 
     private boolean checkForRetry(InterconnectContext so, InfrastructureException e) throws TimeoutException {
         if (!so.isIdempotent()) {
+            this.logger.warn("No message retry due to missing idempotency.");
             return false;
         }
-        if (!(e instanceof CreationException || e instanceof TimeoutException)) {
-            return false;
+
+        if (e instanceof TimeoutException) {
+            return true;
         }
-        return !(e instanceof CreationException) ||
-               Source.DESTINATION.equals(((CreationException) e).getExceptionSource());
+
+        if (e instanceof CreationException) {
+            return Source.DESTINATION.equals(((CreationException) e).getExceptionSource());
+        }
+
+        if (e instanceof CommunicationFailureException) {
+            if (CommunicationError.SEND.equals(((CommunicationFailureException) e).getCommunicationError())) {
+                this.logger.warn("Retrying message send because of: {}", FrameworkErrors.SEND_ERROR);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void sendRequestRetry(InterconnectContext so) throws DaemonError, TimeoutException {
@@ -162,10 +177,12 @@ public final class InterconnectMessageSender implements IDaemonMessageSender {
         try {
             responseObject = this.jmsConnector.request(requestObject);
         } catch (SerializationException e) {
-            throw new RuntimeException(e);
+            DaemonExceptionMapper.mapAndThrow(e);
         } catch (InfrastructureException e) {
             if (this.checkForRetry(requestObject, e)) {
                 responseObject = this.sendSyncRequestRetry(requestObject);
+            } else {
+                DaemonExceptionMapper.mapAndThrow(e);
             }
         }
 

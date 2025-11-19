@@ -2,16 +2,16 @@ package de.taimos.dvalin.interconnect.core.daemon.util;
 
 import de.taimos.dvalin.interconnect.core.daemon.exceptions.FrameworkErrors;
 import de.taimos.dvalin.interconnect.core.daemon.exceptions.UnexpectedTypeException;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.interconnect.model.service.DaemonErrorNumber;
 import de.taimos.dvalin.jms.exceptions.CommunicationFailureException;
 import de.taimos.dvalin.jms.exceptions.CommunicationFailureException.CommunicationError;
 import de.taimos.dvalin.jms.exceptions.CreationException;
 import de.taimos.dvalin.jms.exceptions.CreationException.Source;
-import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
-import de.taimos.dvalin.interconnect.core.exceptions.MessageCryptoException;
-import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
-import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
 
 /**
  * Copyright 2024 Cinovo AG<br>
@@ -77,10 +77,10 @@ public class DaemonExceptionMapper {
 
     private static Exception handleCommunicationFailureException(CommunicationFailureException e) {
         if (CommunicationError.SEND.equals(e.getCommunicationError())) {
-            return new DaemonError(FrameworkErrors.SEND_ERROR, e);
+            return new DaemonError(FrameworkErrors.SEND_ERROR, e.getCause());
         }
         if (CommunicationError.RECEIVE.equals(e.getCommunicationError())) {
-            return new DaemonError(FrameworkErrors.RECEIVE_ERROR, e);
+            return new DaemonError(FrameworkErrors.RECEIVE_ERROR, e.getCause());
         }
         if (CommunicationError.INVALID_RESPONSE.equals(e.getCommunicationError())) {
             return new DaemonError(FrameworkErrors.INVALID_RESPONSE_ERROR, e);
