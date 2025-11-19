@@ -21,9 +21,9 @@ package de.taimos.daemon.properties;
  */
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Properties;
 
 import de.taimos.daemon.DaemonStarter;
@@ -73,32 +73,25 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 	}
 
     private void checkSecureConnections() {
-        String secureConnection = CloudConductorPropertyProvider.getProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_SECURE_CONNECTIONS);
-        if (Boolean.parseBoolean(secureConnection)){
+        String secureConnection = System.getProperty(CloudConductorPropertyProvider.CLOUDCONDUCTOR_SECURE_CONNECTIONS);
+        if (secureConnection == null) {
+            secureConnection = System.getenv(CloudConductorPropertyProvider.CLOUDCONDUCTOR_SECURE_CONNECTIONS);
+        }
+        if (Boolean.parseBoolean(secureConnection)) {
             this.setProtocol(CloudConductorPropertyProvider.HTTPS);
         }
     }
 
-    private static String getProperty(String name) {
-        String property = System.getProperty(name);
-        if(property == null) {
-            property = System.getenv(name);
-        }
-        return property;
-    }
-
-	/**
-	 * @param protocol http or https, http is default;
-	 * @return this provider
-	 */
-	public CloudConductorPropertyProvider setProtocol(String protocol) {
+    /**
+     * @param protocol http or https, http is default;
+     */
+	public void setProtocol(String protocol) {
 		if(protocol.equalsIgnoreCase(CloudConductorPropertyProvider.HTTPS)) {
 			this.protocol = CloudConductorPropertyProvider.HTTPS;
 		} else {
 			this.protocol = "http";
 		}
-		return this;
-	}
+    }
 
 	@Override
 	protected String getDescription() {
@@ -113,7 +106,12 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 		if(this.jwt != null) {
 			req.authBearer(this.jwt);
 		}
-		return req.get();
+        HTTPResponse httpResponse = req.get();
+        int status = httpResponse.getStatus();
+        if (200 > status || 300 < status) {
+            this.logger.warn("Config request with CloudConductor Server {} failed with status {}", this.server, status);
+        }
+        return httpResponse;
 	}
 
 	private void readPropertyFile(String propFile) {
@@ -125,7 +123,7 @@ public class CloudConductorPropertyProvider extends HTTPPropertyProvider {
 			file = new File(CloudConductorPropertyProvider.CLOUDCONDUCTOR_PROP_FILE_DEFAULT_PATH);
 		}
 		if(file.exists()) {
-			try(InputStream reader = new FileInputStream(file)) {
+			try(InputStream reader = Files.newInputStream(file.toPath())) {
 				Properties prop = new Properties();
 				prop.load(reader);
 				if(this.server == null && prop.containsKey(CloudConductorPropertyProvider.CLOUDCONDUCTOR_URL)) {
