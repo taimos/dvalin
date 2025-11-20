@@ -20,13 +20,20 @@ package de.taimos.dvalin.interconnect.core;
  * #L%
  */
 
+import de.taimos.dvalin.interconnect.core.daemon.util.DaemonExceptionMapper;
+import de.taimos.dvalin.interconnect.core.exceptions.InfrastructureException;
+import de.taimos.dvalin.interconnect.core.exceptions.SerializationException;
+import de.taimos.dvalin.interconnect.model.InterconnectMapper;
 import de.taimos.dvalin.interconnect.model.event.EventDomain;
 import de.taimos.dvalin.interconnect.model.event.IEvent;
 import de.taimos.dvalin.interconnect.model.service.DaemonError;
 import de.taimos.dvalin.jms.IJmsConnector;
 import de.taimos.dvalin.interconnect.core.exceptions.TimeoutException;
+import de.taimos.dvalin.jms.model.JmsContext.JmsContextBuilder;
+import de.taimos.dvalin.jms.model.JmsTarget;
 import org.springframework.core.annotation.AnnotationUtils;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -54,10 +61,14 @@ public class EventSender extends AToTopicSender {
 
     @Override
     public void send(Serializable object, String topicName) throws DaemonError, TimeoutException {
-        if (object instanceof IEvent) {
-            this.send((IEvent) object);
-        } else {
-            super.send(object, topicName);
+        try {
+            if (object instanceof IEvent) {
+                super.send(InterconnectMapper.toJson((IEvent) object), topicName, 0L);
+            } else {
+                super.send(object, topicName);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -67,15 +78,19 @@ public class EventSender extends AToTopicSender {
      * @throws TimeoutException in case of communication timeout
      */
     public void send(IEvent object) throws DaemonError, TimeoutException {
+        this.send(object, getTopicName(object));
+    }
+
+    private String getTopicName(IEvent object){
         EventDomain domainAnnotation = AnnotationUtils.findAnnotation(object.getClass(), EventDomain.class);
         if (domainAnnotation == null) {
             this.logger.error("The event {} has no domain annotation", object.getClass().getSimpleName());
-            return;
+            return null;
         }
         if (domainAnnotation.value().isEmpty()) {
             this.logger.error("The domainname for the event {} is empty", object.getClass().getSimpleName());
-            return;
+            return null;
         }
-        super.send(object, this.virtualTopicPrefix + "." + domainAnnotation.value());
+        return this.virtualTopicPrefix + "." + domainAnnotation.value();
     }
 }

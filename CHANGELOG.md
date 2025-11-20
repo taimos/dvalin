@@ -16,9 +16,11 @@
     * Nimbus JOSE+JWT 10.3
     * Swagger 2.2.40
     * Velocity Engine 2.4.1
-* Fixing DaemonExceptionMapper 
-* Fixing problem with retry messages in Interconnect
-* Better error handling in CloudconductorPropertyProvider
+* Bugfix: Fixing DaemonExceptionMapper
+* Bugfix: Serialize EventSender messages to json
+* Bugfix: Fixes problem with events time to live set to 10 seconds
+* Bugfix: Fixing problem with retry messages in Interconnect
+* Bugfix: Better error handling in CloudconductorPropertyProvider
 * Fixed vulnerabilities: CVE-2024-13009(Jetty), CVE-2025-23184(Apache CXF), CVE-2024-57699 (Json-smart),CVE-2025-27533 (ActiveMQ)
 
 # 1.37

@@ -54,12 +54,16 @@ public abstract class AToTopicSender implements IToTopicSender {
      * @throws DaemonError is throw if there is a problem with sending the event
      */
     public void send(Serializable object, String topicName) throws DaemonError, TimeoutException {
+        this.send(object, topicName, IJmsConnector.REQUEST_TIMEOUT);
+    }
+
+    public void send(Serializable object, String topicName, Long timeout) throws DaemonError, TimeoutException {
         if (topicName == null) {
             this.logger.error("Invalid topic name: a non-null name is required");
             throw new IllegalArgumentException("Invalid topic name: a non-null name is required");
         }
         JmsContextBuilder context = new JmsContextBuilder().withTarget(JmsTarget.TOPIC)
-            .withDestinationName(topicName).withBody(object);
+            .withDestinationName(topicName).withTimeToLive(timeout, null).withBody(object);
 
         try {
             this.jmsConnector.send(context.build());
