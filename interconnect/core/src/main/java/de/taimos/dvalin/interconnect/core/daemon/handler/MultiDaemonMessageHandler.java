@@ -2,12 +2,15 @@ package de.taimos.dvalin.interconnect.core.daemon.handler;
 
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonMessageSender;
 import de.taimos.dvalin.interconnect.core.daemon.util.DaemonMethodRegistry.RegistryEntry;
+import de.taimos.dvalin.interconnect.model.InterconnectObject;
 import de.taimos.dvalin.interconnect.model.service.IDaemonHandler;
 import de.taimos.dvalin.jms.crypto.ICryptoService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Copyright 2022 Taimos GmbH<br>
@@ -29,11 +32,14 @@ public class MultiDaemonMessageHandler extends ADaemonMessageHandler {
      * @param cryptoService   the message crypt service
      * @param aMessageSender  the message sender
      * @param beanFactory     the bean factory
+     * @param additionalLogAppender additional log appender
      */
-    public MultiDaemonMessageHandler(final Logger aLogger, final Collection<Class<? extends IDaemonHandler>> aHandlerClazzes, final ICryptoService cryptoService, final IDaemonMessageSender aMessageSender, BeanFactory beanFactory) {
+    public MultiDaemonMessageHandler(final Logger aLogger, final Collection<Class<? extends IDaemonHandler>> aHandlerClazzes, final ICryptoService cryptoService,
+        final IDaemonMessageSender aMessageSender, BeanFactory beanFactory, final List<Function<InterconnectObject, String>> additionalLogAppender) {
         super(aHandlerClazzes, aMessageSender, cryptoService, false);
         this.logger = aLogger;
         this.beanFactory = beanFactory;
+        this.additionalLogAppender.addAll(additionalLogAppender);
     }
 
     @Override

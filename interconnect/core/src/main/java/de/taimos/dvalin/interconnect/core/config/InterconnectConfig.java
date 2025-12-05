@@ -5,6 +5,7 @@ import de.taimos.dvalin.interconnect.core.IVORefreshSender;
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonMessageHandlerFactory;
 import de.taimos.dvalin.interconnect.core.daemon.IDaemonMessageSender;
 import de.taimos.dvalin.interconnect.core.daemon.handler.DefaultMessageHandlerFactory;
+import de.taimos.dvalin.interconnect.core.daemon.handler.MessageHandlerType;
 import de.taimos.dvalin.interconnect.core.daemon.jms.DaemonMessageListener;
 import de.taimos.dvalin.jms.DvalinConnectionFactory;
 import de.taimos.dvalin.jms.IDestinationService;
@@ -49,7 +50,7 @@ public class InterconnectConfig {
         ICryptoService cryptoService,  //
         IDaemonMessageSender messageSender, //
         @Value("${interconnect.requesthandler.mode:}") String requestHandlerMode) {
-        return new DefaultMessageHandlerFactory(applicationContext, messageSender, cryptoService, requestHandlerMode);
+        return new DefaultMessageHandlerFactory(applicationContext, messageSender, cryptoService, MessageHandlerType.from(requestHandlerMode));
     }
 
     /**
@@ -72,8 +73,7 @@ public class InterconnectConfig {
      */
     @Bean(name = "defaultDaemonRequestDestination")
     public Destination getDefaultDaemonRequestDestination(IDestinationService destinationService) {
-        return destinationService.createDestination(JmsTarget.QUEUE,
-            this.serviceName + ".request");
+        return destinationService.createDestination(JmsTarget.QUEUE, this.serviceName + ".request");
     }
 
     /**
