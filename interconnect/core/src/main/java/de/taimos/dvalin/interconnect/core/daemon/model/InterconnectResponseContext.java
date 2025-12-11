@@ -64,7 +64,7 @@ public final class InterconnectResponseContext extends JmsResponseContext<TextMe
         InterconnectContextBuilder receivedContextBuilder = new InterconnectContextBuilder() //
             .withTarget(JmsTarget.RECEPTION_CONTEXT).withSecure(secure) //
             .withRequestICO(receivedIco) //
-            .withCorrelationId(this.extractCorreationId()) //
+            .withCorrelationId(this.extractCorrelationId()) //
             .withReplyToDestination(this.getReplyToDestination());
         this.receivedContext = receivedContextBuilder.build();
     }
@@ -77,7 +77,7 @@ public final class InterconnectResponseContext extends JmsResponseContext<TextMe
         }
     }
 
-    private String extractCorreationId() throws InfrastructureException {
+    private String extractCorrelationId() throws InfrastructureException {
         try {
             return this.getReceivedMessage().getJMSCorrelationID();
         } catch (JMSException e) {
@@ -88,8 +88,10 @@ public final class InterconnectResponseContext extends JmsResponseContext<TextMe
     private InterconnectObject extractIco() throws InfrastructureException {
         try {
             return InterconnectMapper.fromJson(this.getReceivedMessage().getText(), InterconnectObject.class);
-        } catch (final IOException | JMSException e) {
-            throw new InfrastructureException("Failed to create ico from message");
+        } catch (final IOException e) {
+            throw new InfrastructureException("Failed to create ico from message. Json parsing failed.", e);
+        } catch (final JMSException e) {
+            throw new InfrastructureException("Failed to read message content from received message!", e);
         }
     }
 
@@ -166,20 +168,16 @@ public final class InterconnectResponseContext extends JmsResponseContext<TextMe
      * @return a default timeout message for logging or exceptions
      */
     public String timeoutMessage() {
-        return "Response skipped because runtime " + this.getLastHandlingRuntime() + " ms was greater than timeout " +
-               this.getCreateResponseMethod().getTimeoutInMs() + " ms for " +
-               this.getCreateResponseMethod().getMethod().getName() + "(" +
-               this.getReceivedContext().getIcoClass().getSimpleName() + ")" + " with " +
-               de.taimos.dvalin.interconnect.model.InterconnectContext.getContext();
+        return "Response skipped because runtime " + this.getLastHandlingRuntime() + " ms was greater than timeout " + this.getCreateResponseMethod()
+            .getTimeoutInMs() + " ms for " + this.getCreateResponseMethod().getMethod().getName() + "(" + this.getReceivedContext().getIcoClass()
+            .getSimpleName() + ")" + " with " + de.taimos.dvalin.interconnect.model.InterconnectContext.getContext();
     }
 
     /**
      * @return a default slow response message for logging or exceptions
      */
     public String slowResponseMessage() {
-        return "Slow response because runtime " + this.getLastHandlingRuntime() + " ms for " +
-               this.getCreateResponseMethod().getMethod().getName() + "(" +
-               this.getReceivedContext().getIcoClass().getSimpleName() + ")" + " with " +
-               de.taimos.dvalin.interconnect.model.InterconnectContext.getContext();
+        return "Slow response because runtime " + this.getLastHandlingRuntime() + " ms for " + this.getCreateResponseMethod().getMethod()
+            .getName() + "(" + this.getReceivedContext().getIcoClass().getSimpleName() + ")" + " with " + de.taimos.dvalin.interconnect.model.InterconnectContext.getContext();
     }
 }
