@@ -47,7 +47,7 @@ import de.taimos.restutils.RESTAssert;
 @Component
 public class JAXRSContextImpl implements DvalinRSContext {
 
-    @Value("${server.url:http://localhost:${jaxrs.bindport:${svc.port:8080}}}")
+    @Value("${server.url:${jaxrs.protocol:http}://localhost:${jaxrs.bindport:${svc.port:8080}}}")
     private String serverURL;
 
     @Override
