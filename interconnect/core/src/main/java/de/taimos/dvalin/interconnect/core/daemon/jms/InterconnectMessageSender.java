@@ -141,6 +141,8 @@ public final class InterconnectMessageSender implements IDaemonMessageSender {
             this.logger.warn("Retrying message send to {} after {}ms", so.getDestinationName(), this.tempQueueRetry);
             Thread.sleep(this.tempQueueRetry);
             return this.jmsConnector.request(so);
+        } catch (TimeoutException ex){
+            throw ex;
         } catch (InfrastructureException | SerializationException ex) {
             throw new DaemonError(FrameworkErrors.RETRY_FAILED_ERROR, DaemonExceptionMapper.map(ex));
         } catch (InterruptedException ex) {
