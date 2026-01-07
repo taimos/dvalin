@@ -21,6 +21,7 @@
 * Bugfix: Fixes problem with events time to live set to 10 seconds
 * Bugfix: Fixing problem with retry messages in Interconnect
 * Bugfix: Better error handling in CloudconductorPropertyProvider
+* Bugfix: Throw of timeout exceptions for retries instead of DaemonError, restore 1.35 behavior 
 * Fixed vulnerabilities: CVE-2024-13009(Jetty), CVE-2025-23184(Apache CXF), CVE-2024-57699 (Json-smart),CVE-2025-27533 (ActiveMQ)
 
 # 1.37
