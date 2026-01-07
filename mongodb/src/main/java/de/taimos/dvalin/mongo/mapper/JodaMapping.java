@@ -42,12 +42,14 @@ import java.io.IOException;
  */
 public class JodaMapping {
 
+    private static final String DATE_FIELD_NAME = "$date";
+
     public static class MongoDateTimeSerializer extends JsonSerializer<DateTime> {
 
         @Override
         public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
-            jgen.writeStringField("$date", value.withZone(DateTimeZone.UTC).toString(ISODateTimeFormat.dateTime()));
+            jgen.writeStringField(JodaMapping.DATE_FIELD_NAME, value.withZone(DateTimeZone.UTC).toString(ISODateTimeFormat.dateTime()));
             jgen.writeEndObject();
         }
 
@@ -58,8 +60,22 @@ public class JodaMapping {
         @Override
         public DateTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
             JsonNode node = jp.getCodec().readTree(jp);
-            String date = node.get("$date").asText();
-            return ISODateTimeFormat.dateTimeParser().withZoneUTC().parseDateTime(date);
+            String date = node.get(JodaMapping.DATE_FIELD_NAME).asText();
+            try {
+                return ISODateTimeFormat.dateTimeParser().withZoneUTC().parseDateTime(date);
+            } catch (IllegalArgumentException e) {
+                // Fallback for old dates (before 1970)
+                JsonNode dateNode = node.get(JodaMapping.DATE_FIELD_NAME);
+                if (dateNode != null) {
+                    JsonNode numberLongNode = dateNode.get("$numberLong");
+                    if (numberLongNode != null) {
+                        // Parse as BSON timestamp (milliseconds since epoch)
+                        long timestamp = numberLongNode.asLong();
+                        return new DateTime(timestamp, DateTimeZone.UTC);
+                    }
+                }
+            }
+            return null;
         }
     }
 }
