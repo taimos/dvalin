@@ -64,6 +64,14 @@ password hashes secured by the SHA-512 function using a 512 bit salt and a dynam
 Several settings of the dvalin framework can be customized using system properties which are described 
 in `de.taimos.dvalin.jaxrs.SpringCXFProperties`.
 
+For HTTPS, configure protocol and KeyStore via system properties: 
+```
+jaxrs.protocol=https
+jaxrs.server.keyStore=/path/to/keystore.jks 
+jaxrs.server.keyStorePassword=password
+jaxrs.server.keyStoreType=JKS
+```
+
 ### Testing
 
 moved to `test` sub-project.

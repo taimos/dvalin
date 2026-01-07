@@ -66,7 +66,7 @@ public class OpenAPIProvider {
 
     protected void configureServerURL(OpenAPI openAPI) {
         String port = System.getProperty(SpringCXFProperties.JAXRS_BINDPORT, System.getProperty("svc.port", "8080"));
-        String serverUrl = System.getProperty(SpringCXFProperties.SERVER_URL, "http://localhost:" + port);
+        String serverUrl = System.getProperty(SpringCXFProperties.SERVER_URL, System.getProperty("jaxrs.protocol", "http") + "://localhost:" + port);
         String path = System.getProperty(SpringCXFProperties.JAXRS_PATH, "");
         if (!path.startsWith("/")) {
             serverUrl += "/";

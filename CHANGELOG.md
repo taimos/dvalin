@@ -23,6 +23,7 @@
 * Bugfix: Better error handling in CloudconductorPropertyProvider
 * Fixed vulnerabilities: CVE-2024-13009(Jetty), CVE-2025-23184(Apache CXF), CVE-2024-57699 (Json-smart),CVE-2025-27533 (ActiveMQ)
 * Logging improvement and extension options for DaemonMessageListener
+* Add TLS server parameters for JAX-RS
 * Improved Errormessage in case of non parseable JSON strings in the space of InterconnectObjects and Messsaging.
 
 
