@@ -52,13 +52,13 @@ public class RealClientConfig {
     @Value("${mongodb.connecttimeout:${mongodb.connectTimeout:10000}}")
     private int connectTimeout;
 
-    @Value("${mongodb.maxconnectionidletime:${mongodb.maxConnectionIdleTime:600000}}")
+    @Value("${mongodb.maxConnectionIdleTime:600000}")
     private int maxConnectionIdleTime = 600000;
 
-    @Value("${mongodb.minpoolsize:${mongodb.minPoolSize:10}}")
+    @Value("${mongodb.minPoolSize:10}")
     private int minPoolSize = 10;
 
-    @Value("${mongodb.maxpoolsize:${mongodb.maxPoolSize:100}}")
+    @Value("${mongodb.maxPoolSize:100}")
     private int maxPoolSize = 100;
 
     /**
