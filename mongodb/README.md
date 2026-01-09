@@ -20,6 +20,9 @@ For connections to real MongoDB databases, these extra properties can be set:
 * `mongodb.uri` - instead of host and port you can specify the complete connection string
 * `mongodb.sockettimeout` - the socket timeout of the connection (default: 10 seconds)
 * `mongodb.connecttimeout` - the connection timeout of the connection attempt (default: 10 seconds)
+* `mongodb.maxConnectionIdleTime` - the maximum idle time for pooled connections in milliseconds (default: 600000 / 10 minutes)
+* `mongodb.minPoolSize` - the minimum number of connections in the connection pool (default: 10)
+* `mongodb.maxPoolSize` - the maximum number of connections in the connection pool (default: 100)
 
 ### Access to database
 
