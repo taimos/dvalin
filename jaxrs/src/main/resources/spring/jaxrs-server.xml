@@ -21,11 +21,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jaxrs="http://cxf.apache.org/jaxrs"
        xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
        profile="http">
 
-    <jaxrs:server id="restService" address="http://${jaxrs.bindhost:0.0.0.0}:${jaxrs.bindport:${svc.port:8080}}${jaxrs.path:}"
+    <jaxrs:server id="restService" address="${jaxrs.protocol:http}://${jaxrs.bindhost:0.0.0.0}:${jaxrs.bindport:${svc.port:8080}}${jaxrs.path:}"
                   depends-on="cxf-engine" serviceAnnotation="${jaxrs.annotation:de.taimos.dvalin.jaxrs.JaxRsComponent}">
     </jaxrs:server>
 
