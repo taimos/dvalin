@@ -25,6 +25,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import de.taimos.daemon.DaemonStarter;
 import de.taimos.daemon.spring.conditional.OnSystemProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -51,6 +52,15 @@ public class RealClientConfig {
     @Value("${mongodb.connecttimeout:${mongodb.connectTimeout:10000}}")
     private int connectTimeout;
 
+    @Value("${mongodb.maxConnectionIdleTime:600000}")
+    private int maxConnectionIdleTime = 600000;
+
+    @Value("${mongodb.minPoolSize:10}")
+    private int minPoolSize = 10;
+
+    @Value("${mongodb.maxPoolSize:100}")
+    private int maxPoolSize = 100;
+
     /**
      * @return the configured mongo client
      */
@@ -58,9 +68,16 @@ public class RealClientConfig {
     public MongoClient mongoClient() {
         Builder settingsBuilder = MongoClientSettings.builder();
         settingsBuilder.applyConnectionString(new ConnectionString(this.mongoURI));
+        settingsBuilder.applicationName(DaemonStarter.getDaemonName());
         settingsBuilder.applyToSocketSettings(builder -> {
             builder.connectTimeout(RealClientConfig.this.connectTimeout, TimeUnit.MILLISECONDS);
             builder.readTimeout(RealClientConfig.this.socketTimeout, TimeUnit.MILLISECONDS);
+        });
+
+        settingsBuilder.applyToConnectionPoolSettings(builder -> {
+            builder.minSize(this.minPoolSize);
+            builder.maxSize(this.maxPoolSize);
+            builder.maxConnectionIdleTime(RealClientConfig.this.maxConnectionIdleTime, TimeUnit.MILLISECONDS);
         });
         return MongoClients.create(settingsBuilder.build());
     }

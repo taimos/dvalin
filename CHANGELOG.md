@@ -27,6 +27,7 @@
 * Logging improvement and extension options for DaemonMessageListener
 * Add TLS server parameters for JAX-RS
 * Improved Errormessage in case of non parseable JSON strings in the space of InterconnectObjects and Messsaging.
+* Add connection pool settings and idle timeout to MongoDB client configuration
 
 
 # 1.37
