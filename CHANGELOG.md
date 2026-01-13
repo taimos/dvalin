@@ -10,7 +10,7 @@
     * JSON Small and Fast Parser 2.5.2
     * Junit 5.11.4
     * Liquibase 4.32.0
-    * Log4J 2.25.2
+    * Log4J 2.25.3
     * Mongo Java Driver 4.11.5
     * Mongock 5.5.1
     * Nimbus JOSE+JWT 10.3
@@ -23,7 +23,7 @@
 * Bugfix: Better error handling in CloudconductorPropertyProvider
 * Bugfix: Throw of timeout exceptions for retries instead of DaemonError, restore 1.35 behavior 
 * Bugfix: Fallback for old dates (before 1970) for mongo
-* Fixed vulnerabilities: CVE-2024-13009(Jetty), CVE-2025-23184(Apache CXF), CVE-2024-57699 (Json-smart),CVE-2025-27533 (ActiveMQ)
+* Fixed vulnerabilities: CVE-2024-13009(Jetty), CVE-2025-23184(Apache CXF), CVE-2024-57699 (Json-smart),CVE-2025-27533 (ActiveMQ),CVE-2025-68161(Log4j)
 * Logging improvement and extension options for DaemonMessageListener
 * Add TLS server parameters for JAX-RS
 * Improved Errormessage in case of non parseable JSON strings in the space of InterconnectObjects and Messsaging.

@@ -65,7 +65,7 @@
         <jetty.version>9.4.58.v20250814</jetty.version>
         <joda.time.version>2.14.0</joda.time.version>
         <junit.version>5.11.4</junit.version><!-- newer JUnit version not working with Mockito-->
-        <log4j.version>2.25.2</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
         <mockito-core.version>4.11.0</mockito-core.version>
         <mongo.version>4.11.5</mongo.version>
         <mongock.version>5.5.1</mongock.version>
