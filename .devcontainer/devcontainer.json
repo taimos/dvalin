@@ -1,0 +1,11 @@
+{
+	"name": "dvalin",
+	"image": "mcr.microsoft.com/devcontainers/java:8",
+	"features": {
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "8",
+			"installMaven": "true",
+			"installGradle": "false"
+		}
+	}
+}
