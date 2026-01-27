@@ -3,7 +3,7 @@
     <parent>
         <artifactId>dvalin-parent</artifactId>
         <groupId>de.taimos</groupId>
-        <version>1.38-SNAPSHOT</version>
+        <version>1.38</version>
     </parent>
     <artifactId>dvalin-test</artifactId>
     <name>Test support for dvalin</name>
