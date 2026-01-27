@@ -7,7 +7,8 @@
         <version>1.38-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
+    <name>Dvalin JMS ActiveMQ Classic</name>
+    <description>Dvalin JMS ActiveMQ Classic</description>
     <artifactId>dvalin-jms-activemq-classic</artifactId>
 
     <properties>

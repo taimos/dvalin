@@ -6,7 +6,8 @@
         <artifactId>dvalin-jms-parent</artifactId>
         <version>1.38-SNAPSHOT</version>
     </parent>
-
+    <name>Dvalin JMS Core</name>
+    <description>Dvalin JMS Core</description>
     <artifactId>dvalin-jms-core</artifactId>
 
     <dependencies>
