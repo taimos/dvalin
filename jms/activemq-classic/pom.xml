@@ -4,10 +4,11 @@
     <parent>
         <groupId>de.taimos</groupId>
         <artifactId>dvalin-parent</artifactId>
-        <version>1.38-SNAPSHOT</version>
+        <version>1.39-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
+    <name>Dvalin JMS ActiveMQ Classic</name>
+    <description>Dvalin JMS ActiveMQ Classic</description>
     <artifactId>dvalin-jms-activemq-classic</artifactId>
 
     <properties>

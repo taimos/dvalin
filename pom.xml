@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.taimos</groupId>
     <artifactId>dvalin-parent</artifactId>
-    <version>1.38-SNAPSHOT</version>
+    <version>1.39-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Taimos Microservices Framework</name>
     <description>Taimos Microservices Framework</description>

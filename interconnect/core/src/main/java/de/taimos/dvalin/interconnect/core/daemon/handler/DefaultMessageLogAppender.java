@@ -23,7 +23,7 @@ public interface DefaultMessageLogAppender {
 
     /**
      * @param value the integer value
-     * @return each as string: "0" if <= 0; "MAX" if Integer.MAX; value otherwise
+     * @return each as string: "0" if &lt;=0 "MAX" if Integer.MAX; value otherwise
      */
     static String asBoundString(Integer value) {
         if ((value == null || (value < 0))) {
